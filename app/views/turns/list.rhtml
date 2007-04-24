@@ -1,0 +1,27 @@
+<h1>Listing turns</h1>
+
+<table>
+  <tr>
+  <% for column in Turn.content_columns %>
+    <th><%= column.human_name %></th>
+  <% end %>
+  </tr>
+  
+<% for turn in @turns %>
+  <tr>
+  <% for column in Turn.content_columns %>
+    <td><%=h turn.send(column.name) %></td>
+  <% end %>
+    <td><%= link_to 'Show', :action => 'show', :id => turn.Id %></td>
+    <td><%= link_to 'Edit', :action => 'edit', :id => turn.Id %></td>
+    <td><%= link_to 'Destroy', { :action => 'destroy', :id => turn.Id }, :confirm => 'Are you sure?', :method => :post %></td>
+  </tr>
+<% end %>
+</table>
+
+<%= link_to 'Previous page', { :page => @turn_pages.current.previous } if @turn_pages.current.previous %>
+<%= link_to 'Next page', { :page => @turn_pages.current.next } if @turn_pages.current.next %> 
+
+<br />
+
+<%= link_to 'New turn', :action => 'new' %>

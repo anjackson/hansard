@@ -1,0 +1,8 @@
+<% for column in Turn.content_columns %>
+<p>
+  <b><%= column.human_name %>:</b> <%=h @turn.send(column.name) %>
+</p>
+<% end %>
+
+<%= link_to 'Edit', :action => 'edit', :id => @turn %> |
+<%= link_to 'Back', :action => 'list' %>

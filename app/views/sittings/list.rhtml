@@ -1,0 +1,27 @@
+<h1>Listing sittings</h1>
+
+<table>
+  <tr>
+  <% for column in Sitting.content_columns %>
+    <th><%= column.human_name %></th>
+  <% end %>
+  </tr>
+  
+<% for sitting in @sittings %>
+  <tr>
+  <% for column in Sitting.content_columns %>
+    <td><%=h sitting.send(column.name) %></td>
+  <% end %>
+    <td><%= link_to 'Show', :action => 'show', :id => sitting.Id %></td>
+    <td><%= link_to 'Edit', :action => 'edit', :id => sitting.Id %></td>
+    <td><%= link_to 'Destroy', { :action => 'destroy', :id => sitting.Id }, :confirm => 'Are you sure?', :method => :post %></td>
+  </tr>
+<% end %>
+</table>
+
+<%= link_to 'Previous page', { :page => @sitting_pages.current.previous } if @sitting_pages.current.previous %>
+<%= link_to 'Next page', { :page => @sitting_pages.current.next } if @sitting_pages.current.next %> 
+
+<br />
+
+<%= link_to 'New sitting', :action => 'new' %>
