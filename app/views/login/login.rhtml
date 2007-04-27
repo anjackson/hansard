@@ -1,0 +1,11 @@
+<h1>Login</h1>
+
+<form action="login" method="post">
+    Username:
+    <%= text_field "user", "name", "size" => 20 %>
+    <br />
+    Password:
+    <%= password_field "user", "password", "maxsize" => 20 %>
+    <br />
+    <input type="submit" value="Login">
+</form>

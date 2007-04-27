@@ -1,7 +1,46 @@
-<% for column in Sitting.content_columns %>
-<p>
-  <b><%= column.human_name %>:</b> <%=h @sitting.send(column.name) %>
-</p>
+<h1><%= @sitting.date %></h1>
+
+<table>
+  <tr>
+    <th>Section</th>
+    <th>Time</th>
+  </tr>
+  
+<% for section in @sections %>
+  <tr>
+    <td><%= section.name_without_version %></td>
+    <td><%= section.time %></td>
+  </tr>
 <% end %>
+</table>
+
+<table>
+  <tr>
+    <th>Turn</th>
+    <th>Time</th>
+  </tr>
+  
+<% for turn in @turns %>
+  <tr>
+    <td><%= turn.name %></td>
+    <td><%= turn.time %></td>
+  </tr>
+<% end %>
+</table>
+
+<table>
+  <tr>
+    <th>Interval Start</th>
+    <th>Number Of Turns</th>
+  </tr>
+  
+<% for interval in @sitting.turns_by_interval(15).keys.sort %>
+  <tr>
+    <td><%= interval %></td>
+    <td><%= @sitting.turns_by_interval(15)[interval].size %></td>
+  </tr>
+<% end %>
+</table>
+
 
 <%= link_to 'Back', :action => 'list' %>

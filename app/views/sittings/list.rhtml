@@ -7,7 +7,7 @@
   
 <% for sitting in @sittings %>
   <tr>
-    <td><%= link_to sitting.Date, :action => 'show', :id => sitting.Id %></td>
+    <td><%= link_to sitting.date, :action => 'show', :id => sitting.Id %></td>
   </tr>
 <% end %>
 </table>
