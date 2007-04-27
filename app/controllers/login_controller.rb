@@ -5,29 +5,22 @@ class LoginController < ApplicationController
     if request.get?
       session[:username] = nil
     else
-      # Split username on domain and alias
-      split_username = params[:user][:name].split('\\', 2)
-      if split_username.length != 2
-        flash[:notice] = "You did not enter a properly formatted domain and alias" 
-        redirect_to :action => 'login'
-      else
-        # Authenticate username and password
-        domain = split_username[0]
-        username = split_username[1]
-        password = params[:user][:password]
-        if authenticate domain, username, password
-          # User has been authenticated
-          session[:username] = username
-          if @session["return_to"]
-            redirect_to_path(@session["return_to"])
-            @session["return_to"] = nil
-          else
-            redirect_to :controller => "sitting" 
-          end
+      # Authenticate username and password
+      domain = DOMAIN
+      username = params[:user][:name]
+      password = params[:user][:password]
+      if authenticate domain, username, password
+        # User has been authenticated
+        session[:username] = username
+        if @session["return_to"]
+          redirect_to_path(@session["return_to"])
+          @session["return_to"] = nil
         else
-          flash[:notice] = "Incorrect username or password" 
-          redirect_to :action => 'login'
+          redirect_to :controller => "sitting" 
         end
+      else
+        flash[:notice] = "Incorrect username or password" 
+        redirect_to :action => 'login'
       end
     end
   end
