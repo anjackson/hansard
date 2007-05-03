@@ -1,5 +1,7 @@
 <h1><%= @sitting.date %></h1>
 
+<%= turns_graph_tag(@sitting) %>
+
 <table>
   <tr>
     <th>Section</th>
@@ -27,20 +29,5 @@
   </tr>
 <% end %>
 </table>
-
-<table>
-  <tr>
-    <th>Interval Start</th>
-    <th>Number Of Turns</th>
-  </tr>
-  
-<% for interval in @sitting.turns_by_interval(15).keys.sort %>
-  <tr>
-    <td><%= interval %></td>
-    <td><%= @sitting.turns_by_interval(15)[interval].size %></td>
-  </tr>
-<% end %>
-</table>
-
 
 <%= link_to 'Back', :action => 'list' %>

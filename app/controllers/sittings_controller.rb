@@ -15,9 +15,51 @@ class SittingsController < ApplicationController
 
   def show
     @sitting = Sitting.find(params[:id])
-    @sections = @sitting.sections
-    @turns = @sitting.turns
+    @sections = @sitting.original_sections
+    @turns = @sitting.original_turns
+  end
+
+  def turns_sparkline
+    name = params['id']
+    sitting = Sitting.find(params[:id])
+    turns_by_interval = sitting.turns_by_interval(15)
+
+    counts = []
+    turns_by_interval.keys.sort.each do |interval|
+      counts << turns_by_interval[interval].size
+    end
+    
+    params = { :type => 'smooth', :height => 100, :width => 100, :line_color => 'darkgrey' }
+    send_data(Sparklines.plot(counts, params),
+      :disposition => 'inline',
+      :type => 'image/png',
+      :filename => "spark_#{params[:type]}.png" )
+      
+  end
+  
+  def turns_graph
+    
+    sitting = Sitting.find(params[:id])
+    
+    g = Gruff::Line.new(400)
+    g.title = "Turns (" + sitting.date + ")" 
+    
+    turns_by_interval = sitting.turns_by_interval(sitting.SatAt.midnight + 9.hours, sitting.SatAt.midnight + 1.day + 8.hours + 15.minutes, 30)
+
+    counts = []
+    turns_by_interval.keys.sort.each do |interval|
+      counts << turns_by_interval[interval].size
+    end
+    
+    g.data("Turns", counts)
+    g.labels = {0 => turns_by_interval.keys.sort[0].strftime("%I:%M%p"), (turns_by_interval.size-1) => turns_by_interval.keys.sort[(turns_by_interval.size-1)].strftime("%I:%M%p")}
+    
+    send_data(g.to_blob, 
+      :disposition => 'inline', 
+      :type => 'image/png', 
+      :filename => "Turns Graph.png")
     
   end
+
 
 end

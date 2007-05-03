@@ -7,10 +7,12 @@ class ApplicationController < ActionController::Base
   session :session_key => '_hansard_session_id'
   
   def authorize
-    unless logged_in?
-      @session["return_to"] = @request.request_uri
-      redirect_to( :controller => 'login', :action => 'login' )
-      return false
+    unless REQUIRE_AUTHORISATION == false
+      unless logged_in?
+        @session["return_to"] = @request.request_uri
+        redirect_to( :controller => 'login', :action => 'login' )
+        return false
+      end
     end
   end
 

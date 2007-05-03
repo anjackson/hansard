@@ -21,3 +21,4 @@ config.action_view.debug_rjs                         = true
 config.action_mailer.raise_delivery_errors = false
 
 DOMAIN = "parliament"
+REQUIRE_AUTHORISATION = false
