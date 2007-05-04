@@ -1,23 +1,20 @@
-<h1>Listing sittings</h1>
+<h1>Hansard Statistics</h1>
 
-<h2>Username: <%= session[:username] %></h2>
-<%=calendar(:year => 2005, :month => 6) %>
-
-<table>
-  <tr>
-  <th>Date</th>
-
-  </tr>
+<%=
+calendar({:year => @year, :month => @month, :class => 'red'}) do |d|
+  sitting = @sittings.find{|sitting|sitting.SatAt.day == d.mday}
+  if sitting
+      cell_text = link_to d.mday, :action => 'show', :id => sitting.Id
+      cell_attrs = {:class => 'day'}
+      [cell_text, cell_attrs]
+  else
   
-<% for sitting in @sittings %>
-  <tr>
-    <td><%= link_to sitting.date, :action => 'show', :id => sitting.Id %></td>
-  </tr>
-<% end %>
-</table>
+  end
+  
+end
+%>
 
-<%= link_to 'Previous page', { :page => @sitting_pages.current.previous } if @sitting_pages.current.previous %>
-<%= link_to 'Next page', { :page => @sitting_pages.current.next } if @sitting_pages.current.next %> 
-
+<%= link_to '< Previous', :action => 'list', :month => @previous_month, :year => @previous_year %>
+<%= link_to 'Next >', :action => 'list', :month => @next_month, :year => @next_year %>
 <br />
 

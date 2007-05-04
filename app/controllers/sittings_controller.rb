@@ -1,5 +1,10 @@
 class SittingsController < ApplicationController
   
+  def initialize
+    @year = 2007
+    @month = 4
+  end
+  
   def index
     list
     render :action => 'list'
@@ -10,7 +15,25 @@ class SittingsController < ApplicationController
          :redirect_to => { :action => :list }
 
   def list
-    @sitting_pages, @sittings = paginate :sittings, :per_page => 10, :order => "Id DESC"
+    @month = params[:month].to_i if params[:month]
+    @year = params[:year].to_i if params[:year]
+    if @month > 1
+      @previous_month = @month - 1
+      @previous_year = @year
+    else
+      @previous_month = 12
+      @previous_year = @year - 1
+    end
+    if @month < 12
+      @next_month = @month + 1
+      @next_year = @year
+    else
+      @next_month = 1
+      @next_year = @year + 1
+    end
+    
+    @previous_year
+    @sittings = Sitting.sittings_by_month(@year,@month)
   end
 
   def show

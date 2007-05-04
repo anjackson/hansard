@@ -8,6 +8,14 @@ class Sitting < ActiveRecord::Base
     date = self.SatAt.strftime("%A %d %B %Y")
   end
   
+  def year
+    year = self.SatAt.year
+  end
+  
+  def month
+    month = self.SatAt.month
+  end
+  
   def intervals_old(length)
     intervals = []
     
@@ -40,6 +48,12 @@ class Sitting < ActiveRecord::Base
 
   def original_sections
     self.sections.select{|section|section.CreatedDate.midnight == self.SatAt.midnight}
+  end
+
+  def Sitting.sittings_by_month(year,month)
+    Sitting.find(:all).select do |sitting|
+      (sitting.SatAt.year == year and sitting.SatAt.month == month)
+    end
   end
 
   def turns_by_interval_old(length)
