@@ -1,15 +1,25 @@
-body { background-color: #fff; color: #333; }
+body {
+  background-color: #fff;
+  color: #333;
+  margin: 0pt auto;
+  position: relative;
+  width: 70.5em;
+}
 
 body, p, ol, ul, td {
   font-family: verdana, arial, helvetica, sans-serif;
-  font-size:   13px;
-  line-height: 18px;
+  font-size:   0.95em;
+  line-height: 1.3em;
 }
 
 pre {
   background-color: #eee;
   padding: 10px;
   font-size: 11px;
+}
+
+h1 {
+  line-height: 1.3em;
 }
 
 a { color: #000; }
@@ -72,3 +82,20 @@ div.progressBar div.background {
   width: 0%;
 }
 
+#stages {
+  margin-bottom: 1em;
+}
+
+th, td {
+  border-bottom: 1px solid #EEEEEE;
+  padding: 0.3em 1em 0.3em 0em;
+  vertical-align: top;
+}
+
+p.event {
+  margin: 0px;
+}
+
+.event .date {
+  padding-right: 1em;
+}

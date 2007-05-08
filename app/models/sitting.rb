@@ -16,21 +16,7 @@ class Sitting < ActiveRecord::Base
     month = self.SatAt.month
   end
   
-  def intervals_old(length)
-    intervals = []
-    
-    if !self.original_turns.empty?
-      currenttime = self.original_turns.first.CreatedDate
-      endtime = self.original_sections.last.CreatedDate
-    
-      while currenttime < endtime
-        intervals << currenttime
-        currenttime+=length.minutes
-      end
-    end
-    intervals
-  end
-  
+ 
   def intervals(start_time,end_time,length)
     
     intervals = []
@@ -50,29 +36,12 @@ class Sitting < ActiveRecord::Base
     self.sections.select{|section|section.CreatedDate.midnight == self.SatAt.midnight}
   end
 
-  def Sitting.sittings_by_month(year,month)
+  def Sitting.sittings_by_month(date)
     Sitting.find(:all).select do |sitting|
-      (sitting.SatAt.year == year and sitting.SatAt.month == month)
+      (sitting.SatAt.year == date.year and sitting.SatAt.month == date.month)
     end
   end
 
-  def turns_by_interval_old(length)
-
-    intervals = self.intervals(length)
-    turns_by_interval = {}
-    
-    intervals.each do |interval|
-      turns_by_interval[interval] = []
-    end
-    
-    self.original_turns.each do |turn|
-      turn_interval = intervals.find{|interval|interval+length.minutes>turn.CreatedDate}
-      turns_by_interval[turn_interval] << turn
-    end
-    
-    turns_by_interval
-  end
-  
   def turns_by_interval(start_time,end_time,length)
 
     intervals = self.intervals(start_time,end_time,length)

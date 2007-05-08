@@ -1,20 +1,9 @@
 <h1>Hansard Statistics</h1>
 
-<%=
-calendar({:year => @year, :month => @month, :class => 'red'}) do |d|
-  sitting = @sittings.find{|sitting|sitting.SatAt.day == d.mday}
-  if sitting
-      cell_text = link_to d.mday, :action => 'show', :id => sitting.Id
-      cell_attrs = {:class => 'day'}
-      [cell_text, cell_attrs]
-  else
-  
-  end
-  
-end
+<%= 
+    date = Date.new(@year,@month,1) 
+    multiple_sitting_calenders(date,3,3) 
 %>
 
-<%= link_to '< Previous', :action => 'list', :month => @previous_month, :year => @previous_year %>
-<%= link_to 'Next >', :action => 'list', :month => @next_month, :year => @next_year %>
 <br />
 
