@@ -4,5 +4,5 @@ port: "8000"
 environment: production
 #address: 127.0.0.1
 pid_file: log/mongrel.pid
-log_file: log/mongrel.log
+log_file: /u/apps/hansard/log/mongrel.log
 servers: 2
