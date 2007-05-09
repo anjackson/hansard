@@ -15,6 +15,7 @@ ActionController::Routing::Routes.draw do |map|
     m.connect '' 
     m.connect "sittings/show/:id/turns_sparkline.png", :action => 'turns_sparkline'
     m.connect "sittings/show/:id/turns_graph.png", :action => 'turns_graph'
+    m.connect "sittings/show/:id/:name/stage_graph.png", :action => 'stage_graph'
   end
 
   # Allow downloading Web Service WSDL as a file with an extension

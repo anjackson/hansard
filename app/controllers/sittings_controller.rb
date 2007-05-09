@@ -67,6 +67,47 @@ class SittingsController < ApplicationController
       :filename => "Turns Graph.png")
     
   end
+  
+  def stage_graph
+   
+    doctype = Doctype.find_by_Name(params[:name])
+    sitting = Sitting.find(params[:id])
+    
+    documents = sitting.original_turns if params[:name] == "Turn" 
+    documents = sitting.original_sections if params[:name] == "Section"
+
+    
+    g = Gruff::Pie.new(400)
+    g.title = params[:name] + "s Stage Graph" 
+    g.title_font_size = 30
+    g.hide_legend = false
+    g.marker_font_size = 18
+    g.theme = {
+      :colors => %w(red orange green),
+      :maker_color => '#bbbbbb',
+      :background_colors => %w(#eeeeee #eeeeee)
+    }
+    
+    
+    counts = []
+    
+    i = 0
+    for stage in doctype.stages
+      stage_documents = documents.select{|document|document.Stage == stage.Stage}      
+      g.data(stage.Code, [stage_documents.size])
+      
+      i += 1
+    end
+    
+    labels = {0 => "Debate"}
+    g.labels = labels
+
+    send_data(g.to_blob, 
+      :disposition => 'inline', 
+      :type => 'image/png', 
+      :filename => "Stage Graph.png")
+  
+  end
 
 
 end

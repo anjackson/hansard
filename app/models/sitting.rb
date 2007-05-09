@@ -31,6 +31,10 @@ class Sitting < ActiveRecord::Base
   def original_turns
     self.turns.select{|turn|turn.CreatedDate.midnight == self.SatAt.midnight}
   end
+  
+  def turns_by_stage(stage)
+    self.original_turns.select{|turn|turn.Stage == stage}
+  end
 
   def original_sections
     self.sections.select{|section|section.CreatedDate.midnight == self.SatAt.midnight}

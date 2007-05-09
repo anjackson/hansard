@@ -1,6 +1,13 @@
 <h1><%= @sitting.date %></h1>
+<h2>Debate</h2>
+<%= stage_graph_tag(@sitting,"Turn") %>
+<%= stage_graph_tag(@sitting,"Section") %>
+<h2>Writtens</h2>
 
+<br/>
 <%= turns_graph_tag(@sitting) %>
+
+
 
 <table>
   <tr>

@@ -8,6 +8,10 @@ module SittingsHelper
     %Q[<img src="/sittings/show/#{sitting.Id}/turns_graph.png" class="sparkline" alt="Turns Graph" />]
   end
   
+  def stage_graph_tag(sitting,name)
+    %Q[<img src="/sittings/show/#{sitting.Id}/#{name}/stage_graph.png" alt="Stage Graph" />]
+  end
+  
   def sitting_calender(date)
   
     today = Date.today
@@ -67,6 +71,8 @@ module SittingsHelper
     
     html
   end
+
+
 
 
 end
