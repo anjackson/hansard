@@ -12,6 +12,11 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
     @sitting = parse_hansard 's6cv0089p0/housecommons_1985_12_16.xml'
   end
   
+  it 'should create first section in debates' do
+    section = @sitting.debates.sections.first
+    section.should_not be_nil
+  end
+
   it_should_behave_like "All sittings"
   it_should_behave_like "All commons sittings"
 end

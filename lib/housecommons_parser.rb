@@ -27,9 +27,23 @@ class Hansard::HouseCommonsParser
 
   private
 
+    def handle_section debates
+      debates.sections << ProceduralSection.new
+    end
+    
+    def handle_oral_questions
+      
+    end
+    
+    def handle_image
+      
+    end
+
     def create_house_commons
+      @column = @doc.at('housecommons/col').inner_html
+
       sitting = HouseOfCommonsSitting.new({
-        :column => @doc.at('housecommons/col').inner_html,
+        :column => @column,
         :title => @doc.at('housecommons/title').inner_html,
         :text => @doc.at('housecommons/p').inner_html,
         :date_text => @doc.at('housecommons/date').inner_html,
@@ -43,7 +57,26 @@ class Hansard::HouseCommonsParser
         end
       end
 
-      sitting.debates = DebatesSection.new
+      if (debates = @doc.at('housecommons/debates'))
+        sitting.debates = DebatesSection.new
+        debates.children.each do |child|
+          if child.elem?
+            name = child.name
+            if name == "section"
+              handle_section sitting.debates
+            elsif name == "oralquestions"
+              handle_oral_questions
+            elsif name == "image"
+              handle_image
+            elsif name == "col"
+              @column = child.inner_html
+            else
+              raise 'unknown debates section type: ' + name
+            end
+          end
+        end
+      end
+
       sitting
     end
   
