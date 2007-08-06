@@ -13,4 +13,5 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
   end
   
   it_should_behave_like "All sittings"
+  it_should_behave_like "All commons sittings"
 end

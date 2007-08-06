@@ -42,7 +42,8 @@ class Hansard::HouseCommonsParser
           sitting.text += text.to_s
         end
       end
-      
+
+      sitting.debates = DebatesSection.new
       sitting
     end
   
