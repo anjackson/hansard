@@ -1,0 +1,2 @@
+class HouseOfCommonsSitting < Sitting
+end

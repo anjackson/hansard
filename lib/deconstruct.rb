@@ -14,10 +14,15 @@ module Hansard
   
     def write_to_file name, buffer, date=nil
       name = name + '_' + date.to_s.gsub('-','_') if date
-      name = name+'.xml'
-      file = File.join @result_path, name
-      File.open(file, 'w') do |file|
+      file_name = File.join @result_path, name+'.xml'
+      File.open(file_name, 'w') do |file|
         file.write(buffer.join(''))
+      end
+
+      if @indented_copy
+        indented_file = File.join @indented_result_path, name+'_indented.xml'
+        indent_cmd = "xmllint --format #{file_name} > #{indented_file}"
+        `#{indent_cmd}`
       end
     end
   
@@ -82,7 +87,7 @@ module Hansard
 
     def clear_directory path
       if File.exists? path
-        Dir.glob(File.join(path,'*')).each do |file|
+        Dir.glob(File.join(path,'*.xml')).each do |file|
           File.delete file
         end
       else
@@ -90,8 +95,9 @@ module Hansard
       end
     end
 
-    def split base_path
+    def split base_path, indented_copy=false
       @base_path = base_path
+      @indented_copy = indented_copy
       source_path = File.join @base_path, 'xml'
 
       raise "source directory #{source_path} not found" unless File.exists? source_path
@@ -102,7 +108,9 @@ module Hansard
         puts input_file
         directory_name = input_file.split(File::SEPARATOR).last.chomp('.xml').downcase
         @result_path = File.join @base_path, 'data', directory_name
+        @indented_result_path = File.join @base_path, 'data', directory_name, 'indented'
         clear_directory @result_path
+        clear_directory @indented_result_path
 
         @index = 0
         @surrounding_buffer = []
@@ -119,7 +127,7 @@ module Hansard
         write_to_file 'header', @surrounding_buffer
 
         total_lines = 0
-        Dir.glob(File.join(@result_path,'*')).each do |result|
+        Dir.glob(File.join(@result_path,'*.xml')).each do |result|
           total_lines += `wc -l #{result}`.split(' ')[0].to_i
         end
         puts 'total lines: ' + total_lines.to_s
