@@ -27,6 +27,28 @@ class Hansard::HouseCommonsParser
 
   private
 
+    def handle_non_procedural_section section, debates
+      debate = DebatesSection.new
+      debate.column = @column
+
+      section.children.each do |node|
+        if node.elem?
+          name = node.name
+          if name == 'title'
+            debate.title = node.inner_html
+          elsif name == 'p'
+            if (match = /^(\d\d?\.\d\d (am|pm))$/.match node.inner_html)
+              debate.time_text = match[0]
+              debate.time = Time.parse(match[0].gsub('.',':'))
+            end
+          end
+        end
+      end
+
+      debate.parent_section = debates
+      debates.sections << debate
+    end
+
     def handle_procedural_section section, debates
       procedural = ProceduralSection.new
       procedural.column = @column
@@ -143,18 +165,12 @@ class Hansard::HouseCommonsParser
       
     end
 
-    def handle_non_procedural_section title, section, debates
-      debate = DebatesSection.new
-      debate.parent_section = debates
-      debates.sections << debate
-    end
-
     def handle_section section, debates
       if (title = section.at('title/text()'))
         if title.to_s.strip.downcase == 'prayers'
           handle_procedural_section section, debates
         else
-          handle_non_procedural_section title, section, debates
+          handle_non_procedural_section section, debates
         end
       else
         raise 'unexpected to find section with no title: ' + section.to_s

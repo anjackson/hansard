@@ -169,23 +169,23 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
     @third_section.should be_an_instance_of(DebatesSection)
   end
 
-  # it 'should set text on first section in debates' do
-    # @third_section.text.should == '<p id="S6CV0089P0-00361" align="center">[MR. SPEAKER <i>in the Chair</i>]</p>'
-  # end
-# 
-  # it 'should set title on first section in debates' do
-    # @third_section.title.should == 'PRAYERS'
-  # end
-# 
-  # it 'should set column on first section in debates' do
-    # @third_section.column.should == '1'
-  # end
-# 
-  # it 'should set xml id on first section in debates' do
-    # @third_section.xml_id.should == 'S6CV0089P0-00361'
-  # end
-# 
-  it 'should set debates parent on first section in debates' do
+  it 'should set time text on third section in debates' do
+    @third_section.time_text.should == '3.30 pm'
+  end
+
+  it 'should set time on third section in debates' do
+    @third_section.time.strftime('%H:%M:%S').should == '15:30:00'
+  end
+
+  it 'should set title on third section in debates' do
+    @third_section.title.should == 'Social Security White Paper'
+  end
+
+  it 'should set column on third section in debates' do
+    @third_section.column.should == '21'
+  end
+
+  it 'should set debates parent on third section in debates' do
     @third_section.parent_section_id.should == @sitting.debates.id
     @third_section.parent_section.should == @sitting.debates
   end
