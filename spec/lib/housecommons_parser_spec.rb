@@ -12,7 +12,7 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
     @sitting = parse_hansard 's6cv0089p0/housecommons_1985_12_16.xml'
     @sitting.save!
     @oral_questions = @sitting.debates.oral_questions
-    @first_oral_question = @oral_questions.questions.first
+    @first_question_group = @oral_questions.groups.first
   end
   
   it 'should create first section in debates' do
@@ -42,27 +42,27 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
     @sitting.debates.sections.first.section.should == @sitting.debates
   end
 
-  it 'should create oral questions section' do
+  it 'should create oral questions' do
     @oral_questions.should_not be_nil
-    @oral_questions.should be_an_instance_of(OralQuestionsSection)
+    @oral_questions.should be_an_instance_of(OralQuestions)
   end
 
-  it 'should set debates parent on oral questions section' do
+  it 'should set debates parent on oral questions' do
     @oral_questions.section_id.should == @sitting.debates.id
     @oral_questions.section.should == @sitting.debates
   end
 
-  it 'should set title on oral questions section' do
+  it 'should set title on oral questions' do
     @oral_questions.title.should == 'Oral Answers to Questions'
   end
 
-  it 'should set first question on oral questions section' do
-    @first_oral_question.should_not be_nil
-    @first_oral_question.should be_an_instance_of(OralQuestionSection)
+  it 'should set first section on oral questions' do
+    @first_question_group.should_not be_nil
+    @first_question_group.should be_an_instance_of(OralQuestionsSection)
   end
 
   it 'should set title on first oral question section' do
-    @first_oral_question.title.should == 'ENERGY'
+    @first_question_group.title.should == 'ENERGY'
   end
 
   it_should_behave_like "All sittings"

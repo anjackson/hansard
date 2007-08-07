@@ -1,0 +1,2 @@
+class DebatesSubSection < Section
+end
