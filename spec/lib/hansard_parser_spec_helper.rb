@@ -36,7 +36,7 @@ describe "All commons sittings", :shared => true do
 
   it 'should create debates section' do
     @sitting.debates.should_not be_nil
-    @sitting.debates.should be_an_instance_of(DebatesSection)
+    @sitting.debates.should be_an_instance_of(Debates)
   end
 
 end

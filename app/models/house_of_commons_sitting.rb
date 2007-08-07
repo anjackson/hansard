@@ -1,5 +1,5 @@
 class HouseOfCommonsSitting < Sitting
 
-  has_one :debates, :class_name => "DebatesSection"
+  has_one :debates, :class_name => "Debates"
 
 end

@@ -159,7 +159,7 @@ class Hansard::HouseCommonsParser
     end
 
     def handle_debates sitting, debates
-      sitting.debates = DebatesSection.new
+      sitting.debates = Debates.new
       debates.children.each do |node|
         if node.elem?
           name = node.name

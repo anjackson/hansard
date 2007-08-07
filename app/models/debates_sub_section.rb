@@ -1,2 +1,0 @@
-class DebatesSubSection < Section
-end
