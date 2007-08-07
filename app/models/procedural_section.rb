@@ -1,7 +1,7 @@
-class ProceduralSection < Section
+class ProceduralSection < DebatesSubSection
 
   belongs_to :section
-  has_one :contribution
+  has_one :contribution, :class_name => "ProceduralContribution"
 
   def text= value
     self.contribution = ProceduralContribution.new unless self.contribution

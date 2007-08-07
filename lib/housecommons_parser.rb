@@ -50,10 +50,40 @@ class Hansard::HouseCommonsParser
       procedural.section = debates
       debates.sections << procedural
     end
-    
+
+    def handle_oral_question section, oral_questions
+      oral_question = OralQuestionSection.new
+
+      section.children.each do |child|
+        if child.elem?
+          name = child.name
+          if name == 'title'
+            oral_question.title = child.inner_html
+          end
+        end
+      end
+      oral_question.section = oral_questions
+      oral_questions.questions << oral_question      
+    end
+
     def handle_oral_questions section, debates
       oral_questions = OralQuestionsSection.new
       
+      section.children.each do |child|
+        if child.elem?
+          name = child.name
+          if name == 'title'
+            oral_questions.title = child.inner_html
+          elsif name == 'section'
+            handle_oral_question child, oral_questions
+          elsif name == 'col'
+            @column = child.inner_html
+          else
+            
+          end
+        end
+      end
+
       oral_questions.section = debates
       debates.sections << oral_questions
     end

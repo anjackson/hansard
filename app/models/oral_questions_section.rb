@@ -1,6 +1,6 @@
-class OralQuestionsSection < Section
+class OralQuestionsSection < DebatesSubSection
 
   belongs_to :section
-  has_many :sections
+  has_many :questions, :class_name => "OralQuestionSection"
 
 end
