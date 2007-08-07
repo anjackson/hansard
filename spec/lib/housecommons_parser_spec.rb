@@ -11,12 +11,16 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
 
     @sitting = parse_hansard 's6cv0089p0/housecommons_1985_12_16.xml'
     @sitting.save!
+
+    @first_section = @sitting.debates.sections.first
+
     @oral_questions = @sitting.debates.oral_questions
     @first_questions_section = @sitting.debates.oral_questions.sections.first
     @first_question = @sitting.debates.oral_questions.sections.first.questions.first
     @first_question_contribution = @first_question.contributions.first
-
     @second_question_contribution = @first_question.contributions[1]
+
+    @third_section = @sitting.debates.sections[2]
   end
 
   after(:all) do
@@ -25,32 +29,33 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
     Contribution.delete_all
   end
 
+
   it 'should create first section in debates' do
-    section = @sitting.debates.sections.first
-    section.should_not be_nil
-    section.should be_an_instance_of(ProceduralSection)
+    @first_section.should_not be_nil
+    @first_section.should be_an_instance_of(ProceduralSection)
   end
 
   it 'should set text on first section in debates' do
-    @sitting.debates.sections.first.text.should == '<p id="S6CV0089P0-00361" align="center">[MR. SPEAKER <i>in the Chair</i>]</p>'
+    @first_section.text.should == '<p id="S6CV0089P0-00361" align="center">[MR. SPEAKER <i>in the Chair</i>]</p>'
   end
 
   it 'should set title on first section in debates' do
-    @sitting.debates.sections.first.title.should == 'PRAYERS'
+    @first_section.title.should == 'PRAYERS'
   end
 
   it 'should set column on first section in debates' do
-    @sitting.debates.sections.first.column.should == '1'
+    @first_section.column.should == '1'
   end
 
   it 'should set xml id on first section in debates' do
-    @sitting.debates.sections.first.xml_id.should == 'S6CV0089P0-00361'
+    @first_section.xml_id.should == 'S6CV0089P0-00361'
   end
 
   it 'should set debates parent on first section in debates' do
-    @sitting.debates.sections.first.parent_section_id.should == @sitting.debates.id
-    @sitting.debates.sections.first.parent_section.should == @sitting.debates
+    @first_section.parent_section_id.should == @sitting.debates.id
+    @first_section.parent_section.should == @sitting.debates
   end
+
 
   it 'should create oral questions' do
     @oral_questions.should_not be_nil
@@ -66,6 +71,7 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
     @oral_questions.title.should == 'Oral Answers to Questions'
   end
 
+
   it 'should set first section on oral questions' do
     @first_questions_section.should_not be_nil
     @first_questions_section.should be_an_instance_of(OralQuestionsSection)
@@ -80,6 +86,7 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
     @first_questions_section.title.should == 'ENERGY'
   end
 
+
   it 'should set first oral question' do
     @first_question.should_not be_nil
     @first_question.should be_an_instance_of(OralQuestionSection)
@@ -93,6 +100,7 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
   it 'should set title on first oral question' do
     @first_question.title.should == 'Scottish Coalfield'
   end
+
 
   it 'should set first oral question contribution' do
     @first_question_contribution.should_not be_nil
@@ -154,6 +162,33 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
   it 'should set column on second oral question contribution' do
     @second_question_contribution.column.should == '1'
   end
+
+
+  # it 'should create third section in debates' do
+    # @third_section.should_not be_nil
+    # @third_section.should be_an_instance_of(ProceduralSection)
+  # end
+# 
+  # it 'should set text on first section in debates' do
+    # @third_section.text.should == '<p id="S6CV0089P0-00361" align="center">[MR. SPEAKER <i>in the Chair</i>]</p>'
+  # end
+# 
+  # it 'should set title on first section in debates' do
+    # @third_section.title.should == 'PRAYERS'
+  # end
+# 
+  # it 'should set column on first section in debates' do
+    # @third_section.column.should == '1'
+  # end
+# 
+  # it 'should set xml id on first section in debates' do
+    # @third_section.xml_id.should == 'S6CV0089P0-00361'
+  # end
+# 
+  # it 'should set debates parent on first section in debates' do
+    # @third_section.parent_section_id.should == @sitting.debates.id
+    # @third_section.parent_section.should == @sitting.debates
+  # end
 
   
   it_should_behave_like "All sittings"

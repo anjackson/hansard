@@ -27,20 +27,20 @@ class Hansard::HouseCommonsParser
 
   private
 
-    def handle_section section, debates
+    def handle_procedural_section section, debates
       procedural = ProceduralSection.new
       procedural.column = @column
 
-      section.children.each do |child|
-        if child.elem?
-          name = child.name
+      section.children.each do |node|
+        if node.elem?
+          name = node.name
           if name == 'title'
-            procedural.title = child.inner_html
+            procedural.title = node.inner_html
           elsif name == 'p'
-            procedural.xml_id = child.attributes['id']
-            procedural.text = child.to_s
+            procedural.xml_id = node.attributes['id']
+            procedural.text = node.to_s
           elsif name == 'col'
-            @column = child.inner_html
+            @column = node.inner_html
           else
             
           end
@@ -51,7 +51,6 @@ class Hansard::HouseCommonsParser
       debates.sections << procedural
     end
 
-    # <p id="S6CV0089P0-00362">1. <member>Mr. Douglas</member><membercontribution> asked the Secretary of State for Energy if he will make a statement on visits by Ministers in his Department to pits in the Scottish coalfield.</membercontribution></p>
     def handle_question_contribution element, question_section
       contribution = question_section.contributions.create({
          :xml_id => element.attributes['id'],
@@ -60,17 +59,19 @@ class Hansard::HouseCommonsParser
 
       contribution.section = question_section
       
-      element.children.each do |child|
-        if child.elem?
-          name = child.name
+      element.children.each do |node|
+        if node.elem?
+          name = node.name
           if name == 'member'
-            contribution.member = child.inner_html
+            contribution.member = node.inner_html
           elsif name == 'membercontribution'
-            contribution.text = child.inner_html
+            contribution.text = node.inner_html
+          else
+            raise 'unexpected element: ' + name + ': ' + node.to_s
           end
 
-        elsif child.text?
-          text = child.to_s.strip
+        elsif node.text?
+          text = node.to_s.strip
           if (match = /^(\d+.)/.match text)
             contribution.oral_question_no = match[1]
           elsif text.size > 0
@@ -83,13 +84,13 @@ class Hansard::HouseCommonsParser
     def handle_oral_question_section section, questions
       question_section = OralQuestionSection.new
       
-      section.children.each do |child|
-        if child.elem?
-          name = child.name
+      section.children.each do |node|
+        if node.elem?
+          name = node.name
           if name == 'title'
-            question_section.title = child.inner_html
+            question_section.title = node.inner_html
           elsif name == 'p'
-            handle_question_contribution child, question_section
+            handle_question_contribution node, question_section
           end
         end
       end
@@ -101,13 +102,13 @@ class Hansard::HouseCommonsParser
     def handle_oral_questions_section section, oral_questions
       questions_section = OralQuestionsSection.new
 
-      section.children.each do |child|
-        if child.elem?
-          name = child.name
+      section.children.each do |node|
+        if node.elem?
+          name = node.name
           if name == 'title'
-            questions_section.title = child.inner_html
+            questions_section.title = node.inner_html
           elsif name == 'section'
-            handle_oral_question_section child, questions_section
+            handle_oral_question_section node, questions_section
           end
         end
       end
@@ -119,15 +120,15 @@ class Hansard::HouseCommonsParser
     def handle_oral_questions section, debates
       oral_questions = OralQuestions.new
       
-      section.children.each do |child|
-        if child.elem?
-          name = child.name
+      section.children.each do |node|
+        if node.elem?
+          name = node.name
           if name == 'title'
-            oral_questions.title = child.inner_html
+            oral_questions.title = node.inner_html
           elsif name == 'section'
-            handle_oral_questions_section child, oral_questions
+            handle_oral_questions_section node, oral_questions
           elsif name == 'col'
-            @column = child.inner_html
+            @column = node.inner_html
           else
             
           end
@@ -142,24 +143,39 @@ class Hansard::HouseCommonsParser
       
     end
 
+    def handle_non_procedural_section title, section, debates
+    end
+
+    def handle_section section, debates
+      if (title = section.at('title/text()'))
+        if title.to_s.strip.downcase == 'prayers'
+          handle_procedural_section section, debates
+        else
+          handle_non_procedural_section title, section, debates
+        end
+      else
+        raise 'unexpected to find section with no title: ' + section.to_s
+      end
+    end
+
     def handle_debates sitting, debates
       sitting.debates = DebatesSection.new
-      debates.children.each do |child|
-        if child.elem?
-          name = child.name
+      debates.children.each do |node|
+        if node.elem?
+          name = node.name
           if name == "section"
-            handle_section child, sitting.debates
+            handle_section node, sitting.debates
           elsif name == "oralquestions"
-            handle_oral_questions child, sitting.debates
+            handle_oral_questions node, sitting.debates
           elsif name == "image"
             handle_image
           elsif name == "col"
-            @column = child.inner_html
+            @column = node.inner_html
           else
             raise 'unknown debates section type: ' + name
           end
-        elsif child.text?          
-          raise 'unexpected text outside of section: ' + child.to_s if child.to_s.strip.size > 0 
+        elsif node.text?          
+          raise 'unexpected text outside of section: ' + node.to_s if node.to_s.strip.size > 0 
         end
       end
     end
