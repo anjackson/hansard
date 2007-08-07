@@ -13,7 +13,7 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
     @sitting.save!
     @oral_questions = @sitting.debates.oral_questions
     @first_questions_section = @sitting.debates.oral_questions.sections.first
-    @first_question_section = @sitting.debates.oral_questions.sections.first.questions.first
+    @first_question = @sitting.debates.oral_questions.sections.first.questions.first
   end
 
   after(:all) do
@@ -75,6 +75,20 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
 
   it 'should set title on first oral question section' do
     @first_questions_section.title.should == 'ENERGY'
+  end
+
+  it 'should set first oral question' do
+    @first_question.should_not be_nil
+    @first_question.should be_an_instance_of(OralQuestionSection)
+  end
+
+  it 'should set parent section on first oral question' do
+    @first_question.parent_section_id.should == @first_questions_section.id
+    @first_question.parent_section.should == @first_questions_section
+  end
+
+  it 'should set title on first oral question' do
+    @first_question.title.should == 'Scottish Coalfield'
   end
 
   it_should_behave_like "All sittings"

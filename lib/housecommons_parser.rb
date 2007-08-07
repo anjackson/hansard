@@ -51,25 +51,40 @@ class Hansard::HouseCommonsParser
       debates.sections << procedural
     end
 
-    def handle_oral_question_section child, question_section
-    end
-
-    def handle_oral_questions_section section, oral_questions
-      question_section = OralQuestionsSection.new
-
+    def handle_oral_question_section section, questions_section
+      question_section = OralQuestionSection.new
+      
       section.children.each do |child|
         if child.elem?
           name = child.name
           if name == 'title'
             question_section.title = child.inner_html
           elsif name == 'section'
-            handle_oral_question_section child, question_section
+            # handle_oral_question_section child, questions_section
           end
         end
       end
 
-      question_section.parent_section = oral_questions
-      oral_questions.sections << question_section      
+      questions_section.parent_section = questions_section
+      questions_section.questions << question_section
+    end
+
+    def handle_oral_questions_section section, oral_questions
+      questions_section = OralQuestionsSection.new
+
+      section.children.each do |child|
+        if child.elem?
+          name = child.name
+          if name == 'title'
+            questions_section.title = child.inner_html
+          elsif name == 'section'
+            handle_oral_question_section child, questions_section
+          end
+        end
+      end
+
+      questions_section.parent_section = oral_questions
+      oral_questions.sections << questions_section      
     end
 
     def handle_oral_questions section, debates
