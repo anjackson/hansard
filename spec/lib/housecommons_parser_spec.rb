@@ -21,6 +21,7 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
     @second_question_contribution = @first_question.contributions[1]
 
     @third_section = @sitting.debates.sections[2]
+    @third_section_first_contribution = @third_section.contributions.first
   end
 
   after(:all) do
@@ -188,6 +189,29 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
   it 'should set debates parent on third section in debates' do
     @third_section.parent_section_id.should == @sitting.debates.id
     @third_section.parent_section.should == @sitting.debates
+  end
+
+
+  it 'should set first procedural contribution on third section' do
+    @third_section_first_contribution.should_not be_nil
+    @third_section_first_contribution.should be_an_instance_of(ProceduralContribution)
+  end
+
+  it 'should set first procedural contribution text on third section' do
+    @third_section_first_contribution.text.should == '3.30 pm'
+  end
+
+  it 'should set first procedural contribution xml id on third section' do
+    @third_section_first_contribution.xml_id.should == 'S6CV0089P0-00525'
+  end
+
+  it 'should set first procedural contribution column on third section' do
+    @third_section_first_contribution.column.should == '21'
+  end
+  
+  it 'should set first procedural contribution parent on third section' do
+    @third_section_first_contribution.section_id.should == @third_section.id 
+    @third_section_first_contribution.section.should == @third_section 
   end
 
   

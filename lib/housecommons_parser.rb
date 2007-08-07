@@ -7,6 +7,7 @@ require 'hpricot'
 # ruby script/generate rspec_model contribution type:string xml_id:string member:string memberconstituency:string membercontribution:string column:string oral_question_no:string
 
 module Hansard
+  TIME_PATTERN = /^(\d\d?\.\d\d (am|pm))$/
 end
 
 class Hansard::HouseCommonsParser
@@ -37,9 +38,10 @@ class Hansard::HouseCommonsParser
           if name == 'title'
             debate.title = node.inner_html
           elsif name == 'p'
-            if (match = /^(\d\d?\.\d\d (am|pm))$/.match node.inner_html)
+            if (match = Hansard::TIME_PATTERN.match node.inner_html)
               debate.time_text = match[0]
               debate.time = Time.parse(match[0].gsub('.',':'))
+              handle_procedural_contribution node, debate
             end
           end
         end
@@ -47,6 +49,17 @@ class Hansard::HouseCommonsParser
 
       debate.parent_section = debates
       debates.sections << debate
+    end
+
+    # <p id="S6CV0089P0-00525">3.30 pm</p
+    def handle_procedural_contribution node, debate
+      procedural = ProceduralContribution.new({
+        :xml_id => node.attributes['id'],
+        :column => @column,
+        :text => node.inner_html
+      })
+      procedural.section = debate
+      debate.contributions << procedural
     end
 
     def handle_procedural_section section, debates
