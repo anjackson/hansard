@@ -12,9 +12,16 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
     @sitting = parse_hansard 's6cv0089p0/housecommons_1985_12_16.xml'
     @sitting.save!
     @oral_questions = @sitting.debates.oral_questions
-    @first_question_group = @oral_questions.groups.first
+    @first_questions_section = @sitting.debates.oral_questions.sections.first
+    @first_question_section = @sitting.debates.oral_questions.sections.first.questions.first
   end
-  
+
+  after(:all) do
+    Sitting.delete_all
+    Section.delete_all
+    Contribution.delete_all
+  end
+
   it 'should create first section in debates' do
     section = @sitting.debates.sections.first
     section.should_not be_nil
@@ -38,8 +45,8 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
   end
 
   it 'should set debates parent on first section in debates' do
-    @sitting.debates.sections.first.section_id.should == @sitting.debates.id
-    @sitting.debates.sections.first.section.should == @sitting.debates
+    @sitting.debates.sections.first.parent_section_id.should == @sitting.debates.id
+    @sitting.debates.sections.first.parent_section.should == @sitting.debates
   end
 
   it 'should create oral questions' do
@@ -48,8 +55,8 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
   end
 
   it 'should set debates parent on oral questions' do
-    @oral_questions.section_id.should == @sitting.debates.id
-    @oral_questions.section.should == @sitting.debates
+    @oral_questions.parent_section_id.should == @sitting.debates.id
+    @oral_questions.parent_section.should == @sitting.debates
   end
 
   it 'should set title on oral questions' do
@@ -57,12 +64,17 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
   end
 
   it 'should set first section on oral questions' do
-    @first_question_group.should_not be_nil
-    @first_question_group.should be_an_instance_of(OralQuestionsSection)
+    @first_questions_section.should_not be_nil
+    @first_questions_section.should be_an_instance_of(OralQuestionsSection)
+  end
+
+  it 'should set parent on first oral questions section' do
+    @first_questions_section.parent_section_id.should == @oral_questions.id
+    @first_questions_section.parent_section.should == @oral_questions
   end
 
   it 'should set title on first oral question section' do
-    @first_question_group.title.should == 'ENERGY'
+    @first_questions_section.title.should == 'ENERGY'
   end
 
   it_should_behave_like "All sittings"

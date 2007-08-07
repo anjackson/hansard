@@ -7,7 +7,7 @@ class CreateSections < ActiveRecord::Migration
       t.string  :time_text
       t.string  :column
       t.integer :sitting_id
-      t.integer :section_id
+      t.integer :parent_section_id
     end
   end
 

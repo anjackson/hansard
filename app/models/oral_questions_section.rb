@@ -1,6 +1,6 @@
 class OralQuestionsSection < OralQuestions
 
-  belongs_to :section, :class_name => "OralQuestions"
-  has_many :questions, :class_name => "OralQuestionSection"
+  belongs_to :parent_section, :class_name => "OralQuestions", :foreign_key => 'parent_section_id'
+  has_many :questions, :class_name => "OralQuestionSection", :foreign_key => 'parent_section_id'
 
 end
