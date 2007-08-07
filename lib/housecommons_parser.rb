@@ -27,8 +27,28 @@ class Hansard::HouseCommonsParser
 
   private
 
-    def handle_section debates
-      debates.sections << ProceduralSection.new
+    def handle_section section, debates
+      procedural = ProceduralSection.new
+      procedural.column = @column
+
+      section.children.each do |child|
+        if child.elem?
+          name = child.name
+          if name == 'title'
+            procedural.title = child.inner_html
+          elsif name == 'p'
+            procedural.xml_id = child.attributes['id']
+            procedural.text = child.to_s
+          elsif name == 'col'
+            @column = child.inner_html
+          else
+            
+          end
+        end
+      end
+
+      procedural.section = debates
+      debates.sections << procedural
     end
     
     def handle_oral_questions
@@ -37,6 +57,28 @@ class Hansard::HouseCommonsParser
     
     def handle_image
       
+    end
+
+    def handle_debates sitting, debates
+      sitting.debates = DebatesSection.new
+      debates.children.each do |child|
+        if child.elem?
+          name = child.name
+          if name == "section"
+            handle_section child, sitting.debates
+          elsif name == "oralquestions"
+            handle_oral_questions
+          elsif name == "image"
+            handle_image
+          elsif name == "col"
+            @column = child.inner_html
+          else
+            raise 'unknown debates section type: ' + name
+          end
+        elsif child.text?          
+          raise 'unexpected text outside of section: ' + child.to_s if child.to_s.strip.size > 0 
+        end
+      end
     end
 
     def create_house_commons
@@ -58,23 +100,7 @@ class Hansard::HouseCommonsParser
       end
 
       if (debates = @doc.at('housecommons/debates'))
-        sitting.debates = DebatesSection.new
-        debates.children.each do |child|
-          if child.elem?
-            name = child.name
-            if name == "section"
-              handle_section sitting.debates
-            elsif name == "oralquestions"
-              handle_oral_questions
-            elsif name == "image"
-              handle_image
-            elsif name == "col"
-              @column = child.inner_html
-            else
-              raise 'unknown debates section type: ' + name
-            end
-          end
-        end
+        handle_debates sitting, debates
       end
 
       sitting

@@ -38,5 +38,5 @@ describe "All commons sittings", :shared => true do
     @sitting.debates.should_not be_nil
     @sitting.debates.should be_an_instance_of(DebatesSection)
   end
-  
+
 end
