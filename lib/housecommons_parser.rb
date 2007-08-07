@@ -144,6 +144,9 @@ class Hansard::HouseCommonsParser
     end
 
     def handle_non_procedural_section title, section, debates
+      debate = DebatesSection.new
+      debate.parent_section = debates
+      debates.sections << debate
     end
 
     def handle_section section, debates

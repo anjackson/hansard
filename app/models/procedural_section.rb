@@ -1,6 +1,5 @@
 class ProceduralSection < DebatesSection
 
-  belongs_to :parent_section, :class_name => "Section", :foreign_key => 'parent_section_id'
   has_one :contribution, :class_name => "ProceduralContribution"
 
   def text= value
