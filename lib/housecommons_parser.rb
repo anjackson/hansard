@@ -66,12 +66,15 @@ class Hansard::HouseCommonsParser
           if name == 'member'
             contribution.member = child.inner_html
           elsif name == 'membercontribution'
-            contribution.text = child.inner_html.strip
+            contribution.text = child.inner_html
           end
 
         elsif child.text?
-          if (match = /^(\d+.)/.match child.to_s.strip)
+          text = child.to_s.strip
+          if (match = /^(\d+.)/.match text)
             contribution.oral_question_no = match[1]
+          elsif text.size > 0
+            raise 'unexpected text: ' + text
           end
         end
       end

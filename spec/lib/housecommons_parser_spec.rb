@@ -14,7 +14,9 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
     @oral_questions = @sitting.debates.oral_questions
     @first_questions_section = @sitting.debates.oral_questions.sections.first
     @first_question = @sitting.debates.oral_questions.sections.first.questions.first
-    @first_question_contribution = @first_question.contributions.first 
+    @first_question_contribution = @first_question.contributions.first
+
+    @second_question_contribution = @first_question.contributions[1]
   end
 
   after(:all) do
@@ -115,13 +117,45 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
   end
 
   it 'should set member contribution on first oral question contribution' do
-    @first_question_contribution.member_contribution.should == 'asked the Secretary of State for Energy if he will make a statement on visits by Ministers in his Department to pits in the Scottish coalfield.'
+    @first_question_contribution.member_contribution.should == ' asked the Secretary of State for Energy if he will make a statement on visits by Ministers in his Department to pits in the Scottish coalfield.'
   end
 
   it 'should set column on first oral question contribution' do
     @first_question_contribution.column.should == '1'
   end
 
+
+  it 'should set second oral question contribution' do
+    @second_question_contribution.should_not be_nil
+    @second_question_contribution.should be_an_instance_of(OralQuestionContribution)
+  end
+
+  it 'should set parent section on second oral question contribution' do
+    @second_question_contribution.section_id.should == @first_question.id
+    @second_question_contribution.section.should == @first_question
+  end
+
+  it 'should set xml_id on second oral question contribution' do
+    @second_question_contribution.xml_id.should == 'S6CV0089P0-00363'
+  end
+
+  it 'should not set oral question number on second oral question contribution' do
+    @second_question_contribution.oral_question_no.should be_nil
+  end
+
+  it 'should set member on second oral question contribution' do
+    @second_question_contribution.member.should == 'The Parliamentary Under-Secretary of State for Energy (Mr. David Hunt)'
+  end
+
+  it 'should set member contribution on second oral question contribution' do
+    @second_question_contribution.member_contribution.should == ': I was extremely impressed during my recent visit to the Scottish coalfield to hear of the measures being taken to reduce costs and improve productivity.'
+  end
+
+  it 'should set column on second oral question contribution' do
+    @second_question_contribution.column.should == '1'
+  end
+
+  
   it_should_behave_like "All sittings"
   it_should_behave_like "All commons sittings"
 end
