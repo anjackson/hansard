@@ -13,6 +13,7 @@ end
 class Hansard::HouseCommonsParser
 
   def initialize file
+    @unexpected = false
     @doc = Hpricot.XML open(file)
   end
 
@@ -67,7 +68,11 @@ class Hansard::HouseCommonsParser
           elsif name == 'membercontribution'
             contribution.text = node.inner_html.gsub("\r\n","\n")
           else
-            puts 'unexpected element: ' + name + ': ' + node.to_s
+            unless @unexpected
+              puts 'unexpected element: ' + name + ': ' + node.to_s
+              puts 'will suppress rest of unexpected messages'
+            end
+            @unexpected = true
           end
         end
       end
@@ -133,7 +138,11 @@ class Hansard::HouseCommonsParser
           if (match = /^(\d+.)/.match text)
             contribution.oral_question_no = match[1]
           elsif text.size > 0
-            raise 'unexpected text: ' + text
+            unless @unexpected
+              puts 'unexpected text: ' + text
+              puts 'will suppress rest of unexpected messages'
+            end
+            @unexpected = true
           end
         end
       end
