@@ -42,6 +42,8 @@ class Hansard::HouseCommonsParser
               debate.time_text = match[0]
               debate.time = Time.parse(match[0].gsub('.',':'))
               handle_procedural_contribution node, debate
+            else
+              handle_member_contribution node, debate
             end
           end
         end
@@ -51,7 +53,28 @@ class Hansard::HouseCommonsParser
       debates.sections << debate
     end
 
-    # <p id="S6CV0089P0-00525">3.30 pm</p
+    def handle_member_contribution element, debate
+      contribution = MemberContribution.new({
+         :xml_id => element.attributes['id'],
+         :column => @column
+      })
+      
+      element.children.each do |node|
+        if node.elem?
+          name = node.name
+          if name == 'member'
+            contribution.member = node.inner_html
+          elsif name == 'membercontribution'
+            contribution.text = node.inner_html.gsub("\r\n","\n")
+          else
+            puts 'unexpected element: ' + name + ': ' + node.to_s
+          end
+        end
+      end
+      contribution.section = debate
+      debate.contributions << contribution
+    end
+
     def handle_procedural_contribution node, debate
       procedural = ProceduralContribution.new({
         :xml_id => node.attributes['id'],
@@ -100,7 +123,7 @@ class Hansard::HouseCommonsParser
           if name == 'member'
             contribution.member = node.inner_html
           elsif name == 'membercontribution'
-            contribution.text = node.inner_html
+            contribution.text = node.inner_html.chars.gsub("\r\n","\n")
           else
             raise 'unexpected element: ' + name + ': ' + node.to_s
           end
