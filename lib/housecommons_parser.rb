@@ -51,7 +51,33 @@ class Hansard::HouseCommonsParser
       debates.sections << procedural
     end
 
-    def handle_oral_question_section section, questions_section
+    # <p id="S6CV0089P0-00362">1. <member>Mr. Douglas</member><membercontribution> asked the Secretary of State for Energy if he will make a statement on visits by Ministers in his Department to pits in the Scottish coalfield.</membercontribution></p>
+    def handle_question_contribution element, question_section
+      contribution = question_section.contributions.create({
+         :xml_id => element.attributes['id'],
+         :column => @column
+      })
+
+      contribution.section = question_section
+      
+      element.children.each do |child|
+        if child.elem?
+          name = child.name
+          if name == 'member'
+            contribution.member = child.inner_html
+          elsif name == 'membercontribution'
+            contribution.text = child.inner_html.strip
+          end
+
+        elsif child.text?
+          if (match = /^(\d+.)/.match child.to_s.strip)
+            contribution.oral_question_no = match[1]
+          end
+        end
+      end
+    end
+
+    def handle_oral_question_section section, questions
       question_section = OralQuestionSection.new
       
       section.children.each do |child|
@@ -59,14 +85,14 @@ class Hansard::HouseCommonsParser
           name = child.name
           if name == 'title'
             question_section.title = child.inner_html
-          elsif name == 'section'
-            # handle_oral_question_section child, questions_section
+          elsif name == 'p'
+            handle_question_contribution child, question_section
           end
         end
       end
 
-      questions_section.parent_section = questions_section
-      questions_section.questions << question_section
+      question_section.parent_section = questions
+      questions.questions << question_section
     end
 
     def handle_oral_questions_section section, oral_questions

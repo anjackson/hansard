@@ -1,5 +1,8 @@
 class OralQuestionContribution < MemberContribution
 
-  belongs_to :parent_section, :class_name => "OralQuestionSection", :foreign_key => 'parent_section_id'
+  belongs_to :section, :class_name => "OralQuestionSection", :foreign_key => 'section_id'
 
+  def member_contribution
+    text
+  end
 end

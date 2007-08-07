@@ -14,6 +14,7 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
     @oral_questions = @sitting.debates.oral_questions
     @first_questions_section = @sitting.debates.oral_questions.sections.first
     @first_question = @sitting.debates.oral_questions.sections.first.questions.first
+    @first_question_contribution = @first_question.contributions.first 
   end
 
   after(:all) do
@@ -89,6 +90,36 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
 
   it 'should set title on first oral question' do
     @first_question.title.should == 'Scottish Coalfield'
+  end
+
+  it 'should set first oral question contribution' do
+    @first_question_contribution.should_not be_nil
+    @first_question_contribution.should be_an_instance_of(OralQuestionContribution)
+  end
+
+  it 'should set parent section on first oral question contribution' do
+    @first_question_contribution.section_id.should == @first_question.id
+    @first_question_contribution.section.should == @first_question
+  end
+
+  it 'should set xml_id on first oral question contribution' do
+    @first_question_contribution.xml_id.should == 'S6CV0089P0-00362'
+  end
+
+  it 'should set oral question number on first oral question contribution' do
+    @first_question_contribution.oral_question_no.should == '1.'
+  end
+
+  it 'should set member on first oral question contribution' do
+    @first_question_contribution.member.should == 'Mr. Douglas'
+  end
+
+  it 'should set member contribution on first oral question contribution' do
+    @first_question_contribution.member_contribution.should == 'asked the Secretary of State for Energy if he will make a statement on visits by Ministers in his Department to pits in the Scottish coalfield.'
+  end
+
+  it 'should set column on first oral question contribution' do
+    @first_question_contribution.column.should == '1'
   end
 
   it_should_behave_like "All sittings"
