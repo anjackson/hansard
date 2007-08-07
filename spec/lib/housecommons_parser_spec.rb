@@ -40,6 +40,16 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
     @sitting.debates.sections.first.section.should == @sitting.debates
   end
 
+  it 'should create oral questions section' do
+    @sitting.debates.oral_questions.should_not be_nil
+    @sitting.debates.oral_questions.should be_an_instance_of(OralQuestionsSection)
+  end
+
+  it 'should set debates parent on oral questions section' do
+    @sitting.debates.oral_questions.section_id.should == @sitting.debates.id
+    @sitting.debates.oral_questions.section.should == @sitting.debates
+  end
+
   it_should_behave_like "All sittings"
   it_should_behave_like "All commons sittings"
 end

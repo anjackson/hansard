@@ -51,8 +51,11 @@ class Hansard::HouseCommonsParser
       debates.sections << procedural
     end
     
-    def handle_oral_questions
+    def handle_oral_questions section, debates
+      oral_questions = OralQuestionsSection.new
       
+      oral_questions.section = debates
+      debates.sections << oral_questions
     end
     
     def handle_image
@@ -67,7 +70,7 @@ class Hansard::HouseCommonsParser
           if name == "section"
             handle_section child, sitting.debates
           elsif name == "oralquestions"
-            handle_oral_questions
+            handle_oral_questions child, sitting.debates
           elsif name == "image"
             handle_image
           elsif name == "col"
