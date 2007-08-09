@@ -1,2 +1,1 @@
-xml.instruct! :xml, :version=>"1.0" 
-xml << render(:partial => 'oral_question_section', :locals => {:xml_instance => xml})
+
