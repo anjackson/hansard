@@ -1,4 +1,4 @@
-xml = xml_instance_oral_question_section
+xml = xml_instance
 xml.section do
   xml.title(@oral_question_section.title)
 end
