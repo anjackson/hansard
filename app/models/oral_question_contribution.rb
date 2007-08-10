@@ -9,6 +9,7 @@ class OralQuestionContribution < MemberContribution
   
   def to_xml(options={})
     xml = options[:builder] ||= Builder::XmlMarkup.new
+    xml.p(text, :id => xml_id)
   end
 
 end
