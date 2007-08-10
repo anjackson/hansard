@@ -4,3 +4,5 @@ class OralQuestionSection < Section
   has_many :contributions, :class_name => "OralQuestionContribution", :foreign_key => 'section_id'
 
 end
+
+
