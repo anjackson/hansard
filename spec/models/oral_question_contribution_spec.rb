@@ -44,7 +44,6 @@ describe OralQuestionContribution, ".to_xml" do
    
    it "should return a 'p' tag with the id attribute set to the xml_id of the contribution" do
      @oral_question_contribution.xml_id = "testid"
-     print @oral_question_contribution.to_xml
      @oral_question_contribution.to_xml.should have_tag('p[id=testid]')
    end
   
