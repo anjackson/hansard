@@ -15,7 +15,7 @@ describe OralQuestionContribution, " in general" do
   end
   
   it "should have different methods to_xml and activerecord_to_xml" do
-    @oral_question_contribution.to_xml.should_not eql @oral_question_contribution.to_activerecord_xml
+    @oral_question_contribution.to_xml.should_not eql(@oral_question_contribution.to_activerecord_xml)
   end
   
 end
