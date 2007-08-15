@@ -94,14 +94,14 @@ class Hansard::HouseCommonsParser
       procedural = ProceduralSection.new
       procedural.column = @column
 
+      procedural.contributions
       section.children.each do |node|
         if node.elem?
           name = node.name
           if name == 'title'
             procedural.title = node.inner_html
           elsif name == 'p'
-            procedural.xml_id = node.attributes['id']
-            procedural.text = node.to_s
+            handle_procedural_contribution node, procedural
           elsif name == 'col'
             @column = node.inner_html
           else

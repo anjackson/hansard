@@ -69,8 +69,6 @@ describe OralQuestionContribution, ".to_xml" do
      @oral_question_contribution.to_xml.should have_tag('p', :text => nil, :count => 1)
      @oral_question_contribution.to_xml.should have_tag('p member', :count => 1)
    end
-   
-   it "should return a 'p' tag containing a member"
     
 end
 

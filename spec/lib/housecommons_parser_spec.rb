@@ -38,7 +38,7 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
   end
 
   it 'should set text on first section in debates' do
-    @first_section.text.should == '<p id="S6CV0089P0-00361" align="center">[MR. SPEAKER <i>in the Chair</i>]</p>'
+    @first_section.contributions[0].text.should == '[MR. SPEAKER <i>in the Chair</i>]'
   end
 
   it 'should set title on first section in debates' do
@@ -50,7 +50,7 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
   end
 
   it 'should set xml id on first section in debates' do
-    @first_section.xml_id.should == 'S6CV0089P0-00361'
+    @first_section.contributions[0].xml_id.should == 'S6CV0089P0-00361'
   end
 
   it 'should set debates parent on first section in debates' do
@@ -241,7 +241,8 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
     @third_section_second_contribution.section_id.should == @third_section.id 
     @third_section_second_contribution.section.should == @third_section 
   end
-  
+
+
   it_should_behave_like "All sittings"
   it_should_behave_like "All commons sittings"
 end
