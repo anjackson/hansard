@@ -23,6 +23,14 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
     @third_section = @sitting.debates.sections[2]
     @third_section_first_contribution = @third_section.contributions.first
     @third_section_second_contribution = @third_section.contributions[1]
+
+    @seventh_section = @sitting.debates.sections[6]
+    @seventh_section_first_contribution = @seventh_section.contributions.first
+    @seventh_section_second_contribution = @seventh_section.contributions[1]
+    
+    @eighth_section = @sitting.debates.sections[7]
+    @eighth_section_first_contribution = @eighth_section.contributions.first
+    @eighth_section_second_contribution = @eighth_section.contributions[1]
   end
 
   after(:all) do
@@ -226,7 +234,7 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
   end
 
   it 'should set second (member) contribution column on third section' do
-    @third_section_second_contribution.column.should == '21'
+    @third_section_second_contribution.column.should == '21,22,23,24,25'
   end
   
   it 'should set second (member) contribution member on third section' do
@@ -242,6 +250,75 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
     @third_section_second_contribution.section.should == @third_section 
   end
 
+
+  it 'should create list of columns when contribution text contains col element' do
+    @seventh_section_second_contribution.column.should == '47,48'
+  end
+
+
+  it 'should create eighth section in debates' do
+    @eighth_section.should_not be_nil
+    @eighth_section.should be_an_instance_of(ProceduralSection)
+  end
+
+  it 'should set title on eighth section in debates' do
+    @eighth_section.title.should == 'SCOTTISH AFFAIRS'
+  end
+
+  it 'should set column on eighth section in debates' do
+    @eighth_section.column.should == '48'
+  end
+
+  it 'should set debates parent on eighth section in debates' do
+    @eighth_section.parent_section_id.should == @sitting.debates.id
+    @eighth_section.parent_section.should == @sitting.debates
+  end
+
+
+  it 'should set first (procedural) contribution on eighth section' do
+    @eighth_section_first_contribution.should_not be_nil
+    @eighth_section_first_contribution.should be_an_instance_of(ProceduralContribution)
+  end
+
+  it 'should set first (procedural) contribution text on eighth section' do
+    @eighth_section_first_contribution.text.should == '<i>Ordered,</i>'
+  end
+
+  it 'should set first (procedural) contribution xml id on eighth section' do
+    @eighth_section_first_contribution.xml_id.should == 'S6CV0089P0-00671'
+  end
+
+  it 'should set first (procedural) contribution column on eighth section' do
+    @eighth_section_first_contribution.column.should == '48'
+  end
+  
+  it 'should set first (procedural) contribution parent on eighth section' do
+    @eighth_section_first_contribution.section_id.should == @eighth_section.id 
+    @eighth_section_first_contribution.section.should == @eighth_section 
+  end
+
+
+  it 'should set second (procedural) contribution on eighth section' do
+    @eighth_section_second_contribution.should_not be_nil
+    @eighth_section_second_contribution.should be_an_instance_of(ProceduralContribution)
+  end
+
+  it 'should set second (procedural) contribution xml id on eighth section' do
+    @eighth_section_second_contribution.xml_id.should == 'S6CV0089P0-00672'
+  end
+
+  it 'should set second (procedural) contribution column on eighth section' do
+    @eighth_section_second_contribution.column.should == '48'
+  end
+  
+  it 'should set second (procedural) contribution text on eighth section' do
+    @eighth_section_second_contribution.text.should == 'That the matter of the recommendations of the Scottish Tertiary Education Advisory Council concerning higher education in Scotland, being a matter relating exclusively to Scotland, be referred to the Scottish Grand Committee for its consideration.&#x2014;[Mr. <i>Peter Lloyd.</i>]'
+  end
+
+  it 'should set second (procedural) contribution parent on eighth section' do
+    @eighth_section_second_contribution.section_id.should == @eighth_section.id 
+    @eighth_section_second_contribution.section.should == @eighth_section 
+  end
 
   it_should_behave_like "All sittings"
   it_should_behave_like "All commons sittings"

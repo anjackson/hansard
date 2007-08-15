@@ -54,6 +54,20 @@ class Hansard::HouseCommonsParser
       debates.sections << debate
     end
 
+    
+    def handle_contribution_text element, contribution
+      element.children.each do |node|
+        if node.elem?
+          if node.name == 'col'
+            @column = node.inner_html
+            contribution.column += ','+@column
+          end
+        end
+      end
+      contribution.text = element.inner_html.gsub("\r\n","\n")
+    end
+
+    
     def handle_member_contribution element, debate
       contribution = MemberContribution.new({
          :xml_id => element.attributes['id'],
@@ -66,7 +80,7 @@ class Hansard::HouseCommonsParser
           if name == 'member'
             contribution.member = node.inner_html
           elsif name == 'membercontribution'
-            contribution.text = node.inner_html.gsub("\r\n","\n")
+            handle_contribution_text node, contribution
           else
             unless @unexpected
               puts 'unexpected element: ' + name + ': ' + node.to_s
@@ -212,7 +226,7 @@ class Hansard::HouseCommonsParser
 
     def handle_section section, debates
       if (title = section.at('title/text()'))
-        if title.to_s.strip.downcase == 'prayers'
+        if (title.to_s.strip.downcase == 'prayers' or !section.to_s.include?('membercontribution'))
           handle_procedural_section section, debates
         else
           handle_non_procedural_section section, debates
