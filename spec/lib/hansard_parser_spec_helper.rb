@@ -24,7 +24,11 @@ describe "All sittings", :shared => true do
   end
 
   it 'should set start column of sitting' do
-    @sitting.start_column.should == @sitting_column
+    @sitting.start_column.should == @sitting_start_column
+  end
+
+  it 'should set start image of sitting' do
+    @sitting.start_image_src.should == @sitting_start_image
   end
 
   it 'should set sitting opening text, if any' do

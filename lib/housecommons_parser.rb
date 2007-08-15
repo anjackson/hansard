@@ -30,8 +30,10 @@ class Hansard::HouseCommonsParser
   private
 
     def handle_non_procedural_section section, debates
-      debate = DebatesSection.new
-      debate.start_column = @column
+      debate = DebateSection.new({
+        :start_column => @column,
+        :start_image_src => @image
+      })
 
       section.children.each do |node|
         if node.elem?
@@ -61,9 +63,13 @@ class Hansard::HouseCommonsParser
     def handle_contribution_text element, contribution
       element.children.each do |node|
         if node.elem?
-          if node.name == 'col'
-            @column = node.inner_html
+          name = node.name
+          if name == 'col'
+            handle_image_or_column name, node
             contribution.column_range += ','+@column
+          elsif name == 'image'
+            handle_image_or_column name, node
+            contribution.image_src_range += ','+@image
           end
         end
       end
@@ -87,7 +93,8 @@ class Hansard::HouseCommonsParser
     def handle_member_contribution element, debate
       contribution = MemberContribution.new({
          :xml_id => element.attributes['id'],
-         :column_range => @column
+         :column_range => @column,
+         :image_src_range => @image
       })
       
       element.children.each do |node|
@@ -114,17 +121,57 @@ class Hansard::HouseCommonsParser
       procedural = ProceduralContribution.new({
         :xml_id => node.attributes['id'],
         :column_range => @column,
+        :image_src_range => @image,
         :text => node.inner_html.strip
       })
       procedural.section = debate
       debate.contributions << procedural
     end
 
-    def handle_procedural_section section, debates
-      procedural = ProceduralSection.new
-      procedural.start_column = @column
+    def handle_order_of_the_day section, orders
+      order = OrdersOfTheDaySection.new({
+        :start_column => @column,
+        :start_image_src => @image
+      })
+      section.children.each do |node|
+        if node.elem?
+          name = node.name
+          if name == 'title'
+            order.title = node.inner_html
+          elsif name == 'p'
+            handle_procedural_contribution node, order
+          end
+        end
+      end
+      order.parent_section = orders
+      orders.sections << order
+    end
 
-      procedural.contributions
+    def handle_orders_of_the_day section, debates
+      orders = OrdersOfTheDay.new({
+        :start_column => @column,
+        :start_image_src => @image
+      })
+      section.children.each do |node|
+        if node.elem?
+          name = node.name
+          if name == 'title'
+            orders.title = node.inner_html
+          elsif name == 'section'
+            handle_order_of_the_day node, orders
+          end
+        end
+      end
+      orders.parent_section = debates
+      debates.sections << orders
+    end
+
+    def handle_procedural_section section, debates
+      procedural = ProceduralSection.new({
+        :start_column => @column,
+        :start_image_src => @image
+      })
+
       section.children.each do |node|
         if node.elem?
           name = node.name
@@ -132,10 +179,10 @@ class Hansard::HouseCommonsParser
             procedural.title = node.inner_html
           elsif name == 'p'
             handle_procedural_contribution node, procedural
-          elsif name == 'col'
-            @column = node.inner_html
+          elsif (name == 'col' or name == 'image')
+            handle_image_or_column name, node
           else
-            
+            puts 'unexpected element: ' + name + ': ' + node.to_s
           end
         end
       end
@@ -147,7 +194,8 @@ class Hansard::HouseCommonsParser
     def handle_question_contribution element, question_section
       contribution = question_section.contributions.create({
          :xml_id => element.attributes['id'],
-         :column_range => @column
+         :column_range => @column,
+         :image_src_range => @image
       })
 
       contribution.section = question_section
@@ -188,6 +236,10 @@ class Hansard::HouseCommonsParser
             question_section.title = node.inner_html
           elsif name == 'p'
             handle_question_contribution node, question_section
+          elsif (name == 'col' or name == 'image')
+            handle_image_or_column name, node
+          else
+            puts 'unexpected element: ' + name + ': ' + node.to_s
           end
         end
       end
@@ -236,16 +288,24 @@ class Hansard::HouseCommonsParser
       debates.sections << oral_questions
     end
     
-    def handle_image
-      
+    def handle_image_or_column name, node
+      if name == "image"
+        @image = node.attributes['src']
+      elsif name == "col"
+        @column = node.inner_html
+      end
     end
 
     def handle_section section, debates
       if (title = section.at('title/text()'))
-        if (title.to_s.strip.downcase == 'prayers' or !section.to_s.include?('membercontribution'))
-          handle_procedural_section section, debates
-        else
+        title = title.to_s.strip.downcase.squeeze(' ')
+
+        if section.to_s.include?('membercontribution')
           handle_non_procedural_section section, debates
+        elsif title == 'orders of the day'
+          handle_orders_of_the_day section, debates
+        else          
+          handle_procedural_section section, debates
         end
       else
         raise 'unexpected to find section with no title: ' + section.to_s
@@ -261,10 +321,8 @@ class Hansard::HouseCommonsParser
             handle_section node, sitting.debates
           elsif name == "oralquestions"
             handle_oral_questions node, sitting.debates
-          elsif name == "image"
-            handle_image
-          elsif name == "col"
-            @column = node.inner_html
+          elsif (name == 'col' or name == 'image')
+            handle_image_or_column name, node
           else
             raise 'unknown debates section type: ' + name
           end
@@ -276,9 +334,11 @@ class Hansard::HouseCommonsParser
 
     def create_house_commons
       @column = @doc.at('housecommons/col').inner_html
+      @image =  @doc.at('housecommons/image').attributes['src']
 
       sitting = HouseOfCommonsSitting.new({
         :start_column => @column,
+        :start_image_src => @image,
         :title => @doc.at('housecommons/title').inner_html,
         :text => @doc.at('housecommons/p').inner_html,
         :date_text => @doc.at('housecommons/date').inner_html,

@@ -6,7 +6,8 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16.xml" 
     @sitting_date = Date.new(1985,12,16)
     @sitting_date_text = 'Monday 16 December 1985'
     @sitting_title = 'House of Commons' 
-    @sitting_column = '1'
+    @sitting_start_column = '1'
+    @sitting_start_image = 'S6CV0089P0I0010'
     @sitting_text = %Q[<p id="S6CV0089P0-00360" align="center"><i>The House met at half-past Two o'clock</i></p>]
 
     @sitting = parse_hansard 's6cv0089p0/housecommons_1985_12_16.xml'
@@ -31,6 +32,8 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16.xml" 
     @eighth_section = @sitting.debates.sections[7]
     @eighth_section_first_contribution = @eighth_section.contributions.first
     @eighth_section_second_contribution = @eighth_section.contributions[1]
+
+    @orders_of_the_day = @sitting.debates.sections[12]
   end
 
   after(:all) do
@@ -55,6 +58,10 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16.xml" 
 
   it 'should set start column on first section in debates' do
     @first_section.start_column.should == '1'
+  end
+
+  it 'should set start image on first section in debates' do
+    @first_section.start_image_src.should == 'S6CV0089P0I0010'
   end
 
   it 'should set xml id on first section in debates' do
@@ -176,7 +183,7 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16.xml" 
 
   it 'should create third section in debates' do
     @third_section.should_not be_nil
-    @third_section.should be_an_instance_of(DebatesSection)
+    @third_section.should be_an_instance_of(DebateSection)
   end
 
   it 'should set time text on third section in debates' do
@@ -193,6 +200,10 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16.xml" 
 
   it 'should set start column on third section in debates' do
     @third_section.start_column.should == '21'
+  end
+
+  it 'should set start image on third section in debates' do
+    @third_section.start_image_src.should == 'S6CV0089P0I0020'
   end
 
   it 'should set debates parent on third section in debates' do
@@ -277,6 +288,10 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16.xml" 
     @eighth_section.start_column.should == '48'
   end
 
+  it 'should set start image on eighth section in debates' do
+    @eighth_section.start_image_src.should == 'S6CV0089P0I0033'
+  end
+
   it 'should set debates parent on eighth section in debates' do
     @eighth_section.parent_section_id.should == @sitting.debates.id
     @eighth_section.parent_section.should == @sitting.debates
@@ -336,6 +351,29 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16.xml" 
   it 'should set contribution text when contribution contains italics element' do
     text = "<i>It being Seven o'clock, the proceedings lapsed, pursuant to Standing Order No. 6 (Arrangement of public business).</i>"
     @sitting.debates.sections[9].contributions.last.text.should == text
+  end
+
+  
+  it 'should create OrdersOfTheDay for section titled Orders of the Day' do
+    @orders_of_the_day.should be_an_instance_of(OrdersOfTheDay)
+  end
+
+  it 'should set OrdersOfTheDay title to Orders of the Day' do
+    @orders_of_the_day.title.should == 'Orders of the Day'
+  end
+  
+  it 'should create first Orders of the Day section' do
+    @orders_of_the_day.sections[0].should be_an_instance_of(OrdersOfTheDaySection)
+  end
+
+  it 'should set title on Orders of the Day section' do
+    @orders_of_the_day.sections[0].title.should == 'Education (Amendment) Bill'
+  end
+
+  it 'should set first contribution on Order of the Day section' do
+    @orders_of_the_day.sections[0].contributions[0].should be_an_instance_of(ProceduralContribution)
+    @orders_of_the_day.sections[0].contributions[0].text.should == '<i>Considered in Committee.</i>'
+    @orders_of_the_day.sections[0].contributions[0].xml_id.should == 'S6CV0089P0-00791'
   end
 
   it_should_behave_like "All sittings"
