@@ -23,8 +23,8 @@ describe "All sittings", :shared => true do
     @sitting.title.should == @sitting_title
   end
 
-  it 'should set column of sitting' do
-    @sitting.column.should == @sitting_column
+  it 'should set start column of sitting' do
+    @sitting.start_column.should == @sitting_column
   end
 
   it 'should set sitting opening text, if any' do

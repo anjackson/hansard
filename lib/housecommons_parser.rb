@@ -31,7 +31,7 @@ class Hansard::HouseCommonsParser
 
     def handle_non_procedural_section section, debates
       debate = DebatesSection.new
-      debate.column = @column
+      debate.start_column = @column
 
       section.children.each do |node|
         if node.elem?
@@ -63,7 +63,7 @@ class Hansard::HouseCommonsParser
         if node.elem?
           if node.name == 'col'
             @column = node.inner_html
-            contribution.column += ','+@column
+            contribution.column_range += ','+@column
           end
         end
       end
@@ -87,7 +87,7 @@ class Hansard::HouseCommonsParser
     def handle_member_contribution element, debate
       contribution = MemberContribution.new({
          :xml_id => element.attributes['id'],
-         :column => @column
+         :column_range => @column
       })
       
       element.children.each do |node|
@@ -113,7 +113,7 @@ class Hansard::HouseCommonsParser
     def handle_procedural_contribution node, debate
       procedural = ProceduralContribution.new({
         :xml_id => node.attributes['id'],
-        :column => @column,
+        :column_range => @column,
         :text => node.inner_html.strip
       })
       procedural.section = debate
@@ -122,7 +122,7 @@ class Hansard::HouseCommonsParser
 
     def handle_procedural_section section, debates
       procedural = ProceduralSection.new
-      procedural.column = @column
+      procedural.start_column = @column
 
       procedural.contributions
       section.children.each do |node|
@@ -147,7 +147,7 @@ class Hansard::HouseCommonsParser
     def handle_question_contribution element, question_section
       contribution = question_section.contributions.create({
          :xml_id => element.attributes['id'],
-         :column => @column
+         :column_range => @column
       })
 
       contribution.section = question_section
@@ -278,7 +278,7 @@ class Hansard::HouseCommonsParser
       @column = @doc.at('housecommons/col').inner_html
 
       sitting = HouseOfCommonsSitting.new({
-        :column => @column,
+        :start_column => @column,
         :title => @doc.at('housecommons/title').inner_html,
         :text => @doc.at('housecommons/p').inner_html,
         :date_text => @doc.at('housecommons/date').inner_html,

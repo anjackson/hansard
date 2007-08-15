@@ -5,7 +5,8 @@ class CreateSittings < ActiveRecord::Migration
       t.date :date
       t.string :title
       t.string :date_text
-      t.string :column
+      t.string :start_column
+      t.string :start_image_src
       t.text :text
     end
   end

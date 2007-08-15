@@ -6,7 +6,8 @@ class CreateContributions < ActiveRecord::Migration
       t.string  :member
       t.string  :member_constituency
       t.text    :text
-      t.string  :column
+      t.string  :column_range
+      t.string  :image_src_range
       t.string  :oral_question_no
       t.integer :section_id
     end

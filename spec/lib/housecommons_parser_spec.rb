@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/hansard_parser_spec_helper'
 
-describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
+describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16.xml" do
   before(:all) do
     @sitting_type = HouseOfCommonsSitting
     @sitting_date = Date.new(1985,12,16)
@@ -53,8 +53,8 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
     @first_section.title.should == 'PRAYERS'
   end
 
-  it 'should set column on first section in debates' do
-    @first_section.column.should == '1'
+  it 'should set start column on first section in debates' do
+    @first_section.start_column.should == '1'
   end
 
   it 'should set xml id on first section in debates' do
@@ -138,8 +138,8 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
     @first_question_contribution.member_contribution.should == ' asked the Secretary of State for Energy if he will make a statement on visits by Ministers in his Department to pits in the Scottish coalfield.'
   end
 
-  it 'should set column on first oral question contribution' do
-    @first_question_contribution.column.should == '1'
+  it 'should set column range on first oral question contribution' do
+    @first_question_contribution.column_range.should == '1'
   end
 
 
@@ -169,8 +169,8 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
     @second_question_contribution.member_contribution.should == ': I was extremely impressed during my recent visit to the Scottish coalfield to hear of the measures being taken to reduce costs and improve productivity.'
   end
 
-  it 'should set column on second oral question contribution' do
-    @second_question_contribution.column.should == '1'
+  it 'should set column range on second oral question contribution' do
+    @second_question_contribution.column_range.should == '1'
   end
 
 
@@ -191,8 +191,8 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
     @third_section.title.should == 'Social Security White Paper'
   end
 
-  it 'should set column on third section in debates' do
-    @third_section.column.should == '21'
+  it 'should set start column on third section in debates' do
+    @third_section.start_column.should == '21'
   end
 
   it 'should set debates parent on third section in debates' do
@@ -214,8 +214,8 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
     @third_section_first_contribution.xml_id.should == 'S6CV0089P0-00525'
   end
 
-  it 'should set first (procedural) contribution column on third section' do
-    @third_section_first_contribution.column.should == '21'
+  it 'should set first (procedural) contribution column range on third section' do
+    @third_section_first_contribution.column_range.should == '21'
   end
   
   it 'should set first (procedural) contribution parent on third section' do
@@ -233,8 +233,8 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
     @third_section_second_contribution.xml_id.should == 'S6CV0089P0-00526'
   end
 
-  it 'should set second (member) contribution column on third section' do
-    @third_section_second_contribution.column.should == '21,22,23,24,25'
+  it 'should set second (member) contribution column range on third section' do
+    @third_section_second_contribution.column_range.should == '21,22,23,24,25'
   end
   
   it 'should set second (member) contribution member on third section' do
@@ -259,8 +259,8 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
     @seventh_section_second_contribution.member_constituency.should == '(Workington)'
   end
   
-  it 'should create list of columns when contribution text contains col element' do
-    @seventh_section_second_contribution.column.should == '47,48'
+  it 'should create list of columns in column range when contribution text contains col element' do
+    @seventh_section_second_contribution.column_range.should == '47,48'
   end
 
 
@@ -273,8 +273,8 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
     @eighth_section.title.should == 'SCOTTISH AFFAIRS'
   end
 
-  it 'should set column on eighth section in debates' do
-    @eighth_section.column.should == '48'
+  it 'should set start column on eighth section in debates' do
+    @eighth_section.start_column.should == '48'
   end
 
   it 'should set debates parent on eighth section in debates' do
@@ -296,8 +296,8 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
     @eighth_section_first_contribution.xml_id.should == 'S6CV0089P0-00671'
   end
 
-  it 'should set first (procedural) contribution column on eighth section' do
-    @eighth_section_first_contribution.column.should == '48'
+  it 'should set first (procedural) contribution column range on eighth section' do
+    @eighth_section_first_contribution.column_range.should == '48'
   end
   
   it 'should set first (procedural) contribution parent on eighth section' do
@@ -315,8 +315,8 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
     @eighth_section_second_contribution.xml_id.should == 'S6CV0089P0-00672'
   end
 
-  it 'should set second (procedural) contribution column on eighth section' do
-    @eighth_section_second_contribution.column.should == '48'
+  it 'should set second (procedural) contribution column range on eighth section' do
+    @eighth_section_second_contribution.column_range.should == '48'
   end
   
   it 'should set second (procedural) contribution text on eighth section' do
