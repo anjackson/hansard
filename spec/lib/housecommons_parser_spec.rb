@@ -328,6 +328,16 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
     @eighth_section_second_contribution.section.should == @eighth_section 
   end
 
+
+  it "should set contribution to ProceduralContribution when there's no member contribution" do
+    @sitting.debates.sections[9].contributions.last.should be_an_instance_of(ProceduralContribution)
+  end
+  
+  it 'should set contribution text when contribution contains italics element' do
+    text = "<i>It being Seven o'clock, the proceedings lapsed, pursuant to Standing Order No. 6 (Arrangement of public business).</i>"
+    @sitting.debates.sections[9].contributions.last.text.should == text
+  end
+
   it_should_behave_like "All sittings"
   it_should_behave_like "All commons sittings"
 end

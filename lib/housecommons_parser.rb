@@ -43,6 +43,9 @@ class Hansard::HouseCommonsParser
               debate.time_text = match[0]
               debate.time = Time.parse(match[0].gsub('.',':'))
               handle_procedural_contribution node, debate
+            elsif not(node.inner_html.include? 'membercontribution')
+              handle_procedural_contribution node, debate
+              
             else
               handle_member_contribution node, debate
             end
@@ -111,7 +114,7 @@ class Hansard::HouseCommonsParser
       procedural = ProceduralContribution.new({
         :xml_id => node.attributes['id'],
         :column => @column,
-        :text => node.inner_html
+        :text => node.inner_html.strip
       })
       procedural.section = debate
       debate.contributions << procedural
