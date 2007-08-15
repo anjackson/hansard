@@ -251,6 +251,10 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16" do
   end
 
 
+  it 'should create procedural contribution for time stamp paragraphs' do
+    @seventh_section_first_contribution.should be_an_instance_of(ProceduralContribution)
+  end
+
   it 'should create list of columns when contribution text contains col element' do
     @seventh_section_second_contribution.column.should == '47,48'
   end

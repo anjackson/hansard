@@ -7,7 +7,7 @@ require 'hpricot'
 # ruby script/generate rspec_model contribution type:string xml_id:string member:string memberconstituency:string membercontribution:string column:string oral_question_no:string
 
 module Hansard
-  TIME_PATTERN = /^(\d\d?\.\d\d (am|pm))$/
+  TIME_PATTERN = /^(\d\d?(\.|&#x00B7;)\d\d (am|pm))$/
 end
 
 class Hansard::HouseCommonsParser
