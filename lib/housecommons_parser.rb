@@ -4,7 +4,7 @@ require 'hpricot'
 
 # ruby script/generate rspec_model sitting      type:string date:date title:string date_text:string column:string text:text
 # ruby script/generate rspec_model section      type:string title:string time:time time_text:string column:string
-# ruby script/generate rspec_model contribution type:string xml_id:string member:string memberconstituency:string membercontribution:string column:string oral_question_no:string
+# ruby script/generate rspec_model contribution type:string xml_id:string member:string member_constituency:string membercontribution:string column:string oral_question_no:string
 
 module Hansard
   TIME_PATTERN = /^(\d\d?(\.|&#x00B7;)\d\d (am|pm))$/
@@ -67,6 +67,19 @@ class Hansard::HouseCommonsParser
       contribution.text = element.inner_html.gsub("\r\n","\n")
     end
 
+    def handle_member_name element, contribution
+      element.children.each do |node|
+        if node.text?
+          text = node.to_s.strip
+          contribution.member = text if text.size > 0
+
+        elsif node.elem?
+          if node.name == 'memberconstituency'
+            contribution.member_constituency = node.inner_html
+          end
+        end
+      end
+    end
     
     def handle_member_contribution element, debate
       contribution = MemberContribution.new({
@@ -78,7 +91,7 @@ class Hansard::HouseCommonsParser
         if node.elem?
           name = node.name
           if name == 'member'
-            contribution.member = node.inner_html
+            handle_member_name node, contribution
           elsif name == 'membercontribution'
             handle_contribution_text node, contribution
           else

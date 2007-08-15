@@ -4,7 +4,7 @@ class CreateContributions < ActiveRecord::Migration
       t.string  :type
       t.string  :xml_id
       t.string  :member
-      t.string  :memberconstituency
+      t.string  :member_constituency
       t.text    :text
       t.string  :column
       t.string  :oral_question_no
