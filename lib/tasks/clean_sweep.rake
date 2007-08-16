@@ -8,6 +8,7 @@ namespace :hansard do
   end
   
   task :migrate_up => [:environment] do
+    ENV.delete('VERSION')
     Rake::Task['db:migrate'].invoke
   end
 
