@@ -43,7 +43,7 @@ class Hansard::HouseCommonsParser
           elsif name == 'p'
             if (match = Hansard::TIME_PATTERN.match node.inner_html)
               debate.time_text = match[0]
-              debate.time = Time.parse(match[0].gsub('.',':'))
+              debate.time = Time.parse(match[0].gsub('.',':').gsub("&#x00B7;", ":"))
               handle_procedural_contribution node, debate
             elsif not(node.inner_html.include? 'membercontribution')
               handle_procedural_contribution node, debate
