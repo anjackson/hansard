@@ -3,8 +3,8 @@ require File.join(File.dirname(__FILE__),'..','deconstruct.rb')
 namespace :hansard do
 
   task :migrate_down do
-    log = `rake db:migrate VERSION=0`
-    puts log
+    ENV['VERSION'] = '0'
+    Rake::Task['db:migrate'].invoke
   end
   
   task :migrate_up => [:environment] do
