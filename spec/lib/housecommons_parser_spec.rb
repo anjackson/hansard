@@ -45,7 +45,7 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16.xml" 
 
   it 'should create first section in debates' do
     @first_section.should_not be_nil
-    @first_section.should be_an_instance_of(ProceduralSection)
+    @first_section.should be_an_instance_of(Section)
   end
 
   it 'should set text on first section in debates' do
@@ -183,7 +183,7 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16.xml" 
 
   it 'should create third section in debates' do
     @third_section.should_not be_nil
-    @third_section.should be_an_instance_of(DebateSection)
+    @third_section.should be_an_instance_of(Section)
   end
 
   it 'should set time text on third section in debates' do
@@ -248,6 +248,10 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16.xml" 
     @third_section_second_contribution.column_range.should == '21,22,23,24,25'
   end
   
+  it 'should set second (member) contribution image src range on third section' do
+    @third_section_second_contribution.image_src_range.should == 'S6CV0089P0I0020,S6CV0089P0I0021,S6CV0089P0I0022'
+  end
+
   it 'should set second (member) contribution member on third section' do
     @third_section_second_contribution.member.should == 'The Secretary of State for Social Services (Mr. Norman Fowler)'
   end
@@ -262,6 +266,15 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16.xml" 
   end
 
 
+  it 'should set contribution column range when col element appears directly under secction element' do
+    @third_section.contributions[3].column_range.should == '27'
+  end
+
+  it 'should set contribution image src range when image element appears directly under secction element' do
+    @third_section.contributions[3].image_src_range.should == 'S6CV0089P0I0023'
+  end
+
+  
   it 'should create procedural contribution for time stamp paragraphs containing middle dot (&#x00B7;)' do
     @seventh_section_first_contribution.should be_an_instance_of(ProceduralContribution)
   end
@@ -277,7 +290,7 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16.xml" 
 
   it 'should create eighth section in debates' do
     @eighth_section.should_not be_nil
-    @eighth_section.should be_an_instance_of(ProceduralSection)
+    @eighth_section.should be_an_instance_of(Section)
   end
 
   it 'should set title on eighth section in debates' do
@@ -355,7 +368,7 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16.xml" 
 
   
   it 'should create OrdersOfTheDay for section titled Orders of the Day' do
-    @orders_of_the_day.should be_an_instance_of(OrdersOfTheDay)
+    @orders_of_the_day.should be_an_instance_of(Section)
   end
 
   it 'should set OrdersOfTheDay title to Orders of the Day' do
@@ -363,7 +376,7 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16.xml" 
   end
   
   it 'should create first Orders of the Day section' do
-    @orders_of_the_day.sections[0].should be_an_instance_of(OrdersOfTheDaySection)
+    @orders_of_the_day.sections[0].should be_an_instance_of(Section)
   end
 
   it 'should set title on Orders of the Day section' do

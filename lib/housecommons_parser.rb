@@ -30,7 +30,7 @@ class Hansard::HouseCommonsParser
   private
 
     def handle_non_procedural_section section, debates
-      debate = DebateSection.new({
+      debate = Section.new({
         :start_column => @column,
         :start_image_src => @image
       })
@@ -51,6 +51,10 @@ class Hansard::HouseCommonsParser
             else
               handle_member_contribution node, debate
             end
+          elsif (name == 'col' or name == 'image')
+            handle_image_or_column name, node
+          else
+            puts 'unexpected element in non_procedural_section: ' + name # + ': ' + node.to_s
           end
         end
       end
@@ -70,6 +74,8 @@ class Hansard::HouseCommonsParser
           elsif name == 'image'
             handle_image_or_column name, node
             contribution.image_src_range += ','+@image
+          else
+            # don't need to handle as we set contribution.text to inner_html
           end
         end
       end
@@ -85,6 +91,8 @@ class Hansard::HouseCommonsParser
         elsif node.elem?
           if node.name == 'memberconstituency'
             contribution.member_constituency = node.inner_html
+          else
+            puts 'unexpected element in member_name: ' + name + ': ' + node.to_s
           end
         end
       end
@@ -128,27 +136,8 @@ class Hansard::HouseCommonsParser
       debate.contributions << procedural
     end
 
-    def handle_order_of_the_day section, orders
-      order = OrdersOfTheDaySection.new({
-        :start_column => @column,
-        :start_image_src => @image
-      })
-      section.children.each do |node|
-        if node.elem?
-          name = node.name
-          if name == 'title'
-            order.title = node.inner_html
-          elsif name == 'p'
-            handle_procedural_contribution node, order
-          end
-        end
-      end
-      order.parent_section = orders
-      orders.sections << order
-    end
-
     def handle_orders_of_the_day section, debates
-      orders = OrdersOfTheDay.new({
+      orders = Section.new({
         :start_column => @column,
         :start_image_src => @image
       })
@@ -158,7 +147,13 @@ class Hansard::HouseCommonsParser
           if name == 'title'
             orders.title = node.inner_html
           elsif name == 'section'
-            handle_order_of_the_day node, orders
+            if node.to_s.include?('membercontribution')
+              handle_non_procedural_section node, orders
+            else          
+              handle_procedural_section node, orders
+            end
+          else
+            puts 'unexpected element in orders_of_the_day: ' + name + ': ' + node.to_s
           end
         end
       end
@@ -167,7 +162,7 @@ class Hansard::HouseCommonsParser
     end
 
     def handle_procedural_section section, debates
-      procedural = ProceduralSection.new({
+      procedural = Section.new({
         :start_column => @column,
         :start_image_src => @image
       })
@@ -182,7 +177,7 @@ class Hansard::HouseCommonsParser
           elsif (name == 'col' or name == 'image')
             handle_image_or_column name, node
           else
-            puts 'unexpected element: ' + name + ': ' + node.to_s
+            puts 'unexpected element in procedural_section: ' + name + ': ' + node.to_s
           end
         end
       end
@@ -208,7 +203,7 @@ class Hansard::HouseCommonsParser
           elsif name == 'membercontribution'
             contribution.text = node.inner_html.chars.gsub("\r\n","\n")
           else
-            raise 'unexpected element: ' + name + ': ' + node.to_s
+            raise 'unexpected element in question_contribution: ' + name + ': ' + node.to_s
           end
 
         elsif node.text?
@@ -239,7 +234,7 @@ class Hansard::HouseCommonsParser
           elsif (name == 'col' or name == 'image')
             handle_image_or_column name, node
           else
-            puts 'unexpected element: ' + name + ': ' + node.to_s
+            puts 'unexpected element in oral_question_section: ' + name + ': ' + node.to_s
           end
         end
       end
@@ -258,6 +253,8 @@ class Hansard::HouseCommonsParser
             questions_section.title = node.inner_html
           elsif name == 'section'
             handle_oral_question_section node, questions_section
+          else
+            puts 'unexpected element in oral_questions_section: ' + name + ': ' + node.to_s
           end
         end
       end
@@ -276,10 +273,10 @@ class Hansard::HouseCommonsParser
             oral_questions.title = node.inner_html
           elsif name == 'section'
             handle_oral_questions_section node, oral_questions
-          elsif name == 'col'
-            @column = node.inner_html
+          elsif (name == 'image' or name == 'col')
+            handle_image_or_column name, node
           else
-            
+            puts 'unexpected element in oral_questions: ' + name + ': ' + node.to_s            
           end
         end
       end
