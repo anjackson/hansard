@@ -412,6 +412,14 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16.xml" 
     @division.time_text.should == '[11.15 pm>'
   end
 
+  it 'should create aye vote' do
+    @division.votes[0].should_not be_nil
+    @division.votes[0].should be_an_instance_of(AyeVote)
+  end
+
+  it 'should set aye vote name' do
+    @division.votes[0].name == 'Alexander, Richard'
+  end
 
 
   it_should_behave_like "All sittings"

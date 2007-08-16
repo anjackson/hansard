@@ -29,6 +29,39 @@ class Hansard::HouseCommonsParser
 
   private
 
+    def handle_vote text, division
+      parts = text.split('(')
+      vote = @vote_type.new({
+        :name => parts[0].strip,
+        :column => @column,
+        :image_src => @image_src
+      })
+      if parts.size > 1
+        vote.constituency = parts[1].chomp(')')
+      end
+      vote.division = division
+      division.votes << vote
+    end
+
+    def handle_division_table table, division
+      (table/'tr/td').each do |cell|
+        text = cell.inner_text.strip
+        unless text.blank?
+          if text.downcase.include? 'division no'
+            #ignore
+          elsif /\d\d/.match text
+            #ignore
+          elsif text.downcase == 'ayes'
+            @vote_type = AyeVote
+          elsif text.downcase == 'noes'
+            @vote_type = NoeVote
+          else
+            handle_vote text, division
+          end
+        end
+      end
+    end
+
     def handle_division node, debate
       placeholder = DivisionPlaceholder.new
       division = Division.new({
@@ -36,6 +69,18 @@ class Hansard::HouseCommonsParser
         :time_text => node.at('table/tr[1]/td[2]/b/text()').to_s
       })
 
+      node.children.each do |child|
+        if child.elem?
+          name = child.name
+          if name == 'table'
+            handle_division_table child, division
+          elsif (name == 'col' or name == 'image')
+            handle_image_or_column name, node
+          else
+            puts 'unexpected element in non_procedural_section: ' + name + ': ' + node.to_s
+          end
+        end
+      end
       placeholder.division = division
       placeholder.section = debate
       debate.contributions << placeholder
