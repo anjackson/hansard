@@ -421,6 +421,27 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16.xml" 
     @division.votes[0].name == 'Alexander, Richard'
   end
 
+  it 'should set aye vote column' do
+    @division.votes[0].column == 123
+  end
+
+  it 'should set aye vote image' do
+    @division.votes[0].image_src == 'S6CV0089P0I0071'
+  end
+
+  it 'should set aye vote name and constituency when present' do
+    @division.votes[4].name == 'Atkinson, David'
+    @division.votes[4].constituency == "B m'th E"
+  end
+
+  it 'should create noe vote' do
+    @division.votes[148].should_not be_nil
+    @division.votes[148].should be_an_instance_of(NoeVote)
+  end
+
+  it 'should create noe vote name' do
+    @division.votes[148].name.should == 'Alton, David'
+  end
 
   it_should_behave_like "All sittings"
   it_should_behave_like "All commons sittings"
