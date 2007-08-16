@@ -75,7 +75,7 @@ class Hansard::HouseCommonsParser
           if name == 'table'
             handle_division_table child, division
           elsif (name == 'col' or name == 'image')
-            handle_image_or_column name, node
+            handle_image_or_column name, child
           else
             puts 'unexpected element in non_procedural_section: ' + name + ': ' + node.to_s
           end
@@ -242,6 +242,14 @@ class Hansard::HouseCommonsParser
             handle_procedural_contribution node, procedural
           elsif (name == 'col' or name == 'image')
             handle_image_or_column name, node
+          elsif name == 'section'
+            if node.to_s.include?('membercontribution')
+              handle_non_procedural_section node, procedural
+            else          
+              handle_procedural_section node, procedural
+            end
+          elsif name == 'division'
+            handle_division node, procedural
           else
             puts 'unexpected element in procedural_section: ' + name + ': ' + node.to_s
           end
@@ -274,7 +282,7 @@ class Hansard::HouseCommonsParser
 
         elsif node.text?
           text = node.to_s.strip
-          if (match = /^(\d+.)/.match text)
+          if (match = /^(Q?\d+\.)/.match text)
             contribution.oral_question_no = match[1]
           elsif text.size > 0
             unless @unexpected
@@ -319,6 +327,8 @@ class Hansard::HouseCommonsParser
             questions_section.title = node.inner_html
           elsif name == 'section'
             handle_oral_question_section node, questions_section
+          elsif (name == 'col' or name == 'image')
+            handle_image_or_column name, node
           else
             puts 'unexpected element in oral_questions_section: ' + name + ': ' + node.to_s
           end
