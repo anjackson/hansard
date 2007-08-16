@@ -53,6 +53,13 @@ class Hansard::HouseCommonsParser
             end
           elsif (name == 'col' or name == 'image')
             handle_image_or_column name, node
+
+          elsif name == 'section'
+            if node.to_s.include?('membercontribution')
+              handle_non_procedural_section node, debate
+            else          
+              handle_procedural_section node, debate
+            end
           else
             puts 'unexpected element in non_procedural_section: ' + name # + ': ' + node.to_s
           end
