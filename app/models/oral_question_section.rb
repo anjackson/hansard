@@ -14,9 +14,5 @@ class OralQuestionSection < Section
       end
     end
   end
-  
-  
-  
+
 end
-
-

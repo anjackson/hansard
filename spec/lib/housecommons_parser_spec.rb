@@ -34,12 +34,18 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16.xml" 
     @eighth_section_second_contribution = @eighth_section.contributions[1]
 
     @orders_of_the_day = @sitting.debates.sections[12]
+
+    contributions = @sitting.debates.sections[14].sections[0].contributions
+    @division_placeholder = contributions[contributions.size - 3]
+    @division = @division_placeholder.division
   end
 
   after(:all) do
     Sitting.delete_all
     Section.delete_all
     Contribution.delete_all
+    Division.delete_all
+    Vote.delete_all
   end
 
 
@@ -388,6 +394,25 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16.xml" 
     @orders_of_the_day.sections[0].contributions[0].text.should == '<i>Considered in Committee.</i>'
     @orders_of_the_day.sections[0].contributions[0].xml_id.should == 'S6CV0089P0-00791'
   end
+
+
+  it 'should create division placeholder in contributions for division element' do
+    @division_placeholder.should be_an_instance_of(DivisionPlaceholder)
+  end
+
+  it 'should create division' do
+    @division.should be_an_instance_of(Division)
+  end
+
+  it 'should create division name' do
+    @division.name.should == 'Division No. 29]'
+  end
+
+  it 'should create division time text' do
+    @division.time_text.should == '[11.15 pm>'
+  end
+
+
 
   it_should_behave_like "All sittings"
   it_should_behave_like "All commons sittings"

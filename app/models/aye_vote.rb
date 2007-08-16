@@ -1,0 +1,3 @@
+class AyeVote < Vote
+
+end

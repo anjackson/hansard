@@ -1,0 +1,3 @@
+class NoeVote < Vote
+
+end

@@ -29,6 +29,18 @@ class Hansard::HouseCommonsParser
 
   private
 
+    def handle_division node, debate
+      placeholder = DivisionPlaceholder.new
+      division = Division.new({
+        :name => node.at('table/tr[1]/td[1]/b/text()').to_s,
+        :time_text => node.at('table/tr[1]/td[2]/b/text()').to_s
+      })
+
+      placeholder.division = division
+      placeholder.section = debate
+      debate.contributions << placeholder
+    end
+
     def handle_non_procedural_section section, debates
       debate = Section.new({
         :start_column => @column,
@@ -60,6 +72,8 @@ class Hansard::HouseCommonsParser
             else          
               handle_procedural_section node, debate
             end
+          elsif name == 'division'
+            handle_division node, debate
           else
             puts 'unexpected element in non_procedural_section: ' + name # + ': ' + node.to_s
           end
