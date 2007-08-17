@@ -11,7 +11,7 @@ class OralQuestionContribution < MemberContribution
     xml = options[:builder] ||= Builder::XmlMarkup.new
     xml.p(:id => xml_id) do
       xml.text! oral_question_no || ""
-      xml.member
+      xml.member member
       xml.membercontribution text
     end
   end

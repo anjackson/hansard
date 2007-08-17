@@ -8,7 +8,8 @@ end
 
 ActionController::Routing::Routes.draw do |map|
   
-  map.resources :oral_questions, :controller => 'oral_question_sections'
+  map.sitting "sittings/:id.:format", :controller => 'sittings', :action => 'show'
+  map.sitting "sittings/:id", :controller => 'sittings', :action => 'show'
 
   date_format = { :year => /(19|20)\d\d/,
                   :month => /(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec|[01]?\d)/,
@@ -23,4 +24,7 @@ ActionController::Routing::Routes.draw do |map|
     end
   end
   
+  map.oral_question "oral_questions/:id.:format", :controller => 'oral_question_sections', :action => 'show'
+  map.oral_question "oral_questions/:id", :controller => 'oral_question_sections', :action => 'show'
+ 
 end

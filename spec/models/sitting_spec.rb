@@ -37,3 +37,4 @@ describe Sitting do
   end
 
 end
+

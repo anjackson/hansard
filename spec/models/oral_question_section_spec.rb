@@ -1,23 +1,17 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
+
 describe OralQuestionSection, " in general" do
   
   before(:each) do
-    @oral_question_section = OralQuestionSection.new
+    @model = OralQuestionSection.new
+    @mock_builder = mock("xml builder") 
+    @mock_builder.stub!(:section) 
+    @mock_builder.stub!(:title)  
   end
-  
-  it "should respond to activerecord_xml" do
-    @oral_question_section.respond_to?("to_activerecord_xml").should be_true
-  end
-  
-  it "should respond to xml" do
-    @oral_question_section.respond_to?("to_xml").should be_true
-  end
-  
-  it "should have different methods to_xml and activerecord_to_xml" do
-    @oral_question_section.to_xml.should_not eql(@oral_question_section.to_activerecord_xml)
-  end
-  
+    
+  it_should_behave_like "an xml-generating model"
+
 end
 
 describe OralQuestionSection, ".to_xml" do
@@ -28,21 +22,7 @@ describe OralQuestionSection, ".to_xml" do
     @mock_builder.stub!(:title)
     @oral_question_section = OralQuestionSection.new
   end
-  
-  it "should produce some output" do
-    @oral_question_section.to_xml.should_not be_nil
-  end
-  
-  it "should create an xml builder if it is not passed one in the options hash" do
-    Builder::XmlMarkup.should_receive(:new).and_return(@mock_builder)
-    @oral_question_section.to_xml
-  end
-  
-   it "should not create an xml builder if one is passed to it in the :builder param of the options hash" do
-     Builder::XmlMarkup.should_not_receive(:new)
-     @oral_question_section.to_xml(:builder => @mock_builder)
-   end
-  
+ 
   it "should have a 'section' tag" do
     @oral_question_section.to_xml.should have_tag("section")
   end
