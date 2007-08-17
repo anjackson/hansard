@@ -9,6 +9,7 @@ class CreateContributions < ActiveRecord::Migration
       t.string  :column_range
       t.string  :image_src_range
       t.string  :oral_question_no
+      t.string  :procedural_note
       t.integer :section_id
     end
   end

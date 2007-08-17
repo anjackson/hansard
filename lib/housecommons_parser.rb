@@ -132,6 +132,8 @@ class Hansard::HouseCommonsParser
           name = node.name
           if name == 'member'
             handle_member_name node, contribution
+          elsif name == 'i'
+            contribution.procedural_note = node.to_s
           elsif name == 'membercontribution'
             handle_contribution_text node, contribution
           else
@@ -158,6 +160,7 @@ class Hansard::HouseCommonsParser
       })
       procedural.section = debate
       debate.contributions << procedural
+      procedural
     end
 
     def handle_quote_contribution node, debate
@@ -303,6 +306,13 @@ class Hansard::HouseCommonsParser
             handle_oral_question_section node, questions_section
           elsif (name == 'col' or name == 'image')
             handle_image_or_column name, node
+          elsif name == 'p'
+            if questions_section.introduction
+              raise "unexpected second paragraph under oral questions section"
+            else
+              procedural = handle_procedural_contribution node, questions_section
+              questions_section.introduction = procedural 
+            end
           else
             puts 'unexpected element in oral_questions_section: ' + name + ': ' + node.to_s
           end
