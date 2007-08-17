@@ -182,6 +182,8 @@ class Hansard::HouseCommonsParser
             orders.title = node.inner_html
           elsif name == 'section'
             handle_section_element node, orders
+          elsif (name == 'col' or name == 'image')
+            handle_image_or_column name, node
           else
             puts 'unexpected element in orders_of_the_day: ' + name + ': ' + node.to_s
           end
