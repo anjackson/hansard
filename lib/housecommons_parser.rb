@@ -86,50 +86,6 @@ class Hansard::HouseCommonsParser
       debate.contributions << placeholder
     end
 
-    def handle_non_procedural_section section, debates
-      debate = Section.new({
-        :start_column => @column,
-        :start_image_src => @image
-      })
-
-      section.children.each do |node|
-        if node.elem?
-          name = node.name
-          if name == 'title'
-            debate.title = node.inner_html
-          elsif name == 'p'
-            if (match = Hansard::TIME_PATTERN.match node.inner_html)
-              debate.time_text = match[0]
-              debate.time = Time.parse(match[0].gsub('.',':').gsub("&#x00B7;", ":"))
-              handle_procedural_contribution node, debate
-            elsif not(node.inner_html.include? 'membercontribution')
-              handle_procedural_contribution node, debate
-              
-            else
-              handle_member_contribution node, debate
-            end
-          elsif (name == 'col' or name == 'image')
-            handle_image_or_column name, node
-
-          elsif name == 'section'
-            if node.to_s.include?('membercontribution')
-              handle_non_procedural_section node, debate
-            else          
-              handle_procedural_section node, debate
-            end
-          elsif name == 'division'
-            handle_division node, debate
-          else
-            puts 'unexpected element in non_procedural_section: ' + name # + ': ' + node.to_s
-          end
-        end
-      end
-
-      debate.parent_section = debates
-      debates.sections << debate
-    end
-
-    
     def handle_contribution_text element, contribution
       element.children.each do |node|
         if node.elem?
@@ -191,6 +147,8 @@ class Hansard::HouseCommonsParser
       debate.contributions << contribution
     end
 
+
+    
     def handle_procedural_contribution node, debate
       procedural = ProceduralContribution.new({
         :xml_id => node.attributes['id'],
@@ -200,6 +158,16 @@ class Hansard::HouseCommonsParser
       })
       procedural.section = debate
       debate.contributions << procedural
+    end
+
+    def handle_quote_contribution node, debate
+      quote = QuoteContribution.new({
+        :column_range => @column,
+        :image_src_range => @image,
+        :text => node.inner_html.strip
+      })
+      quote.section = debate
+      debate.contributions << quote
     end
 
     def handle_orders_of_the_day section, debates
@@ -213,11 +181,7 @@ class Hansard::HouseCommonsParser
           if name == 'title'
             orders.title = node.inner_html
           elsif name == 'section'
-            if node.to_s.include?('membercontribution')
-              handle_non_procedural_section node, orders
-            else          
-              handle_procedural_section node, orders
-            end
+            handle_section_element node, orders
           else
             puts 'unexpected element in orders_of_the_day: ' + name + ': ' + node.to_s
           end
@@ -227,37 +191,45 @@ class Hansard::HouseCommonsParser
       debates.sections << orders
     end
 
-    def handle_procedural_section section, debates
-      procedural = Section.new({
+    
+    def handle_section_element section_element, debates
+      section = Section.new({
         :start_column => @column,
         :start_image_src => @image
       })
 
-      section.children.each do |node|
+      section_element.children.each do |node|
         if node.elem?
           name = node.name
           if name == 'title'
-            procedural.title = node.inner_html
+            section.title = node.inner_html
           elsif name == 'p'
-            handle_procedural_contribution node, procedural
+            if (match = Hansard::TIME_PATTERN.match node.inner_html)
+              section.time_text = match[0]
+              section.time = Time.parse(match[0].gsub('.',':').gsub("&#x00B7;", ":"))
+              handle_procedural_contribution node, section
+            elsif not(node.inner_html.include? 'membercontribution')
+              handle_procedural_contribution node, section
+              
+            else
+              handle_member_contribution node, section
+            end
+          elsif name == 'quote'
+            handle_quote_contribution node, section 
           elsif (name == 'col' or name == 'image')
             handle_image_or_column name, node
           elsif name == 'section'
-            if node.to_s.include?('membercontribution')
-              handle_non_procedural_section node, procedural
-            else          
-              handle_procedural_section node, procedural
-            end
+            handle_section_element node, section
           elsif name == 'division'
-            handle_division node, procedural
+            handle_division node, section
           else
-            puts 'unexpected element in procedural_section: ' + name + ': ' + node.to_s
+            puts 'unexpected element in non_procedural_section: ' + name # + ': ' + node.to_s
           end
         end
       end
 
-      procedural.parent_section = debates
-      debates.sections << procedural
+      section.parent_section = debates
+      debates.sections << section
     end
 
     def handle_question_contribution element, question_section
@@ -282,7 +254,7 @@ class Hansard::HouseCommonsParser
 
         elsif node.text?
           text = node.to_s.strip
-          if (match = /^(Q?\d+\.)/.match text)
+          if (match = /^(Q?\d+\.?)/.match text)
             contribution.oral_question_no = match[1]
           elsif text.size > 0
             unless @unexpected
@@ -373,12 +345,10 @@ class Hansard::HouseCommonsParser
       if (title = section.at('title/text()'))
         title = title.to_s.strip.downcase.squeeze(' ')
 
-        if section.to_s.include?('membercontribution')
-          handle_non_procedural_section section, debates
-        elsif title == 'orders of the day'
+        if title == 'orders of the day'
           handle_orders_of_the_day section, debates
         else          
-          handle_procedural_section section, debates
+          handle_section_element section, debates
         end
       else
         raise 'unexpected to find section with no title: ' + section.to_s
