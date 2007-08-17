@@ -15,7 +15,7 @@ namespace :db do
 end
 
 desc 'Cruise default task - update the environment and run the tests with rcov'
-task :cruise => ["hansard:migrate_down", "hansard:migrate_up", "hansard:clone_structure"] do
+task :cruise => [ "hansard:migrate_down", "hansard:migrate_up", "hansard:clone_structure", "hansard:split_xml"] do
   ENV['RAILS_ENV'] = RAILS_ENV = 'test'
   Rake::Task['cruise_coverage'].invoke
 end
