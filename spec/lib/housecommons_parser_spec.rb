@@ -5,12 +5,14 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16.xml" 
     @sitting_type = HouseOfCommonsSitting
     @sitting_date = Date.new(1985,12,16)
     @sitting_date_text = 'Monday 16 December 1985'
-    @sitting_title = 'House of Commons' 
+    @sitting_title = 'House of Commons'
     @sitting_start_column = '1'
     @sitting_start_image = 'S6CV0089P0I0010'
     @sitting_text = %Q[<p id="S6CV0089P0-00360" align="center"><i>The House met at half-past Two o'clock</i></p>]
 
-    @sitting = parse_hansard 's6cv0089p0/housecommons_1985_12_16.xml'
+    file = 'housecommons_example.xml'
+    @sitting = Hansard::HouseCommonsParser.new(File.dirname(__FILE__) + "/../data/#{file}").parse
+    # @sitting = parse_hansard 's6cv0089p0/housecommons_1985_12_16.xml'
     @sitting.save!
 
     @first_section = @sitting.debates.sections.first
@@ -28,7 +30,7 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16.xml" 
     @seventh_section = @sitting.debates.sections[6]
     @seventh_section_first_contribution = @seventh_section.contributions.first
     @seventh_section_second_contribution = @seventh_section.contributions[1]
-    
+
     @eighth_section = @sitting.debates.sections[7]
     @eighth_section_first_contribution = @eighth_section.contributions.first
     @eighth_section_second_contribution = @eighth_section.contributions[1]
@@ -38,6 +40,9 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16.xml" 
     contributions = @sitting.debates.sections[14].sections[0].contributions
     @division_placeholder = contributions[contributions.size - 3]
     @division = @division_placeholder.division
+
+    count = @sitting.debates.sections.size
+    @quote = @sitting.debates.sections[count - 2].contributions[1]
   end
 
   after(:all) do
@@ -46,6 +51,47 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16.xml" 
     Contribution.delete_all
     Division.delete_all
     Vote.delete_all
+  end
+
+
+  it 'should add a procedural note for an italics element after a member element' do
+    contribution = @sitting.debates.sections.last.contributions.first
+    contribution.xml_id.should == 'S6CV0089P0-01275' # that's the one!
+    contribution.procedural_note.should == "<i>(seated and covered)</i>"
+  end
+
+
+  it 'should set the image src property on the first element following an image tag within the orders of the day' do
+    count = @sitting.debates.sections.size
+    section = @sitting.debates.sections[count - 3].sections[0]
+    section.start_image_src.should == 'S6CV0089P0I0523'
+  end
+
+  it 'should set the column property on the first element following an column tag within the orders of the day' do
+    count = @sitting.debates.sections.size
+    section = @sitting.debates.sections[count - 3].sections[0]
+    section.start_column.should == '1027'
+  end
+
+
+  it 'should parse a quote element' do
+    @quote.should_not be_nil
+  end
+
+  it 'should create quote contribution for a quote element' do
+    @quote.should be_an_instance_of(QuoteContribution)
+  end
+
+  it 'should set the text for a quote correctly' do
+    @quote.text.should == "That Sir Antony Buck and Mr. Robert Key be discharged from the Select Committee on the Armed Forces Bill and that Mr. Tony Baldry and Mr. Nicholas Soames be added to the Committee.&#x2014;<i>(Mr. Maude.]</i>"
+  end
+
+  it 'should set the column range for a quote correctly' do
+    @quote.column_range.should == '744'
+  end
+
+  it 'should set the image src range for a quote correctly' do
+    @quote.image_src_range.should == 'S6CV0089P0I0381'
   end
 
 
@@ -143,6 +189,20 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16.xml" 
     @first_question_contribution.oral_question_no.should == '1.'
   end
 
+  it 'should set a oral question number when number is formated as Q1.' do
+    question = @sitting.debates.oral_questions.sections.last.sections.first.contributions.first
+    question.oral_question_no.should == 'Q1.'
+  end
+
+  it "should add an introduction procedural contribution to an oralquestions section that has a 'p' tag within it" do
+    count = @sitting.debates.oral_questions.sections.size
+    section = @sitting.debates.oral_questions.sections[count - 2]
+    section.title.should == "SCOTLAND"
+    section.introduction.should_not be_nil
+    section.introduction.should be_an_instance_of(ProceduralContribution)
+    section.introduction.text.should == "<i>The Secretary of State was asked</i>&#x2014;"
+  end
+
   it 'should set member on first oral question contribution' do
     @first_question_contribution.member.should == 'Mr. Douglas'
   end
@@ -234,10 +294,10 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16.xml" 
   it 'should set first (procedural) contribution column range on third section' do
     @third_section_first_contribution.column_range.should == '21'
   end
-  
+
   it 'should set first (procedural) contribution parent on third section' do
-    @third_section_first_contribution.section_id.should == @third_section.id 
-    @third_section_first_contribution.section.should == @third_section 
+    @third_section_first_contribution.section_id.should == @third_section.id
+    @third_section_first_contribution.section.should == @third_section
   end
 
 
@@ -253,7 +313,7 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16.xml" 
   it 'should set second (member) contribution column range on third section' do
     @third_section_second_contribution.column_range.should == '21,22,23,24,25'
   end
-  
+
   it 'should set second (member) contribution image src range on third section' do
     @third_section_second_contribution.image_src_range.should == 'S6CV0089P0I0020,S6CV0089P0I0021,S6CV0089P0I0022'
   end
@@ -267,8 +327,8 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16.xml" 
   end
 
   it 'should set second (member) contribution parent on third section' do
-    @third_section_second_contribution.section_id.should == @third_section.id 
-    @third_section_second_contribution.section.should == @third_section 
+    @third_section_second_contribution.section_id.should == @third_section.id
+    @third_section_second_contribution.section.should == @third_section
   end
 
 
@@ -280,7 +340,7 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16.xml" 
     @third_section.contributions[3].image_src_range.should == 'S6CV0089P0I0023'
   end
 
-  
+
   it 'should create procedural contribution for time stamp paragraphs containing middle dot (&#x00B7;)' do
     @seventh_section_first_contribution.should be_an_instance_of(ProceduralContribution)
   end
@@ -288,7 +348,7 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16.xml" 
   it 'should add member constituency to contribution if constituency is present' do
     @seventh_section_second_contribution.member_constituency.should == '(Workington)'
   end
-  
+
   it 'should create list of columns in column range when contribution text contains col element' do
     @seventh_section_second_contribution.column_range.should == '47,48'
   end
@@ -333,10 +393,10 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16.xml" 
   it 'should set first (procedural) contribution column range on eighth section' do
     @eighth_section_first_contribution.column_range.should == '48'
   end
-  
+
   it 'should set first (procedural) contribution parent on eighth section' do
-    @eighth_section_first_contribution.section_id.should == @eighth_section.id 
-    @eighth_section_first_contribution.section.should == @eighth_section 
+    @eighth_section_first_contribution.section_id.should == @eighth_section.id
+    @eighth_section_first_contribution.section.should == @eighth_section
   end
 
 
@@ -352,27 +412,27 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16.xml" 
   it 'should set second (procedural) contribution column range on eighth section' do
     @eighth_section_second_contribution.column_range.should == '48'
   end
-  
+
   it 'should set second (procedural) contribution text on eighth section' do
     @eighth_section_second_contribution.text.should == 'That the matter of the recommendations of the Scottish Tertiary Education Advisory Council concerning higher education in Scotland, being a matter relating exclusively to Scotland, be referred to the Scottish Grand Committee for its consideration.&#x2014;[Mr. <i>Peter Lloyd.</i>]'
   end
 
   it 'should set second (procedural) contribution parent on eighth section' do
-    @eighth_section_second_contribution.section_id.should == @eighth_section.id 
-    @eighth_section_second_contribution.section.should == @eighth_section 
+    @eighth_section_second_contribution.section_id.should == @eighth_section.id
+    @eighth_section_second_contribution.section.should == @eighth_section
   end
 
 
   it "should set contribution to ProceduralContribution when there's no member contribution" do
     @sitting.debates.sections[9].contributions.last.should be_an_instance_of(ProceduralContribution)
   end
-  
+
   it 'should set contribution text when contribution contains italics element' do
     text = "<i>It being Seven o'clock, the proceedings lapsed, pursuant to Standing Order No. 6 (Arrangement of public business).</i>"
     @sitting.debates.sections[9].contributions.last.text.should == text
   end
 
-  
+
   it 'should create OrdersOfTheDay for section titled Orders of the Day' do
     @orders_of_the_day.should be_an_instance_of(Section)
   end
@@ -380,7 +440,7 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16.xml" 
   it 'should set OrdersOfTheDay title to Orders of the Day' do
     @orders_of_the_day.title.should == 'Orders of the Day'
   end
-  
+
   it 'should create first Orders of the Day section' do
     @orders_of_the_day.sections[0].should be_an_instance_of(Section)
   end
@@ -407,11 +467,15 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16.xml" 
   it 'should create division name' do
     @division.name.should == 'Division No. 29]'
   end
-  
+
+  it 'should create division without trailing square bracket close'
+
   it 'should create division time text' do
     @division.time_text.should == '[11.15 pm>'
   end
-  
+
+  it 'should create division time text without leading square bracket open'
+
   it 'should create aye vote' do
     @division.votes[0].should_not be_nil
     @division.votes[0].should be_an_instance_of(AyeVote)

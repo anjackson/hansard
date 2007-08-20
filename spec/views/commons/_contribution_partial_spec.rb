@@ -53,6 +53,7 @@ describe '_section partial', 'when passed members contribution' do
     @contribution.should_receive(:member).and_return @member
     @contribution.should_receive(:member_constituency).twice.and_return @member_constituency
     @contribution.should_receive(:oral_question_no).twice.and_return @oral_question_no
+    @contribution.should_receive(:procedural_note).twice.and_return '<i>(seated and covered)</i>'
 
     @controller.template.stub!(:contribution).and_return(@contribution)
 
@@ -62,14 +63,19 @@ describe '_section partial', 'when passed members contribution' do
   it 'should show member contribution in p with class "member_contribution"' do
     response.should have_tag('p.member_contribution') do
       with_tag('span.oral_question_no', @oral_question_no)
-      with_tag('span.member', @member)
+      with_tag('cite.member', @member)
       with_tag('span.member_constituency', @member_constituency)
+      with_tag('span.procedural_note', '(seated and covered)')
       with_tag('blockquote.contribution_text', @contribution_text)
     end
   end
 
   it 'should show member name in span with class "member"' do
-    response.should have_tag('span.member', @member)
+    response.should have_tag('cite.member', @member)
+  end
+
+  it 'should show a procedural note in a span with class "procedural_note"' do
+    response.should have_tag('span.procedural_note', '(seated and covered)')
   end
 
   it 'should show member constituency name in span with class "member_constituency"' do
