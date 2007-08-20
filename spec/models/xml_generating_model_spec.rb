@@ -9,8 +9,8 @@ describe "an xml-generating model", :shared => true do
     @model.respond_to?("to_xml").should be_true
   end
   
-  it "should have different methods to_xml and activerecord_to_xml" do
-    @model.to_xml.should_not eql(@model.to_activerecord_xml)
+  it "should respond to to_activerecord_xml" do
+    @model.respond_to?("to_activerecord_xml").should be_true
   end
 
   it "should produce some output from it's to_xml method" do

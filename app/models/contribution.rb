@@ -5,7 +5,9 @@ class Contribution < ActiveRecord::Base
 
   def to_xml(options={})
     xml = options[:builder] ||= Builder::XmlMarkup.new
-    xml
+    xml.p :id => xml_id do 
+      xml << text if text 
+    end
   end
 
 end

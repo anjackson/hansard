@@ -131,7 +131,7 @@ module Hansard
           # total_lines += `wc -l #{result}`.split(' ')[0].to_i
         end
         puts 'total lines: ' + total_lines.to_s
-        puts 'original lines: ' + `wc -l #{input_file}`.split(' ')[0]
+        # puts 'original lines: ' + `wc -l #{input_file}`.split(' ')[0]
       end
     end
   end

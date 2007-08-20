@@ -16,7 +16,6 @@ end
 describe OralQuestionContribution, ".to_xml" do
   
   before do
-    @mock_builder = mock("xml builder")    
     @oral_question_contribution = OralQuestionContribution.new
   end
     

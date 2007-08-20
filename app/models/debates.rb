@@ -11,8 +11,10 @@ class Debates < Section
  
   def to_xml(options={})
     xml = options[:builder] ||= Builder::XmlMarkup.new
-    sections.each do |section|
-      section.to_xml(options)
+    xml.debates do
+      sections.each do |section|
+        section.to_xml(options)
+      end
     end
   end
 

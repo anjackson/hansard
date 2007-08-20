@@ -7,14 +7,21 @@ class Section < ActiveRecord::Base
 
   def to_xml(options={})
     xml = options[:builder] ||= Builder::XmlMarkup.new
-    xml.title(title)
-    contributions.each do |contribution|
-      contribution.to_xml(options)
+    self.outer_tag xml do
+      xml.title(title)
+      contributions.each do |contribution|
+        contribution.to_xml(options)
+      end
+      sections.each do |section|
+        section.to_xml(options)
+      end
     end
-    sections.each do |section|
-      section.to_xml(options)
+  end
+  
+  def outer_tag xml
+    xml.section do
+      yield
     end
-    xml
   end
   
 end

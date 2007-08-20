@@ -1,13 +1,17 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
+def mock_oral_question_section_builder
+  mock_builder = mock("xml builder") 
+  mock_builder.stub!(:section).and_yield 
+  mock_builder.stub!(:title)
+  mock_builder
+end
 
 describe OralQuestionSection, " in general" do
   
   before(:each) do
     @model = OralQuestionSection.new
-    @mock_builder = mock("xml builder") 
-    @mock_builder.stub!(:section) 
-    @mock_builder.stub!(:title)  
+    @mock_builder = mock_oral_question_section_builder 
   end
     
   it_should_behave_like "an xml-generating model"
@@ -17,9 +21,7 @@ end
 describe OralQuestionSection, ".to_xml" do
   
   before do
-    @mock_builder = mock("xml builder")    
-    @mock_builder.stub!(:section).and_yield
-    @mock_builder.stub!(:title)
+    @mock_builder = mock_oral_question_section_builder 
     @oral_question_section = OralQuestionSection.new
   end
  
