@@ -64,7 +64,7 @@ describe '_section partial', 'when passed members contribution' do
       with_tag('span.oral_question_no', @oral_question_no)
       with_tag('span.member', @member)
       with_tag('span.member_constituency', @member_constituency)
-      with_tag('span.contribution_text', @contribution_text)
+      with_tag('blockquote.contribution_text', @contribution_text)
     end
   end
 
@@ -80,8 +80,8 @@ describe '_section partial', 'when passed members contribution' do
     response.should have_tag('span.oral_question_no', @oral_question_no)
   end
 
-  it 'should show contribution text in span with class "contribution_text"' do
-    response.should have_tag('span.contribution_text', @contribution_text)
+  it 'should show contribution text in blockquote with class "contribution_text"' do
+    response.should have_tag('blockquote.contribution_text', @contribution_text)
   end
 
 end
