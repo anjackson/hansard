@@ -1,6 +1,7 @@
 %html
   %head
-    %title= @title || "Title TK"
-    %link{ :rel => 'stylesheet', :href => 'http://www.w3.org/StyleSheets/Core/Swiss', :type => 'text/css' }
+    %title= @title || "Please give me a title!"
+    %link{ :rel => 'stylesheet', :href => 'screen.css', :type => 'text/css', :media => 'screen' }
+    %link{ :rel => 'stylesheet', :href => 'print.css', :type => 'text/css', :media => 'print' }
   %body
     = yield
