@@ -9,9 +9,9 @@ module Hansard
         'westminsterhall',
         'index'
     ]
-  
+
     DATE_PATTERN = /date format="(\d\d\d\d-\d\d-\d\d)"/
-  
+
     def write_to_file name, buffer, date=nil
       name = name + '_' + date.to_s.gsub('-','_') if date
       file_name = File.join @result_path, name+'.xml'
@@ -25,7 +25,7 @@ module Hansard
         `#{indent_cmd}`
       end
     end
-  
+
     def handle_section_start element, line
       if @section_name # inside section already
         @outside_buffer = @buffer # backup outside section
@@ -36,12 +36,12 @@ module Hansard
       @section_name = element
       @start = @index
     end
-  
+
     def handle_section_end line
       if @section_name
         @buffer << line
         puts @date.to_s + '    ' + @section_name + ' start:' + @start.to_s + ' end:' + @index.to_s + ' lines:' + @buffer.size.to_s
-  
+
         write_to_file @section_name, @buffer, @date
         @buffer = []
       elsif @outside_buffer # write out backup if there is one
@@ -49,36 +49,36 @@ module Hansard
         write_to_file @outside_section_name, @outside_buffer, @outside_date
         @outside_buffer = nil
       end
-        
+
       @section_name = nil
       @date = nil
     end
-  
+
     def handle_line line
       @index = @index.next
-  
+
       token_element = false
-  
+
       SPLIT_ON.each do |element|
         if line.include? '<'+element+'>'
           handle_section_start element, line
           token_element = true
         end
-  
+
         if line.include? '</'+element+'>'
           handle_section_end line
           token_element = true
         end
       end
-  
+
       if (@section_name == nil) and (token_element == false)
         @surrounding_buffer << line
       end
-  
+
       if @section_name
         @buffer << line
       end
-  
+
       if (match = DATE_PATTERN.match line)
         new_date = match[1]
         @date = new_date
@@ -128,10 +128,15 @@ module Hansard
 
         total_lines = 0
         Dir.glob(File.join(@result_path,'*.xml')).each do |result|
-          # total_lines += `wc -l #{result}`.split(' ')[0].to_i
+          lines = 0
+          File.open(result).each_line {|line| lines += 1}
+          total_lines += lines
         end
         puts 'total lines: ' + total_lines.to_s
-        # puts 'original lines: ' + `wc -l #{input_file}`.split(' ')[0]
+        input_lines = 0
+        File.open(input_file).each_line {|line| input_lines += 1}
+        puts 'original lines: ' + input_lines.to_s
+        raise "Number of lines don't match!" if total_lines != input_lines
       end
     end
   end
