@@ -408,14 +408,10 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16.xml" 
     @division.name.should == 'Division No. 29]'
   end
   
-  it 'should create division without trailing square bracket close'
-
   it 'should create division time text' do
     @division.time_text.should == '[11.15 pm>'
   end
   
-  it 'should create division time text without leading square bracket open'
-
   it 'should create aye vote' do
     @division.votes[0].should_not be_nil
     @division.votes[0].should be_an_instance_of(AyeVote)
