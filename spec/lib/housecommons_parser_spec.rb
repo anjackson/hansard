@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/hansard_parser_spec_helper'
 
-describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16.xml" do
+describe Hansard::HouseCommonsParser, " when passed housecommons XML" do
   before(:all) do
     @sitting_type = HouseOfCommonsSitting
     @sitting_date = Date.new(1985,12,16)
@@ -468,13 +468,9 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16.xml" 
     @division.name.should == 'Division No. 29]'
   end
 
-  it 'should create division without trailing square bracket close'
-
   it 'should create division time text' do
     @division.time_text.should == '[11.15 pm>'
   end
-
-  it 'should create division time text without leading square bracket open'
 
   it 'should create aye vote' do
     @division.votes[0].should_not be_nil

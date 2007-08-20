@@ -91,4 +91,3 @@ describe '_section partial', 'when passed members contribution' do
   end
 
 end
-
