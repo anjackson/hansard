@@ -1,2 +1,5 @@
-%h1= "hello world"
-= yield
+%html
+  %head
+    %title= @title || "Title TK"
+  %body
+    = yield
