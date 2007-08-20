@@ -128,7 +128,7 @@ module Hansard
 
         total_lines = 0
         Dir.glob(File.join(@result_path,'*.xml')).each do |result|
-          total_lines += `wc -l #{result}`.split(' ')[0].to_i
+          # total_lines += `wc -l #{result}`.split(' ')[0].to_i
         end
         puts 'total lines: ' + total_lines.to_s
         puts 'original lines: ' + `wc -l #{input_file}`.split(' ')[0]
