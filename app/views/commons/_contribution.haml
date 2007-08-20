@@ -4,7 +4,7 @@
   %p.member_contribution
     - if contribution.oral_question_no
       %span.oral_question_no= contribution.oral_question_no
-    %span.member= contribution.member
+    %cite.member= contribution.member
     - if contribution.member_constituency
       %span.member_constituency= contribution.member_constituency
     %blockquote.contribution_text= contribution.text
