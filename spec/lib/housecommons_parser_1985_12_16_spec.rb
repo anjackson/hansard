@@ -407,6 +407,8 @@ describe Hansard::HouseCommonsParser, "when passed housecommons_1985_12_16.xml" 
   it 'should create division name' do
     @division.name.should == 'Division No. 29]'
   end
+  
+  it 'should save division without trailing square bracket close'
 
   it 'should create division time text' do
     @division.time_text.should == '[11.15 pm>'
