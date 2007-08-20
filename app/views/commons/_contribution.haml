@@ -7,6 +7,6 @@
     %span.member= contribution.member
     - if contribution.member_constituency
       %span.member_constituency= contribution.member_constituency
-    %span.contribution_text= contribution.text
+    %blockquote.contribution_text= contribution.text
 - elsif contribution.is_a? QuoteContribution
   %p.quote= contribution.text
