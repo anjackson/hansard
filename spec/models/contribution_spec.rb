@@ -1,7 +1,8 @@
 require File.dirname(__FILE__) + '/../spec_helper'
+require File.dirname(__FILE__) + '/xml_generating_model_spec'
 
 def mock_contribution_builder
-  mock_builder = mock("xml builder") 
+  mock_builder = mock("xml builder")
   mock_builder.stub!(:<<)
   mock_builder.stub!(:p)
   mock_builder
@@ -17,13 +18,13 @@ describe Contribution do
   it "should be valid" do
     @model.should be_valid
   end
-    
+
   it_should_behave_like "an xml-generating model"
 
 end
 
 describe Contribution, ".to_xml" do
-  
+
   before do
     @contribution = Contribution.new
   end
@@ -32,7 +33,7 @@ describe Contribution, ".to_xml" do
     @contribution.xml_id = "xmlid"
     @contribution.to_xml.should have_tag('p#xmlid')
   end
-  
+
   it "should render it's text if there is any" do
     @contribution.text = "some text"
     @contribution.to_xml.should match(/some text/)

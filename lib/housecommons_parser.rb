@@ -119,14 +119,14 @@ class Hansard::HouseCommonsParser
         end
       end
     end
-    
+
     def handle_member_contribution element, debate
       contribution = MemberContribution.new({
          :xml_id => element.attributes['id'],
          :column_range => @column,
          :image_src_range => @image
       })
-      
+
       element.children.each do |node|
         if node.elem?
           name = node.name
@@ -150,7 +150,7 @@ class Hansard::HouseCommonsParser
     end
 
 
-    
+
     def handle_procedural_contribution node, debate
       procedural = ProceduralContribution.new({
         :xml_id => node.attributes['id'],
@@ -196,7 +196,7 @@ class Hansard::HouseCommonsParser
       debates.sections << orders
     end
 
-    
+
     def handle_section_element section_element, debates
       section = Section.new({
         :start_column => @column,
@@ -215,12 +215,12 @@ class Hansard::HouseCommonsParser
               handle_procedural_contribution node, section
             elsif not(node.inner_html.include? 'membercontribution')
               handle_procedural_contribution node, section
-              
+
             else
               handle_member_contribution node, section
             end
           elsif name == 'quote'
-            handle_quote_contribution node, section 
+            handle_quote_contribution node, section
           elsif (name == 'col' or name == 'image')
             handle_image_or_column name, node
           elsif name == 'section'
@@ -245,7 +245,7 @@ class Hansard::HouseCommonsParser
       })
 
       contribution.section = question_section
-      
+
       element.children.each do |node|
         if node.elem?
           name = node.name
@@ -274,7 +274,7 @@ class Hansard::HouseCommonsParser
 
     def handle_oral_question_section section, questions
       question_section = OralQuestionSection.new
-      
+
       section.children.each do |node|
         if node.elem?
           name = node.name
@@ -311,7 +311,7 @@ class Hansard::HouseCommonsParser
               raise "unexpected second paragraph under oral questions section"
             else
               procedural = handle_procedural_contribution node, questions_section
-              questions_section.introduction = procedural 
+              questions_section.introduction = procedural
             end
           else
             puts 'unexpected element in oral_questions_section: ' + name + ': ' + node.to_s
@@ -320,12 +320,12 @@ class Hansard::HouseCommonsParser
       end
 
       questions_section.parent_section = oral_questions
-      oral_questions.sections << questions_section      
+      oral_questions.sections << questions_section
     end
 
     def handle_oral_questions section, debates
       oral_questions = OralQuestions.new
-      
+
       section.children.each do |node|
         if node.elem?
           name = node.name
@@ -336,7 +336,7 @@ class Hansard::HouseCommonsParser
           elsif (name == 'image' or name == 'col')
             handle_image_or_column name, node
           else
-            puts 'unexpected element in oral_questions: ' + name + ': ' + node.to_s            
+            puts 'unexpected element in oral_questions: ' + name + ': ' + node.to_s
           end
         end
       end
@@ -344,7 +344,7 @@ class Hansard::HouseCommonsParser
       oral_questions.parent_section = debates
       debates.sections << oral_questions
     end
-    
+
     def handle_image_or_column name, node
       if name == "image"
         @image = node.attributes['src']
@@ -359,7 +359,7 @@ class Hansard::HouseCommonsParser
 
         if title == 'orders of the day'
           handle_orders_of_the_day section, debates
-        else          
+        else
           handle_section_element section, debates
         end
       else
@@ -381,8 +381,8 @@ class Hansard::HouseCommonsParser
           else
             raise 'unknown debates section type: ' + name
           end
-        elsif node.text?          
-          raise 'unexpected text outside of section: ' + node.to_s if node.to_s.strip.size > 0 
+        elsif node.text?
+          raise 'unexpected text outside of section: ' + node.to_s if node.to_s.strip.size > 0
         end
       end
     end
@@ -413,6 +413,6 @@ class Hansard::HouseCommonsParser
 
       sitting
     end
-  
+
 end
 

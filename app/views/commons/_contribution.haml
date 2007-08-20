@@ -1,2 +1,12 @@
 - if contribution.is_a? ProceduralContribution
   %p.procedural= contribution.text
+- elsif contribution.is_a? MemberContribution
+  %p.member_contribution
+    - if contribution.oral_question_no
+      %span.oral_question_no= contribution.oral_question_no
+    %span.member= contribution.member
+    - if contribution.member_constituency
+      %span.member_constituency= contribution.member_constituency
+    %span.contribution_text= contribution.text
+- elsif contribution.is_a? QuoteContribution
+  %p.quote= contribution.text

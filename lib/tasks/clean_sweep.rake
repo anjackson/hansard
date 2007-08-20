@@ -1,12 +1,10 @@
-require File.join(File.dirname(__FILE__),'..','deconstruct.rb')
-
 namespace :hansard do
 
   task :migrate_down => :environment do
     ENV['VERSION'] = '0'
     Rake::Task['db:migrate'].execute
   end
-  
+
   task :migrate_up => :environment do
     ENV.delete('VERSION')
     Rake::Task['db:migrate'].execute

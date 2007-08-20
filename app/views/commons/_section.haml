@@ -1,2 +1,6 @@
 %h2= section.title
-= render :partial => 'contribution', :collection => section.contributions
+- if section.is_a? OralQuestionsSection
+  %p.question_introduction= section.introduction.text
+- else
+  = render :partial => 'contribution', :collection => section.contributions
+= render :partial => 'section', :collection => section.sections
