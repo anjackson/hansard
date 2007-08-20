@@ -70,7 +70,7 @@ describe '_section partial', 'when passed members contribution' do
     end
   end
 
-  it 'should show member name in span with class "member"' do
+  it 'should show member name in cite with class "member"' do
     response.should have_tag('cite.member', @member)
   end
 
