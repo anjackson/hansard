@@ -2,10 +2,6 @@ require 'rubygems'
 require 'open-uri'
 require 'hpricot'
 
-# ruby script/generate rspec_model sitting      type:string date:date title:string date_text:string column:string text:text
-# ruby script/generate rspec_model section      type:string title:string time:time time_text:string column:string
-# ruby script/generate rspec_model contribution type:string xml_id:string member:string member_constituency:string membercontribution:string column:string oral_question_no:string
-
 module Hansard
   TIME_PATTERN = /^(\d\d?(\.|&#x00B7;)\d\d (am|pm))$/
 end
@@ -31,6 +27,7 @@ class Hansard::HouseCommonsParser
 
     def handle_vote text, division
       parts = text.split('(')
+      puts '@vote_type nil: ' + division.inspect unless @vote_type
       vote = @vote_type.new({
         :name => parts[0].strip,
         :column => @column,
@@ -48,9 +45,9 @@ class Hansard::HouseCommonsParser
         text = cell.inner_text.strip
         unless text.blank?
           if text.downcase.include? 'division no'
-            #ignore
-          elsif /\d\d/.match text
-            #ignore
+            # it's the division number, ignore
+          elsif (/\d\d/.match text or /\d\.\d/.match text)
+            # it's the time, ignore
           elsif text.downcase == 'ayes'
             @vote_type = AyeVote
           elsif text.downcase == 'noes'
@@ -245,12 +242,13 @@ class Hansard::HouseCommonsParser
       })
 
       contribution.section = question_section
+      contribution.member = ''
 
       element.children.each do |node|
         if node.elem?
           name = node.name
           if name == 'member'
-            contribution.member = node.inner_html
+            contribution.member += node.inner_html
           elsif name == 'membercontribution'
             contribution.text = node.inner_html.chars.gsub("\r\n","\n")
           else
@@ -262,7 +260,9 @@ class Hansard::HouseCommonsParser
           if (match = /^(Q?\d+\.?)/.match text)
             contribution.oral_question_no = match[1]
           elsif text.size > 0
-            unless @unexpected
+            if contribution.member.size == 0
+              contribution.member = text.strip + ' '
+            elsif !@unexpected
               puts 'unexpected text: ' + text
               puts 'will suppress rest of unexpected messages'
             end

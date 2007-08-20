@@ -61,6 +61,12 @@ describe Hansard::HouseCommonsParser, " when passed housecommons XML" do
   end
 
 
+  it 'should add text preceding member element to question contribution memeber text' do
+    question = @sitting.debates.oral_questions.sections.last.sections.last.contributions.last
+    question.member.should == "The Parliamentary Under-Secretary of State for Health (Dr. Stephen Ladyman)"
+  end
+
+
   it 'should set the image src property on the first element following an image tag within the orders of the day' do
     count = @sitting.debates.sections.size
     section = @sitting.debates.sections[count - 3].sections[0]
@@ -501,6 +507,12 @@ describe Hansard::HouseCommonsParser, " when passed housecommons XML" do
 
   it 'should create noe vote name' do
     @division.votes[148].name.should == 'Alton, David'
+  end
+
+  it 'should set division time when time format is [6.4 pm' do
+    division = @sitting.debates.sections[10].contributions.select {|c| c.is_a? DivisionPlaceholder}[0].division
+    division.name.should == 'Division No. 27]'
+    division.time_text.should == '[6.4 pm'
   end
 
   it_should_behave_like "All sittings"
