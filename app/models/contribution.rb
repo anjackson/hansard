@@ -9,5 +9,13 @@ class Contribution < ActiveRecord::Base
       xml << text if text 
     end
   end
+  
+  def cols
+     column_range ? column_range.split(",").map{ |col| col.to_i } : []
+  end
 
+  def image_sources
+     image_src_range ? image_src_range.split(",").map{ |image_src| image_src } : []
+  end
+  
 end
