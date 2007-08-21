@@ -68,7 +68,7 @@ describe HouseOfCommonsSitting, ".to_xml" do
   end
   
   it "should have a 'housecommons' tag" do
-    @sitting.to_xml.should match(/<housecommons>.*?<\/housecommons>/)
+    @sitting.to_xml.should match(/<housecommons>.*?<\/housecommons>/m)
   end
   
   it "should have an 'image' tag whose 'src' attribute contains the sitting's start_image_src" do

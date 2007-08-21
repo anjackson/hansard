@@ -22,28 +22,32 @@ describe OralQuestionSection, ".to_xml" do
   
   before do
     @mock_builder = mock_oral_question_section_builder 
-    @oral_question_section = OralQuestionSection.new
+    @section = OralQuestionSection.new
+    @contribution_class = OralQuestionContribution
   end
  
   it "should have a 'section' tag" do
-    @oral_question_section.to_xml.should have_tag("section")
+    @section.to_xml.should have_tag("section")
   end
   
   it "should have one 'title' tag within the 'section' tag containing the question section title " do
-    @oral_question_section.title = "test title"
-    @oral_question_section.to_xml.should have_tag("section title", :text => "test title", :count => 1)
+    @section.title = "test title"
+    @section.to_xml.should have_tag("section title", :text => "test title", :count => 1)
   end
   
-  it "should call the to_xml method on each of it's contributions, passing it's xml builder" do
-    Builder::XmlMarkup.should_receive(:new).and_return(@mock_builder)
-    first_contribution = mock_model(OralQuestionContribution)
-    second_contribution = mock_model(OralQuestionContribution)
-    @oral_question_section.contributions << first_contribution
-    @oral_question_section.contributions << second_contribution
-    first_contribution.should_receive(:to_xml).with(:builder => @mock_builder)
-    second_contribution.should_receive(:to_xml).with(:builder => @mock_builder)
-    @oral_question_section.to_xml
-  end
-  
+  # it "should call the to_xml method on each of it's contributions, passing it's xml builder" do
+  #   Builder::XmlMarkup.should_receive(:new).and_return(@mock_builder)
+  #   first_contribution = mock_model(OralQuestionContribution)
+  #   second_contribution = mock_model(OralQuestionContribution)
+  #   [first_contribution, second_contribution].each do |contribution|
+  #     @oral_question_section.contributions << contribution
+  #     contribution.stub!(:image_sources)
+  #     contribution.stub!(:cols)
+  #     contribution.should_receive(:to_xml).with(:builder => @mock_builder)
+  #   end
+  #   @oral_question_section.to_xml
+  # end
+  # 
+  it_should_behave_like "a section to_xml method"
 end
 

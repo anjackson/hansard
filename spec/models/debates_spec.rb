@@ -23,6 +23,7 @@ describe Debates, ".to_xml" do
     @mock_builder = mock_debates_builder 
     @section = Debates.new
     @subsection_class = Section
+    @contribution_class = Contribution
   end
   
   it "should not have a title tag" do

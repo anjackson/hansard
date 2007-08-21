@@ -24,6 +24,7 @@ describe OralQuestions, ".to_xml" do
     @mock_builder = mock_oral_questions_builder
     @section = OralQuestions.new
     @subsection_class = OralQuestionsSection
+    @contribution_class = Contribution
   end
   
   it "should have one 'title' tag containing the title " do

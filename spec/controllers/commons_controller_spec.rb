@@ -1,4 +1,5 @@
 require File.dirname(__FILE__) + '/../spec_helper'
+require File.dirname(__FILE__) + '/../../lib/housecommons_parser'
 
 describe CommonsController, "#route_for" do
   
@@ -75,3 +76,33 @@ describe CommonsController, "handling GET /commons/1999/feb/08.xml" do
   end
 
 end
+# 
+# describe CommonsController, " handling GET /commons/1985/dec/16.xml with real data and views" do
+# 
+#   before do
+#     @source_file = File.dirname(__FILE__) + "/../../data/s6cv0089p0/housecommons_1985_12_16.xml"
+#     @sitting = Hansard::HouseCommonsParser.new(@source_file).parse
+#     @sitting.save!
+#   end
+#   
+#   def do_get
+#     get :show_commons_hansard, :year => '1985', :month => 'dec', :day => '16', :format => 'xml'
+#   end
+#   
+#   it "should render an xml document identical to the original xml" do
+#     do_get
+#     source = File.read(@source_file)
+#     output = response.body
+#     substitutions = [
+#                      [">", ">\n"],
+#                      ["<","\n<"],
+#                      [/^\s*/, ''],
+#                       [/\s*$/, '']]
+#     substitutions.each do |match, replacement|
+#       source.gsub!(match, replacement)
+#       output.gsub!(match, replacement)
+#     end
+#     output.should eql(source)
+#   end
+#   
+# end

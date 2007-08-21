@@ -34,8 +34,8 @@ describe "a section to_xml method", :shared => true do
   
   it "should call the to_xml method on each of it's contributions, passing it's xml builder" do
     Builder::XmlMarkup.should_receive(:new).and_return(@mock_builder)
-    first_contribution = mock_model(Contribution)
-    second_contribution = mock_model(Contribution)
+    first_contribution = mock_model(@contribution_class)
+    second_contribution = mock_model(@contribution_class)
     [first_contribution, second_contribution].each do |contribution|
       @section.contributions << contribution
       contribution.stub!(:cols).and_return([])
