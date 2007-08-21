@@ -9,9 +9,7 @@ class OralQuestionSection < Section
     xml = options[:builder] ||= Builder::XmlMarkup.new
     xml.section do
       xml.title(title) 
-      contributions.each do |contribution|
-        contribution.to_xml(options)
-      end
+        elements_xml(:builder => xml, :elements => contributions)
     end
   end
 
