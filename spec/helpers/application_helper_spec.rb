@@ -31,4 +31,8 @@ describe ApplicationHelper, " when formatting member contribution" do
         '<p>a <i>real</i> change</p>'
   end
 
+  it 'should leave italics element unchanged' do
+    format_member_contribution('a <sub>real</sub> change').should ==
+        '<p>a <sub>real</sub> change</p>'
+  end
 end

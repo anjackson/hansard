@@ -56,6 +56,10 @@ module ApplicationHelper
             parts << '<i>'
             handle_contribution_part(child, parts, outer_element)
             parts << '</i>'
+          elsif name == 'sub'
+            parts << '<sub>'
+            handle_contribution_part(child, parts, outer_element)
+            parts << '</sub>'
           else
             raise 'unexpected element in contribution text: ' + name
           end
