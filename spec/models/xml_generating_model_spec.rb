@@ -40,6 +40,7 @@ describe "a section to_xml method", :shared => true do
       @section.contributions << contribution
       contribution.stub!(:cols).and_return([])
       contribution.stub!(:image_sources).and_return([])
+      contribution.stub!(:different_image).and_return(false)
       contribution.should_receive(:to_xml).with(:builder => @mock_builder)
     end
     @section.to_xml

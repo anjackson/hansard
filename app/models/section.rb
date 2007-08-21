@@ -28,9 +28,9 @@ class Section < ActiveRecord::Base
         end
       else
         if last_element
-          if element.image_sources && last_element.image_sources && element.image_sources.first && element.image_sources.first != last_element.image_sources.last
+          if element.different_image(last_element)
             if not(/<image src="#{element.image_sources.first}"/.match(element.text) or /<image src="#{element.image_sources.first}"/.match(last_element.text))
-              xml.image(:src => element.image_sources.first)
+              xml.image(:src => element.first_image_source)
             end
           end
           if element.cols && last_element.cols && element.cols.first && element.cols.first != last_element.cols.last
