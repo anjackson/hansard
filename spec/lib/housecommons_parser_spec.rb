@@ -60,6 +60,20 @@ describe Hansard::HouseCommonsParser, " when passed housecommons XML" do
     contribution.procedural_note.should == "<i>(seated and covered)</i>"
   end
 
+  it 'should add a procedural contribution for an ul element after a p element' do
+    contribution = @sitting.debates.sections.last.contributions.last
+    contribution.should_not be_nil
+    contribution.should be_an_instance_of(ProceduralContribution)
+    contribution.text.should == %Q[<ul>\n<li>(f), in line 6, leave out "two" and insert "five".</li>\n<li>(b), in line 6, leave out "two years" and insert "one year".</li>\n</ul>]
+  end
+
+  it 'should add a procedural contribution for an ol element after a p element' do
+    count = @sitting.debates.sections.size
+    contribution = @sitting.debates.sections[count - 2].contributions[2]
+    contribution.should_not be_nil
+    contribution.should be_an_instance_of(ProceduralContribution)
+    contribution.text.should == %Q[<ol>\n<li>1. Paragraphs 4 and 5 of the order shall be omitted.</li>\n<li>2. Proceedings on consideration and Third Reading shall (so far as not previously concluded) be brought to a conclusion:</li>\n</ol>]
+  end
 
   it 'should add text preceding member element to question contribution memeber text' do
     question = @sitting.debates.oral_questions.sections.last.sections.last.contributions.last

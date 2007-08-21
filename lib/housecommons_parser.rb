@@ -224,8 +224,14 @@ class Hansard::HouseCommonsParser
             handle_section_element node, section
           elsif name == 'division'
             handle_division node, section
+          elsif name == 'ul'
+            contribution = handle_procedural_contribution node, section
+            contribution.text = "<ul>\n"+contribution.text+"\n</ul>"
+          elsif name == 'ol'
+            contribution = handle_procedural_contribution node, section
+            contribution.text = "<ol>\n"+contribution.text+"\n</ol>"
           else
-            puts 'unexpected element in non_procedural_section: ' + name # + ': ' + node.to_s
+            puts 'unexpected element in section: ' + name + ': ' + node.to_s
           end
         end
       end
@@ -250,7 +256,7 @@ class Hansard::HouseCommonsParser
           if name == 'member'
             contribution.member += node.inner_html
           elsif name == 'membercontribution'
-            contribution.text = node.inner_html.chars.gsub("\r\n","\n")
+            contribution.text = node.inner_html
           else
             raise 'unexpected element in question_contribution: ' + name + ': ' + node.to_s
           end
@@ -416,3 +422,13 @@ class Hansard::HouseCommonsParser
 
 end
 
+module Hpricot
+  module Traverse
+
+    alias_method :original_inner_html, :inner_html
+
+    def inner_html
+      original_inner_html.chars.gsub("\r\n","\n").to_s
+    end
+  end
+end
