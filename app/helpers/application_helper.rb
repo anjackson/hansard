@@ -19,7 +19,11 @@ module ApplicationHelper
     end
   end
 
-  def format_member_contribution text, outer_elements=['p']
+  def format_section_title title
+    title.gsub('<lb>',' ').gsub('</lb>','').squeeze(' ')
+  end
+
+  def format_contribution text, outer_elements=['p']
     if text.include? ':'
       text = text.sub(':','').strip
     end
@@ -73,6 +77,9 @@ module ApplicationHelper
             wrap_with 'i', child, parts, inner_elements, outer_elements
           elsif name == 'sub'
             wrap_with 'sub', child, parts, inner_elements, outer_elements
+          elsif(name == 'ol' or name == 'ul')
+            addition = child.to_s
+            close_add_open parts, inner_elements, outer_elements, addition
           else
             raise 'unexpected element in contribution text: ' + name
           end

@@ -1,4 +1,4 @@
-%h2= section.title
+%h2= format_section_title(section.title)
 - if section.is_a? OralQuestionsSection
   - if section.introduction
     %p.question_introduction= section.introduction.text

@@ -1,6 +1,8 @@
 - if contribution.is_a? ProceduralContribution
-  %p.procedural= contribution.text
+  %div.procedural
+    = format_contribution(contribution.text, ['div'])
 - elsif contribution.is_a? MemberContribution
   = render :partial => 'member_contribution', :object => contribution
 - elsif contribution.is_a? QuoteContribution
-  %p.quote= contribution.text
+  %div.quote
+    = format_contribution(contribution.text, ['div'])

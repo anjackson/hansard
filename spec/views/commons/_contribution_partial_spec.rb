@@ -11,7 +11,7 @@ describe '_contribution partial', 'when passed quote contribution' do
   end
 
   it 'should show quote text in p with class quote' do
-    response.should have_tag('p.quote', @text.sub('<i>','').sub('</i>',''))
+    response.should have_tag('div.quote', @text.sub(': ','').sub('<i>','').sub('</i>',''))
   end
 
   it 'should show italic text in italics' do
@@ -32,7 +32,7 @@ describe '_contribution partial', 'when passed procedural contribution' do
   end
 
   it 'should show speaker in chair as p with class procedural' do
-    response.should have_tag('p.procedural', '[MADAM SPEAKER in the Chair]')
+    response.should have_tag('div.procedural', '[MADAM SPEAKER in the Chair]')
   end
 
 end
@@ -60,7 +60,7 @@ describe '_section partial', 'when passed members contribution with oral_questio
   end
 
   it 'should show member contribution in p with class "member_contribution"' do
-    response.should have_tag('p.member_contribution') do
+    response.should have_tag('div.member_contribution') do
       with_tag('span.oral_question_no', @oral_question_no)
       with_tag('cite.member', @member)
       with_tag('span.member_constituency', @member_constituency)

@@ -96,4 +96,3 @@ describe "_section partial", "when passed a prayers section" do
   end
 
 end
-

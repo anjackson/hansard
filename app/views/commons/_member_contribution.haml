@@ -1,4 +1,4 @@
-%p.member_contribution
+%div.member_contribution
   - if member_contribution.oral_question_no
     %span.oral_question_no= member_contribution.oral_question_no
   %cite.member= member_contribution.member + colon_after_member_name(member_contribution)
@@ -6,4 +6,4 @@
     %span.member_constituency= member_contribution.member_constituency + colon_after_constituency(member_contribution)
   - if member_contribution.procedural_note
     %span.procedural_note= member_contribution.procedural_note + ':'
-  %blockquote.contribution_text= format_member_contribution(member_contribution.text)
+  %blockquote.contribution_text= format_contribution(member_contribution.text, ['blockquote'])
