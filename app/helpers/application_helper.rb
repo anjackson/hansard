@@ -19,20 +19,20 @@ module ApplicationHelper
     end
   end
 
-  def format_member_contribution(text)
+  def format_member_contribution text, outer_element='p'
     if text.include? ':'
       text = text.sub(':','').strip
     end
 
     xml = '<wrapper>'+text+'</wrapper>'
     doc = Hpricot.XML xml
-    parts = handle_contribution_part doc.children.first, []
-    parts.join('').squeeze(' ')
+    parts = handle_contribution_part doc.children.first, [], outer_element
+    '<p>'+parts.join('').squeeze(' ')+'</p>'
   end
 
   private
 
-    def handle_contribution_part node, parts
+    def handle_contribution_part node, parts, outer_element
       node.children.each do |child|
         if child.text?
           parts << child.to_s if child.to_s.size > 0
@@ -40,8 +40,24 @@ module ApplicationHelper
           name = child.name
           if name == 'quote'
             parts << '<span class="quote">'
-            handle_contribution_part(child, parts)
+            handle_contribution_part(child, parts, outer_element)
             parts << '</span>'
+          elsif name == 'col'
+            parts << "</p></#{outer_element}>"
+            parts << "<h4>Column #{child.inner_html}</h4>"
+            parts << "<#{outer_element}><p>"
+          elsif name == 'image'
+            parts << "</p></#{outer_element}>"
+            parts << "<h4>Image #{child.attributes['src']}</h4>"
+            parts << "<#{outer_element}><p>"
+          elsif name == 'lb'
+            parts << '</p><p>'
+          elsif name == 'i'
+            parts << '<i>'
+            handle_contribution_part(child, parts, outer_element)
+            parts << '</i>'
+          else
+            raise 'unexpected element in contribution text: ' + name
           end
         end
       end
