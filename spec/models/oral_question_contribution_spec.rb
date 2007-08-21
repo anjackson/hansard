@@ -5,7 +5,8 @@ describe OralQuestionContribution, " in general" do
   
   before(:each) do
     @model = OralQuestionContribution.new
-    @mock_builder = mock("xml builder")    
+    @model.stub!(:member).and_return("test member")
+    @mock_builder = mock("xml builder")  
     @mock_builder.stub!(:p)
   end
   
@@ -17,6 +18,7 @@ describe OralQuestionContribution, ".to_xml" do
   
   before do
     @oral_question_contribution = OralQuestionContribution.new
+    @oral_question_contribution.member = "test member"
   end
     
    it "should return one 'p' tag with the id attribute set to the xml_id of the contribution" do
@@ -34,6 +36,11 @@ describe OralQuestionContribution, ".to_xml" do
      @oral_question_contribution.text = the_expected_text
      @oral_question_contribution.to_xml.should have_tag('p membercontribution', :text => the_expected_text, :count => 1)
    end 
+   
+   it "should have a 'memberconstituency' tag inside the 'member' tag containing the constituency if the contribution has a constituency" do
+     @oral_question_contribution.member_constituency = "test constituency"
+     @oral_question_contribution.to_xml.should have_tag('member memberconstituency', :text => "test constituency", :count => 1)
+   end
    
    it "should return a 'p' tag whose text starts with the oral question contribution number if the oral question contribution has one" do
      the_oral_question_no = "1."
@@ -56,7 +63,6 @@ describe OralQuestionContribution, ".to_xml" do
      @oral_question_contribution.text = "Is this a question?"
      @oral_question_contribution.to_xml.should have_tag("membercontribution", "Is this a question?")
    end
-   
    
 end
 
