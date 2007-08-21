@@ -83,6 +83,14 @@ class Hansard::HouseCommonsParser
       debate.contributions << placeholder
     end
 
+    def handle_node_text element
+      text = ''
+      element.children.each do |child|
+        text += child.elem? ?  child.to_original_html : child.to_s
+      end
+      text = text.gsub("\r\n","\n")
+    end
+    
     def handle_contribution_text element, contribution
       element.children.each do |node|
         if node.elem?
@@ -93,12 +101,10 @@ class Hansard::HouseCommonsParser
           elsif name == 'image'
             handle_image_or_column name, node
             contribution.image_src_range += ','+@image
-          else
-            # don't need to handle as we set contribution.text to inner_html
           end
         end
       end
-      contribution.text = element.inner_html.gsub("\r\n","\n")
+      contribution.text = handle_node_text element
     end
 
     def handle_member_name element, contribution
@@ -109,7 +115,7 @@ class Hansard::HouseCommonsParser
 
         elsif node.elem?
           if node.name == 'memberconstituency'
-            contribution.member_constituency = node.inner_html
+            contribution.member_constituency = clean_html(node)
           else
             puts 'unexpected element in member_name: ' + name + ': ' + node.to_s
           end
@@ -154,7 +160,7 @@ class Hansard::HouseCommonsParser
         :xml_id => node.attributes['id'],
         :column_range => @column,
         :image_src_range => @image,
-        :text => node.inner_html.strip
+        :text => clean_html(node).strip
       })
       procedural.section = debate
       debate.contributions << procedural
@@ -165,7 +171,7 @@ class Hansard::HouseCommonsParser
       quote = QuoteContribution.new({
         :column_range => @column,
         :image_src_range => @image,
-        :text => node.inner_html.strip
+        :text => clean_html(node).strip
       })
       quote.section = debate
       debate.contributions << quote
@@ -180,7 +186,7 @@ class Hansard::HouseCommonsParser
         if node.elem?
           name = node.name
           if name == 'title'
-            orders.title = node.inner_html
+            orders.title = clean_html(node)
           elsif name == 'section'
             handle_section_element node, orders
           elsif (name == 'col' or name == 'image')
@@ -205,17 +211,16 @@ class Hansard::HouseCommonsParser
         if node.elem?
           name = node.name
           if name == 'title'
-            section.title = node.inner_html
+            section.title = handle_node_text(node)
           elsif name == 'p'
-            if (match = Hansard::TIME_PATTERN.match node.inner_html)
+            if (match = Hansard::TIME_PATTERN.match  clean_html(node))
               section.time_text = match[0]
               section.time = Time.parse(match[0].gsub('.',':').gsub("&#x00B7;", ":"))
               handle_procedural_contribution node, section
-            elsif not(node.inner_html.include? 'membercontribution')
-              handle_procedural_contribution node, section
-
-            else
+            elsif clean_html(node).include? 'membercontribution' 
               handle_member_contribution node, section
+            else 
+              handle_procedural_contribution node, section
             end
           elsif name == 'quote'
             handle_quote_contribution node, section
@@ -257,7 +262,7 @@ class Hansard::HouseCommonsParser
           if name == 'member'
             handle_member_name node, contribution
           elsif name == 'membercontribution'
-            contribution.text = node.inner_html
+            handle_contribution_text node, contribution
           else
             raise 'unexpected element in question_contribution: ' + name + ': ' + node.to_s
           end
@@ -286,7 +291,7 @@ class Hansard::HouseCommonsParser
         if node.elem?
           name = node.name
           if name == 'title'
-            question_section.title = node.inner_html
+            question_section.title = clean_html(node)
           elsif name == 'p'
             handle_question_contribution node, question_section
           elsif (name == 'col' or name == 'image')
@@ -308,7 +313,7 @@ class Hansard::HouseCommonsParser
         if node.elem?
           name = node.name
           if name == 'title'
-            questions_section.title = node.inner_html
+            questions_section.title = clean_html(node)
           elsif name == 'section'
             handle_oral_question_section node, questions_section
           elsif (name == 'col' or name == 'image')
@@ -337,7 +342,7 @@ class Hansard::HouseCommonsParser
         if node.elem?
           name = node.name
           if name == 'title'
-            oral_questions.title = node.inner_html
+            oral_questions.title = clean_html(node)
           elsif name == 'section'
             handle_oral_questions_section node, oral_questions
           elsif (name == 'image' or name == 'col')
@@ -356,7 +361,7 @@ class Hansard::HouseCommonsParser
       if name == "image"
         @image = node.attributes['src']
       elsif name == "col"
-        @column = node.inner_html
+        @column = clean_html(node)
       end
     end
 
@@ -395,15 +400,15 @@ class Hansard::HouseCommonsParser
     end
 
     def create_house_commons
-      @column = @doc.at('housecommons/col').inner_html
+      @column =  clean_html(@doc.at('housecommons/col'))
       @image =  @doc.at('housecommons/image').attributes['src']
 
       sitting = HouseOfCommonsSitting.new({
         :start_column => @column,
         :start_image_src => @image,
-        :title => @doc.at('housecommons/title').inner_html,
-        :text => @doc.at('housecommons/p').inner_html,
-        :date_text => @doc.at('housecommons/date').inner_html,
+        :title => clean_html(@doc.at('housecommons/title')),
+        :text => clean_html(@doc.at('housecommons/p')),
+        :date_text => clean_html(@doc.at('housecommons/date')),
         :date => @doc.at('housecommons/date').attributes['format']
       })
 
@@ -420,16 +425,9 @@ class Hansard::HouseCommonsParser
 
       sitting
     end
-
-end
-
-module Hpricot
-  module Traverse
-
-    alias_method :original_inner_html, :inner_html
-
-    def inner_html
-      original_inner_html.chars.gsub("\r\n","\n").to_s
+    
+    def clean_html node
+      node.inner_html.chars.gsub("\r\n","\n").to_s
     end
-  end
+
 end
