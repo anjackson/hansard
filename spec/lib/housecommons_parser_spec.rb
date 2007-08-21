@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/hansard_parser_spec_helper'
 
-describe Hansard::HouseCommonsParser, " when passed housecommons XML" do
+describe Hansard::HouseCommonsParser do
   before(:all) do
     @sitting_type = HouseOfCommonsSitting
     @sitting_date = Date.new(1985,12,16)
@@ -212,6 +212,16 @@ describe Hansard::HouseCommonsParser, " when passed housecommons XML" do
   it 'should set a oral question number when number is formated as Q1.' do
     question = @sitting.debates.oral_questions.sections.last.sections.first.contributions.first
     question.oral_question_no.should == 'Q1.'
+  end
+
+  it 'should set member name correctly when member element contains member constituency for a oral question' do
+    question = @sitting.debates.oral_questions.sections.last.sections.first.contributions.first
+    question.member.should == 'Mr. Frank Field'
+  end
+
+  it 'should set member constituency when member element contains member constituency for a oral question' do
+    question = @sitting.debates.oral_questions.sections.last.sections.first.contributions.first
+    question.member_constituency.should == '(Birkenhead)'
   end
 
   it "should add an introduction procedural contribution to an oralquestions section that has a 'p' tag within it" do

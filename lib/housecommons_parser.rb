@@ -105,7 +105,7 @@ class Hansard::HouseCommonsParser
       element.children.each do |node|
         if node.text?
           text = node.to_s.strip
-          contribution.member = text if text.size > 0
+          contribution.member += text if text.size > 0
 
         elsif node.elem?
           if node.name == 'memberconstituency'
@@ -123,6 +123,7 @@ class Hansard::HouseCommonsParser
          :column_range => @column,
          :image_src_range => @image
       })
+      contribution.member = ''
 
       element.children.each do |node|
         if node.elem?
@@ -254,7 +255,7 @@ class Hansard::HouseCommonsParser
         if node.elem?
           name = node.name
           if name == 'member'
-            contribution.member += node.inner_html
+            handle_member_name node, contribution
           elsif name == 'membercontribution'
             contribution.text = node.inner_html
           else
