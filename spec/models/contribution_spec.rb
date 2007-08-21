@@ -1,5 +1,4 @@
 require File.dirname(__FILE__) + '/../spec_helper'
-require File.dirname(__FILE__) + '/xml_generating_model_spec'
 
 def mock_contribution_builder
   mock_builder = mock("xml builder")
@@ -37,6 +36,25 @@ describe Contribution, ".to_xml" do
   it "should render it's text if there is any" do
     @contribution.text = "some text"
     @contribution.to_xml.should match(/some text/)
+  end
+
+end
+
+describe Contribution, ".cols" do
+  
+  it "should return a list of the columns for the contribution" do
+    contribution = Contribution.new(:column_range => "2,3,4")
+    contribution.cols.should == [2,3,4]
+  end
+
+end
+
+
+describe Contribution, ".image_sources" do
+  
+  it "should return a list of the image sources for the contribution" do
+    contribution = Contribution.new(:image_src_range => "image2,image3,image4")
+    contribution.image_sources.should == ["image2", "image3", "image4"]
   end
 
 end
