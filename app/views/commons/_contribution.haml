@@ -1,14 +1,6 @@
 - if contribution.is_a? ProceduralContribution
   %p.procedural= contribution.text
 - elsif contribution.is_a? MemberContribution
-  %p.member_contribution
-    - if contribution.oral_question_no
-      %span.oral_question_no= contribution.oral_question_no
-    %cite.member= contribution.member
-    - if contribution.member_constituency
-      %span.member_constituency= contribution.member_constituency
-    - if contribution.procedural_note
-      %span.procedural_note= contribution.procedural_note
-    %blockquote.contribution_text= contribution.text
+  = render :partial => 'member_contribution', :object => contribution
 - elsif contribution.is_a? QuoteContribution
   %p.quote= contribution.text
