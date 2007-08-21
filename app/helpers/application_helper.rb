@@ -26,9 +26,26 @@ module ApplicationHelper
 
     xml = '<wrapper>'+text+'</wrapper>'
     doc = Hpricot.XML xml
-    doc.children.first.children.each do |node|
-
-    end
-    doc.children.first.inner_html
+    parts = handle_contribution_part doc.children.first, []
+    parts.join('').squeeze(' ')
   end
+
+  private
+
+    def handle_contribution_part node, parts
+      node.children.each do |child|
+        if child.text?
+          parts << child.to_s if child.to_s.size > 0
+        elsif child.elem?
+          name = child.name
+          if name == 'quote'
+            parts << '<span class="quote">'
+            handle_contribution_part(child, parts)
+            parts << '</span>'
+          end
+        end
+      end
+      parts
+    end
+
 end
