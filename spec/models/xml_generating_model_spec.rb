@@ -28,3 +28,35 @@ describe "an xml-generating model", :shared => true do
   end
 
 end
+
+
+describe "a section to_xml method", :shared => true do
+  
+  it "should call the to_xml method on each of it's contributions, passing it's xml builder" do
+    Builder::XmlMarkup.should_receive(:new).and_return(@mock_builder)
+    first_contribution = mock_model(Contribution)
+    second_contribution = mock_model(Contribution)
+    [first_contribution, second_contribution].each do |contribution|
+      @section.contributions << contribution
+      contribution.stub!(:cols).and_return([])
+      contribution.stub!(:image_sources).and_return([])
+      contribution.should_receive(:to_xml).with(:builder => @mock_builder)
+    end
+    @section.to_xml
+  end
+   
+  it "should call the to_xml method on each of it's sections, passing it's xml builder" do
+    Builder::XmlMarkup.should_receive(:new).and_return(@mock_builder)
+    first_section = mock_model(@subsection_class)
+    second_section = mock_model(@subsection_class)
+    [first_section, second_section].each do |section|
+      @section.sections << section
+      section.stub!(:start_image_src)
+      section.stub!(:start_column)
+      section.should_receive(:to_xml).with(:builder => @mock_builder)
+    end
+ 
+    @section.to_xml
+  end
+  
+end
