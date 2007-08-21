@@ -7,15 +7,15 @@ class Debates < Section
   def oral_questions
     sections.select {|s| s.is_a? OralQuestions}[0]
   end
-  
- 
-  def to_xml(options={})
+
+  def outer_tag(options)
     xml = options[:builder] ||= Builder::XmlMarkup.new
     xml.debates do
-      sections.each do |section|
-        section.to_xml(options)
-      end
+      yield
     end
   end
-
+  
+  def title_xml(options)
+  end
+  
 end
