@@ -19,20 +19,39 @@ module ApplicationHelper
     end
   end
 
-  def format_member_contribution text, outer_element='p'
+  def format_member_contribution text, outer_elements=['p']
     if text.include? ':'
       text = text.sub(':','').strip
     end
 
     xml = '<wrapper>'+text+'</wrapper>'
     doc = Hpricot.XML xml
-    parts = handle_contribution_part doc.children.first, [], outer_element
+    inner_elements = []
+    parts = handle_contribution_part doc.children.first, [], inner_elements, outer_elements
     '<p>'+parts.join('').squeeze(' ')+'</p>'
   end
 
   private
 
-    def handle_contribution_part node, parts, outer_element
+    def close_add_open parts, inner_elements, outer_elements, addition
+      inner_elements.each { |e| parts << "</#{e}>" }
+      parts << "</p>"
+      outer_elements.each { |e| parts << "</#{e}>" }
+
+      parts << addition
+
+      outer_elements.reverse.each { |e| parts << "<#{e}>" }
+      parts << "<p>"
+      inner_elements.reverse.each { |e| parts << "<#{e}>" }
+    end
+
+    def wrap_with element, node, parts, inner_elements, outer_elements
+      parts << '<'+element+'>'
+      handle_contribution_part(node, parts, inner_elements + [element], outer_elements)
+      parts << '</'+element+'>'
+    end
+
+    def handle_contribution_part node, parts, inner_elements, outer_elements
       node.children.each do |child|
         if child.text?
           parts << child.to_s if child.to_s.size > 0
@@ -40,26 +59,20 @@ module ApplicationHelper
           name = child.name
           if name == 'quote'
             parts << '<span class="quote">'
-            handle_contribution_part(child, parts, outer_element)
+            handle_contribution_part(child, parts, inner_elements, outer_elements)
             parts << '</span>'
           elsif name == 'col'
-            parts << "</p></#{outer_element}>"
-            parts << "<h4>Column #{child.inner_html}</h4>"
-            parts << "<#{outer_element}><p>"
+            addition = "<h4>Column #{child.inner_html}</h4>"
+            close_add_open parts, inner_elements, outer_elements, addition
           elsif name == 'image'
-            parts << "</p></#{outer_element}>"
-            parts << "<h4>Image #{child.attributes['src']}</h4>"
-            parts << "<#{outer_element}><p>"
+            addition = "<h4>Image #{child.attributes['src']}</h4>"
+            close_add_open parts, inner_elements, outer_elements, addition
           elsif name == 'lb'
             parts << '</p><p>'
           elsif name == 'i'
-            parts << '<i>'
-            handle_contribution_part(child, parts, outer_element)
-            parts << '</i>'
+            wrap_with 'i', child, parts, inner_elements, outer_elements
           elsif name == 'sub'
-            parts << '<sub>'
-            handle_contribution_part(child, parts, outer_element)
-            parts << '</sub>'
+            wrap_with 'sub', child, parts, inner_elements, outer_elements
           else
             raise 'unexpected element in contribution text: ' + name
           end
