@@ -35,19 +35,6 @@ describe OralQuestionSection, ".to_xml" do
     @section.to_xml.should have_tag("section title", :text => "test title", :count => 1)
   end
   
-  # it "should call the to_xml method on each of it's contributions, passing it's xml builder" do
-  #   Builder::XmlMarkup.should_receive(:new).and_return(@mock_builder)
-  #   first_contribution = mock_model(OralQuestionContribution)
-  #   second_contribution = mock_model(OralQuestionContribution)
-  #   [first_contribution, second_contribution].each do |contribution|
-  #     @oral_question_section.contributions << contribution
-  #     contribution.stub!(:image_sources)
-  #     contribution.stub!(:cols)
-  #     contribution.should_receive(:to_xml).with(:builder => @mock_builder)
-  #   end
-  #   @oral_question_section.to_xml
-  # end
-  # 
   it_should_behave_like "a section to_xml method"
 end
 

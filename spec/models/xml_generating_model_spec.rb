@@ -47,13 +47,15 @@ describe "a section to_xml method", :shared => true do
    
   it "should call the to_xml method on each of it's sections, passing it's xml builder" do
     Builder::XmlMarkup.should_receive(:new).and_return(@mock_builder)
-    first_section = mock_model(@subsection_class)
-    second_section = mock_model(@subsection_class)
-    [first_section, second_section].each do |section|
-      @section.sections << section
-      section.stub!(:start_image_src)
-      section.stub!(:start_column)
-      section.should_receive(:to_xml).with(:builder => @mock_builder)
+    if @subsection_class
+      first_section = mock_model(@subsection_class)
+      second_section = mock_model(@subsection_class)
+      [first_section, second_section].each do |section|
+        @section.sections << section
+        section.stub!(:start_image_src)
+        section.stub!(:start_column)
+        section.should_receive(:to_xml).with(:builder => @mock_builder)
+      end
     end
  
     @section.to_xml
