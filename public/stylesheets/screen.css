@@ -1,31 +1,33 @@
 body {
-  background-color:   #fff;
-  color:              #333;
-  font-family:        Georgia, serif;
-  margin-top:             2em;
-margin-left:             10em;
-margin-right:             20em;
-margin-bottom:             10em;
-min-width:	500px;
-font-size: 1.2em;
-line-height: 140%;
-text-align: justify;
+  background-color: #fff;
+  color: #333;
+  font-family: Georgia, serif;
+  font-size: 1.2em;
+  line-height: 140%;
+  text-align: justify;
+
+  position: relative;
+  width: 34em; /* resizing font size doesn't change words per line */
+  margin: 0 auto;
 }
 
-h1, h2, h3, h4 {font-weight: normal;text-align:center;}
+h1, h2, h3, h4 {
+  font-weight: normal;
+  text-align:center;
+}
 
-h2 {padding-bottom: 0.5em;
+h2 {
+  padding-bottom: 0.5em;
 	border-bottom: 1pt solid #333;}
+
 cite {
-  display:              inline;
+  display: inline;
 }
 
 blockquote {
-  display:              inline;
+  display: inline;
 }
 
 a {
-text-decoration: none;
+  text-decoration: none;
 }
-
-
