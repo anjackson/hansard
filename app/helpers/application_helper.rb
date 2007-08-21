@@ -1,3 +1,5 @@
+require 'hpricot'
+
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
 
@@ -19,9 +21,14 @@ module ApplicationHelper
 
   def format_member_contribution(text)
     if text.include? ':'
-      text.sub(':','').strip
-    else
-      text
+      text = text.sub(':','').strip
     end
+
+    xml = '<wrapper>'+text+'</wrapper>'
+    doc = Hpricot.XML xml
+    doc.children.first.children.each do |node|
+
+    end
+    doc.children.first.inner_html
   end
 end
