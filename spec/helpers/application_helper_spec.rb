@@ -25,7 +25,7 @@ describe ApplicationHelper, " when formatting contribution" do
 
   it 'should replace image element with h4' do
     format_contribution('a <image src="S6CV0089P0I0021"/> text',['zzz']).should ==
-        '<p>a </p></zzz><h4>Image S6CV0089P0I0021</h4><zzz><p> text</p>'
+        "<p>a </p></zzz><h4 class='sidenote'>Image S6CV0089P0I0021</h4><zzz><p> text</p>"
   end
 
   it 'should replace lb element with close and open paragraph' do
