@@ -508,31 +508,59 @@ describe Hansard::HouseCommonsParser do
   end
 
   it 'should set aye vote name' do
-    @division.votes[0].name == 'Alexander, Richard'
+    @division.votes[0].name.should == 'Alexander, Richard'
   end
 
   it 'should set aye vote column' do
-    @division.votes[0].column == 123
+    @division.votes[0].column.should == '123'
   end
 
   it 'should set aye vote image' do
-    @division.votes[0].image_src == 'S6CV0089P0I0071'
+    @division.votes[0].image_src.should == 'S6CV0089P0I0071'
   end
 
   it 'should set aye vote name and constituency when present' do
-    @division.votes[4].name == 'Atkinson, David'
-    @division.votes[4].constituency == "B m'th E"
+    @division.votes[4].name.should == 'Atkinson, David'
+    @division.votes[4].constituency.should == "B m'th E"
+  end
+  
+  it 'should create teller aye votes for the cells that appear after the heading "Tellers for the Ayes" in the right hand column of the division table' do
+    [@division.votes[143], @division.votes[145]].each do |division|
+      division.should_not be_nil
+      division.should be_an_instance_of(AyeTellerVote)
+    end
+  end
+  
+  it 'should create aye votes for the cells that appear after the heading "Tellers for the Ayes" in the left hand column of the division table' do
+    [@division.votes[142], @division.votes[144], @division.votes[146]].each do |division|
+      division.should_not be_nil
+      division.should be_an_instance_of(AyeVote)
+    end
   end
 
   it 'should create noe vote' do
-    @division.votes[148].should_not be_nil
-    @division.votes[148].should be_an_instance_of(NoeVote)
+    @division.votes[147].should_not be_nil
+    @division.votes[147].should be_an_instance_of(NoeVote)
   end
 
   it 'should create noe vote name' do
-    @division.votes[148].name.should == 'Alton, David'
+    @division.votes[147].name.should == 'Alton, David'
   end
 
+  it 'should create teller noe votes for the cells that appear after the heading "Tellers for the Noes" in the right hand column of the division table' do
+    [@division.votes[212], @division.votes[214]].each do |division|
+      division.should_not be_nil
+      division.should be_an_instance_of(NoeTellerVote)
+    end
+  end
+  
+  it 'should create noe votes for the cells that appear after the heading "Tellers for the Noes" in the left hand column of the division table' do
+    [@division.votes[211], @division.votes[213], @division.votes[215]].each do |division|
+      division.should_not be_nil
+      division.should be_an_instance_of(NoeVote)
+    end
+  end
+  
   it 'should set division time when time format is [6.4 pm' do
     division = @sitting.debates.sections[10].contributions.select {|c| c.is_a? DivisionPlaceholder}[0].division
     division.name.should == 'Division No. 27]'
