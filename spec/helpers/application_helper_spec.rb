@@ -20,7 +20,7 @@ describe ApplicationHelper, " when formatting contribution" do
 
   it 'should replace col element with h4' do
     format_contribution('a <col>123</col> text',['zzz']).should ==
-        '<p>a </p></zzz><h4>Column 123</h4><zzz><p> text</p>'
+        "<p>a </p></zzz><h4 class='sidenote'>Column 123</h4><zzz><p> text</p>"
   end
 
   it 'should replace image element with h4' do
@@ -45,11 +45,11 @@ describe ApplicationHelper, " when formatting contribution" do
 
   it 'should correctly handle image element in italics element' do
     format_contribution('a <i>really <image src="S6CV0089P0I0021"/> powerful</i> change',['zzz']).should ==
-        '<p>a <i>really </i></p></zzz><h4>Image S6CV0089P0I0021</h4><zzz><p><i> powerful</i> change</p>'
+        "<p>a <i>really </i></p></zzz><h4 class='sidenote'>Image S6CV0089P0I0021</h4><zzz><p><i> powerful</i> change</p>"
   end
 
   it 'should correctly handle column element in subscript element' do
     format_contribution('a <sub>really <col>123</col> powerful</sub> change',['zzz']).should ==
-        '<p>a <sub>really </sub></p></zzz><h4>Column 123</h4><zzz><p><sub> powerful</sub> change</p>'
+        "<p>a <sub>really </sub></p></zzz><h4 class='sidenote'>Column 123</h4><zzz><p><sub> powerful</sub> change</p>"
   end
 end
