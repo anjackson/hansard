@@ -2,10 +2,10 @@ body {
   background-color:   #fff;
   color:              #333;
   font-family:        Georgia, serif;
-  margin-top:             0em;
-margin-left:             10em;
+
+margin-left:             8em;
 margin-right:             20em;
-margin-bottom:             10em;
+margin-bottom:             8em;
 width:	34em;
 font-size: 1.2em;
 line-height: 140%;
@@ -25,14 +25,9 @@ h1, h2, h3 {
 	  font-weight:        normal;
 	  float:              right;
 	  text-align:         left;
-	  margin-top:         0px;
-	  margin-bottom:      0px;
-	  margin-right:		  -260px;
-	  width:              200px;
+	  margin-right:		  -14em;
+	  width:              12em;
 	  position:           relative;
-	  padding-bottom:     0;
-	  padding-top:		  0;
-	  padding-left:		  60px;
 }
 
 cite {
@@ -51,8 +46,13 @@ a {
   text-decoration: none;
 }
 
-#title {font-size:1em;text-align:left;}
+#title {font-size:1em;
+	font-weight:normal;
+	text-align:left;
+	font-family: Helvetica Neue, Helvetica, Arial, Verdana, sans-serif;
+	  color:              #666;}
 
 #search {float:right;}
 
-#header {}
+#header {height:4em;
+	border-bottom:0.5pt solid #666;}
