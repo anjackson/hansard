@@ -37,6 +37,12 @@ describe Contribution, ".to_xml" do
     @contribution.text = "some text"
     @contribution.to_xml.should match(/some text/)
   end
+  
+  it "should have a 'p' tag with any style information for the contribution set as tag attributes" do
+    @contribution.xml_id = "xmlid"
+    @contribution.style = "align=center"
+    @contribution.to_xml.should have_tag("p#xmlid[align=center]")    
+  end
 
 end
 
@@ -113,3 +119,4 @@ describe Contribution, ".last_image_source" do
   end
   
 end
+
