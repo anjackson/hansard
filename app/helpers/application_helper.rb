@@ -66,7 +66,7 @@ module ApplicationHelper
             handle_contribution_part(child, parts, inner_elements, outer_elements)
             parts << '</span>'
           elsif name == 'col'
-            addition = "<h4 class='sidenote'>Column #{child.inner_html}</h4>"
+            addition = "<h4 class='sidenote'>Col. #{child.inner_html}</h4>"
             close_add_open parts, inner_elements, outer_elements, addition
           elsif name == 'image'
             addition = "<h4 class='sidenote'>Image #{child.attributes['src']}</h4>"
