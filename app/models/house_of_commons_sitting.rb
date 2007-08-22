@@ -7,7 +7,9 @@ class HouseOfCommonsSitting < Sitting
     xml = options[:builder] ||= Builder::XmlMarkup.new(:indent => 1)
     xml.housecommons do
       xml.image(:src => start_image_src)
-      xml.col(start_column)
+      options[:current_image_src] = start_image_src
+      xml.col(first_col)
+      options[:current_column] = first_col
       xml.title(title)
       xml.date(date_text, :format => date.strftime("%Y-%m-%d"))
       xml << text + "\n"

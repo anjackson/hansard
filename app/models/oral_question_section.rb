@@ -5,12 +5,5 @@ class OralQuestionSection < Section
 
   alias :to_activerecord_xml :to_xml
   
-  def to_xml(options={})
-    xml = options[:builder] ||= Builder::XmlMarkup.new
-    xml.section do
-      xml.title(title) 
-        elements_xml(:builder => xml, :elements => contributions)
-    end
-  end
 
 end

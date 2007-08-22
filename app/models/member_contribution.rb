@@ -8,7 +8,7 @@ class MemberContribution < Contribution
   
   def to_xml(options={})
     xml = options[:builder] ||= Builder::XmlMarkup.new
-    
+    xml_markers(options)
     xml.p(:id => xml_id) do
       xml.text! oral_question_no || ""
       xml.member do

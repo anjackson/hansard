@@ -7,41 +7,25 @@ class Section < ActiveRecord::Base
 
   def to_xml(options={})
     xml = options[:builder] ||= Builder::XmlMarkup.new
+    xml_markers(options)
     self.outer_tag(options) do
       self.title_xml(options)
-      elements_xml(:builder => xml, :elements => contributions) if self.respond_to? "contributions"
-      elements_xml(:builder => xml, :elements => sections)
+      if respond_to? "contributions"
+        contributions.each { |contribution| contribution.to_xml(options) }
+      end
+      sections.each { |section| section.to_xml(options) }
     end
   end
   
-  def elements_xml(options={})
+  def xml_markers(options)
     xml = options[:builder] ||= Builder::XmlMarkup.new
-    elements = options.delete(:elements)
-    last_element = nil
-    elements.each do |element|
-      if element.kind_of? Section
-        if !element.start_image_src.nil? 
-          xml.image(:src => element.start_image_src)
-        end
-        if !element.start_column.nil?
-          xml.col(element.start_column)
-        end
-      else
-        if last_element
-          if element.different_image(last_element)
-            if not(/<image src="#{element.image_sources.first}"/.match(element.text) or /<image src="#{element.image_sources.first}"/.match(last_element.text))
-              xml.image(:src => element.first_image_source)
-            end
-          end
-          if element.cols && last_element.cols && element.cols.first && element.cols.first != last_element.cols.last
-            if not(/<col>#{element.cols.first}/.match(element.text) or /<col>#{element.cols.first}/.match(last_element.text))
-              xml.col(element.cols.first)
-            end
-          end
-        end
-      end
-      element.to_xml(options)
-      last_element = element
+    if start_image_src && start_image_src != options[:current_image_src]
+      xml.image(:src => start_image_src)
+      options[:current_image_src] = start_image_src
+    end
+    if first_col && first_col > options[:current_column]
+      xml.col(first_col)
+      options[:current_column] = first_col
     end
   end
   
@@ -59,4 +43,11 @@ class Section < ActiveRecord::Base
     end
   end
    
+  def first_col
+    start_column ? start_column.to_i : nil
+  end
+  
+  def last_col
+    start_column ? start_column.to_i : nil
+  end
 end
