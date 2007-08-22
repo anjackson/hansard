@@ -81,7 +81,7 @@ module ApplicationHelper
             addition = child.to_s
             close_add_open parts, inner_elements, outer_elements, addition
           else
-            raise 'unexpected element in contribution text: ' + name
+            # raise 'unexpected element in contribution text: ' + name
           end
         end
       end
