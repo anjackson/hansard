@@ -96,7 +96,7 @@ describe HouseOfCommonsSitting, ".to_xml" do
     Builder::XmlMarkup.should_receive(:new).and_return(@mock_builder)
     debates = mock_model(Debates)
     @sitting.debates = debates
-    debates.should_receive(:to_xml).with(:builder => @mock_builder)
+    debates.should_receive(:to_xml).with(:builder => @mock_builder, :current_image_src => "source", :current_column => 1)
     @sitting.to_xml
   end
 
