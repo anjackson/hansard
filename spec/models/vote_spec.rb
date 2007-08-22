@@ -42,3 +42,17 @@ describe Vote, ".to_xml" do
   end
 
 end
+
+describe Vote, ".first_col" do
+  
+  it "should return the first column" do
+    vote = Vote.new(:column => "2")
+    vote.first_col.should == 2
+  end
+  
+  it "should return nil if the vote has no column" do
+    vote = Vote.new(:column => nil)
+    vote.first_col.should be_nil
+  end
+  
+end
