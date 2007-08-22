@@ -6,7 +6,14 @@ class Contribution < ActiveRecord::Base
   def to_xml(options={})
     xml = options[:builder] ||= Builder::XmlMarkup.new
     xml_markers(options)
-    xml.p :id => xml_id do 
+    style_hash = {}
+    if style
+      style.split(" ").each do |style|
+        key, value = style.split('=')
+        style_hash[key] = value
+      end
+    end
+    xml.p style_hash.update(:id => xml_id) do 
       xml << text if text 
     end
   end
