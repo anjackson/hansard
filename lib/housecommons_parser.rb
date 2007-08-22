@@ -3,7 +3,7 @@ require 'open-uri'
 require 'hpricot'
 
 module Hansard
-  TIME_PATTERN = /^(\d\d?(\.|&#x00B7;)\d\d (am|pm))$/
+  TIME_PATTERN = /^(\d\d?(\.|&#x00B7;)\d\d (am|pm))$/ unless defined?(TIME_PATTERN)
 end
 
 class Hansard::HouseCommonsParser
