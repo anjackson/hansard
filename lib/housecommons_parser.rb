@@ -25,13 +25,13 @@ class Hansard::HouseCommonsParser
 
   private
 
-    def handle_vote text, division
+    def handle_vote text, division, vote_type
       parts = text.split('(')
-      puts '@vote_type nil: ' + division.inspect unless @vote_type
-      vote = @vote_type.new({
+      puts 'vote_type nil: ' + division.inspect unless vote_type
+      vote = vote_type.new({
         :name => parts[0].strip,
         :column => @column,
-        :image_src => @image_src
+        :image_src => @image
       })
       if parts.size > 1
         vote.constituency = parts[1].chomp(')')
@@ -41,7 +41,10 @@ class Hansard::HouseCommonsParser
     end
 
     def handle_division_table table, division
+      left_cells = (table/'tr/td:first-child')
+      # print "#{left_cells}\n\n\n\n"
       (table/'tr/td').each do |cell|
+        
         text = cell.inner_text.strip
         unless text.blank?
           if text.downcase.include? 'division no'
@@ -52,8 +55,23 @@ class Hansard::HouseCommonsParser
             @vote_type = AyeVote
           elsif text.downcase == 'noes'
             @vote_type = NoeVote
+          elsif /teller(s)? for the ayes/.match text.downcase
+            @vote_type = AyeTellerVote
+          elsif /teller(s)? for the noes/.match text.downcase
+            @vote_type = NoeTellerVote
           else
-            handle_vote text, division
+            vote_type = @vote_type
+            if @vote_type == AyeTellerVote
+              if left_cells.include? cell
+                vote_type = AyeVote
+              end
+            end
+            if @vote_type == NoeTellerVote
+              if left_cells.include? cell
+                vote_type = NoeVote
+              end
+            end
+            handle_vote text, division, vote_type
           end
         end
       end
