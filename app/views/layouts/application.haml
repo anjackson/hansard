@@ -1,7 +1,7 @@
-%html{ :lang => 'en-GB' }
-  %head{ :profile => 'http://profiles.parliament.uk/prototyping' }
+%html{ :lang => 'en-GB', :xmlns => 'http://www.w3.org/1999/xhtml' }
+  %head
     %meta{ 'http-equiv'.to_sym=>"Content-Type", :content=>"text/html;charset=utf-8" }
-    %title= @title || "Please give me a title!"
+    %title= @title || "Historic Hansard"
     %link{ :rel => 'stylesheet', :href => '/stylesheets/screen.css', :type => 'text/css', :media => 'screen' }
     %link{ :rel => 'stylesheet', :href => '/stylesheets/print.css', :type => 'text/css', :media => 'print' }
   %body
@@ -10,6 +10,9 @@
         %input
         %input{ :type => 'submit', :value => 'Search' }
       %h1#title Historic Hansard
+      %ol#navigation
+        %li Previous day
+        %li Next day
     #content
       = yield
     #footer &copy; UK Parliament
