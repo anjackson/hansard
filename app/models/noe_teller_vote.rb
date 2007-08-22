@@ -1,0 +1,2 @@
+class NoeTellerVote < Vote
+end
