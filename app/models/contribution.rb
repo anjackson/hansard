@@ -5,7 +5,7 @@ class Contribution < ActiveRecord::Base
 
   def to_xml(options={})
     xml = options[:builder] ||= Builder::XmlMarkup.new
-    xml_markers(options)
+    marker_xml(options)
     style_hash = {}
     if style
       style.split(" ").each do |style|
@@ -17,32 +17,7 @@ class Contribution < ActiveRecord::Base
       xml << text if text 
     end
   end
-  
-  def xml_markers(options)
-    xml = options[:builder] ||= Builder::XmlMarkup.new
-    images = []
-    images = text.scan(/<image src="(.*)"/) if text
-    if !images.empty?
-      options[:current_image_src] = images.last[0]
-    else
-      if first_image_source != options[:current_image_src]
-        xml.image(:src => first_image_source)
-        options[:current_image_src] = first_image_source
-      end
-    end
-    
-    text_cols = []
-    text_cols = text.scan(/<col>(\d+)/) if text
-    if !text_cols.empty?
-      options[:current_column] = text_cols.last[0].to_i
-    else
-      if first_col > options[:current_column]
-        xml.col(first_col)
-        options[:current_column] = first_col
-      end
-    end  
-  end
-  
+
   def cols
      column_range ? column_range.split(",").map{ |col| col.to_i } : []
   end

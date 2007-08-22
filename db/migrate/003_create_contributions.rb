@@ -11,6 +11,7 @@ class CreateContributions < ActiveRecord::Migration
       t.string  :oral_question_no
       t.string  :procedural_note
       t.integer :section_id
+      t.string  :style
     end
   end
 

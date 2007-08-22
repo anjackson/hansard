@@ -9,8 +9,10 @@ end
 def mock_votes(division, vote_class)
   first_vote = mock_model(vote_class.constantize)
   second_vote = mock_model(vote_class.constantize)
-  division.send(vote_class.tableize) << first_vote
-  division.votes << second_vote
+  [first_vote, second_vote].each do |vote|
+    vote.stub!(:first_col)
+    division.send(vote_class.tableize) << vote
+  end
 end
 
 def get_division
@@ -61,10 +63,22 @@ describe Division, ".to_xml" do
     @division.aye_votes.each{ |aye_vote| aye_vote.should_receive(:to_xml) } 
     @division.to_xml
   end
+  
+  it "should ask each of it's aye teller votes for xml" do
+    mock_votes(@division, "AyeTellerVote")
+    @division.aye_teller_votes.each{ |aye_teller_vote| aye_teller_vote.should_receive(:to_xml) } 
+    @division.to_xml
+  end
 
   it "should ask each of it's no votes for xml" do 
     mock_votes(@division, "NoeVote")
     @division.noe_votes.each{ |no_vote| no_vote.should_receive(:to_xml) } 
+    @division.to_xml
+  end
+  
+  it "should ask each of it's noe teller votes for xml" do
+    mock_votes(@division, "NoeTellerVote")
+    @division.noe_teller_votes.each{ |noe_teller_vote| noe_teller_vote.should_receive(:to_xml) } 
     @division.to_xml
   end
   
@@ -73,3 +87,5 @@ describe Division, ".to_xml" do
   end
   
 end
+
+

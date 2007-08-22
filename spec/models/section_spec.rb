@@ -39,3 +39,17 @@ describe Section, ".to_xml" do
   it_should_behave_like "a section to_xml method"
   
 end
+
+describe Section, ".first_image_source" do
+  
+  it "should return the first image source " do
+    section = Section.new(:start_image_src => "image2")
+    section.first_image_source.should == "image2"
+  end
+  
+  it "should return nil if the contribution has no image sources" do
+    section = Section.new(:start_image_src => nil)
+    section.first_image_source.should be_nil
+  end
+  
+end

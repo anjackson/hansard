@@ -76,33 +76,53 @@ describe CommonsController, "handling GET /commons/1999/feb/08.xml" do
   end
 
 end
-# 
-# describe CommonsController, " handling GET /commons/1985/dec/16.xml with real data and views" do
-# 
-#   before do
-#     @source_file = File.dirname(__FILE__) + "/../../data/s6cv0089p0/housecommons_1985_12_16.xml"
-#     @sitting = Hansard::HouseCommonsParser.new(@source_file).parse
-#     @sitting.save!
-#   end
-#   
-#   def do_get
-#     get :show_commons_hansard, :year => '1985', :month => 'dec', :day => '16', :format => 'xml'
-#   end
-#   
-#   it "should render an xml document identical to the original xml" do
-#     do_get
-#     source = File.read(@source_file)
-#     output = response.body
-#     substitutions = [
-#                      [">", ">\n"],
-#                      ["<","\n<"],
-#                      [/^\s*/, ''],
-#                       [/\s*$/, '']]
-#     substitutions.each do |match, replacement|
-#       source.gsub!(match, replacement)
-#       output.gsub!(match, replacement)
-#     end
-#     output.should eql(source)
-#   end
-#   
-# end
+
+describe CommonsController, " handling GET /commons/year/month/day.xml with real data and views" do
+  
+  def get_source(date, file)
+    if date.month < 10
+      month = "0"+date.month.to_s
+    else
+      month = date.month.to_s
+    end
+    File.dirname(__FILE__) + "/../../data/#{file}/housecommons_#{date.year}_#{month}_#{date.day}.xml"
+  end
+  
+  def do_get(date)
+    month = Date::ABBR_MONTHNAMES[date.month].downcase
+    get :show_commons_hansard, :year => date.year, :month => month, :day => date.day, :format => 'xml'
+  end
+  
+  def normalize source, output
+    substitutions = [['<td/>', '<td></td>'],
+                     [/<(.*) (align=".*") (.*=".*")>/, '<\1 \3 \2>'],
+                     [">", ">\n"],
+                     ["<","\n<"],
+                     [/^\s*/, ''],
+                     [/\s*$/, '']]
+    substitutions.each do |match, replacement|
+      source.gsub!(match, replacement)
+      output.gsub!(match, replacement)
+    end
+  end
+  
+  def output_should_equal_source_for(date, orig_file)
+    source_file = get_source(date, orig_file)
+    sitting = Hansard::HouseCommonsParser.new(source_file).parse
+    sitting.save!
+    do_get(date)
+    source = File.read(source_file)
+    output = response.body
+    normalize(source, output)
+    output.should eql(source)
+  end
+  # 
+  # it "should render an xml document identical to the original xml for housecommons_1985_12_16.xml" do
+  #   output_should_equal_source_for(Date.new(1985, 12, 16), "s6cv0089p0")
+  # end
+  
+  # it "should render an xml document identical to the original xml for housecommons_2004_07_19.xml" do
+  #   output_should_equal_source_for(Date.new(2004, 7, 19), "s6cv0424p1")
+  # end
+  
+end

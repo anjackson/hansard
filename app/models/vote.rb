@@ -17,4 +17,8 @@ class Vote < ActiveRecord::Base
     column ? column.to_i : nil
   end
   
+  def first_image_source
+     image_src
+   end
+  
 end

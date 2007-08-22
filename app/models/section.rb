@@ -7,25 +7,13 @@ class Section < ActiveRecord::Base
 
   def to_xml(options={})
     xml = options[:builder] ||= Builder::XmlMarkup.new
-    xml_markers(options)
+    marker_xml(options)
     self.outer_tag(options) do
       self.title_xml(options)
       if respond_to? "contributions"
         contributions.each { |contribution| contribution.to_xml(options) }
       end
       sections.each { |section| section.to_xml(options) }
-    end
-  end
-  
-  def xml_markers(options)
-    xml = options[:builder] ||= Builder::XmlMarkup.new
-    if start_image_src && start_image_src != options[:current_image_src]
-      xml.image(:src => start_image_src)
-      options[:current_image_src] = start_image_src
-    end
-    if first_col && first_col > options[:current_column]
-      xml.col(first_col)
-      options[:current_column] = first_col
     end
   end
   
@@ -50,4 +38,9 @@ class Section < ActiveRecord::Base
   def last_col
     start_column ? start_column.to_i : nil
   end
+  
+  def first_image_source
+    start_image_src
+  end
+   
 end

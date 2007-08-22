@@ -110,17 +110,13 @@ class Hansard::HouseCommonsParser
     end
     
     def handle_contribution_text element, contribution
-      element.children.each do |node|
-        if node.elem?
-          name = node.name
-          if name == 'col'
-            handle_image_or_column name, node
-            contribution.column_range += ','+@column
-          elsif name == 'image'
-            handle_image_or_column name, node
-            contribution.image_src_range += ','+@image
-          end
-        end
+      (element/'col').each do |col|
+        handle_image_or_column "col", col
+        contribution.column_range += ','+@column
+      end
+      (element/'image').each do |image|
+        handle_image_or_column "image", image
+        contribution.image_src_range += ','+@image
       end
       contribution.text = handle_node_text element
     end
@@ -148,7 +144,7 @@ class Hansard::HouseCommonsParser
          :image_src_range => @image
       })
       contribution.member = ''
-
+      
       element.children.each do |node|
         if node.elem?
           name = node.name
@@ -180,6 +176,12 @@ class Hansard::HouseCommonsParser
         :image_src_range => @image,
         :text => clean_html(node).strip
       })
+      style_atts = node.attributes.reject{|att, value| att == 'id'}
+      style_list = []
+      style_atts.each do |att, value|
+        style_list << "#{att}=#{value}" 
+      end
+      procedural.style = style_list.join(" ")
       procedural.section = debate
       debate.contributions << procedural
       procedural
