@@ -12,4 +12,9 @@ class Vote < ActiveRecord::Base
       end 
     end
   end
+  
+  def first_col
+    column ? column.to_i : nil
+  end
+  
 end
