@@ -4,11 +4,13 @@ namespace :hansard do
 
   desc 'clears db, parses xml found in data/**/housecommons_*.xml and persists in db'
   task :load_db => [:environment] do
-    puts 'clearing db ...'
     Sitting.delete_all
+    puts 'Deleted Sittings.'
     Section.delete_all
+    puts 'Deleted Sections.'
     Contribution.delete_all
-
+    puts 'Deleted Contributions.'
+    
     Dir.glob(File.dirname(__FILE__) + "/../../data/*").select{|f| File.directory?(f)}.each do |d|
       Dir.glob(d+"/housecommons_*xml").each do |f|
         parse f
@@ -17,9 +19,9 @@ namespace :hansard do
   end
 
   def parse file
-    puts 'parsing: ' + file
     @sitting = Hansard::HouseCommonsParser.new(file).parse
-    puts 'persisting: ' + file
+    puts 'Parsed: ' + file
     @sitting.save!
+    puts 'Saved: ' + file
   end
 end
