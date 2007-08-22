@@ -1,14 +1,16 @@
 body {
-  background-color: #fff;
-  color: #333;
-  font-family: Georgia, serif;
-  font-size: 1.2em;
-  line-height: 140%;
-  text-align: justify;
-
-  position: relative;
-  width: 34em; /* resizing font size doesn't change words per line */
-  margin: 0 auto;
+  background-color:   #fff;
+  color:              #333;
+  font-family:        Georgia, serif;
+  margin-top:             0em;
+margin-left:             10em;
+margin-right:             20em;
+margin-bottom:             10em;
+width:	40em;
+font-size: 1.2em;
+line-height: 140%;
+text-align: justify;
+padding-top: 0em;
 }
 
 h1, h2, h3, h4 {
@@ -28,6 +30,18 @@ blockquote {
   display: inline;
 }
 
+span {
+  display:              inline;
+}
+
 a {
   text-decoration: none;
 }
+<<<<<<< .mine
+
+#title {font-size:1em;text-align:left;}
+
+#search {float:right;}
+
+#header {}=======
+>>>>>>> .r1590
