@@ -16,4 +16,8 @@ class CommonsController < ApplicationController
   def show_commons_hansard_source
   end
 
+  def index
+    @sittings = HouseOfCommonsSitting.find(:all)
+  end
+  
 end
