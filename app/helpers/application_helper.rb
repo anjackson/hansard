@@ -4,11 +4,16 @@ require 'hpricot'
 module ApplicationHelper
 
   def sitting_date_url(sitting)
+    if sitting.date.day < 10
+      day = "0"+sitting.date.day.to_s
+    else
+      day = sitting.date.day.to_s
+    end
     url_for(:controller => 'commons', 
             :action => 'show_commons_hansard', 
             :year => sitting.date.year, 
             :month => Date::ABBR_MONTHNAMES[sitting.date.month].downcase, 
-            :day => sitting.date.day)
+            :day => day)
   end
   
   def sitting_display_date(sitting)
