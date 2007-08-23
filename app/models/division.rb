@@ -102,8 +102,8 @@ class Division < ActiveRecord::Base
       end
     
       while (!teller_votes.empty? or !leftover_votes.empty?)
-        options[:first_vote] = teller_votes.shift
-        options[:second_vote] = leftover_votes.shift
+        options[:first_vote] = leftover_votes.shift
+        options[:second_vote] = teller_votes.shift
         vote_pair_xml(options)
       end
     end
