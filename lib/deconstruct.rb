@@ -16,6 +16,7 @@ module Hansard
 
     def split base_path, indented_copy=false
       @base_path = base_path
+      Dir.mkdir(@base_path + '/data') unless File.exists?(@base_path + '/data')
       @indented_copy = indented_copy
       source_path = File.join @base_path, 'xml'
 
@@ -36,6 +37,11 @@ module Hansard
         file.write(buffer.join(''))
       end
 
+      if (file_name.include? 'lords')
+        @house = 'lords'
+      elsif (file_name.include? 'commons')
+        @house = 'commons'
+      end
       if @indented_copy
         indented_file = File.join @indented_result_path, name+'_indented.xml'
         indent_cmd = "xmllint --format #{file_name} > #{indented_file}"
@@ -113,8 +119,10 @@ module Hansard
       end
     end
 
-    def move_final_result directory_name
-      result_path = File.join(@base_path, 'data', @first_date.to_s.gsub('-','_'))
+    def move_final_result directory_name, input_file
+      size_in_mb = (File.size(input_file)/ 1048576.0)
+      mb = size_in_mb.to_s[0..2]
+      result_path = File.join(@base_path, 'data', @first_date.to_s.gsub('-','_')+'_'+@house)+'_'+mb+'mb'
       Dir.mkdir result_path unless File.exists?(result_path)
       result_directory = File.join(result_path, directory_name)
       FileUtils.remove_dir result_directory, true
@@ -122,7 +130,7 @@ module Hansard
     end
 
     def handle_file input_file
-      directory_name = input_file.split(File::SEPARATOR).last.chomp('.xml').downcase
+      directory_name = input_file.split(File::SEPARATOR).last.chomp('.xml')
       @result_path = File.join @base_path, 'data', directory_name
       @indented_result_path = File.join @base_path, 'data', directory_name, 'indented'
       clear_directory @result_path
@@ -142,7 +150,7 @@ module Hansard
       write_to_file 'header', @surrounding_buffer
 
       check_line_count_correct input_file
-      move_final_result directory_name
+      move_final_result directory_name, input_file
     end
 
     def check_line_count_correct input_file

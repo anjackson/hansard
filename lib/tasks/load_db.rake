@@ -10,10 +10,13 @@ namespace :hansard do
     puts 'Deleted Sections.'
     Contribution.delete_all
     puts 'Deleted Contributions.'
-    
-    Dir.glob(File.dirname(__FILE__) + "/../../data/*").select{|f| File.directory?(f)}.each do |d|
-      Dir.glob(d+"/housecommons_*xml").each do |f|
-        parse f
+
+    directories = Dir.glob(File.dirname(__FILE__) + "/../../data/*").select{|f| File.directory?(f)}
+    directories.each do |directory|
+      Dir.glob(directory + "/*").select{|f| File.directory?(f)}.each do |d|
+        Dir.glob(d+"/housecommons_*xml").each do |f|
+          parse f
+        end
       end
     end
   end
