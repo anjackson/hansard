@@ -9,7 +9,7 @@ class MemberContribution < Contribution
   def to_xml(options={})
     xml = options[:builder] ||= Builder::XmlMarkup.new
     marker_xml(options)
-    xml.p(:id => xml_id) do
+    xml_para(options) do
       xml.text! oral_question_no || ""
       xml.member do
         xml << member.strip
@@ -20,5 +20,5 @@ class MemberContribution < Contribution
       end
     end
   end
-
+  
 end

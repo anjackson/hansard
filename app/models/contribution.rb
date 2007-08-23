@@ -7,14 +7,7 @@ class Contribution < ActiveRecord::Base
   def to_xml(options={})
     xml = options[:builder] ||= Builder::XmlMarkup.new
     marker_xml(options)
-    style_hash = {}
-    if style
-      style.split(" ").each do |style|
-        key, value = style.split('=')
-        style_hash[key] = value
-      end
-    end
-    xml.p style_hash.update(:id => xml_id) do 
+    xml_para(options) do 
       xml << text if text 
     end
   end
@@ -41,6 +34,21 @@ class Contribution < ActiveRecord::Base
     
   def last_col
     cols.empty? ? nil : cols.last
+  end
+  
+  def xml_para(options)
+    xml = options[:builder] ||= Builder::XmlMarkup.new
+    attribute_hash = {}
+    if style
+      style.split(" ").each do |style|
+        key, value = style.split('=')
+        attribute_hash[key] = value
+      end
+    end
+    attribute_hash.update(:id => xml_id) if xml_id
+    xml.p(attribute_hash) do
+      yield
+    end
   end
 
 end
