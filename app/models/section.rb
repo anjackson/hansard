@@ -4,6 +4,7 @@ class Section < ActiveRecord::Base
   has_many :sections, :foreign_key => 'parent_section_id'
   belongs_to :parent_section, :class_name => "Section", :foreign_key => 'parent_section_id'
   alias :to_activerecord_xml :to_xml
+  acts_as_hansard_element
 
   def to_xml(options={})
     xml = options[:builder] ||= Builder::XmlMarkup.new

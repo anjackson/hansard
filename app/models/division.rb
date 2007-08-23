@@ -8,7 +8,7 @@ class Division < ActiveRecord::Base
   has_many :noe_votes, :class_name => "Vote", :conditions => "type = 'NoeVote'"
   has_many :aye_teller_votes, :class_name => "Vote", :conditions => "type = 'AyeTellerVote'"
   has_many :noe_teller_votes, :class_name => "Vote", :conditions => "type = 'NoeTellerVote'"
-  
+  acts_as_hansard_element
   alias :to_activerecord_xml :to_xml
 
   def to_xml(options={})
