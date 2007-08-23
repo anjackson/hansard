@@ -25,7 +25,7 @@ module Acts
         if !images.empty?
           options[:current_image_src] = images.last[0]
         else
-          if first_image_source != options[:current_image_src]    
+          if first_image_source and first_image_source != options[:current_image_src]    
             xml.image(:src => first_image_source)
             options[:current_image_src] = first_image_source
           end
@@ -36,7 +36,7 @@ module Acts
         if !text_cols.empty?
           options[:current_column] = text_cols.last[0].to_i
         else      
-          if first_col != options[:current_column]
+          if first_col and first_col != options[:current_column]
             xml.col(first_col)
             options[:current_column] = first_col
           end
