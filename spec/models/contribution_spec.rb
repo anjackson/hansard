@@ -28,21 +28,7 @@ describe Contribution, ".to_xml" do
     @contribution = Contribution.new
   end
 
-  it "should have a 'p' tag with the contribution's xml_id as it's id" do
-    @contribution.xml_id = "xmlid"
-    @contribution.to_xml.should have_tag('p#xmlid')
-  end
-
-  it "should render it's text if there is any" do
-    @contribution.text = "some text"
-    @contribution.to_xml.should match(/some text/)
-  end
-  
-  it "should have a 'p' tag with any style information for the contribution set as tag attributes" do
-    @contribution.xml_id = "xmlid"
-    @contribution.style = "align=center"
-    @contribution.to_xml.should have_tag("p#xmlid[align=center]")    
-  end
+  it_should_behave_like "a contribution"  
 
 end
 
