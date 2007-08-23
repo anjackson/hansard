@@ -41,8 +41,7 @@ class Hansard::HouseCommonsParser
     end
 
     def handle_division_table table, division
-      left_cells = (table/'tr/td:first-child')
-      # print "#{left_cells}\n\n\n\n"
+      left_cells = (table/'tr').collect {|e| (e/'td')[0] }
       (table/'tr/td').each do |cell|
         text = cell.inner_text.strip
         unless text.blank?
@@ -107,7 +106,7 @@ class Hansard::HouseCommonsParser
       end
       text = text.gsub("\r\n","\n").strip
     end
-    
+
     def handle_contribution_text element, contribution
       (element/'col').each do |col|
         handle_image_or_column "col", col
@@ -143,7 +142,7 @@ class Hansard::HouseCommonsParser
          :image_src_range => @image
       })
       contribution.member = ''
-      
+
       element.children.each do |node|
         if node.elem?
           name = node.name
@@ -178,7 +177,7 @@ class Hansard::HouseCommonsParser
       style_atts = node.attributes.reject{|att, value| att == 'id'}
       style_list = []
       style_atts.each do |att, value|
-        style_list << "#{att}=#{value}" 
+        style_list << "#{att}=#{value}"
       end
       procedural.style = style_list.join(" ")
       procedural.section = debate
@@ -236,9 +235,9 @@ class Hansard::HouseCommonsParser
               section.time_text = match[0]
               section.time = Time.parse(match[0].gsub('.',':').gsub("&#x00B7;", ":"))
               handle_procedural_contribution node, section
-            elsif clean_html(node).include? 'membercontribution' 
+            elsif clean_html(node).include? 'membercontribution'
               handle_member_contribution node, section
-            else 
+            else
               handle_procedural_contribution node, section
             end
           elsif name == 'quote'
@@ -444,7 +443,7 @@ class Hansard::HouseCommonsParser
 
       sitting
     end
-    
+
     def clean_html node
       node.inner_html.chars.gsub("\r\n","\n").to_s
     end
