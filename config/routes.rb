@@ -8,6 +8,8 @@ end
 
 ActionController::Routing::Routes.draw do |map|
 
+  map.home '', :controller => "commons", :action => "index"
+  
   date_format = { :year => /(19|20)\d\d/,
                   :month => /(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec|[01]?\d)/,
                   :day => /[0-3]?\d/ }
