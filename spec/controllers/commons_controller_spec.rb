@@ -122,8 +122,8 @@ describe CommonsController, " handling GET /commons/year/month/day.xml with real
   #   output_should_equal_source_for(Date.new(1985, 12, 16), "s6cv0089p0")
   # end
   
-  it "should render an xml document identical to the original xml for housecommons_2004_07_19.xml" do
-     output_should_equal_source_for(Date.new(2004, 7, 19), "s6cv0424p1")
-   end
-   
+  # it "should render an xml document identical to the original xml for housecommons_2004_07_19.xml" do
+  #    output_should_equal_source_for(Date.new(2004, 7, 19), "s6cv0424p1")
+  #  end
+  #  
 end
