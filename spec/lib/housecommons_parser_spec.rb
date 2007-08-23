@@ -527,6 +527,10 @@ describe Hansard::HouseCommonsParser do
     @division.votes[4].constituency.should == "B m'th E"
   end
   
+  it 'should correctly parse vote names that include HTML entities' do
+    @division.votes[8].name.should == '&#x00D6;pik, Lembit'
+  end
+  
   it 'should create teller aye votes for the cells that appear after the heading "Tellers for the Ayes" in the right hand column of the division table' do
     [@division.votes[143], @division.votes[145]].each do |division|
       division.should_not be_nil
