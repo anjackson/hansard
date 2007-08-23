@@ -105,7 +105,7 @@ class Hansard::HouseCommonsParser
       element.children.each do |child|
         text += child.elem? ?  child.to_original_html : child.to_s
       end
-      text = text.gsub("\r\n","\n")
+      text = text.gsub("\r\n","\n").strip
     end
     
     def handle_contribution_text element, contribution
@@ -172,9 +172,9 @@ class Hansard::HouseCommonsParser
       procedural = ProceduralContribution.new({
         :xml_id => node.attributes['id'],
         :column_range => @column,
-        :image_src_range => @image,
-        :text => clean_html(node).strip
+        :image_src_range => @image
       })
+      procedural.text = handle_contribution_text(node, procedural)
       style_atts = node.attributes.reject{|att, value| att == 'id'}
       style_list = []
       style_atts.each do |att, value|
