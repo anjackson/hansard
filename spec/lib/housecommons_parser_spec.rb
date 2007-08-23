@@ -43,6 +43,7 @@ describe Hansard::HouseCommonsParser do
 
     count = @sitting.debates.sections.size
     @quote = @sitting.debates.sections[count - 2].contributions[1]
+    @last_procedural_contribution = @sitting.debates.sections.last.contributions.last
   end
 
   after(:all) do
@@ -61,7 +62,7 @@ describe Hansard::HouseCommonsParser do
   end
 
   it 'should add a procedural contribution for an ul element after a p element' do
-    contribution = @sitting.debates.sections.last.contributions.last
+    contribution = @sitting.debates.sections.last.contributions[2]
     contribution.should_not be_nil
     contribution.should be_an_instance_of(ProceduralContribution)
     contribution.text.should == %Q[<ul>\n<li>(f), in line 6, leave out "two" and insert "five".</li>\n<li>(b), in line 6, leave out "two years" and insert "one year".</li>\n</ul>]
@@ -241,7 +242,7 @@ describe Hansard::HouseCommonsParser do
   end
 
   it 'should set member contribution on first oral question contribution' do
-    @first_question_contribution.member_contribution.should == ' asked the Secretary of State for Energy if he will make a statement on visits by Ministers in his Department to pits in the Scottish coalfield.'
+    @first_question_contribution.member_contribution.should == 'asked the Secretary of State for Energy if he will make a statement on visits by Ministers in his Department to pits in the Scottish coalfield.'
   end
 
   it 'should set column range on first oral question contribution' do
@@ -572,6 +573,10 @@ describe Hansard::HouseCommonsParser do
     division = @sitting.debates.sections[10].contributions.select {|c| c.is_a? DivisionPlaceholder}[0].division
     division.name.should == 'Division No. 27]'
     division.time_text.should == '[6.4 pm'
+  end
+  
+  it "should extract column tags within procedural contributions" do
+    @last_procedural_contribution.column_range.should == '744,745'
   end
 
   it_should_behave_like "All sittings"
