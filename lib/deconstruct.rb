@@ -1,3 +1,5 @@
+require 'fileutils'
+
 module Hansard
   class Splitter
 
@@ -11,6 +13,21 @@ module Hansard
     ]
 
     DATE_PATTERN = /date format="(\d\d\d\d-\d\d-\d\d)"/
+
+    def split base_path, indented_copy=false
+      @base_path = base_path
+      @indented_copy = indented_copy
+      source_path = File.join @base_path, 'xml'
+
+      raise "source directory #{source_path} not found" unless File.exists? source_path
+      source_files = Dir.glob(File.join(source_path,'*'))
+      raise "no source files found in #{source_path}" if source_files.size == 0
+
+      source_files.each do |input_file|
+        puts input_file
+        handle_file input_file
+      end
+    end
 
     def write_to_file name, buffer, date=nil
       name = name + '_' + date.to_s.gsub('-','_') if date
@@ -82,6 +99,7 @@ module Hansard
       if (match = DATE_PATTERN.match line)
         new_date = match[1]
         @date = new_date
+        @first_date = new_date unless @first_date
       end
     end
 
@@ -95,49 +113,51 @@ module Hansard
       end
     end
 
-    def split base_path, indented_copy=false
-      @base_path = base_path
-      @indented_copy = indented_copy
-      source_path = File.join @base_path, 'xml'
-
-      raise "source directory #{source_path} not found" unless File.exists? source_path
-      source_files = Dir.glob(File.join(source_path,'*'))
-      raise "no source files found in #{source_path}" if source_files.size == 0
-
-      source_files.each do |input_file|
-        puts input_file
-        directory_name = input_file.split(File::SEPARATOR).last.chomp('.xml').downcase
-        @result_path = File.join @base_path, 'data', directory_name
-        @indented_result_path = File.join @base_path, 'data', directory_name, 'indented'
-        clear_directory @result_path
-        clear_directory @indented_result_path
-
-        @index = 0
-        @surrounding_buffer = []
-        @buffer = []
-        @outside_buffer = nil
-        @section_name = nil
-        @date = nil
-
-        File.new(input_file).each_line do |line|
-          handle_line line
-        end
-
-        puts 'header ' + @surrounding_buffer.size.to_s
-        write_to_file 'header', @surrounding_buffer
-
-        total_lines = 0
-        Dir.glob(File.join(@result_path,'*.xml')).each do |result|
-          lines = 0
-          File.open(result).each_line {|line| lines += 1}
-          total_lines += lines
-        end
-        puts 'total lines: ' + total_lines.to_s
-        input_lines = 0
-        File.open(input_file).each_line {|line| input_lines += 1}
-        puts 'original lines: ' + input_lines.to_s
-        raise "Number of lines don't match!" if total_lines != input_lines
-      end
+    def move_final_result directory_name
+      result_path = File.join(@base_path, 'data', @first_date.to_s.gsub('-','_'))
+      Dir.mkdir result_path unless File.exists?(result_path)
+      result_directory = File.join(result_path, directory_name)
+      FileUtils.remove_dir result_directory, true
+      FileUtils.mv @result_path, result_directory
     end
+
+    def handle_file input_file
+      directory_name = input_file.split(File::SEPARATOR).last.chomp('.xml').downcase
+      @result_path = File.join @base_path, 'data', directory_name
+      @indented_result_path = File.join @base_path, 'data', directory_name, 'indented'
+      clear_directory @result_path
+      clear_directory @indented_result_path
+
+      @index = 0
+      @surrounding_buffer = []
+      @buffer = []
+      @outside_buffer = nil
+      @section_name = nil
+      @date = nil
+      @first_date = nil
+
+      File.new(input_file).each_line { |line| handle_line line }
+
+      puts 'header ' + @surrounding_buffer.size.to_s
+      write_to_file 'header', @surrounding_buffer
+
+      check_line_count_correct input_file
+      move_final_result directory_name
+    end
+
+    def check_line_count_correct input_file
+      total_lines = 0
+      Dir.glob(File.join(@result_path,'*.xml')).each do |result|
+        lines = 0
+        File.open(result).each_line {|line| lines += 1}
+        total_lines += lines
+      end
+      puts 'total lines: ' + total_lines.to_s
+      input_lines = 0
+      File.open(input_file).each_line {|line| input_lines += 1}
+      puts 'original lines: ' + input_lines.to_s
+      raise "Number of lines don't match!" if total_lines != input_lines
+    end
+
   end
 end
