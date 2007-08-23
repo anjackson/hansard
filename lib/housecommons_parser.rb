@@ -26,6 +26,7 @@ class Hansard::HouseCommonsParser
   private
 
     def handle_vote text, division, vote_type
+      p "handling #{text}\n"
       parts = text.split('(')
       puts 'vote_type nil: ' + division.inspect unless vote_type
       vote = vote_type.new({
@@ -44,12 +45,11 @@ class Hansard::HouseCommonsParser
       left_cells = (table/'tr/td:first-child')
       # print "#{left_cells}\n\n\n\n"
       (table/'tr/td').each do |cell|
-        
         text = cell.inner_text.strip
         unless text.blank?
           if text.downcase.include? 'division no'
             # it's the division number, ignore
-          elsif (/\d\d/.match text or /\d\.\d/.match text)
+          elsif (/\d\d /.match text or /\d\.\d /.match text)
             # it's the time, ignore
           elsif text.downcase == 'ayes'
             @vote_type = AyeVote
