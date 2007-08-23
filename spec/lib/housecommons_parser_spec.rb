@@ -123,6 +123,10 @@ describe Hansard::HouseCommonsParser do
   it 'should set text on first section in debates' do
     @first_section.contributions[0].text.should == '[MR. SPEAKER <i>in the Chair</i>]'
   end
+  
+  it 'should set style attributes on a contribution' do
+    @first_section.contributions[0].style.should == "align=center"
+  end
 
   it 'should set title on first section in debates' do
     @first_section.title.should == 'PRAYERS'
@@ -144,8 +148,6 @@ describe Hansard::HouseCommonsParser do
     @first_section.parent_section_id.should == @sitting.debates.id
     @first_section.parent_section.should == @sitting.debates
   end
-
-  it "should set the style on a contribution"
 
   it 'should create oral questions' do
     @oral_questions.should_not be_nil
