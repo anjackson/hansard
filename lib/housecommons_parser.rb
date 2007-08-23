@@ -26,7 +26,6 @@ class Hansard::HouseCommonsParser
   private
 
     def handle_vote text, division, vote_type
-      p "handling #{text}\n"
       parts = text.split('(')
       puts 'vote_type nil: ' + division.inspect unless vote_type
       vote = vote_type.new({

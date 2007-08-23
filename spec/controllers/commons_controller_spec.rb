@@ -94,12 +94,13 @@ describe CommonsController, " handling GET /commons/year/month/day.xml with real
   end
   
   def normalize source, output
-    substitutions = [['<td/>', '<td></td>'],
-                     [/<(.*) (align=".*") (.*=".*")>/, '<\1 \3 \2>'],
-                     [">", ">\n"],
-                     ["<","\n<"],
-                     [/^\s*/, ''],
-                     [/\s*$/, '']]
+    substitutions = [['<td/>', '<td></td>'], # make empty td tags consisten
+                     [/<(.*) (align=".*") (.*=".*")>/, '<\1 \3 \2>'], #brutally reorder some tags
+                     [">", ">\n"], # all tags followed by a newline
+                     ["<","\n<"], # all tags preceded by a newline
+                     [/^\s*/, ''], # strip whitespace at start of line
+                     [/\s*$/, '']] # strip whitespace at end of line
+                     
     substitutions.each do |match, replacement|
       source.gsub!(match, replacement)
       output.gsub!(match, replacement)
@@ -116,13 +117,13 @@ describe CommonsController, " handling GET /commons/year/month/day.xml with real
     normalize(source, output)
     output.should eql(source)
   end
-  # 
+  
   # it "should render an xml document identical to the original xml for housecommons_1985_12_16.xml" do
   #   output_should_equal_source_for(Date.new(1985, 12, 16), "s6cv0089p0")
   # end
   
-  # it "should render an xml document identical to the original xml for housecommons_2004_07_19.xml" do
-  #   output_should_equal_source_for(Date.new(2004, 7, 19), "s6cv0424p1")
-  # end
-  
+  it "should render an xml document identical to the original xml for housecommons_2004_07_19.xml" do
+     output_should_equal_source_for(Date.new(2004, 7, 19), "s6cv0424p1")
+   end
+   
 end
