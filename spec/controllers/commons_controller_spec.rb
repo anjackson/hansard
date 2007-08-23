@@ -3,6 +3,11 @@ require File.dirname(__FILE__) + '/../../lib/housecommons_parser'
 
 describe CommonsController, "#route_for" do
   
+  it "should map { :controller => 'commons', :action => 'index' } to /" do
+    params = { :controller => 'commons', :action => 'index'}
+    route_for(params).should == "/"
+  end
+  
   it "should map { :controller => 'commons', :action => 'show_commons_hansard', :year => '1999', :month => 'feb', :day => '08' } to /commons/1999/feb/02" do
     params = { :controller => 'commons', :action => 'show_commons_hansard', :year => '1999', :month => 'feb', :day => '08' }
     route_for(params).should == "/commons/1999/feb/08"
