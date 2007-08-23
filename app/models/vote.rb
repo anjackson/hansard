@@ -2,6 +2,7 @@ class Vote < ActiveRecord::Base
 
   belongs_to :division
   alias :to_activerecord_xml :to_xml
+  acts_as_hansard_element
 
   def to_xml(options={})
     xml = options[:builder] ||= Builder::XmlMarkup.new
