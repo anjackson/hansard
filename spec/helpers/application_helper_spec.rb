@@ -53,3 +53,22 @@ describe ApplicationHelper, " when formatting contribution" do
         "<p>a <sub>really </sub></p></zzz><h4 class='sidenote'>Col. 123</h4><zzz><p><sub> powerful</sub> change</p>"
   end
 end
+
+describe ApplicationHelper, ".sitting_date_url" do
+  
+  it "should return the url for the sitting" do
+    sitting = Sitting.new(:date => Date.new(1985, 12, 16))
+    sitting_date_url(sitting).should == '/commons/1985/dec/16'
+  end
+
+end
+
+describe ApplicationHelper, ".display_date" do
+
+  it "should return a date in the format" do
+    sitting = Sitting.new(:date => Date.new(1985, 12, 16))
+    sitting_display_date(sitting).should == 'Monday, December 16, 1985'
+  end
+  
+end
+
