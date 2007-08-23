@@ -3,6 +3,18 @@ require 'hpricot'
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
 
+  def sitting_date_url(sitting)
+    url_for(:controller => 'commons', 
+            :action => 'show_commons_hansard', 
+            :year => sitting.date.year, 
+            :month => Date::ABBR_MONTHNAMES[sitting.date.month].downcase, 
+            :day => sitting.date.day)
+  end
+  
+  def sitting_display_date(sitting)
+    sitting.date.strftime("%A, %B %d, %Y")
+  end
+  
   def colon_after_member_name contribution
     if (!contribution.member_constituency and !contribution.procedural_note)
       ':'
