@@ -3,14 +3,19 @@ require File.dirname(__FILE__) + '/../../lib/housecommons_parser'
 
 describe CommonsController, "#route_for" do
   
-  it "should map { :controller => 'commons', :action => 'show_commons_hansard', :year => '1999', :month => 'feb', day => '08' } to /commons/1999/feb/02" do
+  it "should map { :controller => 'commons', :action => 'show_commons_hansard', :year => '1999', :month => 'feb', :day => '08' } to /commons/1999/feb/02" do
     params = { :controller => 'commons', :action => 'show_commons_hansard', :year => '1999', :month => 'feb', :day => '08' }
     route_for(params).should == "/commons/1999/feb/08"
   end
  
-  it "should map { :controller => 'commons', :action => 'show_commons_hansard', :year => '1999', :month => 'feb', day => '08', :format => 'xml' } to /commons/1999/feb/02.xml" do
+  it "should map { :controller => 'commons', :action => 'show_commons_hansard', :year => '1999', :month => 'feb', :day => '08', :format => 'xml' } to /commons/1999/feb/02.xml" do
     params = { :controller => 'commons', :action => 'show_commons_hansard', :year => '1999', :month => 'feb', :day => '08', :format => 'xml' }
     route_for(params).should == "/commons/1999/feb/08.xml"
+  end
+  
+  it "should map { :controller => 'commons', :action => 'show_commons_hansard_source', :year => '1999', :month => 'feb', :day => '08', :format => 'xml' } to /commons/source/1999/feb/08.xml" do
+    params = { :controller => 'commons', :action => 'show_commons_hansard_source', :year => '1999', :month => 'feb', :day => '08', :format => 'xml'}
+    route_for(params).should == "/commons/source/1999/feb/08.xml"
   end
 
 end
@@ -75,6 +80,25 @@ describe CommonsController, "handling GET /commons/1999/feb/08.xml" do
     do_get
   end
 
+end
+
+describe CommonsController, "handling GET /commons/source/1999/feb/08.xml" do
+
+  before do
+   
+  end
+  
+  def do_get
+    get :show_commons_hansard_source, :year => '1999', :month => 'feb', :day => '08', :format => 'xml'
+  end
+
+  it "should be successful" do
+    do_get
+    response.should be_success
+  end
+  
+  
+  
 end
 
 describe CommonsController, " handling GET /commons/year/month/day.xml with real data and views" do

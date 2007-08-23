@@ -12,5 +12,8 @@ class CommonsController < ApplicationController
       end
     end
   end
+  
+  def show_commons_hansard_source
+  end
 
 end

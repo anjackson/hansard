@@ -26,6 +26,10 @@ ActionController::Routing::Routes.draw do |map|
       def_route "commons/#{date}", :show_commons_hansard, by_date
     end
   
+    commons.with_options(formatted_date_options) do |by_date|
+      def_route "commons/source/#{date}.:format", :show_commons_hansard_source, by_date
+    end
+    
   end
   
 end
