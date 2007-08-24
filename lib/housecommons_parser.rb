@@ -264,14 +264,33 @@ class Hansard::HouseCommonsParser
       debates.sections << section
     end
 
+    def get_contribution_type_for_question element
+      contribution_type = nil
+
+      element.children.each do |node|
+        if node.elem?
+          name = node.name
+          if name == 'member' || name == 'membercontribution'
+            contribution_type = OralQuestionContribution
+          elsif name == 'i'
+            contribution_type = ProceduralContribution
+          else
+            raise 'unexpected element in question_contribution: ' + name + ': ' + node.to_s
+          end
+        end
+      end
+      contribution_type
+    end
+
     def handle_question_contribution element, question_section
-      contribution = question_section.contributions.create({
+      contribution_type = get_contribution_type_for_question element
+
+      contribution = contribution_type.new({
          :xml_id => element.attributes['id'],
          :column_range => @column,
          :image_src_range => @image
       })
 
-      contribution.section = question_section
       contribution.member = ''
 
       element.children.each do |node|
@@ -281,6 +300,8 @@ class Hansard::HouseCommonsParser
             handle_member_name node, contribution
           elsif name == 'membercontribution'
             handle_contribution_text node, contribution
+          elsif name == 'i'
+            handle_contribution_text element, contribution
           else
             raise 'unexpected element in question_contribution: ' + name + ': ' + node.to_s
           end
@@ -300,6 +321,9 @@ class Hansard::HouseCommonsParser
           end
         end
       end
+
+      contribution.section = question_section
+      question_section.contributions << contribution
     end
 
     def handle_oral_question_section section, questions

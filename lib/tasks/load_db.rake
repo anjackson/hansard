@@ -12,10 +12,12 @@ namespace :hansard do
     puts 'Deleted Contributions.'
 
     directories = Dir.glob(File.dirname(__FILE__) + "/../../data/*").select{|f| File.directory?(f)}
+    puts 'directory count is: ' + directories.size.to_s
     directories.each do |directory|
       Dir.glob(directory + "/*").select{|f| File.directory?(f)}.each do |d|
-        Dir.glob(d+"/housecommons_*xml").each do |f|
-          parse f
+        Dir.glob(d+"/housecommons_*xml").each do |file|
+          puts 'parsing: ' + file
+          parse file
         end
       end
     end
