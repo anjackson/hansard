@@ -165,8 +165,6 @@ class Hansard::HouseCommonsParser
       debate.contributions << contribution
     end
 
-
-
     def handle_procedural_contribution node, debate
       procedural = ProceduralContribution.new({
         :xml_id => node.attributes['id'],
@@ -274,6 +272,8 @@ class Hansard::HouseCommonsParser
             contribution_type = OralQuestionContribution
           elsif name == 'i'
             contribution_type = ProceduralContribution
+          elsif name == 'quote'
+            contribution_type = QuoteContribution
           else
             raise 'unexpected element in question_contribution: ' + name + ': ' + node.to_s
           end
@@ -288,45 +288,51 @@ class Hansard::HouseCommonsParser
     def handle_question_contribution element, question_section
       contribution_type = get_contribution_type_for_question(element)
 
-      contribution = contribution_type.new({
-         :xml_id => element.attributes['id'],
-         :column_range => @column,
-         :image_src_range => @image
-      })
+      if contribution_type == QuoteContribution
+        handle_quote_contribution element, question_section
+      elsif contribution_type == ProceduralContribution
+        handle_procedural_contribution element, question_section
+      else
+        contribution = contribution_type.new({
+           :xml_id => element.attributes['id'],
+           :column_range => @column,
+           :image_src_range => @image
+        })
 
-      contribution.member = ''
+        contribution.member = ''
 
-      element.children.each do |node|
-        if node.elem?
-          name = node.name
-          if name == 'member'
-            handle_member_name node, contribution
-          elsif name == 'membercontribution'
-            handle_contribution_text node, contribution
-          elsif name == 'i'
-            handle_contribution_text element, contribution
-          else
-            raise 'unexpected element in question_contribution: ' + name + ': ' + node.to_s
-          end
-
-        elsif node.text?
-          text = node.to_s.strip
-          if (match = /^(Q?\d+\.?)/.match text)
-            contribution.oral_question_no = match[1]
-          elsif text.size > 0
-            if contribution.member.size == 0
-              contribution.member = text.strip + ' '
-            elsif !@unexpected
-              puts 'unexpected text: ' + text
-              puts 'will suppress rest of unexpected messages'
+        element.children.each do |node|
+          if node.elem?
+            name = node.name
+            if name == 'member'
+              handle_member_name node, contribution
+            elsif name == 'membercontribution'
+              handle_contribution_text node, contribution
+            elsif name == 'i'
+              handle_contribution_text element, contribution
+            else
+              raise 'unexpected element in question_contribution: ' + name + ': ' + node.to_s
             end
-            @unexpected = true
+
+          elsif node.text?
+            text = node.to_s.strip
+            if (match = /^(Q?\d+\.?)/.match text)
+              contribution.oral_question_no = match[1]
+            elsif text.size > 0
+              if contribution.member.size == 0
+                contribution.member = text.strip + ' '
+              elsif !@unexpected
+                puts 'unexpected text: ' + text
+                puts 'will suppress rest of unexpected messages'
+              end
+              @unexpected = true
+            end
           end
         end
-      end
 
-      contribution.section = question_section
-      question_section.contributions << contribution
+        contribution.section = question_section
+        question_section.contributions << contribution
+      end
     end
 
     def handle_oral_question_section section, questions
