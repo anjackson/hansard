@@ -56,6 +56,11 @@ describe CommonsController, "handling GET /commons/1999/feb/08" do
     assigns[:sitting].should equal(@sitting)
   end
   
+  it "should assign an empty marker options hash to the view" do
+    do_get
+    assigns[:marker_options].should == {}
+  end
+  
 end
 
 describe CommonsController, "handling GET /commons/1999/feb/08.xml" do

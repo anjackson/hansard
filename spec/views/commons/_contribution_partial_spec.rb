@@ -1,11 +1,24 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 
+describe "_contribution partial", " in general" do
+
+  it "should ask the contribution assigned to it for it's marker html" do
+    contribution = mock_model(Contribution)
+    contribution.stub!(:text).and_return("")
+    @controller.template.stub!(:contribution).and_return(contribution)
+    @controller.template.should_receive(:marker_html).and_return("")
+    render 'commons/_contribution.haml'
+  end
+  
+end
+
 describe '_contribution partial', 'when passed quote contribution' do
 
   before do
     @text = ': That Sir Antony Buck and Mr. Robert Key be discharged from the Select Committee on the Armed Forces Bill and that Mr. Tony Baldry and Mr. Nicholas Soames be added to the Committee.&#x2014;<i>(Mr. Maude.]</i>'
     @quote = mock_model(QuoteContribution)
     @quote.should_receive(:text).and_return @text
+    @quote.should_receive(:markers)
     @controller.template.stub!(:contribution).and_return @quote
     render 'commons/_contribution.haml'
   end
@@ -25,6 +38,7 @@ describe '_contribution partial', 'when passed procedural contribution' do
     @text = '[MADAM SPEAKER <i>in the Chair</i>]'
 
     @procedural = mock_model(ProceduralContribution)
+    @procedural.should_receive(:markers)
     @procedural.should_receive(:text).and_return @text
     @controller.template.stub!(:contribution).and_return @procedural
 
@@ -47,7 +61,7 @@ describe '_section partial', 'when passed members contribution with oral_questio
     @member_constituency = '(South Ribble)'
     @oral_question_no = '1.'
     @contribution_text = ': What assessment he has made of the responses to the pensions Green Paper received to date. [68005]'
-
+    @contribution.stub!(:markers)
     @contribution.stub!(:text).and_return @contribution_text
     @contribution.stub!(:member).and_return @member
     @contribution.stub!(:member_constituency).and_return @member_constituency
@@ -98,7 +112,8 @@ describe '_section partial', 'when passed members contribution with constituency
     @member = 'Mr. David Borrow'
     @member_constituency = '(South Ribble)'
     @contribution_text = ': What assessment he has made of the responses to the pensions Green Paper received to date. [68005]'
-
+    
+    @contribution.stub!(:markers)
     @contribution.stub!(:text).and_return @contribution_text
     @contribution.stub!(:member).and_return @member
     @contribution.stub!(:member_constituency).and_return @member_constituency
@@ -124,6 +139,7 @@ describe '_section partial', 'when passed members contribution without constitue
     @member_constituency = '(South Ribble)'
     @contribution_text = ': What assessment he has made of the responses to the pensions Green Paper received to date. [68005]'
 
+    @contribution.stub!(:markers)
     @contribution.stub!(:text).and_return @contribution_text
     @contribution.stub!(:member).and_return @member
     @contribution.stub!(:member_constituency).and_return nil

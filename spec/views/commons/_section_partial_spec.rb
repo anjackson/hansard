@@ -1,5 +1,19 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 
+describe "_section partial", " in general" do
+
+  it "should ask the section assigned to it for it's marker html" do
+    section = mock_model(Section)
+    section.stub!(:title).and_return("")
+    section.stub!(:sections).and_return([])
+    section.stub!(:contributions).and_return([])
+    @controller.template.stub!(:section).and_return(section)
+    @controller.template.should_receive(:marker_html).and_return("")
+    render 'commons/_section.haml'
+  end
+  
+end
+
 describe "_section partial", "when passed oral answers" do
 
   # <oralquestions>
@@ -8,10 +22,11 @@ describe "_section partial", "when passed oral answers" do
   before do
     @oral_questions = mock_model(OralQuestions)
     @oral_questions_section = mock_model(OralQuestionsSection)
-
+    @oral_questions_section.stub!(:markers)
     @title = 'Oral Answers to Questions'
     sections = [@oral_questions_section]
 
+    @oral_questions.stub!(:markers)
     @oral_questions.stub!(:title).and_return(@title)
     @oral_questions.stub!(:sections).and_return(sections)
     @oral_questions.stub!(:contributions).and_return([])
@@ -42,9 +57,11 @@ describe "_section partial", "when passed an oral answers section" do
     @text = '<i>The Secretary of State was asked</i>&#x2014;'
 
     @introduction = mock_model(ProceduralContribution)
+    
     @introduction.stub!(:text).and_return '<p>'+@text+'</p>'
     sections = [@question_section]
-
+    
+    @questions_section.stub!(:markers)
     @questions_section.stub!(:title).and_return(@title)
     @questions_section.stub!(:introduction).and_return(@introduction)
     @questions_section.stub!(:contributions).and_return([@introduction])
@@ -80,6 +97,7 @@ describe "_section partial", "when passed a prayers section" do
     @title = 'PRAYERS'
     contributions = [@procedural]
 
+    @prayers.stub!(:markers)
     @prayers.stub!(:title).and_return(@title)
     @prayers.stub!(:contributions).and_return(contributions)
     @prayers.stub!(:sections).and_return([])

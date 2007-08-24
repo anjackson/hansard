@@ -54,7 +54,7 @@ describe ApplicationHelper, " when formatting contribution" do
   end
 end
 
-describe ApplicationHelper, ".sitting_date_url" do
+describe ApplicationHelper, " when returning the url for a sitting" do
   
   it "should return the url for the sitting" do
     sitting = Sitting.new(:date => Date.new(1985, 12, 6))
@@ -63,11 +63,48 @@ describe ApplicationHelper, ".sitting_date_url" do
 
 end
 
-describe ApplicationHelper, ".display_date" do
+describe ApplicationHelper, " when returning a display date for a sitting" do
 
   it "should return a date in the format 'Monday, December 16, 1985'" do
     sitting = Sitting.new(:date => Date.new(1985, 12, 16))
     sitting_display_date(sitting).should == 'Monday, December 16, 1985'
+  end
+  
+end
+
+describe ApplicationHelper, " when returning marker html for a model" do
+  
+  before do
+    @mock_sitting = mock_model(Sitting)
+  end
+  
+  it "should ask the model for it's markers" do
+    @mock_sitting.should_receive(:markers)
+    marker_html(@mock_sitting, {})
+  end
+  
+  it "should return an image marker tag if the model yields an image marker" do
+    @mock_sitting.stub!(:markers).and_yield("image", "image source")
+    should_receive(:image_marker).with("image source").and_return("")
+    marker_html(@mock_sitting, {})
+  end
+  
+  it "should return a column marker tag if the model yields a column" do
+    @mock_sitting.stub!(:markers).and_yield("column", "column number")
+    should_receive(:column_marker).with("column number").and_return("")
+    marker_html(@mock_sitting, {})
+  end
+  
+  it "should return an 'h4' tag with class 'sidenote' containing the text 'Image' and the image source for an image marker" do
+    image_marker("image source").should have_tag("h4.sidenote", :text => "Image image source", :count => 1)
+  end
+
+  it "should return an 'h4' tag with class 'sidenote' containing the text 'Col' and the column number for a column marker" do
+    column_marker("5").should have_tag("h4.sidenote", :text => "Col. 5", :count => 1)
+  end
+  
+  it "should return an anchor for the column_number for a column marker" do
+    column_marker("5").should have_tag("a[name=column_5]", :count => 1)
   end
   
 end

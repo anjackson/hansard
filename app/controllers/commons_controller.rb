@@ -6,6 +6,7 @@ class CommonsController < ApplicationController
       render :text => 'not valid date'
     else
       @sitting = HouseOfCommonsSitting.find_by_date(date.to_date.to_s)
+      @marker_options = {}
       respond_to do |format|
         format.html
         format.xml { render :xml => @sitting.to_xml }

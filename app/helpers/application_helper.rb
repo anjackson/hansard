@@ -3,6 +3,26 @@ require 'hpricot'
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
 
+  def marker_html(model, options)
+    markers = ''
+    model.markers(options) do |marker_type, marker_value|
+      if marker_type == "image"
+        markers += image_marker(marker_value)
+      elsif marker_type == "column"
+        markers += column_marker(marker_value)
+      end
+    end 
+    markers
+  end
+  
+  def image_marker(image_src)
+    "<h4 class='sidenote'>Image #{image_src}</h4>"
+  end
+  
+  def column_marker(column)
+    "<h4 class='sidenote'>Col. #{column}</h4><a name='column_#{column}'>"
+  end
+  
   def sitting_date_url(sitting)
     if sitting.date.day < 10
       day = "0"+sitting.date.day.to_s
@@ -83,10 +103,10 @@ module ApplicationHelper
             handle_contribution_part(child, parts, inner_elements, outer_elements)
             parts << '</span>'
           elsif name == 'col'
-            addition = "<h4 class='sidenote'>Col. #{child.inner_html}</h4><a name='column_#{child.inner_html}'>"
+            addition = column_marker(child.inner_html)
             close_add_open parts, inner_elements, outer_elements, addition
           elsif name == 'image'
-            addition = "<h4 class='sidenote'>Image #{child.attributes['src']}</h4>"
+            addition = image_marker(child.attributes['src'])
             close_add_open parts, inner_elements, outer_elements, addition
           elsif name == 'lb'
             parts << '</p><p>'
