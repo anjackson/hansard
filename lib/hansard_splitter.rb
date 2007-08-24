@@ -110,6 +110,7 @@ module Hansard
       proxy_lines = []
 
       if start_end_on_same_line
+        puts 'start and end on same line: ' + line if @verbose
         proxy_line = line.sub('</'+start_end_element+'>','')
         line = line.sub('<'+start_end_element+'>', '')
         proxy_lines << proxy_line
