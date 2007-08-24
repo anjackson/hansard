@@ -265,23 +265,14 @@ class Hansard::HouseCommonsParser
     def get_contribution_type_for_question element
       contribution_type = nil
 
-      element.children.each do |node|
-        if node.elem?
-          name = node.name
-          if (name == 'member' or name == 'membercontribution')
-            contribution_type = OralQuestionContribution
-          elsif name == 'i'
-            contribution_type = ProceduralContribution
-          elsif name == 'quote'
-            contribution_type = QuoteContribution
-          else
-            raise 'unexpected element in question_contribution: ' + name + ': ' + node.to_s
-          end
-        end
-      end
-      if contribution_type == nil
+      if (element.at('member') or element.at('membercontribution'))
+        contribution_type = OralQuestionContribution
+      elsif element.at('quote')
+        contribution_type = QuoteContribution
+      else
         contribution_type = ProceduralContribution
       end
+
       contribution_type
     end
 
@@ -310,6 +301,8 @@ class Hansard::HouseCommonsParser
               handle_contribution_text node, contribution
             elsif name == 'i'
               handle_contribution_text element, contribution
+            elsif (name == 'col' or name == 'image')
+              handle_image_or_column name, node
             else
               raise 'unexpected element in question_contribution: ' + name + ': ' + node.to_s
             end
@@ -320,10 +313,14 @@ class Hansard::HouseCommonsParser
               contribution.oral_question_no = match[1]
             elsif text.size > 0
               if contribution.member.size == 0
-                contribution.member = text.strip + ' '
+                contribution.member = text.gsub("\r\n","\n").strip + ' '
               elsif !@unexpected
-                puts 'unexpected text: ' + text
-                puts 'will suppress rest of unexpected messages'
+                if element.at('membercontribution')
+                  puts 'unexpected text: ' + text
+                  puts 'will suppress rest of unexpected messages'
+                else
+                  contribution.text = text.gsub("\r\n","\n").strip
+                end
               end
               @unexpected = true
             end
