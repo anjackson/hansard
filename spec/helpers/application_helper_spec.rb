@@ -18,9 +18,9 @@ describe ApplicationHelper, " when formatting contribution" do
         '<p>a <span class="quote">quote</span> from</p>'
   end
 
-  it 'should replace col element with h4' do
+  it 'should replace col element with h4 and anchor' do
     format_contribution('a <col>123</col> text',['zzz']).should ==
-        "<p>a </p></zzz><h4 class='sidenote'>Col. 123</h4><zzz><p> text</p>"
+        "<p>a </p></zzz><h4 class='sidenote'>Col. 123</h4><a name='column_123'><zzz><p> text</p>"
   end
 
   it 'should replace image element with h4' do
@@ -50,22 +50,22 @@ describe ApplicationHelper, " when formatting contribution" do
 
   it 'should correctly handle column element in subscript element' do
     format_contribution('a <sub>really <col>123</col> powerful</sub> change',['zzz']).should ==
-        "<p>a <sub>really </sub></p></zzz><h4 class='sidenote'>Col. 123</h4><zzz><p><sub> powerful</sub> change</p>"
+        "<p>a <sub>really </sub></p></zzz><h4 class='sidenote'>Col. 123</h4><a name='column_123'><zzz><p><sub> powerful</sub> change</p>"
   end
 end
 
 describe ApplicationHelper, ".sitting_date_url" do
   
   it "should return the url for the sitting" do
-    sitting = Sitting.new(:date => Date.new(1985, 12, 16))
-    sitting_date_url(sitting).should == '/commons/1985/dec/16'
+    sitting = Sitting.new(:date => Date.new(1985, 12, 6))
+    sitting_date_url(sitting).should == '/commons/1985/dec/06'
   end
 
 end
 
 describe ApplicationHelper, ".display_date" do
 
-  it "should return a date in the format" do
+  it "should return a date in the format 'Monday, December 16, 1985'" do
     sitting = Sitting.new(:date => Date.new(1985, 12, 16))
     sitting_display_date(sitting).should == 'Monday, December 16, 1985'
   end
