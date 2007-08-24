@@ -351,6 +351,7 @@ class Hansard::HouseCommonsParser
     def handle_oral_questions_section section, oral_questions
       questions_section = OralQuestionsSection.new
 
+      has_introduction = ((section/'p').size == 1)
       section.children.each do |node|
         if node.elem?
           name = node.name
@@ -361,11 +362,11 @@ class Hansard::HouseCommonsParser
           elsif (name == 'col' or name == 'image')
             handle_image_or_column name, node
           elsif name == 'p'
-            if questions_section.introduction
-              raise "unexpected second paragraph under oral questions section"
-            else
+            if has_introduction
               procedural = handle_procedural_contribution node, questions_section
               questions_section.introduction = procedural
+            else
+              handle_question_contribution node, questions_section
             end
           else
             puts 'unexpected element in oral_questions_section: ' + name + ': ' + node.to_s

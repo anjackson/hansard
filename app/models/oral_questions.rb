@@ -8,5 +8,5 @@ class OralQuestions < Section
       yield
     end
   end
-  
+
 end
