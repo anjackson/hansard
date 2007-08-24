@@ -6,4 +6,5 @@ Inflector.inflections do |inflect|
 #   inflect.irregular 'person', 'people'
 #   inflect.uncountable %w( fish sheep )
   inflect.uncountable %w( debates )
+  inflect.irregular 'index', 'indices'
 end
