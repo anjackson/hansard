@@ -17,6 +17,7 @@ module Hansard
     def initialize indented_copy, verbose=true
       @indented_copy = indented_copy
       @verbose = verbose
+      @additional_lines = 0
     end
 
     def split base_path, indented_copy=false
@@ -98,6 +99,23 @@ module Hansard
 
       token_element = false
 
+      start_end_on_same_line = false
+      start_end_element = nil
+      SPLIT_ON.each do |element|
+        unless start_end_on_same_line
+          start_end_on_same_line = line.starts_with?('</'+element+'><'+element+'>')
+          start_end_element = element
+        end
+      end
+      proxy_lines = []
+
+      if start_end_on_same_line
+        proxy_line = line.sub('</'+start_end_element+'>','')
+        line = line.sub('<'+start_end_element+'>', '')
+        proxy_lines << proxy_line
+        @additional_lines = @additional_lines.next
+      end
+
       SPLIT_ON.each do |element|
         if line.include? '<'+element+'>'
           handle_section_start element, line
@@ -123,6 +141,8 @@ module Hansard
         @date = new_date
         @first_date = new_date unless @first_date
       end
+
+      proxy_lines.each {|l| handle_line l}
     end
 
     def clear_directory path
@@ -177,10 +197,10 @@ module Hansard
         total_lines += lines
       end
       puts 'total lines: ' + total_lines.to_s  if @verbose
-      input_lines = 0
+      input_lines = @additional_lines
       File.open(input_file).each_line {|line| input_lines += 1}
       puts 'original lines: ' + input_lines.to_s  if @verbose
-      raise "Number of lines don't match!" if total_lines != input_lines
+      raise "Number of lines don't match! Expected: #{input_lines} Got: #{total_lines}" if total_lines != input_lines
     end
 
   end
