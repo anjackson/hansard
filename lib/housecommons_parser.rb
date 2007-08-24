@@ -270,7 +270,7 @@ class Hansard::HouseCommonsParser
       element.children.each do |node|
         if node.elem?
           name = node.name
-          if name == 'member' || name == 'membercontribution'
+          if (name == 'member' or name == 'membercontribution')
             contribution_type = OralQuestionContribution
           elsif name == 'i'
             contribution_type = ProceduralContribution
@@ -279,11 +279,14 @@ class Hansard::HouseCommonsParser
           end
         end
       end
+      if contribution_type == nil
+        contribution_type = ProceduralContribution
+      end
       contribution_type
     end
 
     def handle_question_contribution element, question_section
-      contribution_type = get_contribution_type_for_question element
+      contribution_type = get_contribution_type_for_question(element)
 
       contribution = contribution_type.new({
          :xml_id => element.attributes['id'],
