@@ -14,10 +14,15 @@ module Hansard
 
     DATE_PATTERN = /date format="(\d\d\d\d-\d\d-\d\d)"/
 
+    def initialize indented_copy, verbose=true
+      @indented_copy = indented_copy
+      @verbose = verbose
+    end
+
     def split base_path, indented_copy=false
+      @files_created = []
       @base_path = base_path
       Dir.mkdir(@base_path + '/data') unless File.exists?(@base_path + '/data')
-      @indented_copy = indented_copy
       source_path = File.join @base_path, 'xml'
 
       raise "source directory #{source_path} not found" unless File.exists? source_path
@@ -25,7 +30,7 @@ module Hansard
       raise "no source files found in #{source_path}" if source_files.size == 0
 
       source_files.each do |input_file|
-        puts input_file
+        puts input_file if @verbose
         handle_file input_file
       end
     end
@@ -33,9 +38,20 @@ module Hansard
     def write_to_file name, buffer, date=nil
       name = name + '_' + date.to_s.gsub('-','_') if date
       file_name = File.join @result_path, name+'.xml'
+
+      if @files_created.include? file_name
+        index = 2
+        while @files_created.include? file_name
+          file_name = File.join @result_path, name+"_part_#{index}.xml"
+          index = index.next
+        end
+      end
+
       File.open(file_name, 'w') do |file|
         file.write(buffer.join(''))
       end
+
+      @files_created << file_name
 
       if (file_name.include? 'lords')
         @house = 'lords'
@@ -63,7 +79,7 @@ module Hansard
     def handle_section_end line
       if @section_name
         @buffer << line
-        puts @date.to_s + '    ' + @section_name + ' start:' + @start.to_s + ' end:' + @index.to_s + ' lines:' + @buffer.size.to_s
+        puts @date.to_s + '    ' + @section_name + ' start:' + @start.to_s + ' end:' + @index.to_s + ' lines:' + @buffer.size.to_s  if @verbose
 
         write_to_file @section_name, @buffer, @date
         @buffer = []
@@ -134,7 +150,7 @@ module Hansard
       @result_path = File.join @base_path, 'data', directory_name
       @indented_result_path = File.join @base_path, 'data', directory_name, 'indented'
       clear_directory @result_path
-      clear_directory @indented_result_path
+      clear_directory @indented_result_path if @indented_copy
 
       @index = 0
       @surrounding_buffer = []
@@ -146,7 +162,7 @@ module Hansard
 
       File.new(input_file).each_line { |line| handle_line line }
 
-      puts 'header ' + @surrounding_buffer.size.to_s
+      puts 'header ' + @surrounding_buffer.size.to_s  if @verbose
       write_to_file 'header', @surrounding_buffer
 
       check_line_count_correct input_file
@@ -160,10 +176,10 @@ module Hansard
         File.open(result).each_line {|line| lines += 1}
         total_lines += lines
       end
-      puts 'total lines: ' + total_lines.to_s
+      puts 'total lines: ' + total_lines.to_s  if @verbose
       input_lines = 0
       File.open(input_file).each_line {|line| input_lines += 1}
-      puts 'original lines: ' + input_lines.to_s
+      puts 'original lines: ' + input_lines.to_s  if @verbose
       raise "Number of lines don't match!" if total_lines != input_lines
     end
 
