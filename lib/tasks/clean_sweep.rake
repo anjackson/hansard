@@ -16,7 +16,6 @@ namespace :hansard do
 
   desc 'migrates db down and up, does db:test:clone_structure, and runs rake spec'
   task :clean_sweep => [:migrate_down, :migrate_up, :clone_structure] do
-    Rake::Task[:spec].invoke
   end
 
 end
