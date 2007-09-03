@@ -83,7 +83,7 @@ module Hansard
     def handle_section_end line
       if @section_name
         @buffer << line
-        puts @date.to_s + '    ' + @section_name + '     (' + @start.to_s + ' - ' + @index.to_s + ')     ' + @buffer.size.to_s  if @verbose
+        puts @date.to_s + '   ' + @section_name + '  ' + @start.to_s + '..' + @index.to_s + '  ' + @buffer.size.to_s  if @verbose
 
         write_to_file @section_name, @buffer, @date
         @buffer = []
