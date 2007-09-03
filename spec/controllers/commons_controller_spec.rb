@@ -1,5 +1,4 @@
 require File.dirname(__FILE__) + '/../spec_helper'
-require File.dirname(__FILE__) + '/../../lib/housecommons_parser'
 
 describe CommonsController, "#route_for" do
   

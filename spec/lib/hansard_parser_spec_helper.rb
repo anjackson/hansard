@@ -1,5 +1,4 @@
 require File.dirname(__FILE__) + '/../spec_helper'
-require File.dirname(__FILE__) + '/../../lib/housecommons_parser'
 
 def parse_hansard file
   Hansard::HouseCommonsParser.new(File.dirname(__FILE__) + "/../../data/#{file}").parse

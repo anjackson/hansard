@@ -1,4 +1,3 @@
-require File.dirname(__FILE__) + '/../../lib/index_parser'
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Hansard::IndexParser do

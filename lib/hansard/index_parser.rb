@@ -24,7 +24,7 @@ module Hansard
       @image =  @doc.at('index/image').attributes['src']
       title = handle_node_text(@doc.at('index/title'))
       date_span = handle_node_text(@doc.at('index/p/i'))
-      start_date_text, end_date_text = date_span.split('&#x2013;')
+      start_date_text, end_date_text = date_span.split(/&#x2013;|&#x2014;/)
       @index = Index.new(:title => title, 
                          :start_date_text => start_date_text,
                          :end_date_text   => end_date_text, 
@@ -117,8 +117,7 @@ module Hansard
         @column = handle_node_text(node)
       end
     end
-    
-    
+  
   end
   
 end

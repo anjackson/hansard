@@ -1,5 +1,3 @@
-require File.join(File.dirname(__FILE__),'..','hansard_splitter.rb')
-
 namespace :hansard do
 
   desc 'splits Hansard XML files in /xml in to XML sections in /data'

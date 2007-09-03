@@ -23,6 +23,10 @@ module ApplicationHelper
     "<h4 class='sidenote'>Col. #{column}</h4><a name='column_#{column}'>"
   end
   
+  def sitting_link(sitting)
+    link_to sitting.title + " &ndash; " + sitting_display_date(sitting), sitting_date_url(sitting)
+  end
+  
   def sitting_date_url(sitting)
     if sitting.date.day < 10
       day = "0"+sitting.date.day.to_s

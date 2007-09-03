@@ -63,6 +63,15 @@ describe ApplicationHelper, " when returning the url for a sitting" do
 
 end
 
+describe ApplicationHelper, " when returning a link for a sitting" do
+  
+  it "should return a link whose text is of the form 'House of Commons &ndash; Monday, December 16, 1985'" do
+    sitting = Sitting.new(:date => Date.new(1985, 12, 16), :title => "House of Commons")
+    sitting_link(sitting).should == "<a href=\"/commons/1985/dec/16\">House of Commons &ndash; Monday, December 16, 1985</a>"
+  end
+
+end
+
 describe ApplicationHelper, " when returning a display date for a sitting" do
 
   it "should return a date in the format 'Monday, December 16, 1985'" do
