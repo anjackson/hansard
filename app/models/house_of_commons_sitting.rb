@@ -1,8 +1,9 @@
 class HouseOfCommonsSitting < Sitting
 
-  has_one :debates, :class_name => "Debates", :foreign_key => "sitting_id"
+  has_one :debates, :class_name => "Debates", :foreign_key => "sitting_id", :dependent => :destroy
+
   alias :to_activerecord_xml :to_xml
-  
+
   def to_xml(options={})
     xml = options[:builder] ||= Builder::XmlMarkup.new(:indent => 1)
     xml.housecommons do

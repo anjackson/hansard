@@ -47,13 +47,8 @@ describe Hansard::HouseCommonsParser do
   end
 
   after(:all) do
-    Sitting.delete_all
-    Section.delete_all
-    Contribution.delete_all
-    Division.delete_all
-    Vote.delete_all
+    Sitting.find(:all).each {|s| s.destroy}
   end
-
 
   it 'should add a procedural note for an italics element after a member element' do
     contribution = @sitting.debates.sections.last.contributions.first
@@ -124,7 +119,7 @@ describe Hansard::HouseCommonsParser do
   it 'should set text on first section in debates' do
     @first_section.contributions[0].text.should == '[MR. SPEAKER <i>in the Chair</i>]'
   end
-  
+
   it 'should set style attributes on a contribution' do
     @first_section.contributions[0].style.should == "align=center"
   end
@@ -527,18 +522,18 @@ describe Hansard::HouseCommonsParser do
     @division.votes[4].name.should == 'Atkinson, David'
     @division.votes[4].constituency.should == "B m'th E"
   end
-  
+
   it 'should correctly parse vote names that include HTML entities' do
     @division.votes[8].name.should == '&#x00D6;pik, Lembit'
   end
-  
+
   it 'should create teller aye votes for the cells that appear after the heading "Tellers for the Ayes" in the right hand column of the division table' do
     [@division.votes[143], @division.votes[145]].each do |division|
       division.should_not be_nil
       division.should be_an_instance_of(AyeTellerVote)
     end
   end
-  
+
   it 'should create aye votes for the cells that appear after the heading "Tellers for the Ayes" in the left hand column of the division table' do
     [@division.votes[142], @division.votes[144], @division.votes[146]].each do |division|
       division.should_not be_nil
@@ -561,20 +556,20 @@ describe Hansard::HouseCommonsParser do
       division.should be_an_instance_of(NoeTellerVote)
     end
   end
-  
+
   it 'should create noe votes for the cells that appear after the heading "Tellers for the Noes" in the left hand column of the division table' do
     [@division.votes[211], @division.votes[213], @division.votes[215]].each do |division|
       division.should_not be_nil
       division.should be_an_instance_of(NoeVote)
     end
   end
-  
+
   it 'should set division time when time format is [6.4 pm' do
     division = @sitting.debates.sections[10].contributions.select {|c| c.is_a? DivisionPlaceholder}[0].division
     division.name.should == 'Division No. 27]'
     division.time_text.should == '[6.4 pm'
   end
-  
+
   it "should extract column tags within procedural contributions" do
     @last_procedural_contribution.column_range.should == '744,745'
   end
