@@ -1,0 +1,6 @@
+- if index_entry.parent_entry
+  %div.index-child-entry
+    = index_entry_links(index_entry)
+- else
+  %div.index-entry
+    = index_entry_links(index_entry)

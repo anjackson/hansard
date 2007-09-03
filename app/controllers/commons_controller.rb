@@ -18,7 +18,6 @@ class CommonsController < ApplicationController
   end
 
   def index
-    @indexes = Index.find(:all)
     @sittings = HouseOfCommonsSitting.find(:all)
   end
   

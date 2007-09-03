@@ -1,0 +1,48 @@
+<% @title = "Search"-%>
+
+<% if @query %>
+	<% if !@result_set.hits.nil? %>
+	<% @title = "Search Results: \"#{@query}\""-%>
+		<div id="google-search-results-header">
+		<% if !@result_set.suggestion.nil? %>
+		Did you mean: <%= link_to @result_set.suggestion, :controller => "search", :query => @result_set.suggestion %>
+		<% end %>
+
+		<% if @result_set.total > 0 %>
+		<p>Results <%= @result_set.first %> to <%= @result_set.last %>:
+		  <%= render :partial => "hit_nav"%>
+		</p>
+		<% else %>
+		<p>Sorry, no results for <%= @query %>. <a href="http://www.google.com/search?q=<%= h @query %>+site:parliament.uk">Try Google</a>?</p>
+		
+		
+		<% end %>
+		</div>
+		<!-- search results -->
+		<% @result_set.hits.each do |hit| %>
+		<div id="google-search-result">
+		  <div id="google-search-result-title">
+		    <%= hit[:title] %>
+		  </div>
+
+		  <div id="google-search-result-text">
+		    <%= hit[:text] %>
+		  </div>
+ 
+		  <div id="google-search-result-url">
+		   <%= link_to hit[:link_text], hit[:link] %>
+		  </div>
+		</div>
+
+		<% end %>
+		<!-- end search results -->
+		<div id="google-search-results-footer">
+		  <%= render :partial => "hit_nav"%>
+		
+		</div>
+	<% end %>
+	<% else %>
+
+	
+<% end %>
+

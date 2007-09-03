@@ -56,3 +56,6 @@ end
 
 require 'lib/acts_as_hansard_element'
 ActiveRecord::Base.send(:include, Acts::HansardElement)
+
+SEARCH_HOST     = "10.100.10.76"
+APPLICATION_URLS = {:search    => "http://#{SEARCH_HOST}/search"}

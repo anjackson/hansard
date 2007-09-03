@@ -54,20 +54,35 @@ describe ApplicationHelper, " when formatting contribution" do
   end
 end
 
-describe ApplicationHelper, " when returning the url for a sitting" do
+describe ApplicationHelper, " when returning the date-based urls" do
   
-  it "should return the url for the sitting" do
+  it "should return a url in the format /commons/1985/dec/06 for a sitting" do
     sitting = Sitting.new(:date => Date.new(1985, 12, 6))
     sitting_date_url(sitting).should == '/commons/1985/dec/06'
   end
 
+  it "should return a url in the format /indices/1985/dec/06/1986/jan/07 for an index" do
+    index = Index.new(:start_date => Date.new(1985, 12, 6), 
+                      :end_date => Date.new(1986, 1, 7))
+    index_date_span_url(index).should == '/indices/1985/dec/06/1986/jan/07'
+  end
+    
 end
 
-describe ApplicationHelper, " when returning a link for a sitting" do
+describe ApplicationHelper, " when returning links" do
   
-  it "should return a link whose text is of the form 'House of Commons &ndash; Monday, December 16, 1985'" do
+  it "should return a link for a sitting whose text is of the form 'House of Commons &ndash; Monday, December 16, 1985'" do
     sitting = Sitting.new(:date => Date.new(1985, 12, 16), :title => "House of Commons")
-    sitting_link(sitting).should == "<a href=\"/commons/1985/dec/16\">House of Commons &ndash; Monday, December 16, 1985</a>"
+    sitting_link(sitting).should have_tag("a", :text => "House of Commons &ndash; Monday, December 16, 1985")
+  end
+  
+  it "should return a link for an index whose text is of the form 'INDEX TO THE PARLIAMENTARY DEBATES 16th December 1985 &ndash; 17th January 1986'" do
+    index = Index.new(:start_date_text => "16th December 1985", 
+                      :end_date_text => "17th January 1986", 
+                      :start_date => Date.new(1985, 12, 16), 
+                      :end_date  => Date.new(1986, 1, 17), 
+                      :title => "INDEX TO THE PARLIAMENTARY DEBATES")
+    index_link(index).should have_tag("a", :text => "INDEX TO THE PARLIAMENTARY DEBATES 16th December 1985 &ndash; 17th January 1986")
   end
 
 end
@@ -79,6 +94,37 @@ describe ApplicationHelper, " when returning a display date for a sitting" do
     sitting_display_date(sitting).should == 'Monday, December 16, 1985'
   end
   
+end
+
+describe ApplicationHelper, " when creating links in index entries" do
+
+  before do 
+    @index = Index.new(:start_date => Date.new(2006, 5, 4), 
+                      :end_date => Date.new(2006, 6, 6))
+    @index_entry = IndexEntry.new(:index => @index)
+    Sitting.stub!(:find_by_column_and_date_range).and_return(Sitting.new(:date => Date.new(2006,5,5)))
+  end
+  
+  it "should replace index entries with links appropriately for the text 'Channel tunnel 758'" do
+    @index_entry.text = "Channel tunnel 758"
+    expected = "Channel tunnel <a href=\"/commons/2006/may/05#column_758\">758</a>"
+    index_entry_links(@index_entry).should == expected
+  end
+
+  it "should replace index entries with links appropriately for the text 'Scotland 16&#x2013;7, 18, 59&#x2013;60w'" do
+    @index_entry.text = "Scotland 16&#x2013;7, 18, 59&#x2013;60w"
+    expected = "Scotland <a href=\"/commons/2006/may/05#column_16\">16</a>&#x2013;7, <a href=\"/commons/2006/may/05#column_18\">18</a>, 59&#x2013;60w"
+    index_entry_links(@index_entry).should == expected
+  end
+
+# TODO: Make this spec pass! 
+  # 
+  # it "should replace index entries with links appropriately for the text '1985 (16.01.86) 1332&#x2013;3'" do
+  #   @index_entry.text = " 1985 (16.01.86) 1332&#x2013;3"
+  #   expected = " 1985 (16.01.86) <a href=\"/commons/2006/may/05#column_1332\">1332</a>&#x2013;3"
+  #   index_entry_links(@index_entry).should == expected
+  # end
+  # 
 end
 
 describe ApplicationHelper, " when returning marker html for a model" do

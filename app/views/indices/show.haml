@@ -1,0 +1,3 @@
+%div= @index.title
+%div= alphabet_links(@index)
+%div= render :partial => 'index_entry', :collection => @index.entries(@letter)

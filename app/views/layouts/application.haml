@@ -10,8 +10,8 @@
     %link{ :rel => 'prev' }
   %body
     #header
-      %form#search
-        %input
+      %form#search{:action => search_url}
+        %input{:name => 'query'}
         %input{ :type => 'submit', :value => 'Search' }
       %h1#title Historic Hansard
       %ol#navigation
