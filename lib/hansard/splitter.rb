@@ -14,13 +14,14 @@ module Hansard
 
     DATE_PATTERN = /date format="(\d\d\d\d-\d\d-\d\d)"/
 
-    def initialize indented_copy, verbose=true
+    def initialize indented_copy, overwrite=true, verbose=true
       @indented_copy = indented_copy
       @verbose = verbose
+      @overwrite = overwrite
       @additional_lines = 0
     end
 
-    def split base_path, indented_copy=false
+    def split base_path
       @files_created = []
       @base_path = base_path
       Dir.mkdir(@base_path + '/data') unless File.exists?(@base_path + '/data')
@@ -31,8 +32,10 @@ module Hansard
       raise "no source files found in #{source_path}" if source_files.size == 0
 
       source_files.each do |input_file|
+        @additional_lines = 0
         puts input_file if @verbose
         handle_file input_file
+        sleep 5
       end
     end
 
@@ -148,8 +151,10 @@ module Hansard
 
     def clear_directory path
       if File.exists? path
-        Dir.glob(File.join(path,'*.xml')).each do |file|
-          File.delete file
+        if @overwrite
+          Dir.glob(File.join(path,'*.xml')).each do |file|
+            File.delete file
+          end
         end
       else
         Dir.mkdir path
@@ -170,6 +175,15 @@ module Hansard
       directory_name = input_file.split(File::SEPARATOR).last.chomp('.xml')
       @result_path = File.join @base_path, 'data', directory_name
       @indented_result_path = File.join @base_path, 'data', directory_name, 'indented'
+
+      if (File.exists?(@result_path) and not(@override))
+        puts 'not splitting - results directory already exists: ' + @result_path
+      else
+        process_file input_file, directory_name
+      end
+    end
+
+    def process_file input_file, directory_name
       clear_directory @result_path
       clear_directory @indented_result_path if @indented_copy
 
@@ -201,7 +215,10 @@ module Hansard
       input_lines = @additional_lines
       File.open(input_file).each_line {|line| input_lines += 1}
       puts 'original lines: ' + input_lines.to_s  if @verbose
-      raise "Number of lines don't match! Expected: #{input_lines} Got: #{total_lines}" if total_lines != input_lines
+
+      if total_lines != input_lines
+        raise "Number of lines don't match! Expected: #{input_lines} Got: #{total_lines}"
+      end
     end
 
   end
