@@ -79,3 +79,12 @@ a {
 .index-child-entry{
   margin-left:	2em;
 }
+
+td.number, td.percentage {
+  text-align: right;
+  padding-right: 1.5em;
+}
+
+th {
+  border-bottom: 0.5em solid white;
+}

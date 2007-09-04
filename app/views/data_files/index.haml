@@ -1,0 +1,38 @@
+%h1.title= 'Data Files'
+- total = @data_files.size
+- saved = @data_files.select(&:saved).size
+- not_saved = total - saved
+- no_warnings = @data_files.select{|f| f.log.blank?}.size
+- warnings = total - no_warnings
+%table
+  %thead
+    %tr
+      %th
+      %th Sitting days
+      %th Percentage
+  %tbody
+    %tr
+      %td Total files
+      %td.number= number_with_delimiter total
+      %td.percentage= number_to_percentage( total / total.to_f * 100.0, :precision => 0)
+    %tr
+      %td .
+    %tr
+      %td Saved
+      %td.number= number_with_delimiter saved
+      %td.percentage= number_to_percentage( saved / total.to_f * 100.0, :precision => 0)
+    %tr
+      %td Not saved
+      %td.number= number_with_delimiter not_saved
+      %td.percentage= number_to_percentage( not_saved / total.to_f * 100.0, :precision => 0)
+    %tr
+      %td .
+    %tr
+      %td No warnings
+      %td.number= number_with_delimiter no_warnings
+      %td.percentage= number_to_percentage( no_warnings / total.to_f * 100.0, :precision => 0)
+    %tr
+      %td With warnings
+      %td.number= number_with_delimiter warnings
+      %td.percentage= number_to_percentage( warnings / total.to_f * 100.0, :precision => 0)
+%hr

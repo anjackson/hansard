@@ -19,6 +19,7 @@ namespace :hansard do
 
   desc 'clears db, parses xml matching data/**/housecommons_*.xml and persists in db'
   task :load_commons => [:environment] do
+    sleep_seconds = ENV['sleep'].to_i if ENV['sleep']
     sittings = Sitting.find(:all)
     puts "Attempting to destroy #{sittings.size} sittings."
     sittings.each {|sitting| 
@@ -50,6 +51,7 @@ namespace :hansard do
           data_file.save!
         end
       end
+      sleep sleep_seconds if sleep_seconds
     end
   end
 
