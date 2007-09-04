@@ -14,11 +14,12 @@ module Hansard
 
     DATE_PATTERN = /date format="(\d\d\d\d-\d\d-\d\d)"/
 
-    def initialize indented_copy, overwrite=true, verbose=true
+    def initialize indented_copy, overwrite=true, verbose=true, sleep_seconds=nil
       @indented_copy = indented_copy
       @verbose = verbose
       @overwrite = overwrite
       @additional_lines = 0
+      @sleep_seconds = sleep_seconds
     end
 
     def split base_path
@@ -35,7 +36,7 @@ module Hansard
         @additional_lines = 0
         puts input_file if @verbose
         handle_file input_file
-        sleep 5
+        sleep @sleep_seconds if @sleep_seconds
       end
     end
 
