@@ -59,3 +59,8 @@ ActiveRecord::Base.send(:include, Acts::HansardElement)
 
 SEARCH_HOST     = "10.100.10.76"
 APPLICATION_URLS = {:search    => "http://#{SEARCH_HOST}/search"}
+
+# Settings for the exception notification plugin
+ExceptionNotifier.exception_recipients = %w(brookr@parliament.uk)
+ExceptionNotifier.sender_address = %("Prototype Error" <brookr@parliament.uk>)
+ExceptionNotifier.email_prefix = "[Historical Hansard] "

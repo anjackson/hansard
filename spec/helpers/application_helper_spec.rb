@@ -116,15 +116,7 @@ describe ApplicationHelper, " when creating links in index entries" do
     expected = "Scotland <a href=\"/commons/2006/may/05#column_16\">16</a>&#x2013;7, <a href=\"/commons/2006/may/05#column_18\">18</a>, 59&#x2013;60w"
     index_entry_links(@index_entry).should == expected
   end
-
-# TODO: Make this spec pass! 
-  # 
-  # it "should replace index entries with links appropriately for the text '1985 (16.01.86) 1332&#x2013;3'" do
-  #   @index_entry.text = " 1985 (16.01.86) 1332&#x2013;3"
-  #   expected = " 1985 (16.01.86) <a href=\"/commons/2006/may/05#column_1332\">1332</a>&#x2013;3"
-  #   index_entry_links(@index_entry).should == expected
-  # end
-  # 
+  
 end
 
 describe ApplicationHelper, " when returning marker html for a model" do
