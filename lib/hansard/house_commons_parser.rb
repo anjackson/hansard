@@ -8,9 +8,14 @@ end
 
 class Hansard::HouseCommonsParser
 
-  def initialize file
+  def initialize file, logger
+    @logger = logger
     @unexpected = false
     @doc = Hpricot.XML open(file)
+  end
+
+  def log text
+    @logger.add_log text
   end
 
   def parse
@@ -27,7 +32,7 @@ class Hansard::HouseCommonsParser
 
     def handle_vote text, division, vote_type
       parts = text.split('(')
-      puts 'vote_type nil: ' + division.inspect unless vote_type
+      log 'vote_type nil: ' + division.inspect unless vote_type
       vote = vote_type.new({
         :name => parts[0].strip,
         :column => @column,
@@ -90,7 +95,7 @@ class Hansard::HouseCommonsParser
           elsif (name == 'col' or name == 'image')
             handle_image_or_column name, child
           else
-            puts 'unexpected element in non_procedural_section: ' + name + ': ' + node.to_s
+            log 'unexpected element in non_procedural_section: ' + name + ': ' + node.to_s
           end
         end
       end
@@ -129,7 +134,7 @@ class Hansard::HouseCommonsParser
           if node.name == 'memberconstituency'
             contribution.member_constituency = clean_html(node)
           else
-            puts 'unexpected element in member_name: ' + name + ': ' + node.to_s
+            log 'unexpected element in member_name: ' + name + ': ' + node.to_s
           end
         end
       end
@@ -154,8 +159,8 @@ class Hansard::HouseCommonsParser
             handle_contribution_text node, contribution
           else
             unless @unexpected
-              puts 'unexpected element: ' + name + ': ' + node.to_s
-              puts 'will suppress rest of unexpected messages'
+              log 'unexpected element: ' + name + ': ' + node.to_s
+              log 'will suppress rest of unexpected messages'
             end
             @unexpected = true
           end
@@ -208,7 +213,7 @@ class Hansard::HouseCommonsParser
           elsif (name == 'col' or name == 'image')
             handle_image_or_column name, node
           else
-            puts 'unexpected element in orders_of_the_day: ' + name + ': ' + node.to_s
+            log 'unexpected element in orders_of_the_day: ' + name + ': ' + node.to_s
           end
         end
       end
@@ -253,7 +258,7 @@ class Hansard::HouseCommonsParser
             contribution = handle_procedural_contribution node, section
             contribution.text = "<ol>\n"+contribution.text+"\n</ol>"
           else
-            puts 'unexpected element in section: ' + name + ': ' + node.to_s
+            log 'unexpected element in section: ' + name + ': ' + node.to_s
           end
         end
       end
@@ -316,8 +321,8 @@ class Hansard::HouseCommonsParser
                 contribution.member = text.gsub("\r\n","\n").strip + ' '
               elsif !@unexpected
                 if element.at('membercontribution')
-                  puts 'unexpected text: ' + text
-                  puts 'will suppress rest of unexpected messages'
+                  log 'unexpected text: ' + text
+                  log 'will suppress rest of unexpected messages'
                 else
                   contribution.text = text.gsub("\r\n","\n").strip
                 end
@@ -345,7 +350,7 @@ class Hansard::HouseCommonsParser
           elsif (name == 'col' or name == 'image')
             handle_image_or_column name, node
           else
-            puts 'unexpected element in oral_question_section: ' + name + ': ' + node.to_s
+            log 'unexpected element in oral_question_section: ' + name + ': ' + node.to_s
           end
         end
       end
@@ -375,7 +380,7 @@ class Hansard::HouseCommonsParser
               handle_question_contribution node, questions_section
             end
           else
-            puts 'unexpected element in oral_questions_section: ' + name + ': ' + node.to_s
+            log 'unexpected element in oral_questions_section: ' + name + ': ' + node.to_s
           end
         end
       end
@@ -397,7 +402,7 @@ class Hansard::HouseCommonsParser
           elsif (name == 'image' or name == 'col')
             handle_image_or_column name, node
           else
-            puts 'unexpected element in oral_questions: ' + name + ': ' + node.to_s
+            log 'unexpected element in oral_questions: ' + name + ': ' + node.to_s
           end
         end
       end

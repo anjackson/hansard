@@ -1,5 +1,17 @@
 namespace :hansard do
 
+  desc 'populates data files table based on files in /data'
+  task :populate_data_files => [:environment] do
+    per_file('*xml') do |file|
+      name = File.basename(file)
+      directory = File.dirname(file)
+      if DataFile.count("name = '#{name}' and directory = '#{directory}'") == 0
+        data_file = DataFile.new :name => name, :directory => directory
+        data_file.save!
+      end
+    end
+  end
+
   desc 'clears db, parses xml matching data/**/housecommons_*.xml and persists in db'
   task :load_commons => [:environment] do
     sittings = Sitting.find(:all)
@@ -7,7 +19,29 @@ namespace :hansard do
     sittings.each {|sitting| sitting.destroy}
 
     per_file('housecommons_*xml') do |file|
-      Hansard::HouseCommonsParser.new(file).parse.save!
+      data_file = DataFile.from_file(file)
+      unless data_file.saved?
+        data_file.add_log 'parsing: ' + data_file.name, false
+        data_file.attempted_parse = true
+        begin
+          result = Hansard::HouseCommonsParser.new(file, data_file).parse
+          data_file.parsed = true
+
+          begin
+            data_file.attempted_save = true
+            result.save!
+            data_file.add_log 'saved: ' + data_file.name, false
+            data_file.saved = true
+            data_file.save!
+          rescue Exception => e
+            data_file.add_log 'saving failed: ' + e.to_s
+            data_file.save!
+          end
+        rescue Exception => e
+          data_file.add_log 'parsing failed: ' + e.to_s
+          data_file.save!
+        end
+      end
     end
   end
 
@@ -27,9 +61,7 @@ namespace :hansard do
     directories.each do |directory|
       Dir.glob(directory + "/*").select{|f| File.directory?(f)}.each do |d|
         Dir.glob(d+'/'+pattern).each do |file|
-          puts 'parsing: ' + file
           yield file
-          puts 'persisted: ' + file
         end
       end
     end
