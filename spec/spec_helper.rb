@@ -11,6 +11,14 @@ Spec::Runner.configure do |config|
   config.use_instantiated_fixtures  = false
   config.fixture_path = RAILS_ROOT + '/spec/fixtures'
 
+  config.include Haml::Helpers
+  config.include ActionView::Helpers
+
+  config.before(:each, :behaviour_type => :helper) do
+    @haml_is_haml = true
+    @haml_stack = [Haml::Buffer.new(:attr_wrapper => "'")]
+  end
+  
   # You can declare fixtures for each behaviour like this:
   #   describe "...." do
   #     fixtures :table_a, :table_b

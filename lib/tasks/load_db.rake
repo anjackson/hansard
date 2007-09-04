@@ -38,6 +38,7 @@ namespace :hansard do
 
           begin
             data_file.attempted_save = true
+            result.data_file = data_file
             result.save!
             data_file.add_log "saved\t" + data_file.name, false
             data_file.saved = true

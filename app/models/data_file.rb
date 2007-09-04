@@ -15,6 +15,10 @@ class DataFile < ActiveRecord::Base
     end
     data_file
   end
+  
+  def file 
+    File.new(File.join(directory, name))
+  end
 
   def add_log text, persist=true
     self.log = '' if log.nil?

@@ -60,7 +60,17 @@ describe ApplicationHelper, " when returning the date-based urls" do
     sitting = Sitting.new(:date => Date.new(1985, 12, 6))
     sitting_date_url(sitting).should == '/commons/1985/dec/06'
   end
+  
+  it "should return a url in the format /commons/source/1985/dec/06.xml for a sitting source" do
+    sitting = Sitting.new(:date => Date.new(1985, 12, 6))
+    sitting_date_source_url(sitting).should == '/commons/source/1985/dec/06.xml'
+  end
 
+  it "should return a url in the format /commons/1985/dec/06.xml for a sitting in xml" do
+    sitting = Sitting.new(:date => Date.new(1985, 12, 6))
+    sitting_date_xml_url(sitting).should == '/commons/1985/dec/06.xml'
+  end
+  
   it "should return a url in the format /indices/1985/dec/06/1986/jan/07 for an index" do
     index = Index.new(:start_date => Date.new(1985, 12, 6), 
                       :end_date => Date.new(1986, 1, 7))
@@ -94,6 +104,101 @@ describe ApplicationHelper, " when returning a display date for a sitting" do
     sitting_display_date(sitting).should == 'Monday, December 16, 1985'
   end
   
+end
+
+describe ApplicationHelper, " when creating a link for a sitting's next or previous day" do
+  
+  before do
+    @day = Date.new(1985, 12, 16)
+  end
+  
+  it "should yield in the context of a link to the sitting if a sitting can be found" do
+    sitting = mock_model(Sitting)
+    stub!(:sitting_date_url).and_return("http://test.url")
+    Sitting.stub!(:find).and_return(sitting)
+    capture_haml{
+      day_link(@day, ">"){ puts "moo" }
+    }.should have_tag("a[href=http://test.url]", :text => "moo")
+  end
+  
+  it "should yield in without a link if no sitting can be found" do
+    Sitting.stub!(:find).and_return(nil)
+    capture_haml{
+      day_link(@day, ">"){ puts "moo" }
+    }.should == "moo\n"
+  end
+
+  it "should look for the first sitting with a date larger than the sitting date passed for direction '>'" do
+    Sitting.should_receive(:find).with(:first,
+                                       :conditions => ["date > ?", @day.to_date],
+                                       :order => "date asc")
+    day_link(@day, ">"){}
+  end
+
+  it "should look for the first sitting with a date smaller than the sitting date passed for direction '<'" do
+    Sitting.should_receive(:find).with(:first,
+                                       :conditions => ["date < ?", @day.to_date],
+                                       :order => "date desc")
+    day_link(@day, "<"){}
+  end
+  
+end
+
+describe ApplicationHelper, " when creating navigation links" do
+
+  before do 
+    @sitting = mock_model(Sitting)
+    @sitting.stub!(:date).and_return(Date.new(2006,3,3))
+    stub!(:sitting_date_source_url)
+    stub!(:sitting_date_xml_url)
+    stub!(:day_link).and_yield
+  end
+  
+  it "shouldn't write anything to the page if @day is not true" do
+    capture_haml{
+      day_nav_links
+    }.should == ''
+  end
+  
+  it "should write content to the page if @day is true" do
+    @day = true
+    capture_haml{
+      day_nav_links
+    }.should_not == ''
+  end
+  
+  it "should include an 'ol' tag containing an 'li' tag containing a link to the source xml with the text 'XML source'" do
+    @day = true
+    should_receive(:sitting_date_source_url).and_return("http://test.url")
+    capture_haml{
+      day_nav_links
+    }.should have_tag("ol li a[href=http://test.url]", :text => "XML source")
+  end
+  
+  it "should include an 'ol' tag containing an 'li' tag containing a link to the generated xml with the text 'Generated XML'" do 
+    @day = true
+    should_receive(:sitting_date_xml_url).and_return("http://test.url")
+    capture_haml{
+      day_nav_links
+    }.should have_tag("ol li a[href=http://test.url]", :text => "Generated XML")
+  end
+  
+  it "should include an 'ol' tag containing an 'li' tag containing the text 'Previous day'" do 
+    @day = true
+    should_receive(:day_link).any_number_of_times.and_yield
+    capture_haml{
+      day_nav_links
+    }.should have_tag("ol li", :text => "Previous day")
+  end
+  
+  it "should include an 'ol' tag containing an 'li' tag containing the text 'Next day'" do
+    @day = true
+    should_receive(:day_link).any_number_of_times.and_yield
+    capture_haml{
+      day_nav_links
+    }.should have_tag("ol li", :text => "Next day") 
+  end
+    
 end
 
 describe ApplicationHelper, " when creating links in index entries" do

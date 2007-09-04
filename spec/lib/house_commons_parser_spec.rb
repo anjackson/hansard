@@ -11,7 +11,7 @@ describe Hansard::HouseCommonsParser do
     @sitting_text = %Q[<p id="S6CV0089P0-00360" align="center"><i>The House met at half-past Two o'clock</i></p>]
 
     file = 'housecommons_example.xml'
-    @sitting = Hansard::HouseCommonsParser.new(File.dirname(__FILE__) + "/../data/#{file}").parse
+    @sitting = Hansard::HouseCommonsParser.new(File.dirname(__FILE__) + "/../data/#{file}", nil).parse
     # @sitting = parse_hansard 's6cv0089p0/housecommons_1985_12_16.xml'
     @sitting.save!
 

@@ -23,6 +23,41 @@ module ApplicationHelper
     "<h4 class='sidenote#{extra_class}'>Col. #{column}</h4><a name='column_#{column}'>"
   end
   
+  def day_link day, direction
+    if sitting = Sitting.find(:first, 
+                              :conditions => ["date #{direction} ?", day.to_date], 
+                              :order => "date #{direction == ">" ? "asc" : "desc"}")
+      open :a, { :href => sitting_date_url(sitting) } do
+        yield
+      end
+    else
+      yield
+    end
+  end
+  
+  def day_nav_links
+    if @day
+      open :ol, {:id => 'navigation'} do
+        open :li do   
+          day_link(@sitting.date,"<"){ puts "Previous day" }
+        end
+        open :li do   
+          day_link(@sitting.date, ">"){ puts "Next day" }
+        end
+        open :li do
+          open :a, { :href => sitting_date_source_url(@sitting) } do
+            puts "XML source"
+          end
+        end
+        open :li do
+          open :a, { :href => sitting_date_xml_url(@sitting) } do
+            puts "Generated XML"
+          end 
+        end
+      end
+    end
+  end
+  
   def sitting_link(sitting)
     link_to sitting.title + " &ndash; " + sitting_display_date(sitting), sitting_date_url(sitting)
   end
@@ -68,11 +103,25 @@ module ApplicationHelper
   end
   
   def sitting_date_url(sitting)
-    url_for(:controller => 'commons', 
-            :action     => 'show_commons_hansard', 
-            :year       => sitting.date.year, 
-            :month      => month_abbr(sitting.date.month), 
-            :day        => zero_padded_day(sitting.date.day))
+    url_for(sitting_date_url_params(sitting))
+  end
+  
+  def sitting_date_source_url(sitting)
+    source_params = {:action => "show_commons_hansard_source", 
+                     :format => "xml"}
+    url_for(sitting_date_url_params(sitting).update(source_params))
+  end
+  
+  def sitting_date_xml_url(sitting)
+    url_for(sitting_date_url_params(sitting).update(:format => "xml"))
+  end
+  
+  def sitting_date_url_params(sitting)
+    {:controller => 'commons', 
+     :action     => 'show_commons_hansard', 
+     :year       => sitting.date.year, 
+     :month      => month_abbr(sitting.date.month), 
+     :day        => zero_padded_day(sitting.date.day)}
   end
   
   def month_abbr(month)
