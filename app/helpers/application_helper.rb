@@ -9,7 +9,7 @@ module ApplicationHelper
       if marker_type == "image"
         markers += image_marker(marker_value)
       elsif marker_type == "column"
-        markers += column_marker(marker_value)
+        markers += column_marker(marker_value, extra_class=" second-sidenote")
       end
     end 
     markers
@@ -19,8 +19,8 @@ module ApplicationHelper
     "<h4 class='sidenote'>Image #{image_src}</h4>"
   end
   
-  def column_marker(column)
-    "<h4 class='sidenote'>Col. #{column}</h4><a name='column_#{column}'>"
+  def column_marker(column, extra_class="")
+    "<h4 class='sidenote#{extra_class}'>Col. #{column}</h4><a name='column_#{column}'>"
   end
   
   def sitting_link(sitting)

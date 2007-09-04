@@ -32,8 +32,11 @@ h1, h2, h3 {
 	text-align: left;
 	margin-right:	-14em;
 	width: 12em;
-	margin-top: 2em;
 	position: relative;
+}
+
+.second-sidenote {
+	margin-top: 2.5em;
 }
 
 

@@ -146,7 +146,7 @@ describe ApplicationHelper, " when returning marker html for a model" do
   
   it "should return a column marker tag if the model yields a column" do
     @mock_sitting.stub!(:markers).and_yield("column", "column number")
-    should_receive(:column_marker).with("column number").and_return("")
+    should_receive(:column_marker).with("column number", " second-sidenote").and_return("")
     marker_html(@mock_sitting, {})
   end
   
