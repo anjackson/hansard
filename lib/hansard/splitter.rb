@@ -211,13 +211,15 @@ module Hansard
         File.open(result).each_line {|line| lines += 1}
         total_lines += lines
       end
-      puts 'total lines: ' + total_lines.to_s  if @verbose
+      puts "total\t" + total_lines.to_s  if @verbose
       input_lines = @additional_lines
       File.open(input_file).each_line {|line| input_lines += 1}
-      puts 'original lines: ' + input_lines.to_s  if @verbose
+      puts "original\t" + input_lines.to_s  if @verbose
 
       if total_lines != input_lines
         raise "Number of lines don't match! Expected: #{input_lines} Got: #{total_lines}"
+      else
+        puts "Processed expected number of lines\t" + total_lines.to_s  if @verbose
       end
     end
 
