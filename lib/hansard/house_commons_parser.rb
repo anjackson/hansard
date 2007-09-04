@@ -8,14 +8,14 @@ end
 
 class Hansard::HouseCommonsParser
 
-  def initialize file, logger
+  def initialize file, logger=nil
     @logger = logger
     @unexpected = false
     @doc = Hpricot.XML open(file)
   end
 
   def log text
-    @logger.add_log text
+    @logger.add_log text if @logger
   end
 
   def parse
