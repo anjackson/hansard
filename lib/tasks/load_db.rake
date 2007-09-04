@@ -11,17 +11,25 @@ namespace :hansard do
       end
     end
   end
+  
+  desc 'dummy task, refers to load_commons'
+  task :load_db => [:environment] do
+    puts "There's no hansard:load_db task. Try hansard:load_commons!"
+  end
 
   desc 'clears db, parses xml matching data/**/housecommons_*.xml and persists in db'
   task :load_commons => [:environment] do
     sittings = Sitting.find(:all)
-    puts "Destroying #{sittings.size} sittings."
-    sittings.each {|sitting| sitting.destroy}
+    puts "Attempting to destroy #{sittings.size} sittings."
+    sittings.each {|sitting| 
+      sitting.destroy
+      puts "Destroyed sitting #{sitting}."
+      }
 
     per_file('housecommons_*xml') do |file|
       data_file = DataFile.from_file(file)
       unless data_file.saved?
-        data_file.add_log 'parsing: ' + data_file.name, false
+        data_file.add_log "parsing\t" + data_file.name, false
         data_file.attempted_parse = true
         begin
           result = Hansard::HouseCommonsParser.new(file, data_file).parse
@@ -30,15 +38,15 @@ namespace :hansard do
           begin
             data_file.attempted_save = true
             result.save!
-            data_file.add_log 'saved: ' + data_file.name, false
+            data_file.add_log "saved\t" + data_file.name, false
             data_file.saved = true
             data_file.save!
           rescue Exception => e
-            data_file.add_log 'saving failed: ' + e.to_s
+            data_file.add_log "saving FAILED\t" + e.to_s
             data_file.save!
           end
         rescue Exception => e
-          data_file.add_log 'parsing failed: ' + e.to_s
+          data_file.add_log "parsing FAILED\t" + e.to_s
           data_file.save!
         end
       end
