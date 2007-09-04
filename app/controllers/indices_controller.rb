@@ -1,5 +1,7 @@
 class IndicesController < ApplicationController
 
+  caches_page :index, :show
+  
   def show
     start_date = UrlDate.new(:year => params[:start_year], 
                              :month => params[:start_month],

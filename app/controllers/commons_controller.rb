@@ -1,4 +1,6 @@
 class CommonsController < ApplicationController
+  
+  caches_page :index, :show_commons_hansard
 
   def show_commons_hansard
     date = UrlDate.new(params)
