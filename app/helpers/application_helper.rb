@@ -74,7 +74,7 @@ module ApplicationHelper
   end
   
   def index_link(index)
-    link_text = "#{index.title} #{index.start_date_text} &ndash; #{index.end_date_text}"
+    link_text = "#{index.start_date_text} &ndash; #{index.end_date_text}"
     link_to link_text, index_date_span_url(index)
   end
   

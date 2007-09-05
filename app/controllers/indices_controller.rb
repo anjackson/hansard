@@ -17,7 +17,7 @@ class IndicesController < ApplicationController
   end
   
   def index
-    @indices = Index.find(:all)
+    @indices = Index.find(:all, :order => "start_date asc")
   end
   
 end

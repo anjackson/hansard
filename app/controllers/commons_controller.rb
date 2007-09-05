@@ -1,6 +1,6 @@
 class CommonsController < ApplicationController
   
-  caches_page :index, :show_commons_hansard
+  caches_page :show_commons_hansard
   before_filter :check_valid_date, :only => [:show_commons_hansard, :show_commons_hansard_source]
 
   def show_commons_hansard

@@ -86,13 +86,13 @@ describe ApplicationHelper, " when returning links" do
     sitting_link(sitting).should have_tag("a", :text => "House of Commons &ndash; Monday, December 16, 1985")
   end
   
-  it "should return a link for an index whose text is of the form 'INDEX TO THE PARLIAMENTARY DEBATES 16th December 1985 &ndash; 17th January 1986'" do
+  it "should return a link for an index whose text is of the form '16th December 1985 &ndash; 17th January 1986'" do
     index = Index.new(:start_date_text => "16th December 1985", 
                       :end_date_text => "17th January 1986", 
                       :start_date => Date.new(1985, 12, 16), 
                       :end_date  => Date.new(1986, 1, 17), 
                       :title => "INDEX TO THE PARLIAMENTARY DEBATES")
-    index_link(index).should have_tag("a", :text => "INDEX TO THE PARLIAMENTARY DEBATES 16th December 1985 &ndash; 17th January 1986")
+    index_link(index).should have_tag("a", :text => "16th December 1985 &ndash; 17th January 1986")
   end
 
 end

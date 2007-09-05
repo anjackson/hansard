@@ -47,7 +47,7 @@ describe IndicesController, "handling GET /indices" do
   end
   
   it "should find all the indices" do
-    Index.should_receive(:find).with(:all).and_return([@index])
+    Index.should_receive(:find).with(:all, :order => "start_date asc").and_return([@index])
     do_get
   end
   
