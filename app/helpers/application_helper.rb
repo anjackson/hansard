@@ -36,7 +36,7 @@ module ApplicationHelper
   end
   
   def day_nav_links
-    if @day
+    
       open :ol, {:id => 'navigation'} do
         
         open :li do
@@ -44,7 +44,7 @@ module ApplicationHelper
             puts "Historic Hansard"
           end
         end
-        
+        if @day
         open :li do   
           day_link(@sitting.date,"<"){ puts "Previous day" }
         end
@@ -64,9 +64,9 @@ module ApplicationHelper
             puts "XML output"
           end 
         end
-        
+        end
       end
-    end
+    
   end
   
   def sitting_link(sitting)
