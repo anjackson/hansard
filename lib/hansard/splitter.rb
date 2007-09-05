@@ -186,11 +186,7 @@ module Hansard
       @result_path = File.join @base_path, 'data', directory_name
       @indented_result_path = File.join @base_path, 'data', directory_name, 'indented'
 
-      if (File.exists?(@result_path) and not(@override))
-        puts 'not splitting - results directory already exists: ' + @result_path
-      else
-        process_file input_file, directory_name
-      end
+      process_file input_file, directory_name
     end
 
     def process_file input_file, directory_name
