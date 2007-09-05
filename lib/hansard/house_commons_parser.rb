@@ -426,6 +426,24 @@ class Hansard::HouseCommonsParser
       end
     end
 
+    def handle_prayers_outside_section node, debates
+      section = Section.new({
+        :start_column => @column,
+        :start_image_src => @image
+      })
+
+      section.title = node.inner_html.to_s
+      element = node.next_sibling
+      if (element.elem? and element.inner_html.to_s.include?('Chair'))
+        handle_procedural_contribution element, section
+      else
+        raise 'unexpected sibling after prayers: ' + element.to_s
+      end
+
+      section.parent_section = debates
+      debates.sections << section
+    end
+
     def handle_debates sitting, debates
       sitting.debates = Debates.new
       debates.children.each do |node|
@@ -437,6 +455,14 @@ class Hansard::HouseCommonsParser
             handle_oral_questions node, sitting.debates
           elsif (name == 'col' or name == 'image')
             handle_image_or_column name, node
+          elsif (name == 'p')
+            if node.inner_html.to_s == 'PRAYERS'
+              handle_prayers_outside_section node, sitting.debates
+            elsif node.inner_html.to_s == '[Mr. SPEAKER <i>in the Chair</i>]'
+              # handled in handle_prayers_outside_section
+            else
+              raise 'unexpected paragraph in debates section: ' + node.to_s
+            end
           else
             raise 'unknown debates section type: ' + name
           end

@@ -28,7 +28,7 @@ namespace :hansard do
     Dir.glob(result_directory+'/housecommons_*xml').each do |file|
       parse_file(file, Hansard::HouseCommonsParser)
     end
-    
+
     Dir.glob(result_directory+'/index.xml').each do |file|
       parse_file(file, Hansard::IndexParser)
     end
@@ -41,6 +41,7 @@ namespace :hansard do
   def parse_file(file, parser)
     data_file = DataFile.from_file(file)
     unless data_file.saved?
+      data_file.log = ''
       data_file.add_log "parsing\t" + data_file.name, false
       data_file.add_log "directory:\t" + data_file.directory, false
       data_file.attempted_parse = true
