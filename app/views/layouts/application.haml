@@ -11,10 +11,11 @@
   %body
     #header
       / header begins
-      %form#search{ :action => search_url }
-        %input{ :name => 'query' }
-        %input{ :type => 'submit', :value => 'Search' }
-      -day_nav_links 
+      %p
+        %form#search{ :action => search_url }
+          %input{ :name => 'query' }
+          %input{ :type => 'submit', :value => 'Search' }
+        -day_nav_links 
       / header ends
     #content
       / content begins
