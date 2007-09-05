@@ -86,8 +86,12 @@ module ApplicationHelper
        column = $2
        suffix = $3
        index = index_entry.index
-       sitting = Sitting.find_by_column_and_date_range(column, index.start_date, index.end_date)
-       text += link_to(column, sitting_date_url(sitting) + "#column_#{column}")
+       sitting = HouseOfCommonsSitting.find_by_column_and_date_range(column, index.start_date, index.end_date)
+       if sitting
+         text += link_to(column, sitting_date_url(sitting) + "#column_#{column}")
+       else
+         text += $2
+       end
        text += suffix
        text
     end

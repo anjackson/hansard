@@ -29,12 +29,10 @@ namespace :hansard do
       parse_file(file, Hansard::HouseCommonsParser)
     end
     
-    if /commons/.match result_directory
-      Dir.glob(result_directory+'/index_*xml').each do |file|
-        parse_file(file, Hansard::IndexParser)
-      end
+    Dir.glob(result_directory+'/index.xml').each do |file|
+      parse_file(file, Hansard::IndexParser)
     end
-    
+
     Dir.glob(result_directory+'/writtenanswers_*xml').each do |file|
       parse_file(file, Hansard::WrittenAnswersParser)
     end

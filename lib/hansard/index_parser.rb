@@ -31,11 +31,18 @@ module Hansard
       date_span = handle_node_text(@doc.at('index/p:nth(2)'))
       date_span.gsub!(/<\/?i>/, '')
       start_date_text, end_date_text = date_span.split(/&#x2013;|&#x2014;/)
+      end_date = Date.parse(end_date_text)
+      begin
+        start_date = Date.parse(start_date_text)
+        raise "bad date" if start_date.year == Time.now.year 
+      rescue
+        start_date = Date.parse(start_date_text + " #{end_date.year}")
+      end
       @index = Index.new(:title => title, 
                          :start_date_text => start_date_text,
                          :end_date_text   => end_date_text, 
-                         :start_date      => Date.parse(start_date_text), 
-                         :end_date        => Date.parse(end_date_text))
+                         :start_date      => start_date, 
+                         :end_date        => end_date)
     
       (@doc/'indexdiv').each do |indexdiv|
         handle_index indexdiv

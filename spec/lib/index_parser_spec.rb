@@ -20,19 +20,19 @@ describe Hansard::IndexParser do
   end
 
   it "should set the start date text of the index model" do
-    @index.start_date_text.should == "16th December 1985"
+    @index.start_date_text.should == "16th January"
   end
 
   it "should set the end date text of the index model" do
-    @index.end_date_text.should == "17th January 1986"
+    @index.end_date_text.should == "17th February 1986"
   end
 
   it "should set the start date of the index model" do
-    @index.start_date.should == Date.new(1985, 12, 16)
+    @index.start_date.should == Date.new(1986, 1, 16)
   end
 
   it "should set the end date of the index model" do
-    @index.end_date.should == Date.new(1986, 1, 17)
+    @index.end_date.should == Date.new(1986, 2, 17)
   end
 
   it "should create the first index entry for the index with text 'Abortion deaths 81&#x2013;4w' and letter 'A'" do

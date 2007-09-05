@@ -207,7 +207,7 @@ describe ApplicationHelper, " when creating links in index entries" do
     @index = Index.new(:start_date => Date.new(2006, 5, 4), 
                       :end_date => Date.new(2006, 6, 6))
     @index_entry = IndexEntry.new(:index => @index)
-    Sitting.stub!(:find_by_column_and_date_range).and_return(Sitting.new(:date => Date.new(2006,5,5)))
+    HouseOfCommonsSitting.stub!(:find_by_column_and_date_range).and_return(Sitting.new(:date => Date.new(2006,5,5)))
   end
   
   it "should replace index entries with links appropriately for the text 'Channel tunnel 758'" do
