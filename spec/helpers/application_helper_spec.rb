@@ -154,10 +154,10 @@ describe ApplicationHelper, " when creating navigation links" do
     stub!(:day_link).and_yield
   end
   
-  it "shouldn't write anything to the page if @day is not true" do
+  it "should write 'Historic Hansard' to the page if @day is not true" do
     capture_haml{
       day_nav_links
-    }.should == ''
+    }.should == "Historic Hansard\n"
   end
   
   it "should write content to the page if @day is true" do
