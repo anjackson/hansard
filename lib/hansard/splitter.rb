@@ -40,6 +40,14 @@ module Hansard
       end
     end
 
+    def split_file base_path, input_file
+      @files_created = []
+      @base_path = base_path
+      @additional_lines = 0
+      puts input_file if @verbose
+      handle_file input_file
+    end
+
     def write_to_file name, buffer, date=nil
       name = name + '_' + date.to_s.gsub('-','_') if date
       file_name = File.join @result_path, name+'.xml'
@@ -170,6 +178,7 @@ module Hansard
       result_directory = File.join(result_path, directory_name)
       FileUtils.remove_dir result_directory, true
       FileUtils.mv @result_path, result_directory
+      result_directory
     end
 
     def handle_file input_file

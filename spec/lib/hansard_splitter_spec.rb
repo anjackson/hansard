@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe Hansard::Splitter do
 
   before do
-    @splitter = Hansard::Splitter.new(false,false)
+    @splitter = Hansard::Splitter.new(false,overwrite=true, verbose=false)
   end
 
   it 'should split commons data with written answers at end' do
