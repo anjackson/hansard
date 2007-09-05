@@ -43,6 +43,14 @@ module ApplicationHelper
           open :a, { :href => "/" } do
             puts "Historic Hansard"
           end
+          
+          open :a, { :href => "/writtenanswers" } do
+            puts "Written Answers"
+          end
+          
+          open :a, { :href => "/indices" } do
+            puts "Indices"
+          end
         end
         if @day
         open :li do   
