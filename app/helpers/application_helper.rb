@@ -38,26 +38,34 @@ module ApplicationHelper
   def day_nav_links
     if @day
       open :ol, {:id => 'navigation'} do
+        
+        open :li do
+          open :a, { :href => "/" } do
+            puts "Historic Hansard"
+          end
+        end
+        
         open :li do   
           day_link(@sitting.date,"<"){ puts "Previous day" }
         end
+        
         open :li do   
           day_link(@sitting.date, ">"){ puts "Next day" }
         end
+        
         open :li do
           open :a, { :href => sitting_date_source_url(@sitting) } do
             puts "XML source"
           end
         end
+        
         open :li do
           open :a, { :href => sitting_date_xml_url(@sitting) } do
-            puts "Generated XML"
+            puts "XML output"
           end 
         end
+        
       end
-      
-    else
-      puts "Historic Hansard"
     end
   end
   
