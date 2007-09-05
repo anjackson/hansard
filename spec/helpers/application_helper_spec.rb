@@ -115,31 +115,31 @@ describe ApplicationHelper, " when creating a link for a sitting's next or previ
   it "should yield in the context of a link to the sitting if a sitting can be found" do
     sitting = mock_model(Sitting)
     stub!(:sitting_date_url).and_return("http://test.url")
-    Sitting.stub!(:find).and_return(sitting)
+    HouseOfCommonsSitting.stub!(:find).and_return(sitting)
     capture_haml{
-      day_link(@day, ">"){ puts "moo" }
+      commons_day_link(@day, ">"){ puts "moo" }
     }.should have_tag("a[href=http://test.url]", :text => "moo")
   end
   
   it "should yield in without a link if no sitting can be found" do
-    Sitting.stub!(:find).and_return(nil)
+    HouseOfCommonsSitting.stub!(:find).and_return(nil)
     capture_haml{
-      day_link(@day, ">"){ puts "moo" }
+      commons_day_link(@day, ">"){ puts "moo" }
     }.should == "moo\n"
   end
 
   it "should look for the first sitting with a date larger than the sitting date passed for direction '>'" do
-    Sitting.should_receive(:find).with(:first,
+    HouseOfCommonsSitting.should_receive(:find).with(:first,
                                        :conditions => ["date > ?", @day.to_date],
                                        :order => "date asc")
-    day_link(@day, ">"){}
+    commons_day_link(@day, ">"){}
   end
 
   it "should look for the first sitting with a date smaller than the sitting date passed for direction '<'" do
-    Sitting.should_receive(:find).with(:first,
+    HouseOfCommonsSitting.should_receive(:find).with(:first,
                                        :conditions => ["date < ?", @day.to_date],
                                        :order => "date desc")
-    day_link(@day, "<"){}
+    commons_day_link(@day, "<"){}
   end
   
 end
@@ -151,7 +151,7 @@ describe ApplicationHelper, " when creating navigation links" do
     @sitting.stub!(:date).and_return(Date.new(2006,3,3))
     stub!(:sitting_date_source_url)
     stub!(:sitting_date_xml_url)
-    stub!(:day_link).and_yield
+    stub!(:commons_day_link).and_yield
   end
   
   it "should write 'Historic Hansard' to the page if @day is not true" do
@@ -185,7 +185,7 @@ describe ApplicationHelper, " when creating navigation links" do
   
   it "should include an 'ol' tag containing an 'li' tag containing the text 'Previous day'" do 
     @day = true
-    should_receive(:day_link).any_number_of_times.and_yield
+    should_receive(:commons_day_link).any_number_of_times.and_yield
     capture_haml{
       day_nav_links
     }.should have_tag("ol li", :text => "Previous day")
@@ -193,7 +193,7 @@ describe ApplicationHelper, " when creating navigation links" do
   
   it "should include an 'ol' tag containing an 'li' tag containing the text 'Next day'" do
     @day = true
-    should_receive(:day_link).any_number_of_times.and_yield
+    should_receive(:commons_day_link).any_number_of_times.and_yield
     capture_haml{
       day_nav_links
     }.should have_tag("ol li", :text => "Next day") 

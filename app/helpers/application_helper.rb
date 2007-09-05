@@ -23,10 +23,10 @@ module ApplicationHelper
     "<h4 class='sidenote#{extra_class}'>Col. #{column}</h4><a name='column_#{column}'>"
   end
   
-  def day_link day, direction
-    if sitting = Sitting.find(:first, 
-                              :conditions => ["date #{direction} ?", day.to_date], 
-                              :order => "date #{direction == ">" ? "asc" : "desc"}")
+  def commons_day_link day, direction
+    if sitting = HouseOfCommonsSitting.find(:first, 
+                                            :conditions => ["date #{direction} ?", day.to_date], 
+                                            :order => "date #{direction == ">" ? "asc" : "desc"}")
       open :a, { :href => sitting_date_url(sitting) } do
         yield
       end
@@ -46,11 +46,11 @@ module ApplicationHelper
         end
         if @day
         open :li do   
-          day_link(@sitting.date,"<"){ puts "Previous day" }
+          commons_day_link(@sitting.date,"<"){ puts "Previous day" }
         end
         
         open :li do   
-          day_link(@sitting.date, ">"){ puts "Next day" }
+          commons_day_link(@sitting.date, ">"){ puts "Next day" }
         end
         
         open :li do
