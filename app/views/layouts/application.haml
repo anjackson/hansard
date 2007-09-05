@@ -1,4 +1,4 @@
-%html{ :lang => 'en-GB', :xmlns => 'http://www.w3.org/1999/xhtml' }
+%html{ :lang => 'en-GB' }
   %head
     %meta{ 'http-equiv'.to_sym=>"Content-Type", :content=>"text/html;charset=utf-8" }
     %title= @title || "Historic Hansard"
@@ -10,15 +10,18 @@
     %link{ :rel => 'prev' }
   %body
     #header
-      %form#search{:action => search_url}
-        %input{:name => 'query'}
+      / header begins
+      %form#search{ :action => search_url }
+        %input{ :name => 'query' }
         %input{ :type => 'submit', :value => 'Search' }
       -day_nav_links 
+      / header ends
     #content
       / content begins
       = yield
       / content ends
     #footer 
       / footer begins
-      Coda
+      %a{ :href => '#navigation'}
+        Top of page
       / footer ends
