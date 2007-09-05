@@ -21,7 +21,7 @@ ssh_options[:paranoid] = false
 namespace :deploy
   desc "Softlink the 'hansard_data/data' directory to 'data'"
   task :create_data_softlink, :roles => ["app"] do   
-    invoke_command "ln -s /u/apps/hansard_data/data data", :via => "sudo"
+    invoke_command "ln -s /u/apps/hansard_data/data /u/apps/#{application}/current/data", :via => "sudo"
   end
 end
 
