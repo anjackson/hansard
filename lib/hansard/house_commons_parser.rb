@@ -198,30 +198,6 @@ class Hansard::HouseCommonsParser
       debate.contributions << quote
     end
 
-    def handle_orders_of_the_day section, debates
-      orders = Section.new({
-        :start_column => @column,
-        :start_image_src => @image
-      })
-      section.children.each do |node|
-        if node.elem?
-          name = node.name
-          if name == 'title'
-            orders.title = clean_html(node)
-          elsif name == 'section'
-            handle_section_element node, orders
-          elsif (name == 'col' or name == 'image')
-            handle_image_or_column name, node
-          else
-            log 'unexpected element in orders_of_the_day: ' + name + ': ' + node.to_s
-          end
-        end
-      end
-      orders.parent_section = debates
-      debates.sections << orders
-    end
-
-
     def handle_section_element section_element, debates
       section = Section.new({
         :start_column => @column,
@@ -444,13 +420,7 @@ class Hansard::HouseCommonsParser
 
     def handle_section section, debates
       if (title = section.at('title/text()'))
-        title = title.to_s.strip.downcase.squeeze(' ')
-
-        if title == 'orders of the day'
-          handle_orders_of_the_day section, debates
-        else
-          handle_section_element section, debates
-        end
+        handle_section_element section, debates
       else
         raise 'unexpected to find section with no title: ' + section.to_s
       end
