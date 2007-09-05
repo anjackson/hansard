@@ -275,6 +275,21 @@ describe Hansard::HouseCommonsParser do
   end
 
 
+  it 'should set member on a oral question contribution containing <lb>' do
+    question = @sitting.debates.oral_questions.sections.first.questions.last
+    question.contributions.first.member.should == 'Mr. Hilton'
+  end
+
+  it 'should set member on a oral question with two question numbers' do
+    question = @sitting.debates.oral_questions.sections.first.questions.last
+    question.contributions.first.oral_question_no.should == '12 and 13.'
+  end
+
+  it 'should set member contribution on a oral question contribution containing <lb>' do
+    question = @sitting.debates.oral_questions.sections.first.questions.last
+    question.contributions.first.member_contribution.should == 'asked the Minister of Agriculture, Fisheries and Food (1) how many outbreaks of fowl pest have been confirmed in Norfolk during the past three months; how this number compares with outbreaks in previous years; and what new measures are proposed to reduce the outbreaks of this disease;<lb/>\n<col>596</col>\n(2) how much has been paid in compensation in Norfolk in respect of fowl pest during the past three months; and what is the largest amount paid to any one breeder during the same period.'
+  end
+
   it 'should create third section in debates' do
     @third_section.should_not be_nil
     @third_section.should be_an_instance_of(Section)

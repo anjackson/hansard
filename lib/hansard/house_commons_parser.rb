@@ -296,7 +296,9 @@ class Hansard::HouseCommonsParser
         })
 
         contribution.member = ''
+        contribution.text = ''
 
+        in_member_contribution_text = false
         element.children.each do |node|
           if node.elem?
             name = node.name
@@ -308,15 +310,22 @@ class Hansard::HouseCommonsParser
               handle_contribution_text element, contribution
             elsif (name == 'col' or name == 'image')
               handle_image_or_column name, node
-            # elsif name == 'lb'
-
+              if in_member_contribution_text
+                contribution.text += node.to_s
+              end
+            elsif name == 'lb'
+              if in_member_contribution_text
+                contribution.text += node.to_s.sub('<lb></lb>', '<lb/>')
+              end
             else
               raise 'unexpected element in question_contribution: ' + name + ': ' + node.to_s
             end
 
           elsif node.text?
             text = node.to_s.strip
-            if (match = /^(Q?\d+\.?)/.match text)
+            if (match = /^(Q?\d+\.? and \d+\.?)/.match text)
+              contribution.oral_question_no = match[1]
+            elsif (match = /^(Q?\d+\.?)/.match text)
               contribution.oral_question_no = match[1]
             elsif text.size > 0
               if contribution.member.size == 0
@@ -325,14 +334,26 @@ class Hansard::HouseCommonsParser
                 if element.at('membercontribution')
                   log 'unexpected text: ' + text
                   log 'will suppress rest of unexpected messages'
+                  @unexpected = true
                 else
-                  contribution.text = text.gsub("\r\n","\n").strip
+                  in_member_contribution_text = true
+                  suffix = node.to_s.ends_with?("\r\n") ? '\n' : ''
+                  prefix = node.to_s.starts_with?("\r\n") ? '\n' : ''
+                  contribution.text += prefix + text.gsub("\r\n","\n").strip + suffix
                 end
               end
-              @unexpected = true
+            elsif node.to_s == "\r\n"
+              if in_member_contribution_text
+                contribution.text += '\n'
+              end
             end
           end
         end
+
+      # element.children.each do |child|
+        # text += child.elem? ?  child.to_original_html : child.to_s
+      # end
+      # text = text.gsub("\r\n","\n").strip
 
         contribution.section = question_section
         question_section.contributions << contribution
