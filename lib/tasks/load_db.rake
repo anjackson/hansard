@@ -25,6 +25,11 @@ namespace :hansard do
       sleep sleep_seconds if sleep_seconds
     end
   end
+  
+  desc 'dummy alias to load_indices'
+  task :load_indexes => [:environment] do
+    Rake::Task[:load_indices].invoke
+  end
 
   desc 'clears db, parses xml matching data/**/index.xml and persists in db'
   task :load_indices => [:environment] do
