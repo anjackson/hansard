@@ -55,6 +55,9 @@ module ApplicationHelper
           end 
         end
       end
+      
+    else
+      puts "Historic Hansard"
     end
   end
   
