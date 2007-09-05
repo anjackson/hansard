@@ -20,49 +20,70 @@ namespace :hansard do
   desc 'clears db, parses xml matching data/**/housecommons_*.xml and persists in db'
   task :load_commons => [:environment] do
     sleep_seconds = ENV['sleep'].to_i if ENV['sleep']
-    sittings = Sitting.find(:all)
-    puts "Attempting to destroy #{sittings.size} sittings."
-    sittings.each {|sitting| 
-      sitting.destroy
-      puts "Destroyed sitting #{sitting}."
-      }
-
+    sittings = HouseOfCommonsSitting.find(:all)
+    puts "Attempting to destroy #{sittings.size} house of commons sittings."
+    destroy sittings
     per_file('housecommons_*xml') do |file|
-      data_file = DataFile.from_file(file)
-      unless data_file.saved?
-        data_file.add_log "parsing\t" + data_file.name, false
-        data_file.attempted_parse = true
-        begin
-          result = Hansard::HouseCommonsParser.new(file, data_file).parse
-          data_file.parsed = true
-
-          begin
-            data_file.attempted_save = true
-            result.data_file = data_file
-            result.save!
-            data_file.add_log "saved\t" + data_file.name, false
-            data_file.saved = true
-            data_file.save!
-          rescue Exception => e
-            data_file.add_log "saving FAILED\t" + e.to_s
-            data_file.save!
-          end
-        rescue Exception => e
-          data_file.add_log "parsing FAILED\t" + e.to_s
-          data_file.save!
-        end
-      end
+      parse_file(file, Hansard::HouseCommonsParser)
       sleep sleep_seconds if sleep_seconds
     end
   end
 
   desc 'clears db, parses xml matching data/**/index.xml and persists in db'
   task :load_indices => [:environment] do
-    Index.delete_all
+    sleep_seconds = ENV['sleep'].to_i if ENV['sleep']
+    Index.destroy_all
     puts 'Deleted indices.'
-
     per_file('index.xml') do |file|
-      Hansard::IndexParser.new(file).parse.save!
+      parse_file(file, Hansard::IndexParser)
+      sleep sleep_seconds if sleep_seconds
+    end
+  end
+  
+  desc 'clears db, parses xml matching data/**/writtenanswers_*.xml and persists in db' 
+  task :load_written => [:environment] do
+    sleep_seconds = ENV['sleep'].to_i if ENV['sleep']
+    sittings = WrittenAnswersSitting.find(:all)
+    puts "Attempting to destroy #{sittings.size} written answers sittings."
+    destroy sittings
+    per_file('writtenanswers*xml') do |file|
+      parse_file(file, Hansard::WrittenAnswersParser)
+      sleep sleep_seconds if sleep_seconds
+    end
+  end
+  
+  def destroy models
+    models.each do |model| 
+      model.destroy
+      puts "Destroyed #{model}."
+    end
+  end
+  
+  def parse_file(file, parser)
+    data_file = DataFile.from_file(file)
+    unless data_file.saved?
+      data_file.add_log "parsing\t" + data_file.name, false
+      data_file.add_log "directory:\t" + data_file.directory, false
+      data_file.attempted_parse = true
+      begin
+        result = parser.new(file, data_file).parse
+        data_file.parsed = true
+
+        begin
+          data_file.attempted_save = true
+          result.data_file = data_file
+          result.save!
+          data_file.add_log "saved\t" + data_file.name, false
+          data_file.saved = true
+          data_file.save!
+        rescue Exception => e
+          data_file.add_log "saving FAILED\t" + e.to_s
+          data_file.save!
+        end
+      rescue Exception => e
+        data_file.add_log "parsing FAILED\t" + e.to_s
+        data_file.save!
+      end
     end
   end
 

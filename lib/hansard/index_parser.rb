@@ -5,10 +5,15 @@ require 'hpricot'
 module Hansard
   class IndexParser
 
-    def initialize file
+    def initialize file, logger=nil
+      @logger = logger
       @doc = Hpricot.XML open(file)
     end
 
+    def log text
+      @logger.add_log text if @logger
+    end
+    
     def parse
       type = @doc.children[0].name
       if type == 'index'

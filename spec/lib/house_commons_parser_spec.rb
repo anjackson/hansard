@@ -12,7 +12,6 @@ describe Hansard::HouseCommonsParser do
 
     file = 'housecommons_example.xml'
     @sitting = Hansard::HouseCommonsParser.new(File.dirname(__FILE__) + "/../data/#{file}", nil).parse
-    # @sitting = parse_hansard 's6cv0089p0/housecommons_1985_12_16.xml'
     @sitting.save!
 
     @first_section = @sitting.debates.sections.first

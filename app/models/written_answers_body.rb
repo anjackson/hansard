@@ -1,0 +1,4 @@
+class WrittenAnswersBody < Section
+
+
+end
