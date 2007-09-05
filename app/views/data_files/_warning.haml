@@ -1,0 +1,4 @@
+%tr
+  %td= warning.name
+  %td= h(warning.log).size > 250 ? h(warning.log)[0..249] : h(warning.log)
+  %td= warning.saved ? 'Y' : 'N'

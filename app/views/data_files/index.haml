@@ -32,7 +32,7 @@
       %td.number= number_with_delimiter no_warnings
       %td.percentage= number_to_percentage( no_warnings / total.to_f * 100.0, :precision => 0)
     %tr
-      %td With warnings
+      %td= link_to 'With warnings', show_warnings_url
       %td.number= number_with_delimiter warnings
       %td.percentage= number_to_percentage( warnings / total.to_f * 100.0, :precision => 0)
 %hr

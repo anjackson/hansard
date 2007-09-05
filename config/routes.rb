@@ -58,7 +58,8 @@ ActionController::Routing::Routes.draw do |map|
 
   end
 
-  map.with_options(:controller => 'data_files') do |df|
-    def_index_route "data_files", df
+  map.with_options(:controller => 'data_files') do |data_file|
+    def_index_route "data_files", data_file
+    def_route "data_files/warnings", :show_warnings, data_file
   end
 end
