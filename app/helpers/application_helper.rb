@@ -44,14 +44,9 @@ module ApplicationHelper
             puts "Historic Hansard"
           end
           
-          open :a, { :href => "/writtenanswers" } do
-            puts "Written Answers"
-          end
-          
-          open :a, { :href => "/indices" } do
-            puts "Indices"
-          end
+         
         end
+        
         if @day
         open :li do   
           commons_day_link(@sitting.date,"<"){ puts "Previous day" }
@@ -72,6 +67,15 @@ module ApplicationHelper
             puts "XML output"
           end 
         end
+        
+      else
+         open :a, { :href => "/writtenanswers" } do
+            puts "Written Answers"
+          end
+          
+          open :a, { :href => "/indices" } do
+            puts "Indices"
+          end      
         end
       end
     
