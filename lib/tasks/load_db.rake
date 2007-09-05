@@ -11,7 +11,7 @@ namespace :hansard do
       end
     end
   end
-  
+
   desc 'dummy task, refers to load_commons'
   task :load_db => [:environment] do
     puts "There's no hansard:load_db task. Try hansard:load_commons!"
@@ -20,9 +20,6 @@ namespace :hansard do
   desc 'clears db, parses xml matching data/**/housecommons_*.xml and persists in db'
   task :load_commons => [:environment] do
     sleep_seconds = ENV['sleep'].to_i if ENV['sleep']
-    sittings = HouseOfCommonsSitting.find(:all)
-    puts "Attempting to destroy #{sittings.size} house of commons sittings."
-    destroy sittings
     per_file('housecommons_*xml') do |file|
       parse_file(file, Hansard::HouseCommonsParser)
       sleep sleep_seconds if sleep_seconds
@@ -39,8 +36,8 @@ namespace :hansard do
       sleep sleep_seconds if sleep_seconds
     end
   end
-  
-  desc 'clears db, parses xml matching data/**/writtenanswers_*.xml and persists in db' 
+
+  desc 'clears db, parses xml matching data/**/writtenanswers_*.xml and persists in db'
   task :load_written => [:environment] do
     sleep_seconds = ENV['sleep'].to_i if ENV['sleep']
     sittings = WrittenAnswersSitting.find(:all)
@@ -51,14 +48,14 @@ namespace :hansard do
       sleep sleep_seconds if sleep_seconds
     end
   end
-  
+
   def destroy models
-    models.each do |model| 
+    models.each do |model|
       model.destroy
       puts "Destroyed #{model}."
     end
   end
-  
+
   def parse_file(file, parser)
     data_file = DataFile.from_file(file)
     unless data_file.saved?
