@@ -26,31 +26,45 @@ namespace :hansard do
 
   def load_split_files result_directory
     Dir.glob(result_directory+'/housecommons_*xml').each do |file|
-      data_file = DataFile.from_file(file)
-      unless data_file.saved?
-        data_file.add_log "parsing\t" + data_file.name, false
-        data_file.attempted_parse = true
-        begin
-          result = Hansard::HouseCommonsParser.new(file, data_file).parse
-          data_file.parsed = true
-
-          begin
-            data_file.attempted_save = true
-            result.data_file = data_file
-            result.save!
-            data_file.add_log "saved\t" + data_file.name, false
-            data_file.saved = true
-            data_file.save!
-          rescue Exception => e
-            data_file.add_log "saving FAILED\t" + e.to_s
-            data_file.save!
-          end
-        rescue Exception => e
-          data_file.add_log "parsing FAILED\t" + e.to_s
-          data_file.save!
-        end
+      parse_file(file, Hansard::HouseCommonsParser)
+    end
+    
+    if /commons/.match result_directory
+      Dir.glob(result_directory+'/index_*xml').each do |file|
+        parse_file(file, Hansard::IndexParser)
       end
+    end
+    
+    Dir.glob(result_directory+'/writtenanswers_*xml').each do |file|
+      parse_file(file, Hansard::WrittenAnswersParser)
     end
   end
 
+  def parse_file(file, parser)
+    data_file = DataFile.from_file(file)
+    unless data_file.saved?
+      data_file.add_log "parsing\t" + data_file.name, false
+      data_file.add_log "directory:\t" + data_file.directory, false
+      data_file.attempted_parse = true
+      begin
+        result = parser.new(file, data_file).parse
+        data_file.parsed = true
+
+        begin
+          data_file.attempted_save = true
+          result.data_file = data_file
+          result.save!
+          data_file.add_log "saved\t" + data_file.name, false
+          data_file.saved = true
+          data_file.save!
+        rescue Exception => e
+          data_file.add_log "saving FAILED\t" + e.to_s
+          data_file.save!
+        end
+      rescue Exception => e
+        data_file.add_log "parsing FAILED\t" + e.to_s
+        data_file.save!
+      end
+    end
+  end
 end

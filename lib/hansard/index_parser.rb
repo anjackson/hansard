@@ -28,7 +28,8 @@ module Hansard
     def create_index
       @image =  @doc.at('index/image').attributes['src']
       title = handle_node_text(@doc.at('index/title'))
-      date_span = handle_node_text(@doc.at('index/p/i'))
+      date_span = handle_node_text(@doc.at('index/p:nth(2)'))
+      date_span.gsub!(/<\/?i>/, '')
       start_date_text, end_date_text = date_span.split(/&#x2013;|&#x2014;/)
       @index = Index.new(:title => title, 
                          :start_date_text => start_date_text,
@@ -75,8 +76,8 @@ module Hansard
             handle_top_level_index_entry(child.children.first)
           elsif name == 'i'
             handle_index_context(child)
-          else
-            puts 'unexpected element in index entry: ' + name + ': ' + child.to_s
+          # else
+            # puts 'unexpected element in index entry: ' + name + ': ' + child.to_s
           end
         else
           handle_second_level_index_entry(child)  

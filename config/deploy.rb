@@ -17,3 +17,12 @@ set :user, "cap"               # defaults to the currently logged in user
 set :use_sudo, false
 
 ssh_options[:paranoid] = false 
+
+namespace :deploy
+  desc "Softlink the 'hansard_data/data' directory to 'data'"
+  task :create_data_softlink, :roles => ["app"] do   
+    invoke_command "ln -s /u/apps/hansard_data/data data", :via => "sudo"
+  end
+end
+
+after "deploy:document", "deploy:create_data_softlink"
