@@ -1,4 +1,6 @@
 %tr
-  %td= warning.name
+  %td= warning.directory.split('/').last+'.xml'
+  %td= warning.type_of_data
+  %td= warning.date_text
   %td= h(warning.log).size > 250 ? h(warning.log)[0..249] : h(warning.log)
   %td= warning.saved ? 'Y' : 'N'

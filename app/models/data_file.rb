@@ -15,9 +15,19 @@ class DataFile < ActiveRecord::Base
     end
     data_file
   end
-  
-  def file 
+
+  def file
     File.new(File.join(directory, name))
+  end
+
+  def type_of_data
+    type_of_data = name.split('_')[0]
+    type_of_data.sub('house','')
+  end
+
+  def date_text
+    prefix = name.split('_')[0]
+    name.sub(prefix+'_','').chomp('.xml').gsub('_','/').sub('/part/', ' part ')
   end
 
   def add_log text, persist=true

@@ -308,6 +308,8 @@ class Hansard::HouseCommonsParser
               handle_contribution_text element, contribution
             elsif (name == 'col' or name == 'image')
               handle_image_or_column name, node
+            # elsif name == 'lb'
+
             else
               raise 'unexpected element in question_contribution: ' + name + ': ' + node.to_s
             end
