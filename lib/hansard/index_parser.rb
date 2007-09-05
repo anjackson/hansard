@@ -29,7 +29,7 @@ module Hansard
       @image =  @doc.at('index/image').attributes['src']
       title = handle_node_text(@doc.at('index/title'))
       date_span = handle_node_text(@doc.at('index/p:nth(2)'))
-      date_span.gsub!(/<\/?i>/, '')
+      date_span.gsub!(/<\/?i>|,/, '')
       start_date_text, end_date_text = date_span.split(/&#x2013;|&#x2014;/)
       end_date = Date.parse(end_date_text)
       begin
