@@ -43,9 +43,9 @@ describe ApplicationHelper, " when formatting contribution" do
         '<p>a <sub>real</sub> change</p>'
   end
 
-  it 'should correctly handle image element in italics element' do
+  it 'should correctly handle image element in italics element by generating image' do
     format_contribution('a <i>really <image src="S6CV0089P0I0021"/> powerful</i> change',['zzz']).should ==
-        "<p>a <i>really </i></p></zzz><h4 class='sidenote'>Image S6CV0089P0I0021</h4><zzz><p><i> powerful</i> change</p>"
+        "<p>a <i>really </i></p></zzz><h4 class='sidenote'><img src='/images/dummypage.jpg' alt='Image: S6CV0089P0I0021' title='Image: S6CV0089P0I0021'/></h4><zzz><p><i> powerful</i> change</p>"
   end
 
   it 'should correctly handle column element in subscript element' do
@@ -249,8 +249,11 @@ describe ApplicationHelper, " when returning marker html for a model" do
     marker_html(@mock_sitting, {})
   end
   
+  # <h4 class='sidenote'><img src='/images/dummypage.jpg' alt='Image: S5CV0750P0I0497' title='Image: S5CV0750P0I0497'/></h4>
+  
   it "should return an 'h4' tag with class 'sidenote' containing the text 'Image' and the image source for an image marker" do
-    image_marker("image source").should have_tag("h4.sidenote", :text => "Image image source", :count => 1)
+    expected_tag_selector = "h4.sidenote img[src=/images/dummypage.jpg][alt=Image: S5CV0750P0I0497][title=Image: S5CV0750P0I0497]"
+    image_marker("S5CV0750P0I0497").should have_tag(expected_tag_selector, :count => 1)
   end
 
   it "should return an 'h4' tag with class 'sidenote' containing the text 'Col' and the column number for a column marker" do
