@@ -9,4 +9,6 @@
   - if member_contribution.text
     %blockquote.contribution_text= format_contribution(member_contribution.text, ['blockquote'])
   - else
-    %p.warning No contribution text recorded.
+    %p
+      %span.warning No contribution text recorded for Member Contribution
+      %span.warning= member_contribution.id
