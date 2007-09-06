@@ -6,4 +6,7 @@
     %span.member_constituency= member_contribution.member_constituency + colon_after_constituency(member_contribution)
   - if member_contribution.procedural_note
     %span.procedural_note= member_contribution.procedural_note + ':'
-  %blockquote.contribution_text= format_contribution(member_contribution.text, ['blockquote'])
+  - if member_contribution.text
+    %blockquote.contribution_text= format_contribution(member_contribution.text, ['blockquote'])
+  - else
+    %p.warning No contribution text recorded.
