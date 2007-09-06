@@ -7,6 +7,7 @@ class WrittenAnswersController < ApplicationController
   end
   
   def show
+    @day = true
     @sitting = WrittenAnswersSitting.find_by_date(@date.to_date.to_s)
     @marker_options = {}
     respond_to do |format|

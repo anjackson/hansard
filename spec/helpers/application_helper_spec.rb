@@ -110,21 +110,22 @@ describe ApplicationHelper, " when creating a link for a sitting's next or previ
   
   before do
     @day = Date.new(1985, 12, 16)
+    @sitting = mock_model(HouseOfCommonsSitting)
+    @sitting.stub!(:date).and_return(@day)
   end
   
   it "should yield in the context of a link to the sitting if a sitting can be found" do
-    sitting = mock_model(Sitting)
     stub!(:sitting_date_url).and_return("http://test.url")
-    HouseOfCommonsSitting.stub!(:find).and_return(sitting)
+    HouseOfCommonsSitting.stub!(:find).and_return(@sitting)
     capture_haml{
-      commons_day_link(@day, ">"){ puts "moo" }
+      day_link(@sitting, ">"){ puts "moo" }
     }.should have_tag("a[href=http://test.url]", :text => "moo")
   end
   
   it "should yield in without a link if no sitting can be found" do
     HouseOfCommonsSitting.stub!(:find).and_return(nil)
     capture_haml{
-      commons_day_link(@day, ">"){ puts "moo" }
+      day_link(@sitting, ">"){ puts "moo" }
     }.should == "moo\n"
   end
 
@@ -132,14 +133,14 @@ describe ApplicationHelper, " when creating a link for a sitting's next or previ
     HouseOfCommonsSitting.should_receive(:find).with(:first,
                                        :conditions => ["date > ?", @day.to_date],
                                        :order => "date asc")
-    commons_day_link(@day, ">"){}
+    day_link(@sitting, ">"){}
   end
 
   it "should look for the first sitting with a date smaller than the sitting date passed for direction '<'" do
     HouseOfCommonsSitting.should_receive(:find).with(:first,
                                        :conditions => ["date < ?", @day.to_date],
                                        :order => "date desc")
-    commons_day_link(@day, "<"){}
+    day_link(@sitting, "<"){}
   end
   
 end
