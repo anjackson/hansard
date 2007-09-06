@@ -153,6 +153,8 @@ describe ApplicationHelper, " when creating navigation links" do
     stub!(:sitting_date_source_url)
     stub!(:sitting_date_xml_url)
     stub!(:home_url)
+    stub!(:written_answers_url)
+    stub!(:indices_url)
     stub!(:commons_day_link).and_yield
   end
   
@@ -162,6 +164,21 @@ describe ApplicationHelper, " when creating navigation links" do
       day_nav_links
     }.should have_tag("ol li a[href=http://test.url]")
   end
+  
+  it "should include an 'ol' tag containing an 'li' tag containing a link to the indices url if @day is not true" do
+    should_receive(:indices_url).and_return("http://test.url")
+    capture_haml{
+      day_nav_links
+    }.should have_tag("ol li a[href=http://test.url]")
+  end
+  
+  it "should include an 'ol' tag containing an 'li' tag containing a link to the writtenanswers url if @day is not true" do
+    should_receive(:written_answers_url).and_return("http://test.url")
+    capture_haml{
+      day_nav_links
+    }.should have_tag("ol li a[href=http://test.url]")
+  end
+  
   
   it "should write content to the page if @day is true" do
     @day = true

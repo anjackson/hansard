@@ -32,11 +32,11 @@ ActionController::Routing::Routes.draw do |map|
   date = ':year/:month/:day'
   date_span = ':start_year/:start_month/:start_day/:end_year/:end_month/:end_day'
 
-  map.with_options(:controller => 'indices') do |indices|
+  map.with_options(:controller => 'indices') do |indexes|
 
-    indices.map 'indices', :action => 'index'
+    indexes.indices 'indices', :action => 'index'
 
-    indices.with_options(date_span_options) do |by_date_span|
+    indexes.with_options(date_span_options) do |by_date_span|
       def_route "indices/#{date_span}", :show, by_date_span
     end
 
@@ -58,19 +58,19 @@ ActionController::Routing::Routes.draw do |map|
 
   end
   
-  map.with_options(:controller => 'written_answers') do |written_answers|
+  map.with_options(:controller => 'written_answers') do |written|
 
-    written_answers.map 'writtenanswers', :action => 'index'
+    written.written_answers 'writtenanswers', :action => 'index'
  
-    written_answers.with_options(formatted_date_options) do |by_date|
+    written.with_options(formatted_date_options) do |by_date|
       def_route "writtenanswers/#{date}.:format", :show, by_date
     end
 
-    written_answers.with_options(date_options) do |by_date|
+    written.with_options(date_options) do |by_date|
       def_route "writtenanswers/#{date}", :show, by_date
     end
 
-    written_answers.with_options(formatted_date_options) do |by_date|
+    written.with_options(formatted_date_options) do |by_date|
       def_route "writtenanswers/source/#{date}.:format", :show_source, by_date
     end
 

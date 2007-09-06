@@ -67,12 +67,16 @@ module ApplicationHelper
         end
         
       else
-        open :a, { :href => "/writtenanswers" } do
-          puts "Written Answers"
+        open :li do
+          open :a, { :href => written_answers_url } do
+            puts "Written Answers"
+          end
         end
           
-        open :a, { :href => "/indices" } do
-          puts "Indices"
+        open :li do
+          open :a, { :href => indices_url } do
+            puts "Indices"
+          end
         end      
       end
     end  
@@ -98,37 +102,28 @@ module ApplicationHelper
   end
   
   def index_entry_links(index_entry)
-    simple_column_number = /(\s)(\d+)(,|\s|&#x2013;\d+,|&#x2013;\d+$|$)/
-    index_entry.text.gsub!(simple_column_number) do 
-       text = $1
-       column = $2
-       suffix = $3
-       index = index_entry.index
-       sitting = HouseOfCommonsSitting.find_by_column_and_date_range(column, index.start_date, index.end_date)
-       if sitting
-         text += link_to(column, sitting_date_url(sitting) + "#column_#{column}")
-       else
-         text += $2
-       end
-       text += suffix
-       text
-    end
-    written_answer_column_number = /(\s)(\d+)(w)/
-    index_entry.text.gsub!(written_answer_column_number) do
+    index = index_entry.index
+    basic_col = /(\s)(\d+)(,|\s|&#x2013;\d+,|&#x2013;\d+$|$)/
+    written_answer_col = /(\s)(\d+)(w)/
+    index_entry.text = create_index_links(index_entry.text, index, basic_col, HouseOfCommonsSitting)
+    index_entry.text = create_index_links(index_entry.text, index, written_answer_col, WrittenAnswersSitting)
+  end
+
+  def create_index_links(entry, index, pattern, sitting_type)
+    entry.gsub!(pattern) do
       text = $1
       column = $2
       suffix = $3
-      index = index_entry.index
-      sitting = WrittenAnswersSitting.find_by_column_and_date_range(column, index.start_date, index.end_date)
+      sitting = sitting_type.find_by_column_and_date_range(column, index.start_date, index.end_date)
       if sitting
         text += link_to(column, sitting_date_url(sitting) + "#column_#{column}")
       else
-        text += $2
+        text += column
       end
-      text += $3
+      text += suffix
       text
     end
-    index_entry.text
+    entry
   end
   
   def index_date_span_url(index)
