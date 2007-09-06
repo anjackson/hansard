@@ -51,7 +51,7 @@ describe '_contribution partial', 'when passed procedural contribution' do
 
 end
 
-describe '_section partial', 'when passed members contribution with oral_question_no, constituency and procedural note' do
+describe '_section partial', 'when passed members contribution with question_no, constituency and procedural note' do
 
   # <p>1. <member>Mr. David Borrow <memberconstituency>(South Ribble)</memberconstituency></member><membercontribution>: What assessment he has made of the responses to the pensions Green Paper received to date. [68005]</membercontribution></p>
   before do
@@ -59,13 +59,13 @@ describe '_section partial', 'when passed members contribution with oral_questio
 
     @member = 'Mr. David Borrow'
     @member_constituency = '(South Ribble)'
-    @oral_question_no = '1.'
+    @question_no = '1.'
     @contribution_text = ': What assessment he has made of the responses to the pensions Green Paper received to date. [68005]'
     @contribution.stub!(:markers)
     @contribution.stub!(:text).and_return @contribution_text
     @contribution.stub!(:member).and_return @member
     @contribution.stub!(:member_constituency).and_return @member_constituency
-    @contribution.stub!(:oral_question_no).and_return @oral_question_no
+    @contribution.stub!(:question_no).and_return @question_no
     @contribution.stub!(:procedural_note).and_return '<i>(seated and covered)</i>'
 
     @controller.template.stub!(:contribution).and_return(@contribution)
@@ -75,7 +75,7 @@ describe '_section partial', 'when passed members contribution with oral_questio
 
   it 'should show member contribution in p with class "member_contribution"' do
     response.should have_tag('div.member_contribution') do
-      with_tag('span.oral_question_no', @oral_question_no)
+      with_tag('span.question_no', @question_no)
       with_tag('cite.member', @member)
       with_tag('span.member_constituency', @member_constituency)
       with_tag('span.procedural_note', '(seated and covered):')
@@ -95,8 +95,8 @@ describe '_section partial', 'when passed members contribution with oral_questio
     response.should have_tag('span.member_constituency', @member_constituency)
   end
 
-  it 'should show oral question number in span with class "oral_question_no"' do
-    response.should have_tag('span.oral_question_no', @oral_question_no)
+  it 'should show oral question number in span with class "question_no"' do
+    response.should have_tag('span.question_no', @question_no)
   end
 
   it 'should show contribution text in blockquote with class "contribution_text"' do
@@ -117,7 +117,7 @@ describe '_section partial', 'when passed members contribution with constituency
     @contribution.stub!(:text).and_return @contribution_text
     @contribution.stub!(:member).and_return @member
     @contribution.stub!(:member_constituency).and_return @member_constituency
-    @contribution.stub!(:oral_question_no).and_return nil
+    @contribution.stub!(:question_no).and_return nil
     @contribution.stub!(:procedural_note).and_return nil
 
     @controller.template.stub!(:contribution).and_return(@contribution)
@@ -143,7 +143,7 @@ describe '_section partial', 'when passed members contribution without constitue
     @contribution.stub!(:text).and_return @contribution_text
     @contribution.stub!(:member).and_return @member
     @contribution.stub!(:member_constituency).and_return nil
-    @contribution.stub!(:oral_question_no).and_return nil
+    @contribution.stub!(:question_no).and_return nil
     @contribution.stub!(:procedural_note).and_return nil
 
     @controller.template.stub!(:contribution).and_return(@contribution)

@@ -45,15 +45,33 @@ ActionController::Routing::Routes.draw do |map|
   map.with_options(:controller => 'commons') do |commons|
 
     commons.with_options(formatted_date_options) do |by_date|
-      def_route "commons/#{date}.:format", :show_commons_hansard, by_date
+      def_route "commons/#{date}.:format", :show, by_date
     end
 
     commons.with_options(date_options) do |by_date|
-      def_route "commons/#{date}", :show_commons_hansard, by_date
+      def_route "commons/#{date}", :show, by_date
     end
 
     commons.with_options(formatted_date_options) do |by_date|
-      def_route "commons/source/#{date}.:format", :show_commons_hansard_source, by_date
+      def_route "commons/source/#{date}.:format", :show_source, by_date
+    end
+
+  end
+  
+  map.with_options(:controller => 'written_answers') do |written_answers|
+
+    written_answers.map 'writtenanswers', :action => 'index'
+ 
+    written_answers.with_options(formatted_date_options) do |by_date|
+      def_route "writtenanswers/#{date}.:format", :show, by_date
+    end
+
+    written_answers.with_options(date_options) do |by_date|
+      def_route "writtenanswers/#{date}", :show, by_date
+    end
+
+    written_answers.with_options(formatted_date_options) do |by_date|
+      def_route "writtenanswers/source/#{date}.:format", :show_source, by_date
     end
 
   end

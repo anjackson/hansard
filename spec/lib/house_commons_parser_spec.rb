@@ -204,12 +204,12 @@ describe Hansard::HouseCommonsParser do
   end
 
   it 'should set oral question number on first oral question contribution' do
-    @first_question_contribution.oral_question_no.should == '1.'
+    @first_question_contribution.question_no.should == '1.'
   end
 
   it 'should set a oral question number when number is formated as Q1.' do
     question = @sitting.debates.oral_questions.sections.last.sections.first.contributions.first
-    question.oral_question_no.should == 'Q1.'
+    question.question_no.should == 'Q1.'
   end
 
   it 'should set member name correctly when member element contains member constituency for a oral question' do
@@ -259,7 +259,7 @@ describe Hansard::HouseCommonsParser do
   end
 
   it 'should not set oral question number on second oral question contribution' do
-    @second_question_contribution.oral_question_no.should be_nil
+    @second_question_contribution.question_no.should be_nil
   end
 
   it 'should set member on second oral question contribution' do
@@ -282,7 +282,7 @@ describe Hansard::HouseCommonsParser do
 
   it 'should set member on a oral question with two question numbers' do
     question = @sitting.debates.oral_questions.sections.first.questions.last
-    question.contributions.first.oral_question_no.should == '12 and 13.'
+    question.contributions.first.question_no.should == '12 and 13.'
   end
 
   it 'should set member contribution on a oral question contribution containing <lb>' do

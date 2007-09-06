@@ -22,8 +22,10 @@ class Section < ActiveRecord::Base
 
   def title_xml(options)
     xml = options[:builder] ||= Builder::XmlMarkup.new
-    xml.title do
-      xml << title if title
+    if title
+      xml.title do
+        xml << title 
+      end
     end
   end
 

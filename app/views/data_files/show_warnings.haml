@@ -8,5 +8,5 @@
       %th Warning
       %th Saved?
   %tbody
-    = render :partial => 'warning', :collection => @data_files[false]
-    = render :partial => 'warning', :collection => @data_files[true]
+    = render :partial => 'warning', :collection => @data_files[false] if @data_files[false]
+    = render :partial => 'warning', :collection => @data_files[true] if @data_files[true]

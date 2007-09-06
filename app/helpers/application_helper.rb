@@ -37,21 +37,20 @@ module ApplicationHelper
   
   def day_nav_links
     
-      open :ol, {:id => 'navigation'} do
-        
-        open :li do
-          open :a, { :href => "/" } do
-            puts "Historic Hansard"
-          end
-          
-         
+    open :ol, {:id => 'navigation'} do
+      
+      open :li do
+        open :a, { :href => home_url } do
+          puts "Historic Hansard"
         end
+      end
         
-        if @day
+      if @day
+     
         open :li do   
           commons_day_link(@sitting.date,"<"){ puts "Previous day" }
         end
-        
+     
         open :li do   
           commons_day_link(@sitting.date, ">"){ puts "Next day" }
         end
@@ -69,17 +68,17 @@ module ApplicationHelper
         end
         
       else
-         open :a, { :href => "/writtenanswers" } do
-            puts "Written Answers"
-          end
-          
-          open :a, { :href => "/indices" } do
-            puts "Indices"
-          end      
+        open :a, { :href => "/writtenanswers" } do
+          puts "Written Answers"
         end
+          
+        open :a, { :href => "/indices" } do
+          puts "Indices"
+        end      
       end
-    
+    end  
   end
+  
   
   def sitting_link(sitting)
     link_to sitting.title + " &ndash; " + sitting_display_date(sitting), sitting_date_url(sitting)
@@ -115,6 +114,21 @@ module ApplicationHelper
        text += suffix
        text
     end
+    written_answer_column_number = /(\s)(\d+)(w)/
+    index_entry.text.gsub!(written_answer_column_number) do
+      text = $1
+      column = $2
+      suffix = $3
+      index = index_entry.index
+      sitting = WrittenAnswersSitting.find_by_column_and_date_range(column, index.start_date, index.end_date)
+      if sitting
+        text += link_to(column, sitting_date_url(sitting) + "#column_#{column}")
+      else
+        text += $2
+      end
+      text += $3
+      text
+    end
     index_entry.text
   end
   
@@ -134,7 +148,7 @@ module ApplicationHelper
   end
   
   def sitting_date_source_url(sitting)
-    source_params = {:action => "show_commons_hansard_source", 
+    source_params = {:action => "show_source", 
                      :format => "xml"}
     url_for(sitting_date_url_params(sitting).update(source_params))
   end
@@ -144,11 +158,22 @@ module ApplicationHelper
   end
   
   def sitting_date_url_params(sitting)
-    {:controller => 'commons', 
-     :action     => 'show_commons_hansard', 
+    {:controller => sitting_controller(sitting),
+     :action     => "show",
      :year       => sitting.date.year, 
      :month      => month_abbr(sitting.date.month), 
      :day        => zero_padded_day(sitting.date.day)}
+  end
+  
+  def sitting_controller(sitting)
+    case sitting
+    when HouseOfCommonsSitting
+      'commons'
+    when WrittenAnswersSitting
+      'written_answers'
+    else 
+      raise "Can't generate a url for '#{sitting.class}"
+    end
   end
   
   def month_abbr(month)

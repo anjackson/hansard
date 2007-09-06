@@ -8,6 +8,7 @@ class Hansard::WrittenAnswersParser
     @logger = logger
     @unexpected = false
     @doc = Hpricot.XML open(file)
+    @filename = File.basename(file)
   end
 
   def log text
@@ -27,13 +28,26 @@ class Hansard::WrittenAnswersParser
   def create_written_answers
     @column =  clean_html(@doc.at('writtenanswers/col'))
     @image =  @doc.at('writtenanswers/image').attributes['src']
-
+    if @doc.at('writtenanswers/date')
+      date_text = clean_html(@doc.at('writtenanswers/date'))
+      date = @doc.at('writtenanswers/date').attributes['format']
+    else
+      date_patt = /(\d\d\d\d)_(\d\d)_(\d\d)/
+      date_match = date_patt.match(@filename)
+      year = date_match[1].to_i
+      month = date_match[2].to_i
+      day = date_match[3].to_i
+      date = Date.new(year, month, day)
+      date_text = date.to_s
+      
+      print "DATE #{year} #{month} #{day}"
+    end
     sitting = WrittenAnswersSitting.new({
       :start_column => @column,
       :start_image_src => @image,
-      :title => clean_html(@doc.at('writtenanswers/title')),
-      :date_text => clean_html(@doc.at('writtenanswers/date')),
-      :date => @doc.at('writtenanswers/date').attributes['format']
+      :title => handle_node_text(@doc.at('writtenanswers/title')),
+      :date_text => date_text,
+      :date => date
     })
 
     if (texts = (@doc/'writtenanswers/p'))
@@ -112,7 +126,7 @@ class Hansard::WrittenAnswersParser
     contribution_type = nil
 
     if (element.at('member') or element.at('membercontribution'))
-      contribution_type = MemberContribution
+      contribution_type = WrittenMemberContribution
     else
       contribution_type = ProceduralContribution
     end
@@ -135,16 +149,25 @@ class Hansard::WrittenAnswersParser
         name = node.name
         if name == 'member'
           handle_member_name(node, contribution)
-        elsif (name == 'col' or name == 'image')
-          handle_image_or_column name, node
+        elsif name == 'col'
+          handle_contribution_col(node, contribution)
+          contribution.text += node.to_original_html
+        elsif name == 'image'
+          handle_contribution_image(node, contribution)
+          contribution.text += node.to_original_html
         else
-          contribution.text += "<#{name}>"
           handle_contribution_text(node, contribution)
-          contribution.text += "</#{name}>"
-          # log "unexpected element in #{contribution_type}: " + name + ': ' + node.to_s
         end
       elsif node.text?
-       contribution.text += node.to_s.gsub("\r\n","\n")
+        text = node.to_s.strip
+        if (match = /^(Q?\d+\.? and \d+\.?)$/.match text)
+          contribution.question_no = match[1]
+        elsif (match = /^(Q?\d+\.?)$/.match text)
+          contribution.question_no = match[1]
+        else
+         handle_contribution_text(node, contribution)
+         # contribution.text += node.to_s.gsub("\r\n","\n")
+        end
       end
     end
 
@@ -170,15 +193,19 @@ class Hansard::WrittenAnswersParser
   end
   
   def handle_contribution_text element, contribution
-    (element/'col').each do |col|
-      handle_image_or_column "col", col
-      contribution.column_range += ','+@column
-    end
-    (element/'image').each do |image|
-      handle_image_or_column "image", image
-      contribution.image_src_range += ','+@image
-    end
-    contribution.text += handle_node_text element
+    (element/'col').each { |col| handle_contribution_col(col, contribution) }
+    (element/'image').each { |image| handle_contribution_image(image, contribution) }
+    contribution.text += element.to_original_html
+  end
+  
+  def handle_contribution_col(col, contribution)
+    handle_image_or_column "col", col
+    contribution.column_range += ','+@column
+  end
+  
+  def handle_contribution_image(image, contribution)
+    handle_image_or_column "image", image
+    contribution.image_src_range += ','+@image
   end
   
   def handle_image_or_column name, node
@@ -191,8 +218,12 @@ class Hansard::WrittenAnswersParser
   
   def handle_node_text element
     text = ''
-    element.children.each do |child|
-      text += child.elem? ?  child.to_original_html : child.to_s
+    if element.elem?
+      element.children.each do |child|
+        text += child.elem? ?  child.to_original_html : child.to_s
+      end
+    else
+      text = element.to_s
     end
     text = text.gsub("\r\n","\n").strip
   end

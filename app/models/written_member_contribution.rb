@@ -1,10 +1,5 @@
-class MemberContribution < Contribution
+class WrittenMemberContribution < MemberContribution
 
-  alias :to_activerecord_xml :to_xml
-
-  def member_contribution
-    text
-  end
   
   def to_xml(options={})
     xml = options[:builder] ||= Builder::XmlMarkup.new
@@ -15,9 +10,7 @@ class MemberContribution < Contribution
         xml << member.strip
         xml.memberconstituency(member_constituency) if member_constituency
       end
-      xml.membercontribution do
-        xml << text.strip if text
-      end
+      xml << text.strip if text
     end
   end
   

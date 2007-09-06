@@ -56,18 +56,18 @@ end
 
 describe ApplicationHelper, " when returning the date-based urls" do
   
-  it "should return a url in the format /commons/1985/dec/06 for a sitting" do
-    sitting = Sitting.new(:date => Date.new(1985, 12, 6))
+  it "should return a url in the format /commons/1985/dec/06 for a house of commons sitting" do
+    sitting = HouseOfCommonsSitting.new(:date => Date.new(1985, 12, 6))
     sitting_date_url(sitting).should == '/commons/1985/dec/06'
   end
   
-  it "should return a url in the format /commons/source/1985/dec/06.xml for a sitting source" do
-    sitting = Sitting.new(:date => Date.new(1985, 12, 6))
+  it "should return a url in the format /commons/source/1985/dec/06.xml for a house of commons sitting source" do
+    sitting = HouseOfCommonsSitting.new(:date => Date.new(1985, 12, 6))
     sitting_date_source_url(sitting).should == '/commons/source/1985/dec/06.xml'
   end
 
   it "should return a url in the format /commons/1985/dec/06.xml for a sitting in xml" do
-    sitting = Sitting.new(:date => Date.new(1985, 12, 6))
+    sitting = HouseOfCommonsSitting.new(:date => Date.new(1985, 12, 6))
     sitting_date_xml_url(sitting).should == '/commons/1985/dec/06.xml'
   end
   
@@ -82,7 +82,7 @@ end
 describe ApplicationHelper, " when returning links" do
   
   it "should return a link for a sitting whose text is of the form 'House of Commons &ndash; Monday, December 16, 1985'" do
-    sitting = Sitting.new(:date => Date.new(1985, 12, 16), :title => "House of Commons")
+    sitting = HouseOfCommonsSitting.new(:date => Date.new(1985, 12, 16), :title => "House of Commons")
     sitting_link(sitting).should have_tag("a", :text => "House of Commons &ndash; Monday, December 16, 1985")
   end
   
@@ -151,13 +151,15 @@ describe ApplicationHelper, " when creating navigation links" do
     @sitting.stub!(:date).and_return(Date.new(2006,3,3))
     stub!(:sitting_date_source_url)
     stub!(:sitting_date_xml_url)
+    stub!(:home_url)
     stub!(:commons_day_link).and_yield
   end
   
-  it "should write 'Historic Hansard' to the page if @day is not true" do
+  it "should include an 'ol' tag containing an 'li' tag containing a link to the root if @day is not true" do
+    should_receive(:home_url).and_return("http://test.url")
     capture_haml{
       day_nav_links
-    }.should == "Historic Hansard\n"
+    }.should have_tag("ol li a[href=http://test.url]")
   end
   
   it "should write content to the page if @day is true" do
@@ -175,12 +177,12 @@ describe ApplicationHelper, " when creating navigation links" do
     }.should have_tag("ol li a[href=http://test.url]", :text => "XML source")
   end
   
-  it "should include an 'ol' tag containing an 'li' tag containing a link to the generated xml with the text 'Generated XML'" do 
+  it "should include an 'ol' tag containing an 'li' tag containing a link to the generated xml with the text 'XML output'" do 
     @day = true
     should_receive(:sitting_date_xml_url).and_return("http://test.url")
     capture_haml{
       day_nav_links
-    }.should have_tag("ol li a[href=http://test.url]", :text => "Generated XML")
+    }.should have_tag("ol li a[href=http://test.url]", :text => "XML output")
   end
   
   it "should include an 'ol' tag containing an 'li' tag containing the text 'Previous day'" do 
@@ -207,7 +209,7 @@ describe ApplicationHelper, " when creating links in index entries" do
     @index = Index.new(:start_date => Date.new(2006, 5, 4), 
                       :end_date => Date.new(2006, 6, 6))
     @index_entry = IndexEntry.new(:index => @index)
-    HouseOfCommonsSitting.stub!(:find_by_column_and_date_range).and_return(Sitting.new(:date => Date.new(2006,5,5)))
+    HouseOfCommonsSitting.stub!(:find_by_column_and_date_range).and_return(HouseOfCommonsSitting.new(:date => Date.new(2006,5,5)))
   end
   
   it "should replace index entries with links appropriately for the text 'Channel tunnel 758'" do

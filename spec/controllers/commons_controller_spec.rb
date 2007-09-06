@@ -7,18 +7,18 @@ describe CommonsController, "#route_for" do
     route_for(params).should == "/"
   end
   
-  it "should map { :controller => 'commons', :action => 'show_commons_hansard', :year => '1999', :month => 'feb', :day => '08' } to /commons/1999/feb/02" do
-    params = { :controller => 'commons', :action => 'show_commons_hansard', :year => '1999', :month => 'feb', :day => '08' }
+  it "should map { :controller => 'commons', :action => 'show', :year => '1999', :month => 'feb', :day => '08' } to /commons/1999/feb/02" do
+    params = { :controller => 'commons', :action => 'show', :year => '1999', :month => 'feb', :day => '08' }
     route_for(params).should == "/commons/1999/feb/08"
   end
  
-  it "should map { :controller => 'commons', :action => 'show_commons_hansard', :year => '1999', :month => 'feb', :day => '08', :format => 'xml' } to /commons/1999/feb/02.xml" do
-    params = { :controller => 'commons', :action => 'show_commons_hansard', :year => '1999', :month => 'feb', :day => '08', :format => 'xml' }
+  it "should map { :controller => 'commons', :action => 'show', :year => '1999', :month => 'feb', :day => '08', :format => 'xml' } to /commons/1999/feb/02.xml" do
+    params = { :controller => 'commons', :action => 'show', :year => '1999', :month => 'feb', :day => '08', :format => 'xml' }
     route_for(params).should == "/commons/1999/feb/08.xml"
   end
   
-  it "should map { :controller => 'commons', :action => 'show_commons_hansard_source', :year => '1999', :month => 'feb', :day => '08', :format => 'xml' } to /commons/source/1999/feb/08.xml" do
-    params = { :controller => 'commons', :action => 'show_commons_hansard_source', :year => '1999', :month => 'feb', :day => '08', :format => 'xml'}
+  it "should map { :controller => 'commons', :action => 'show_source', :year => '1999', :month => 'feb', :day => '08', :format => 'xml' } to /commons/source/1999/feb/08.xml" do
+    params = { :controller => 'commons', :action => 'show_source', :year => '1999', :month => 'feb', :day => '08', :format => 'xml'}
     route_for(params).should == "/commons/source/1999/feb/08.xml"
   end
 
@@ -32,7 +32,7 @@ describe CommonsController, "handling GET /commons/1999/feb/08" do
   end
   
   def do_get
-    get :show_commons_hansard, :year => '1999', :month => 'feb', :day => '08'
+    get :show, :year => '1999', :month => 'feb', :day => '08'
   end
 
   it "should be successful" do
@@ -45,9 +45,9 @@ describe CommonsController, "handling GET /commons/1999/feb/08" do
     do_get
   end
   
-  it "should render with the 'show_commons_hansard' template" do
+  it "should render with the 'show' template" do
     do_get
-    response.should render_template('show_commons_hansard')
+    response.should render_template('show')
   end
 
   it "should assign the sitting for the view" do
@@ -71,7 +71,7 @@ describe CommonsController, "handling GET /commons/1999/feb/08.xml" do
   end
   
   def do_get
-    get :show_commons_hansard, :year => '1999', :month => 'feb', :day => '08', :format => 'xml'
+    get :show, :year => '1999', :month => 'feb', :day => '08', :format => 'xml'
   end
 
   it "should be successful" do
@@ -104,7 +104,7 @@ describe CommonsController, "handling GET /commons/source/1999/feb/08.xml" do
   end
   
   def do_get
-    get :show_commons_hansard_source, :year => '1999', :month => 'feb', :day => '08', :format => 'xml'
+    get :show_source, :year => '1999', :month => 'feb', :day => '08', :format => 'xml'
   end
 
   it "should be successful" do
@@ -148,7 +148,7 @@ describe CommonsController, " handling GET /commons/year/month/day.xml with real
   
   def do_get(date)
     month = Date::ABBR_MONTHNAMES[date.month].downcase
-    get :show_commons_hansard, :year => date.year, :month => month, :day => date.day, :format => 'xml'
+    get :show, :year => date.year, :month => month, :day => date.day, :format => 'xml'
   end
   
   def normalize source, output

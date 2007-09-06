@@ -1,0 +1,4 @@
+= marker_html(section, @marker_options)
+%h2= format_section_title(section.title) if section.title
+= render :partial => 'contribution', :collection => section.contributions
+= render :partial => 'section', :collection => section.sections

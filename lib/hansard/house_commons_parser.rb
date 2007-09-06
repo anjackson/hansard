@@ -300,9 +300,9 @@ class Hansard::HouseCommonsParser
           elsif node.text?
             text = node.to_s.strip
             if (match = /^(Q?\d+\.? and \d+\.?)/.match text)
-              contribution.oral_question_no = match[1]
+              contribution.question_no = match[1]
             elsif (match = /^(Q?\d+\.?)/.match text)
-              contribution.oral_question_no = match[1]
+              contribution.question_no = match[1]
             elsif text.size > 0
               if contribution.member.size == 0
                 contribution.member = text.gsub("\r\n","\n").strip + ' '

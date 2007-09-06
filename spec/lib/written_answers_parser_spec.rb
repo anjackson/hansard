@@ -67,7 +67,7 @@ describe Hansard::WrittenAnswersParser, " when run against 'spec/data/writtenans
   end
   
   it "should create the second contribution as a member contribution" do
-    @second_contribution.should be_an_instance_of(MemberContribution)
+    @second_contribution.should be_an_instance_of(WrittenMemberContribution)
   end
   
   it "should set the member correctly on the member contribution" do 
