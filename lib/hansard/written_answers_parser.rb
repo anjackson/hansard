@@ -26,8 +26,25 @@ class Hansard::WrittenAnswersParser
   end
 
   def create_written_answers
-    @column =  clean_html(@doc.at('writtenanswers/col'))
-    @image =  @doc.at('writtenanswers/image').attributes['src']
+    
+    if @doc.at('writtenanswers/col')
+      @column =  clean_html(@doc.at('writtenanswers/col')) 
+    elsif @doc.at('col')
+      # try and infer the initial column
+      next_column = clean_html(@doc.at('col')).to_i
+      @column = (next_column - 1).to_s
+    end
+    
+    if @doc.at('writtenanswers/image')
+      @image =  @doc.at('writtenanswers/image').attributes['src'] 
+    elsif @doc.at('image')
+      # try and infer the initial image
+      next_image = @doc.at('image').attributes['src'] 
+      @image = next_image.gsub(/(.*?)(\d\d\d)$/) do
+        $1 + ($2.to_i - 1).to_s
+      end
+    end
+    
     if @doc.at('writtenanswers/date')
       date_text = clean_html(@doc.at('writtenanswers/date'))
       date = @doc.at('writtenanswers/date').attributes['format']
@@ -39,9 +56,8 @@ class Hansard::WrittenAnswersParser
       day = date_match[3].to_i
       date = Date.new(year, month, day)
       date_text = date.to_s
-      
-      print "DATE #{year} #{month} #{day}"
     end
+    
     sitting = WrittenAnswersSitting.new({
       :start_column => @column,
       :start_image_src => @image,
