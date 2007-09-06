@@ -104,3 +104,7 @@ td.number, td.percentage {
 th {
   border-bottom: 0.5em solid white;
 }
+
+.warning {
+	color:red;
+}
