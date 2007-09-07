@@ -1,5 +1,7 @@
 class DataFile < ActiveRecord::Base
 
+  belongs_to :source_file
+  
   validates_presence_of :name
   validates_presence_of :directory
 
@@ -35,7 +37,7 @@ class DataFile < ActiveRecord::Base
     puts text
     $stdout.flush
     if persist
-      text = self.log + (text + "/n")
+      text = self.log + (text + "\n")
       self.log = text
     end
   end

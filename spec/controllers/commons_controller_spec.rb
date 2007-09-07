@@ -24,6 +24,34 @@ describe CommonsController, "#route_for" do
 
 end
 
+describe CommonsController, " handling GET /" do
+
+  before do 
+    @sitting = mock_model(HouseOfCommonsSitting)
+    HouseOfCommonsSitting.stub!(:find).and_return([@sitting])
+  end
+  
+  def do_get
+    get :index
+  end
+  
+  it "should be successful" do
+    do_get
+    response.should be_success
+  end
+  
+  it "should render with the 'index' template" do
+    do_get
+    response.should render_template('index')
+  end
+  
+  it "should ask for all the sittings in cronological order" do 
+    HouseOfCommonsSitting.should_receive(:find).with(:all, :order => "date asc").and_return([@sitting])
+    do_get
+  end
+  
+end
+
 describe CommonsController, "handling GET /commons/1999/feb/08" do
 
   before do

@@ -80,4 +80,10 @@ ActionController::Routing::Routes.draw do |map|
     def_index_route "data_files", data_file
     def_route "data_files/warnings", :show_warnings, data_file
   end
+  
+  map.with_options(:controller => 'source_files') do |file|
+    file.source_files "source_files", :action => "index"
+    file.source_file "source_files/:name", :action => "show"
+  end
+  
 end

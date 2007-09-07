@@ -13,34 +13,36 @@ namespace :hansard do
     @splitter = Hansard::Splitter.new(false, (overwrite=true), true)
 
     source_files.each do |file|
-      result_directory = split_file file
-      load_split_files result_directory
+      source_file = split_file file
+      load_split_files source_file
     end
   end
 
   def split_file file
-    result_directory = @splitter.split_file @base_path, file
-    puts 'RESULT DIR ' + result_directory
-    result_directory
+    source_file = @splitter.split_file @base_path, file
+    puts 'RESULT DIR ' + source_file.result_directory
+    source_file
   end
 
-  def load_split_files result_directory
-    Dir.glob(result_directory+'/housecommons_*xml').each do |file|
-      parse_file(file, Hansard::HouseCommonsParser)
+  def load_split_files source_file
+    
+    Dir.glob(source_file.result_directory+'/housecommons_*xml').each do |file|
+      parse_file(file, Hansard::HouseCommonsParser, source_file)
     end
 
-    Dir.glob(result_directory+'/index.xml').each do |file|
-      parse_file(file, Hansard::IndexParser)
+    Dir.glob(source_file.result_directory+'/index.xml').each do |file|
+      parse_file(file, Hansard::IndexParser, source_file)
     end
 
-    Dir.glob(result_directory+'/writtenanswers_*xml').each do |file|
-      parse_file(file, Hansard::WrittenAnswersParser)
+    Dir.glob(source_file.result_directory+'/writtenanswers_*xml').each do |file|
+      parse_file(file, Hansard::WrittenAnswersParser, source_file)
     end
   end
 
-  def parse_file(file, parser)
+  def parse_file(file, parser, source_file)
     data_file = DataFile.from_file(file)
     unless data_file.saved?
+      data_file.source_file = source_file
       data_file.log = ''
       data_file.add_log "parsing\t" + data_file.name, false
       data_file.add_log "directory:\t" + data_file.directory, false

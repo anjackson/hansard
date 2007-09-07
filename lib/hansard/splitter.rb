@@ -13,6 +13,7 @@ module Hansard
     ]
 
     DATE_PATTERN = /date format="(\d\d\d\d-\d\d-\d\d)"/
+    SCHEMA_PATTERN = /xsi:noNamespaceSchemaLocation="(.*?)"/
 
     def initialize indented_copy, overwrite=true, verbose=true, sleep_seconds=nil
       @indented_copy = indented_copy
@@ -25,6 +26,7 @@ module Hansard
     def split base_path
       @files_created = []
       @base_path = base_path
+      files_split = []
       Dir.mkdir(@base_path + '/data') unless File.exists?(@base_path + '/data')
       source_path = File.join @base_path, 'xml'
 
@@ -35,9 +37,11 @@ module Hansard
       source_files.each do |input_file|
         @additional_lines = 0
         puts input_file if @verbose
-        handle_file input_file
+        source_file = handle_file(input_file)
+        files_split << source_file
         sleep @sleep_seconds if @sleep_seconds
       end
+      files_split
     end
 
     def split_file base_path, input_file
@@ -149,12 +153,10 @@ module Hansard
         @buffer << line
       end
 
-      if (match = DATE_PATTERN.match line)
-        new_date = match[1]
-        @date = new_date
-        @first_date = new_date unless @first_date
-      end
-
+      check_for_date(line)
+      check_for_schema(line) unless @source_file.schema
+      check_for_image(line) 
+        
       proxy_lines.each {|l| handle_line l}
     end
 
@@ -169,6 +171,32 @@ module Hansard
         Dir.mkdir path
       end
     end
+    
+    def check_for_image(line)
+      if (match = @image_pattern.match line)
+        new_image_num = match[1].to_i
+        if !@image_num and new_image_num != 1
+          @source_file.add_log "First image num is #{new_image_num}"
+        elseif  @image_num+1 != new_image_num 
+          @source_file.add_log "Missing image? Image: #{new_image_num} (last image #{@image_num})"
+        end 
+        @image_num = new_image_num
+      end
+    end
+    
+    def check_for_date(line)
+      if (match = DATE_PATTERN.match line)
+        new_date = match[1]
+        @date = new_date
+        @first_date = new_date unless @first_date
+      end
+    end
+      
+    def check_for_schema(line)
+      if (match = SCHEMA_PATTERN.match line)
+        @source_file.schema = match[1]
+      end
+    end
 
     def move_final_result directory_name, input_file
       size_in_mb = (File.size(input_file)/ 1048576.0)
@@ -178,14 +206,16 @@ module Hansard
       result_directory = File.join(result_path, directory_name)
       FileUtils.remove_dir result_directory, true
       FileUtils.mv @result_path, result_directory
-      result_directory
+      @source_file.result_directory = result_directory
+      @source_file
     end
 
     def handle_file input_file
       directory_name = input_file.split(File::SEPARATOR).last.chomp('.xml')
       @result_path = File.join @base_path, 'data', directory_name
       @indented_result_path = File.join @base_path, 'data', directory_name, 'indented'
-
+      @source_file = SourceFile.from_file(input_file)
+      @image_pattern = /image src="#{directory_name}I(\d\d\d\d)"/
       process_file input_file, directory_name
     end
 

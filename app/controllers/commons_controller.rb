@@ -22,7 +22,7 @@ class CommonsController < ApplicationController
   end
 
   def index
-    @sittings = HouseOfCommonsSitting.find(:all)
+    @sittings = HouseOfCommonsSitting.find(:all, :order => "date asc")
   end
   
 
