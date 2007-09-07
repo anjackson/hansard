@@ -12,7 +12,7 @@ module Hansard
         'index'
     ]
 
-    DATE_PATTERN = /date format="(\d\d\d\d-\d\d-\d\d)"/
+    DATE_PATTERN = /date format="(\d\d\d\d-\d\d-\d\d)">(.*?)<\/date>/
     SCHEMA_PATTERN = /xsi:noNamespaceSchemaLocation="(.*?)"/
 
     def initialize indented_copy, overwrite=true, verbose=true, sleep_seconds=nil
@@ -38,6 +38,7 @@ module Hansard
         @additional_lines = 0
         puts input_file if @verbose
         source_file = handle_file(input_file)
+        source_file.save!
         files_split << source_file
         sleep @sleep_seconds if @sleep_seconds
       end
@@ -49,7 +50,9 @@ module Hansard
       @base_path = base_path
       @additional_lines = 0
       puts input_file if @verbose
-      handle_file input_file
+      source_file = handle_file(input_file)
+      source_file.save!
+      source_file
     end
 
     def write_to_file name, buffer, date=nil
@@ -175,10 +178,8 @@ module Hansard
     def check_for_image(line)
       if (match = @image_pattern.match line)
         new_image_num = match[1].to_i
-        if !@image_num and new_image_num != 1
-          @source_file.add_log "First image num is #{new_image_num}"
-        elseif  @image_num+1 != new_image_num 
-          @source_file.add_log "Missing image? Image: #{new_image_num} (last image #{@image_num})"
+        if @image_num+1 != new_image_num 
+          @source_file.add_log "Missing image? Got: #{new_image_num}, expected #{@image_num+1} (last image #{@image_num})"
         end 
         @image_num = new_image_num
       end
@@ -187,6 +188,10 @@ module Hansard
     def check_for_date(line)
       if (match = DATE_PATTERN.match line)
         new_date = match[1]
+        new_date_text = match[2]
+        if Date.parse(new_date_text) != Date.parse(new_date)
+          @source_file.add_log("Bad date format: #{match[0]}")
+        end 
         @date = new_date
         @first_date = new_date unless @first_date
       end
@@ -215,7 +220,8 @@ module Hansard
       @result_path = File.join @base_path, 'data', directory_name
       @indented_result_path = File.join @base_path, 'data', directory_name, 'indented'
       @source_file = SourceFile.from_file(input_file)
-      @image_pattern = /image src="#{directory_name}I(\d\d\d\d)"/
+      @image_pattern = /image src="#{directory_name}I(\d\d\d\d)"\//
+      @image_num = 0
       process_file input_file, directory_name
     end
 

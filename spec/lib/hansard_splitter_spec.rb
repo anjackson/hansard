@@ -27,15 +27,19 @@ describe Hansard::Splitter do
 end
 
 
-describe Hansard::Splitter, " when splitting files from a source file" do
+describe Hansard::Splitter, " when splitting files from spec/data/S5LV0436P0" do
 
-  before do
+  before(:all) do
     splitter = Hansard::Splitter.new(false,overwrite=true, verbose=false)
     path = File.join(File.dirname(__FILE__),'..','data','S5LV0436P0')
     @source_files = splitter.split(path)
     @source_file = @source_files.first
   end
 
+  after(:all) do
+    SourceFile.delete_all
+  end
+  
   it "should create a source file model for each file split" do
     @source_files.each{ |file| file.should be_a_kind_of(SourceFile) }
   end
@@ -51,6 +55,15 @@ describe Hansard::Splitter, " when splitting files from a source file" do
   it "should set the source file's schema" do 
     @source_file.schema.should == 'hansard_v8.xsd'
   end
+  
+  it "should add a log message about a missing image tag" do
+    @source_file.log.should match(/Missing image\? Got: 3, expected 2 \(last image 1\)\n/)
+  end
+  
+  it "should add a log message if the date is not in correct format - <date format=\"1896-04-09\">Thursday, 9th April 1896.</date>" do 
+    @source_file.log.should match(/Bad date format: date format="1985-12-16">Monday 17 December 1985<\/date>/)
+  end
+  
   
   it "should set the source file's start date text"
   it "should set the source file's end date text" 

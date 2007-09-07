@@ -1,7 +1,7 @@
 class SourceFilesController < ApplicationController
 
   def index
-    @source_files = SourceFile.find(:all, :order => "start_date asc")
+    @source_files = SourceFile.find(:all, :order => "name asc")
   end
   
   def show

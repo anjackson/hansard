@@ -1,3 +1,7 @@
 %h1=@source_file.name
+%h4 Schema:
 %div=@source_file.schema
+%h4 Problems:
+%div=@source_file.log
+%h4 Files created:
 %div= render :partial => 'data_file', :collection => @source_file.data_files

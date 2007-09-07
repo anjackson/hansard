@@ -1,6 +1,7 @@
 class DataFile < ActiveRecord::Base
 
   belongs_to :source_file
+  has_one :sitting, :foreign_key => "data_file_id"
   
   validates_presence_of :name
   validates_presence_of :directory

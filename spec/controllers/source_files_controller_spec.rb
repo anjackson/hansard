@@ -31,7 +31,7 @@ describe SourceFilesController, " when handling GET /source_files" do
   end
 
   it "should find all the source files" do
-    SourceFile.should_receive(:find).with(:all, :order => "start_date asc").and_return([@source_file])
+    SourceFile.should_receive(:find).with(:all, :order => "name asc").and_return([@source_file])
     do_get
   end
 

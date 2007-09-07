@@ -1,1 +1,5 @@
-%div=data_file.name
+%div
+  -if data_file.sitting
+    =link_to(data_file.name, sitting_date_url(data_file.sitting))
+  -else
+    =data_file.name 
