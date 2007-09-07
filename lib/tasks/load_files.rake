@@ -39,7 +39,7 @@ namespace :hansard do
     end
   end
 
-  def parse_file(file, parser, source_file)
+  def parse_file(file, parser, source_file=nil)
     data_file = DataFile.from_file(file)
     unless data_file.saved?
       data_file.source_file = source_file

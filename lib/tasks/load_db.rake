@@ -56,35 +56,6 @@ namespace :hansard do
     end
   end
 
-  def parse_file(file, parser)
-    data_file = DataFile.from_file(file)
-    unless data_file.saved?
-      data_file.log = ''
-      data_file.add_log "parsing\t" + data_file.name, false
-      data_file.add_log "directory:\t" + data_file.directory, false
-      data_file.attempted_parse = true
-      begin
-        result = parser.new(file, data_file).parse
-        data_file.parsed = true
-
-        begin
-          data_file.attempted_save = true
-          result.data_file = data_file
-          result.save!
-          data_file.add_log "saved\t" + data_file.name, false
-          data_file.saved = true
-          data_file.save!
-        rescue Exception => e
-          data_file.add_log "saving FAILED\t" + e.to_s
-          data_file.save!
-        end
-      rescue Exception => e
-        data_file.add_log "parsing FAILED\t" + e.to_s
-        data_file.save!
-      end
-    end
-  end
-
   def per_file pattern, &block
     directories = Dir.glob(File.dirname(__FILE__) + "/../../data/*").select{|f| File.directory?(f)}
     puts 'directory count is: ' + directories.size.to_s
