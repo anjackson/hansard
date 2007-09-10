@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hansard xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:noNamespaceSchemaLocation="hansard_v8.xsd">
+  <titlepage>
+  <image src="S5LV0436P0I0001"/>  
+  <image src="S5LV0436P0I0003"/>  
+  </titlepage>
+  <frontmatter></frontmatter>
+  <p></p>
+  <housecommons>
+    <title></title>
+    <date format="1985-12-16">Monday 17 December 1985</date>
+    <p></p>
+    <debates>
+      <section>
+        <title></title>
+        <p></p>
+      </section>
+      <oralquestions>
+        <section>
+          <title></title>
+          <p></p>
+        </section>
+      </oralquestions>
+    </debates>
+  </housecommons>
+  <index>
+    <date format="1985-12-16">Monday 16 December 1985</date>
+    <indexdiv>
+      <index-letter></index-letter>
+      <p></p>
+    </indexdiv>
+  </index>
+</hansard>
