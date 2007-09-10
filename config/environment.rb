@@ -57,7 +57,17 @@ end
 require 'lib/acts_as_hansard_element'
 ActiveRecord::Base.send(:include, Acts::HansardElement)
 
+PRODUCTION_HOST = "rua.parliament.uk"
 SEARCH_HOST     = "10.100.10.76"
+MAIL_HOST       = "hp3k13m.parliament.uk"
+
+# General mail settings
+ActionMailer::Base.delivery_method = :smtp
+ActionMailer::Base.raise_delivery_errors = true
+ActionMailer::Base.smtp_settings = {:address => MAIL_HOST,
+                                    :port => "25",
+                                    :domain => PRODUCTION_HOST}
+                                    
 APPLICATION_URLS = {:search    => "http://#{SEARCH_HOST}/search"}
 
 # Settings for the exception notification plugin
