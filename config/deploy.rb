@@ -19,10 +19,12 @@ set :use_sudo, false
 ssh_options[:paranoid] = false 
 
 namespace :deploy do 
-  desc "Softlink the 'hansard_data/data' directory to 'data'"
-  task :create_data_softlink, :roles => ["app"] do   
+  desc "Softlink the 'hansard_data/data' directory to 'data' and 'hansard_data/xml' to 'xml'"
+  task :create_data_softlinks, :roles => ["app"] do   
     invoke_command "ln -s /u/apps/hansard_data/data /u/apps/#{application}/current/data", :via => "sudo"
+    invoke_command "rm -rf /u/apps/#{application}/current/xml", :via => "sudo" 
+    invoke_command "ln -s /u/apps/hansard_data/xml /u/apps/#{application}/current/xml", :via => "sudo"
   end
 end
 
-after "deploy:document", "deploy:create_data_softlink"
+after "deploy:document", "deploy:create_data_softlinks"
