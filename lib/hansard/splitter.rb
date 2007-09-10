@@ -159,7 +159,7 @@ module Hansard
       check_for_date(line)
       check_for_schema(line) unless @source_file.schema
       check_for_image(line) 
-        
+      check_for_column(line)  
       proxy_lines.each {|l| handle_line l}
     end
 
@@ -185,13 +185,28 @@ module Hansard
       end
     end
     
+    def check_for_column(line)
+      if (match = @column_pattern.match line)
+        new_column_num = match[1].to_i
+        if @column_num+1 != new_column_num 
+          @source_file.add_log "Missing column? Got: #{new_column_num}, expected #{@column_num+1} (last column #{@column_num})"
+        end 
+        @column_num = new_column_num
+      end
+    end
+    
+    
     def check_for_date(line)
       if (match = DATE_PATTERN.match line)
         new_date = match[1]
         new_date_text = match[2]
-        if Date.parse(new_date_text) != Date.parse(new_date)
+        begin 
+          if Date.parse(new_date_text.gsub(/\.|,/, '')) != Date.parse(new_date)
+            @source_file.add_log("Bad date format: #{match[0]}")
+          end 
+        rescue
           @source_file.add_log("Bad date format: #{match[0]}")
-        end 
+        end
         @date = new_date
         @first_date = new_date unless @first_date
       end
@@ -221,7 +236,9 @@ module Hansard
       @indented_result_path = File.join @base_path, 'data', directory_name, 'indented'
       @source_file = SourceFile.from_file(input_file)
       @image_pattern = /image src="#{directory_name}I(\d\d\d\d)"\//
+      @column_pattern = /<col>(\d+)<\/col>/
       @image_num = 0
+      @column_num = 0
       process_file input_file, directory_name
     end
 

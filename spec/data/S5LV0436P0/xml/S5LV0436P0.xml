@@ -3,10 +3,13 @@
 xsi:noNamespaceSchemaLocation="hansard_v8.xsd">
   <titlepage>
   <image src="S5LV0436P0I0001"/>  
+  <col>1</col>
   <image src="S5LV0436P0I0003"/>  
+  <col>2</col>
   </titlepage>
   <frontmatter></frontmatter>
   <p></p>
+  <col>4</col>
   <housecommons>
     <title></title>
     <date format="1985-12-16">Monday 17 December 1985</date>

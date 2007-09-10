@@ -3,4 +3,4 @@
     =link_to(data_file.name, sitting_date_url(data_file.sitting))
   -else
     =data_file.name 
-  =html_list(data_file.log) if !data_file.log.blank?
+  =truncate(html_linebreaks(h(data_file.log)), 250) if !data_file.log.blank?
