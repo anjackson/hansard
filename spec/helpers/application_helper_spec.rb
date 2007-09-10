@@ -267,8 +267,6 @@ describe ApplicationHelper, " when returning marker html for a model" do
     marker_html(@mock_sitting, {})
   end
   
-  # <h4 class='sidenote'><img src='/images/dummypage.jpg' alt='Image: S5CV0750P0I0497' title='Image: S5CV0750P0I0497'/></h4>
-  
   it "should return an 'h4' tag with class 'sidenote' containing the text 'Image' and the image source for an image marker" do
     expected_tag_selector = "h4.sidenote img[src=/images/dummypage.jpg][alt=Image: S5CV0750P0I0497][title=Image: S5CV0750P0I0497]"
     image_marker("S5CV0750P0I0497").should have_tag(expected_tag_selector, :count => 1)
@@ -283,4 +281,13 @@ describe ApplicationHelper, " when returning marker html for a model" do
   end
   
 end
+
+describe ApplicationHelper, " when formatting plain text as an html list" do
+  
+  it "should replace a newline-delimited piece of text with an html unordered list" do 
+    html_list("line\nother line").should == "<ul><li>line</li><li>other line</li></ul>"
+  end
+
+end
+
 

@@ -32,7 +32,7 @@ describe "source_files/show.haml", " in general" do
   end
 
   it "should have a div showing the source file log" do
-    @source_file.should_receive(:log).and_return("a big error")
+    @source_file.should_receive(:log).any_number_of_times.and_return("a big error")
     do_render
     response.should have_tag("div", :text => "a big error")
   end

@@ -1,10 +1,6 @@
 
 describe "an xml-generating model", :shared => true do
   
-  it "should respond to activerecord_xml" do
-    @model.respond_to?("to_activerecord_xml").should be_true
-  end
-  
   it "should respond to xml" do
     @model.respond_to?("to_xml").should be_true
   end

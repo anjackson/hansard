@@ -213,6 +213,11 @@ module ApplicationHelper
     parts = handle_contribution_part doc.children.first, [], inner_elements, outer_elements
     '<p>'+parts.join('').squeeze(' ')+'</p>'
   end
+  
+  def html_list(text)
+    list = text.split("\n").compact
+    "<ul><li>" + list.join("</li><li>") + "</li></ul>"
+  end
 
   private
 
