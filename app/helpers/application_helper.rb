@@ -219,6 +219,10 @@ module ApplicationHelper
     "<ul><li>" + list.join("</li><li>") + "</li></ul>"
   end
 
+  def html_linebreaks(text)
+    text.gsub("\n", "<br>")
+  end
+  
   private
 
     def close_add_open parts, inner_elements, outer_elements, addition

@@ -6,6 +6,7 @@ describe "source_files/_data_file.haml", " in general" do
     @data_file = mock_model(DataFile)
     @data_file.stub!(:name).and_return("data file name")
     @data_file.stub!(:sitting)
+    @data_file.stub!(:log)
     @controller.template.stub!(:data_file).and_return(@data_file)
   end
   
