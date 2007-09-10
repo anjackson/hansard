@@ -11,6 +11,7 @@ xsi:noNamespaceSchemaLocation="hansard_v8.xsd">
   <p></p>
   <col>4</col>
   <housecommons>
+    <col>1</col>
     <title></title>
     <date format="1985-12-16">Monday 17 December 1985</date>
     <p></p>

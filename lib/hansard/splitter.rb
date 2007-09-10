@@ -94,6 +94,7 @@ module Hansard
       end
       @section_name = element
       @start = @index
+      @new_section = true
     end
 
     def handle_section_end line
@@ -188,10 +189,11 @@ module Hansard
     def check_for_column(line)
       if (match = @column_pattern.match line)
         new_column_num = match[1].to_i
-        if @column_num+1 != new_column_num 
+        if (@column_num+1 != new_column_num and !(@new_section and new_column_num == 1))  
           @source_file.add_log "Missing column? Got: #{new_column_num}, expected #{@column_num+1} (last column #{@column_num})"
         end 
         @column_num = new_column_num
+        @new_section = false
       end
     end
     

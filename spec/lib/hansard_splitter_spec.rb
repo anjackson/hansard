@@ -64,6 +64,11 @@ describe Hansard::Splitter, " when splitting files from spec/data/S5LV0436P0" do
     @source_file.log.should match(/Missing column\? Got: 4, expected 3 \(last column 2\)\n/)
   end
   
+  it "should not add a log message about a missing column tag in a new section" do 
+    @source_file.log.should_not match(/Missing column\? Got: 1, expected 5 \(last column 4\)\n/)
+  end
+  
+  
   it "should add a log message if the date is not in correct format - <date format=\"1896-04-09\">Thursday, 9th April 1896.</date>" do 
     @source_file.log.should match(/Bad date format: date format="1985-12-16">Monday 17 December 1985<\/date>/)
   end
