@@ -1,6 +1,5 @@
 require 'hpricot'
 
-# Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
 
   def marker_html(model, options)
