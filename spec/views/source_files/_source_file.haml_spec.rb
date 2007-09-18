@@ -18,7 +18,7 @@ describe "source_files/_source_file.haml", " in general" do
     response.should have_tag("a", :text => "source name")
   end
   
-  it "should show the text 'problems' with a number counting the lines of the log if the source file has content in it's log" do 
+  it "should show the text 'problems' within an 'em' tag with a number counting the lines of the log if the source file has content in it's log" do 
     
   end
   
