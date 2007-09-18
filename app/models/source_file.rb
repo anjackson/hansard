@@ -1,4 +1,5 @@
 class SourceFile < ActiveRecord::Base
+  
 
   has_many :data_files
   validates_uniqueness_of :name
@@ -6,6 +7,11 @@ class SourceFile < ActiveRecord::Base
   def self.from_file file
     name = File.basename(file, '.xml')
     SourceFile.find_or_create_by_name(name)
+  end
+  
+  # surely there's a better way of counting lines?
+  def log_line_count
+    self.log.split("\n").length
   end
   
   def to_param
@@ -20,6 +26,6 @@ class SourceFile < ActiveRecord::Base
       text = self.log + (text + "\n")
       self.log = text
     end
-  end
+  end  
   
 end
