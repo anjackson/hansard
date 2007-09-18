@@ -1,2 +1,6 @@
-%h1.title= 'Historical Hansard: Source Files'
-= render :partial => 'source_file', :collection => @source_files
+%h1.title
+  = @source_files.length
+  Source Files
+
+%table
+  = render :partial => 'source_file', :collection => @source_files
