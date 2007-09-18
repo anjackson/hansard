@@ -18,10 +18,10 @@ describe "source_files/_source_file.haml", " in general" do
     response.should have_tag("a", :text => "source name")
   end
   
-  it "should show the text 'problem' if the source file has content in it's log" do 
-    @source_file.should_receive(:log).and_return("oops")
-    do_render
-    response.should have_tag('div', :text => "source name\n  (problems)")
+  it "should show the text 'problems' with a number counting the lines of the log if the source file has content in it's log" do 
+    
   end
+  
+
 
 end
