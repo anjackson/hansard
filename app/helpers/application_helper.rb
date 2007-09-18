@@ -76,7 +76,14 @@ module ApplicationHelper
           open :a, { :href => indices_url } do
             puts "Indices"
           end
-        end      
+        end    
+        
+        open :li do
+          open :a, { :href => source_files_url } do
+            puts "Source Files"
+          end
+        end
+          
       end
     end  
   end
