@@ -6,6 +6,7 @@ describe "source_files/_source_file.haml", " in general" do
     @source_file = mock_model(SourceFile)
     @source_file.stub!(:name).and_return("source name")
     @source_file.stub!(:log)
+    @source_file.stub!(:schema)
     @controller.template.stub!(:source_file).and_return(@source_file)
   end
   
