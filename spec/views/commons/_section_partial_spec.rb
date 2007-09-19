@@ -26,10 +26,12 @@ describe "_section partial", "when passed oral answers" do
     @oral_questions_section = mock_model(OralQuestionsSection)
     @oral_questions_section.stub!(:markers)
     @title = 'Oral Answers to Questions'
+    @title_for_linking = 'oral_answers_to_questions'
     sections = [@oral_questions_section]
 
     @oral_questions.stub!(:markers)
     @oral_questions.stub!(:title).and_return(@title)
+    @oral_questions.stub!(:title_for_linking).and_return(@title_for_linking)
     @oral_questions.stub!(:sections).and_return(sections)
     @oral_questions.stub!(:contributions).and_return([])
 
@@ -98,10 +100,12 @@ describe "_section partial", "when passed a prayers section" do
     @procedural = mock_model(ProceduralContribution)
 
     @title = 'PRAYERS'
+    @title_for_linking = 'prayers'
     contributions = [@procedural]
 
     @prayers.stub!(:markers)
     @prayers.stub!(:title).and_return(@title)
+    @prayers.stub!(:title_for_linking).and_return(@title_for_linking)
     @prayers.stub!(:contributions).and_return(contributions)
     @prayers.stub!(:sections).and_return([])
 
