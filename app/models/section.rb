@@ -47,5 +47,15 @@ class Section < ActiveRecord::Base
   def first_image_source
     start_image_src
   end
+  
+  def title_cleaned_up
+    title.gsub('<lb>',' ').gsub('</lb>','').squeeze(' ')
+  end
+  
+  def title_for_linking
+    title_cleaned_up.downcase.gsub(/ /, '_')
+  end
+  
+  
 
 end
