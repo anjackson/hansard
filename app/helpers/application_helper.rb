@@ -83,11 +83,52 @@ module ApplicationHelper
             puts "Source Files"
           end
         end
+        
+        open :li do
+          open :a, { :href => data_files_url } do
+            puts "Data Files"
+          end
+        end
           
       end
     end  
   end
   
+  def google_ajax_box(index_entry)    
+    my_return = ""
+    javascript = <<EOF
+    <script language="Javascript" type="text/javascript">
+  	    //<![CDATA[
+
+  	    google.load("search", "1");
+
+  	    function OnLoad() {
+  	      
+  	      var searchControl = new google.search.SearchControl();
+  	      var options = new GsearcherOptions();
+  	      var drawOptions = new GdrawOptions();
+  	      
+          options.setExpandMode(GSearchControl.EXPAND_MODE_CLOSED);
+          
+          drawOptions.setDrawMode(GSearchControl.DRAW_MODE_TABBED);
+          
+  	      searchControl.addSearcher(new google.search.ImageSearch(), options);
+  	      searchControl.addSearcher(new google.search.BookSearch(), options);
+  	      searchControl.addSearcher(new google.search.WebSearch(), options);
+  	      
+  	      searchControl.draw(document.getElementById("search_control_#{index_entry.id}"), drawOptions);
+  	      searchControl.execute("#{index_entry.text}");
+  	      
+  	    }
+  	    google.setOnLoadCallback(OnLoad);
+
+  	    //]]>
+  	    </script>
+  	    <div id="search_control_#{index_entry.id}">Loading...</div>
+        
+EOF
+my_return = javascript
+  end
   
   def sitting_link(sitting)
     link_to sitting.title + " &ndash; " + sitting_display_date(sitting), sitting_date_url(sitting)
