@@ -1,7 +1,7 @@
 - if index_entry.parent_entry
-  %div.index-child-entry
+  .index-child-entry
     = index_entry_links(index_entry)
 - else
-  %div.index-entry
-    / oh how I wish I could link to google here
+  .index-entry
+    / = google_ajax_box(index_entry)
     = index_entry_links(index_entry)
