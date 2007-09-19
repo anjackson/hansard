@@ -1,6 +1,5 @@
 class SourceFile < ActiveRecord::Base
   
-
   has_many :data_files
   validates_uniqueness_of :name
   
