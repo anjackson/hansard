@@ -12,7 +12,7 @@ class WrittenAnswersController < ApplicationController
     @marker_options = {}
     respond_to do |format|
       format.html
-      format.xml { render :xml => @sitting.to_xml }
+      format.xml { render :xml => @sitting.to_xml }         
     end
   end
   
