@@ -20,7 +20,7 @@ describe ApplicationHelper, " when formatting contribution" do
 
   it 'should replace col element with h4 and anchor' do
     format_contribution('a <col>123</col> text',['zzz']).should ==
-        "<p>a </p></zzz><h4 class='sidenote'>Col. 123</h4><a name='column_123'><zzz><p> text</p>"
+        "<p>a </p></zzz><h4 class='sidenote'><a name='column_123' href='#column_123'>Col. 123</a></h4><zzz><p> text</p>"
   end
 
   it 'should replace image element with an image with appropriate markup' do
@@ -50,7 +50,7 @@ describe ApplicationHelper, " when formatting contribution" do
 
   it 'should correctly handle column element in subscript element' do
     format_contribution('a <sub>really <col>123</col> powerful</sub> change',['zzz']).should ==
-        "<p>a <sub>really </sub></p></zzz><h4 class='sidenote'>Col. 123</h4><a name='column_123'><zzz><p><sub> powerful</sub> change</p>"
+        "<p>a <sub>really </sub></p></zzz><h4 class='sidenote'><a name='column_123' href='#column_123'>Col. 123</a></h4><zzz><p><sub> powerful</sub> change</p>"
   end
 end
 
@@ -81,9 +81,9 @@ end
 
 describe ApplicationHelper, " when returning links" do
   
-  it "should return a link for a sitting whose text is of the form 'House of Commons &ndash; Monday, December 16, 1985'" do
-    sitting = HouseOfCommonsSitting.new(:date => Date.new(1985, 12, 16), :title => "House of Commons")
-    sitting_link(sitting).should have_tag("a", :text => "House of Commons &ndash; Monday, December 16, 1985")
+  it "should return a link for a sitting whose text is of the form 'House Of Commons &ndash; Monday, December 16, 1985'" do
+    sitting = HouseOfCommonsSitting.new(:date => Date.new(1985, 12, 16), :title => "HOUSE OF COMMONS")
+    sitting_link(sitting).should have_tag("a", :text => "House Of Commons &ndash; Monday, December 16, 1985")
   end
   
   it "should return a link for an index whose text is of the form '16th December 1985 &ndash; 17th January 1986'" do
