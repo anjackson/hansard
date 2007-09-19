@@ -19,7 +19,7 @@ module ApplicationHelper
   end
   
   def column_marker(column, extra_class="")
-    "<h4 class='sidenote#{extra_class}'>Col. #{column}</h4><a name='column_#{column}'>"
+    "<h4 class='sidenote#{extra_class}'><a name='column_#{column}' href='#column_#{column}'>Col. #{column}</a></h4>"
   end
   
   def day_link(sitting, direction)
@@ -131,7 +131,7 @@ my_return = javascript
   end
   
   def sitting_link(sitting)
-    link_to sitting.title + " &ndash; " + sitting_display_date(sitting), sitting_date_url(sitting)
+    link_to sitting.title.titleize + " &ndash; " + sitting_display_date(sitting), sitting_date_url(sitting)
   end
   
   def index_link(index)
