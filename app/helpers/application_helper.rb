@@ -95,40 +95,19 @@ module ApplicationHelper
     end  
   end
   
-  def google_ajax_box(index_entry)    
-    my_return = ""
+  def google_custom_search_form    
     javascript = <<EOF
-    <script language="Javascript" type="text/javascript">
-  	    //<![CDATA[
-
-  	    google.load("search", "1");
-
-  	    function OnLoad() {
-  	      
-  	      var searchControl = new google.search.SearchControl();
-  	      var options = new GsearcherOptions();
-  	      var drawOptions = new GdrawOptions();
-  	      
-          options.setExpandMode(GSearchControl.EXPAND_MODE_CLOSED);
-          
-          drawOptions.setDrawMode(GSearchControl.DRAW_MODE_TABBED);
-          
-  	      searchControl.addSearcher(new google.search.ImageSearch(), options);
-  	      searchControl.addSearcher(new google.search.BookSearch(), options);
-  	      searchControl.addSearcher(new google.search.WebSearch(), options);
-  	      
-  	      searchControl.draw(document.getElementById("search_control_#{index_entry.id}"), drawOptions);
-  	      searchControl.execute("#{index_entry.text}");
-  	      
-  	    }
-  	    google.setOnLoadCallback(OnLoad);
-
-  	    //]]>
-  	    </script>
-  	    <div id="search_control_#{index_entry.id}">Loading...</div>
-        
+    <!-- Google CSE Search Box Begins  -->
+      <form id="searchbox_002582221602550181161:owz178jujce" action="http://www.google.com/cse">
+        <input type="hidden" name="cx" value="002582221602550181161:owz178jujce" />
+        <input type="hidden" name="cof" value="FORID:0" />
+        <input name="q" type="text" size="40" />
+        <input type="submit" name="sa" value="Search" />
+      </form>
+      <script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_002582221602550181161%3Aowz178jujce"></script>
+    <!-- Google CSE Search Box Ends -->
+    
 EOF
-my_return = javascript
   end
   
   def sitting_link(sitting)
