@@ -40,7 +40,7 @@ module ApplicationHelper
       
       open :li do
         open :a, { :href => home_url } do
-          puts "Historic Hansard"
+          puts "<strong>Historic Hansard</strong>"
         end
       end
         
