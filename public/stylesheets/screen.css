@@ -81,6 +81,7 @@ a {
 }
 
 #header {
+	width: 40em;
 }
 
 .index-entry{
@@ -114,11 +115,11 @@ th {
 }
 
 #footer {
+	margin-top: 1em;
+	padding-top: 1em;
+	border-top: 1pt solid #999;
 	font-size: 0.8em;
 	font-family: "Helvetica Neue", Helvetica, Arial, Verdana, sans-serif;
 	color: #999;
-	font-weight: normal;
-	float: right;
-	text-align: left;
 	line-height: 120%;
 }
