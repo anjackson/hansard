@@ -4,7 +4,6 @@ describe "_section partial", " in general" do
 
   it "should ask the section assigned to it for it's marker html" do
     section = mock_model(Section)
-    section.stub!(:title).and_return("TRANSPORT (PARKING)")
     section.stub!(:title_for_linking).and_return("transport_(parking)")
     section.stub!(:title_cleaned_up).and_return("")
     section.stub!(:sections).and_return([])
@@ -30,6 +29,7 @@ describe "_section partial", "when passed oral answers" do
     sections = [@oral_questions_section]
 
     @oral_questions.stub!(:markers)
+    @oral_questions.stub!(:title_cleaned_up)
     @oral_questions.stub!(:title).and_return(@title)
     @oral_questions.stub!(:title_for_linking).and_return(@title_for_linking)
     @oral_questions.stub!(:sections).and_return(sections)
@@ -68,7 +68,7 @@ describe "_section partial", "when passed an oral answers section" do
     sections = [@question_section]
     
     @questions_section.stub!(:markers)
-    @questions_section.stub!(:title).and_return(@title)
+    @questions_section.stub!(:title_cleaned_up)
     @questions_section.stub!(:title_for_linking).and_return(@title_for_linking)
     @questions_section.stub!(:introduction).and_return(@introduction)
     @questions_section.stub!(:contributions).and_return([@introduction])
@@ -104,7 +104,7 @@ describe "_section partial", "when passed a prayers section" do
     contributions = [@procedural]
 
     @prayers.stub!(:markers)
-    @prayers.stub!(:title).and_return(@title)
+    @prayers.stub!(:title_cleaned_up)
     @prayers.stub!(:title_for_linking).and_return(@title_for_linking)
     @prayers.stub!(:contributions).and_return(contributions)
     @prayers.stub!(:sections).and_return([])
