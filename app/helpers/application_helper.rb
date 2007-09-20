@@ -15,7 +15,7 @@ module ApplicationHelper
   end
   
   def image_marker(image_src)
-    "<h4 class='sidenote'><img src='/images/dummypage.jpg' alt='Image: #{image_src}' title='Image: #{image_src}'/></h4>"
+    "<h4 class='sidenote'><a href=\"\">Image: #{image_src}</a></h4>"
   end
   
   def column_marker(column, extra_class="")
