@@ -18,7 +18,7 @@ describe Section, " in general" do
 
 end
 
-describe Section, ".to_param" do
+describe Section, ".to_slug" do
 
   before do
     @section = Section.new
@@ -26,29 +26,28 @@ describe Section, ".to_param" do
   
   it "should return 'value-added-tax' for a section titled 'Value Added Tax'" do
     @section.title = "Value Added Tax"
-    @section.to_param.should == "value-added-tax"
+    @section.to_slug.should == "value-added-tax"
   end
   
   it "should return 'tax-collection-wales' for 'Tax Collection (Wales)'" do
     @section.title = "Tax Collection (Wales)"
-    @section.to_param.should == "tax-collection-wales"
+    @section.to_slug.should == "tax-collection-wales"
   end
   
   it "should return 'multi-role-combat-aircraft' for 'Multi-rôle Combat Aircraft'" do
     @section.title = "Multi-rôle Combat Aircraft"
-    @section.to_param.should == "multi-role-combat-aircraft"
+    @section.to_slug.should == "multi-role-combat-aircraft"
   end
   
   it "should return 40 characters or less, without cropping words in half" do
     @section.title = "A really long title with more than 40 characters"
-    @section.to_param.length.should <= Section::MAX_SLUG_LENGTH
-    p @section.to_param
-    @section.to_param[-2..-1].should == "40"
+    @section.to_slug.length.should <= Section::MAX_SLUG_LENGTH
+    @section.to_slug[-2..-1].should == "40"
   end
   
   it "should crop a title starting with a word longer than the maximum slug length to the max length" do 
     @section.title = "antidisestablishmentarianismandallthatjazzetcetcetc"
-    @section.to_param.length.should <= Section::MAX_SLUG_LENGTH  
+    @section.to_slug.length.should <= Section::MAX_SLUG_LENGTH  
   end
   
 end
