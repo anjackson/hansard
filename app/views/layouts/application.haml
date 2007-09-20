@@ -6,22 +6,15 @@
     =stylesheet_link_tag "print", :media => "print" 
     %link{ :rel => 'contact', :href => 'mailto:brookr@parliament.uk' }
     %link{ :rel => 'licence license', :href => 'http://www.parliament.uk/site_information/parliamentary_copyright.cfm' }
-    / %script{ :src => 'http://www.google.com/jsapi?key=ABQIAAAABrCGpaWWu-hEvsgJXi3GVBRMz8STf0Jvo044tY8njlX94vik2RSNlgwwyZ6T16KgD92cZPqaBcsDAQ', :type => 'text/javascript' }
   %body
     #header
-      / header begins
       %p
         %form#search{ :action => search_url }
           %input{ :name => 'query' }
           %input{ :type => 'submit', :value => 'Search' }
         -day_nav_links 
-      / header ends
     #content
-      / content begins
       = yield
-      / content ends
     #footer 
-      / footer begins
-      %a{ :href => '#navigation'}
-        Top of page
-      / footer ends
+      &copy; Parliamentary copyright. Material from this site may be reproduced without formal permission for the purposes of non-commercial research, private study and for criticism, review and news reporting provided that the material is appropriately attributed. For any other re-use of the material you are required to <a href="http://www.opsi.gov.uk/click-use/system/online/pLogin.asp?referrer=Parliament">apply for a Click-Use Parliamentary Licence from the Office of Public Sector Information</a>.
+          
