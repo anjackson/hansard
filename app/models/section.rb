@@ -1,4 +1,4 @@
-require 'unicode' 
+require 'cgi'
 class Section < ActiveRecord::Base
 
   include ActionView::Helpers::TextHelper
@@ -12,11 +12,12 @@ class Section < ActiveRecord::Base
   
   acts_as_hansard_element
 
-  def to_param
-    normalized_title = Unicode::normalize_KD(title)
+  def to_slug
+    normalized_title = Iconv.new('US-ASCII//TRANSLIT', 'utf-8').iconv(title)
     normalized_title.downcase!
     normalized_title.gsub!(/[^a-z0-9\s_-]+/, '')
     normalized_title.gsub!(/[\s_-]+/, '-')
+    normalized_title = CGI::escape(normalized_title)
     cropped_title = truncate(normalized_title, MAX_SLUG_LENGTH+1, "")
     if normalized_title != cropped_title
       if cropped_title[0..-1] == "-"
