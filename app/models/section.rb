@@ -1,4 +1,3 @@
-require 'cgi'
 class Section < ActiveRecord::Base
 
   include ActionView::Helpers::TextHelper
@@ -17,7 +16,6 @@ class Section < ActiveRecord::Base
     normalized_title.downcase!
     normalized_title.gsub!(/[^a-z0-9\s_-]+/, '')
     normalized_title.gsub!(/[\s_-]+/, '-')
-    normalized_title = CGI::escape(normalized_title)
     cropped_title = truncate(normalized_title, MAX_SLUG_LENGTH+1, "")
     if normalized_title != cropped_title
       if cropped_title[0..-1] == "-"
