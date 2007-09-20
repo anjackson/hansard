@@ -110,5 +110,15 @@ th {
 }
 
 .procedural {
-	color:#999;
+	color:#666;
+}
+
+#footer {
+	font-size: 0.8em;
+	font-family: "Helvetica Neue", Helvetica, Arial, Verdana, sans-serif;
+	color: #999;
+	font-weight: normal;
+	float: right;
+	text-align: left;
+	line-height: 120%;
 }
