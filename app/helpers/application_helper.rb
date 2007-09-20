@@ -95,6 +95,16 @@ module ApplicationHelper
     end  
   end
   
+  def delicious_badge
+    javascript = <<EOF
+    <script type="text/javascript">
+        if (typeof window.Delicious == "undefined") window.Delicious = {};
+        Delicious.BLOGBADGE_DEFAULT_CLASS = 'delicious-blogbadge-line';
+    </script>
+    <script src="http://images.del.icio.us/static/js/blogbadge.js"></script>
+EOF
+  end
+  
   def google_custom_search_form    
     javascript = <<EOF
     <!-- Google CSE Search Box Begins  -->
