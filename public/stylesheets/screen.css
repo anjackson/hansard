@@ -81,7 +81,7 @@ a {
 }
 
 #header {
-	width: 40em;
+	width: 100%;
 }
 
 .index-entry{
@@ -119,6 +119,7 @@ th {
 	padding-top: 1em;
 	border-top: 1pt solid #999;
 	font-size: 0.8em;
+	width: 100%;
 	font-family: "Helvetica Neue", Helvetica, Arial, Verdana, sans-serif;
 	color: #999;
 	line-height: 120%;
