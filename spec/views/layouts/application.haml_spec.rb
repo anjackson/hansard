@@ -2,15 +2,25 @@ require File.dirname(__FILE__) + '/../../spec_helper'
 
 describe "application.haml", " in general" do
   
-  def do_render 
+  before do
+    
+  end
+  
+  def do_render
     render 'layouts/application.haml'
   end
   
-  it 'should render the HTML 5 doctype of "<!DOCTYPE html>"'
+  it 'should render the HTML 5 doctype of "<!DOCTYPE html>"' do
+    do_render
+    response.body[0..14].should == "<!DOCTYPE html>"
+  end
   
-  it 'should have the lang type of "en-GB"'
+  it 'should have the lang type of "en-GB"' do
+    do_render
+    response.should have_tag("html[lang='en-GB']")
+  end
   
-  it 'should not have a title which includes the text "Please give me a title"'
+  it 'should not have a title which is "Historic Hansard: Please give me a title"'
   
   it 'should render the Google Custom Search box if we are online'
   
