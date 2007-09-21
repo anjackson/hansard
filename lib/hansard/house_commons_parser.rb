@@ -201,7 +201,8 @@ class Hansard::HouseCommonsParser
     def handle_section_element section_element, debates
       section = Section.new({
         :start_column => @column,
-        :start_image_src => @image
+        :start_image_src => @image, 
+        :sitting => @sitting
       })
 
       section_element.children.each do |node|
@@ -337,7 +338,7 @@ class Hansard::HouseCommonsParser
     end
 
     def handle_oral_question_section section, questions
-      question_section = OralQuestionSection.new
+      question_section = OralQuestionSection.new(:sitting => @sitting)
 
       section.children.each do |node|
         if node.elem?
@@ -359,7 +360,7 @@ class Hansard::HouseCommonsParser
     end
 
     def handle_oral_questions_section section, oral_questions
-      questions_section = OralQuestionsSection.new
+      questions_section = OralQuestionsSection.new(:sitting => @sitting)
 
       has_introduction = ((section/'p').size == 1)
       section.children.each do |node|
@@ -389,7 +390,7 @@ class Hansard::HouseCommonsParser
     end
 
     def handle_oral_questions section, debates
-      oral_questions = OralQuestions.new
+      oral_questions = OralQuestions.new(:sitting => @sitting)
 
       section.children.each do |node|
         if node.elem?
@@ -429,7 +430,8 @@ class Hansard::HouseCommonsParser
     def handle_prayers_outside_section node, debates
       section = Section.new({
         :start_column => @column,
-        :start_image_src => @image
+        :start_image_src => @image,
+        :sitting => @sitting
       })
 
       section.title = node.inner_html.to_s
@@ -445,7 +447,7 @@ class Hansard::HouseCommonsParser
     end
 
     def handle_debates sitting, debates
-      sitting.debates = Debates.new
+      sitting.debates = Debates.new(:sitting => @sitting)
       debates.children.each do |node|
         if node.elem?
           name = node.name
@@ -476,7 +478,7 @@ class Hansard::HouseCommonsParser
       @column =  clean_html(@doc.at('housecommons/col'))
       @image =  @doc.at('housecommons/image').attributes['src']
 
-      sitting = HouseOfCommonsSitting.new({
+      @sitting = HouseOfCommonsSitting.new({
         :start_column => @column,
         :start_image_src => @image,
         :title => clean_html(@doc.at('housecommons/title')),
@@ -486,17 +488,17 @@ class Hansard::HouseCommonsParser
       })
 
       if (texts = (@doc/'housecommons/p'))
-        sitting.text = ''
+        @sitting.text = ''
         texts.each do |text|
-          sitting.text += text.to_s
+          @sitting.text += text.to_s
         end
       end
 
       if (debates = @doc.at('housecommons/debates'))
-        handle_debates sitting, debates
+        handle_debates @sitting, debates
       end
 
-      sitting
+      @sitting
     end
 
     def clean_html node

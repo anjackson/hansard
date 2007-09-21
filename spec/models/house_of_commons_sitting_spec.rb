@@ -106,18 +106,18 @@ describe HouseOfCommonsSitting, " destroy" do
 
   it 'should destroy child debates, oral questions, sections, contributions, divisions and votes' do
     sitting = HouseOfCommonsSitting.new
-    sitting.debates = Debates.new
+    sitting.debates = Debates.new(:sitting => sitting)
 
-    sitting.debates.sections << Section.new(:title=>'PRIVATE BUSINESS')
-    sitting.debates.sections[0].sections << Section.new(:title=>'ANGLE ORE AND TRANSPORT COMPANY BILL [Lords]')
+    sitting.debates.sections << Section.new(:title=>'PRIVATE BUSINESS', :sitting => sitting)
+    sitting.debates.sections[0].sections << Section.new(:title=>'ANGLE ORE AND TRANSPORT COMPANY BILL [Lords]', :sitting => sitting)
     sitting.debates.sections[0].sections[0].contributions << ProceduralContribution.new(:text=>"<i>Queen's Consent, on behalf of the Crown, signified.</i>")
 
-    sitting.debates.sections << OralQuestions.new(:title => 'ORAL ANSWERS TO QUESTIONS')
-    sitting.debates.sections[1].sections << OralQuestionsSection.new(:title => 'GOVERNMENT INFORMATION SERVICES')
-    sitting.debates.sections[1].sections[0].questions << OralQuestionSection.new(:title => 'Television Films')
+    sitting.debates.sections << OralQuestions.new(:title => 'ORAL ANSWERS TO QUESTIONS', :sitting => sitting)
+    sitting.debates.sections[1].sections << OralQuestionsSection.new(:title => 'GOVERNMENT INFORMATION SERVICES', :sitting => sitting)
+    sitting.debates.sections[1].sections[0].questions << OralQuestionSection.new(:title => 'Television Films', :sitting => sitting)
     sitting.debates.sections[1].sections[0].questions[0].contributions << MemberContribution.new(:question_no=>1, :xml_id=>"S5CV0602P0-00252", :member=>"Mr. John Hall", :text=>"<p>asked the Chancellor of the Duchy of Lancaster what steps he has taken to ensure that an adequate supply of suitable British filmed material is available to countries starting television services.</p>")
 
-    sitting.debates.sections << Section.new(:title => 'ANGLO-EGYPTIAN FINANCIAL AGREEMENT')
+    sitting.debates.sections << Section.new(:title => 'ANGLO-EGYPTIAN FINANCIAL AGREEMENT', :sitting => sitting)
     sitting.debates.sections[2].contributions << MemberContribution.new(:xml_id=>"S5CV0602P0-00641", :member=>"Mr. George Chetwynd", :member_constituency=>"(Stockton-on-Tees)", :text => 'For the right hon. Gentleman, yes.')
     sitting.debates.sections[2].contributions << DivisionPlaceholder.new
     sitting.debates.sections[2].contributions[1].division = Division.new(:name=>'Division No. 65.]',:time_text=>'10.00 p.m.')

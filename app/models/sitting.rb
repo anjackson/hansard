@@ -1,6 +1,7 @@
 class Sitting < ActiveRecord::Base
 
   has_one :debates, :class_name => "Debates", :foreign_key => 'sitting_id'
+  has_many :sections, :foreign_key => 'sitting_id'
   belongs_to :data_file 
   
   before_validation_on_create :check_date

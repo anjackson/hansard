@@ -1,6 +1,5 @@
 class Debates < Section
 
-  belongs_to :sitting
   alias :to_activerecord_xml :to_xml
   has_many :sections, :class_name => "Section", :foreign_key => 'parent_section_id', :dependent => :destroy
 

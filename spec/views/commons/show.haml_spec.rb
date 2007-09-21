@@ -10,6 +10,11 @@ describe "show.haml", " in general" do
     @sitting.stub!(:debates).and_return(@debates)
     @controller.template.stub!(:render)
     assigns[:sitting] = @sitting
+    @first_section = mock_model(Section)
+    @first_section.stub!(:title).and_return("First Title")
+    @second_section = mock_model(Section)
+    @second_section.stub!(:title).and_return("Second Title")
+    @controller.template.stub!(:section_url).and_return("http://test.host")
   end
   
   def do_render 
@@ -22,17 +27,22 @@ describe "show.haml", " in general" do
   end
   
   it "should display a link to each of the sections belonging to the sitting's debates with the title of the section" do
-    first_section = mock_model(Section)
-    first_section.should_receive(:title).and_return("First Title")
-    second_section = mock_model(Section)
-    second_section.should_receive(:title).and_return("Second Title")
-    @debates.should_receive(:sections).and_return([first_section, second_section])
+    @debates.should_receive(:sections).and_return([@first_section, @second_section])
     do_render
-    print response.body
     response.should have_tag('div.debates') do
       with_tag('div.section-link', :text => "First Title")
       with_tag('div.section-link', :text => "Second Title") 
     end
   end
   
+  it "should actually link to the sections" do
+    @debates.should_receive(:sections).and_return([@first_section, @second_section])
+    do_render
+    response.should have_tag('div.debates') do
+      with_tag('div.section-link a[href=http://test.host]')
+      with_tag('div.section-link a[href=http://test.host]') 
+    end
+  end
+  
 end
+

@@ -18,36 +18,89 @@ describe Section, " in general" do
 
 end
 
-describe Section, ".to_slug" do
+
+describe Section, ".title_cleaned_up" do
 
   before do
-    @section = Section.new
+    @section = Section.new(:sitting => Sitting.new)
+  end
+  
+  it "should get rid of <lb>, <lb/> and </lb>" do
+    @section.title = "seriously <lb>unclean <lb/>title</lb>"
+    @section.title_cleaned_up.should == "seriously unclean title"
+  end
+
+end
+
+
+describe Section, ".to_param" do
+
+  before do
+    @section = Section.new(:sitting => Sitting.new)
+  end
+  
+  it "should return the slug" do
+    @section.slug = "test"
+    @section.slug.should_not be_nil
+    @section.to_param.should == @section.slug
+  end
+  
+end
+
+describe Section, " on creation" do
+
+  before do
+    @section = Section.new(:sitting => Sitting.new)
+  end
+
+  it "should create and save the section's slug" do 
+    @section.title = "New slug"
+    @section.slug.should be_nil
+    @section.save!
+    @section.slug.should == "new-slug"
+  end 
+
+  it "should create a slug which is unique within the sitting" do
+    @existing_title_section = Section.new(:title => "New slug")
+    @existing_title_section.sitting = Sitting.new
+    @existing_title_section.sitting.sections.stub!(:find_by_slug)
+    @existing_title_section.sitting.sections.should_receive(:find_by_slug).with("new-slug").and_return(@section)
+    @existing_title_section.create_slug.should_not == "new-slug"
+  end
+  
+end
+
+
+describe Section, ".create_slug" do
+
+  before do
+    @section = Section.new(:sitting => Sitting.new)
   end
   
   it "should return 'value-added-tax' for a section titled 'Value Added Tax'" do
     @section.title = "Value Added Tax"
-    @section.to_slug.should == "value-added-tax"
+    @section.create_slug.should == "value-added-tax"
   end
   
   it "should return 'tax-collection-wales' for 'Tax Collection (Wales)'" do
     @section.title = "Tax Collection (Wales)"
-    @section.to_slug.should == "tax-collection-wales"
+    @section.create_slug.should == "tax-collection-wales"
   end
   
   it "should return 'multi-role-combat-aircraft' for 'Multi-rôle Combat Aircraft'" do
     @section.title = "Multi-rôle Combat Aircraft"
-    @section.to_slug.should == "multi-role-combat-aircraft"
+    @section.create_slug.should == "multi-role-combat-aircraft"
   end
   
   it "should return 40 characters or less, without cropping words in half" do
     @section.title = "A really long title with more than 40 characters"
-    @section.to_slug.length.should <= Section::MAX_SLUG_LENGTH
-    @section.to_slug[-2..-1].should == "40"
+    @section.create_slug.length.should <= Section::MAX_SLUG_LENGTH
+    @section.create_slug[-2..-1].should == "40"
   end
   
   it "should crop a title starting with a word longer than the maximum slug length to the max length" do 
     @section.title = "antidisestablishmentarianismandallthatjazzetcetcetc"
-    @section.to_slug.length.should <= Section::MAX_SLUG_LENGTH  
+    @section.create_slug.length.should <= Section::MAX_SLUG_LENGTH  
   end
   
 end

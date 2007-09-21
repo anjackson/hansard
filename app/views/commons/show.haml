@@ -1,5 +1,5 @@
 = render :partial => 'hansard_header'
 %div.debates
   - @sitting.debates.sections.each do |section|
-    %div.section-link= link_to section.title, ""
+    %div.section-link= link_to section.title, section_url(section)
 

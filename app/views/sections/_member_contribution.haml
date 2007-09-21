@@ -1,0 +1,14 @@
+.member_contribution
+  - if member_contribution.question_no
+    %span.question_no= member_contribution.question_no
+  %cite.member= member_contribution.member + colon_after_member_name(member_contribution)
+  - if member_contribution.member_constituency
+    %span.member_constituency= member_contribution.member_constituency + colon_after_constituency(member_contribution)
+  - if member_contribution.procedural_note
+    %span.procedural_note= member_contribution.procedural_note + ':'
+  - if member_contribution.text
+    %blockquote.contribution_text= format_contribution(member_contribution.text, ['blockquote'])
+  - else
+    %p
+      %span.warning No contribution text recorded for Member Contribution
+      %span.warning= member_contribution.id

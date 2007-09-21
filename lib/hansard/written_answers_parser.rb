@@ -58,7 +58,7 @@ class Hansard::WrittenAnswersParser
       date_text = date.to_s
     end
     
-    sitting = WrittenAnswersSitting.new({
+    @sitting = WrittenAnswersSitting.new({
       :start_column => @column,
       :start_image_src => @image,
       :title => handle_node_text(@doc.at('writtenanswers/title')),
@@ -67,24 +67,25 @@ class Hansard::WrittenAnswersParser
     })
 
     if (texts = (@doc/'writtenanswers/p'))
-      sitting.text = ''
+      @sitting.text = ''
       texts.each do |text|
-        sitting.text += text.to_s
+        @sitting.text += text.to_s
       end
     end
 
     if (groups = (@doc/'writtenanswers/group'))
       groups.each do |group|
-        handle_group(group, sitting)
+        handle_group(group)
       end
     end
-    sitting
+    @sitting
   end
   
-  def handle_group(group_element, sitting) 
+  def handle_group(group_element) 
     group = WrittenAnswersGroup.new({
       :start_column => @column,
-      :start_image_src => @image
+      :start_image_src => @image, 
+      :sitting => @sitting
     })
 
     group_element.children.each do |node|
@@ -104,15 +105,16 @@ class Hansard::WrittenAnswersParser
       end
     end
 
-    group.sitting = sitting
-    sitting.groups << group
+    group.sitting = @sitting
+    @sitting.groups << group
   
   end
   
   def handle_section(section_element, group, type)
     section = type.new({
       :start_column => @column,
-      :start_image_src => @image
+      :start_image_src => @image,
+      :sitting => @sitting
     })
     section_element.children.each do |node|
       if node.elem?

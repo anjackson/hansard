@@ -1,18 +1,31 @@
 class Section < ActiveRecord::Base
 
   include ActionView::Helpers::TextHelper
+  belongs_to :sitting
   has_many :contributions, :dependent => :destroy
   has_many :sections, :foreign_key => 'parent_section_id', :dependent => :destroy
   belongs_to :parent_section, :class_name => "Section", :foreign_key => 'parent_section_id'
 
   alias :to_activerecord_xml :to_xml
+  before_create :create_slug
 
   MAX_SLUG_LENGTH = 40
   
   acts_as_hansard_element
 
-  def to_slug
-    truncate_slug(slugcase_title)
+  def to_param
+    slug
+  end
+  
+  def create_slug
+    self.slug = truncate_slug(slugcase_title)
+    index = 1
+    candidate_slug = self.slug
+    while slug_exists = sitting.sections.find_by_slug(candidate_slug)
+      candidate_slug = "#{self.slug}-#{index}"
+      index += 1
+    end
+    self.slug = candidate_slug
   end
   
   def truncate_slug(string)
@@ -82,7 +95,7 @@ class Section < ActiveRecord::Base
   end
   
   def title_cleaned_up
-    title.gsub('<lb>',' ').gsub('</lb>','').squeeze(' ')
+    title.gsub(/<lb>|<\/lb>|<lb\/>/,'').squeeze(' ') if title
   end
   
   def title_for_linking

@@ -86,4 +86,10 @@ ActionController::Routing::Routes.draw do |map|
     file.source_file "source_files/:name", :action => "show"
   end
   
+  map.with_options(:controller => 'sections') do |sections|
+    sections.with_options(date_options) do |by_date|
+      def_route ":type/#{date}/:id", :show, by_date
+    end
+  end
+  
 end

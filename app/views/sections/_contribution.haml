@@ -1,0 +1,9 @@
+= marker_html(contribution, @marker_options)
+- if contribution.is_a? ProceduralContribution
+  %div.procedural
+    = format_contribution(contribution.text, ['div'])
+- elsif contribution.is_a? MemberContribution
+  = render :partial => 'member_contribution', :object => contribution
+- elsif contribution.is_a? QuoteContribution
+  %div.quote
+    = format_contribution(contribution.text, ['div'])

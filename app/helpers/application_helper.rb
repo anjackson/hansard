@@ -23,6 +23,10 @@ module ApplicationHelper
     "<h4 class='sidenote#{extra_class}'><a name='column_#{column}' href='#column_#{column}'>Col. #{column}</a></h4>"
   end
   
+  def section_url(section)
+    url_for(params.update(:controller => "sections", :action => "show", :id => section.slug, :type => "commons"))
+  end
+  
   def day_link(sitting, direction)
     next_sitting = sitting.class.find_next(sitting.date, direction)
     if next_sitting
