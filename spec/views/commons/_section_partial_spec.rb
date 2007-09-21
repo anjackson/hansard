@@ -13,6 +13,8 @@ describe "_section partial", " in general" do
     render 'commons/_section.haml'
   end
   
+  it "should show timestamps with valid datetimes in the wrapping tag"
+  
 end
 
 describe "_section partial", "when passed oral answers" do
