@@ -22,4 +22,20 @@ describe "application.haml", " in general" do
   
   it 'should should have a link rel="alternate" with appropriate title pointing to the xml output if on a day page'
   
+  it 'should should have a link rel="author"'
+  
+  it 'should should have a link rel="bookmark"'
+  
+  it 'should should have a link rel="contact"'
+  
+  it 'should should have a link rel="first"'
+  
+  it 'should should have a link rel="help"'
+  
+  it 'should should have a link rel="index"'
+  
+  it 'should should have a link rel="last"'
+  
+  
+  
 end
