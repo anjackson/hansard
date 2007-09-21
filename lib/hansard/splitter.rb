@@ -14,6 +14,7 @@ module Hansard
 
     DATE_PATTERN = /date format="(\d\d\d\d-\d\d-\d\d)">(.*?)<\/date>/
     SCHEMA_PATTERN = /xsi:noNamespaceSchemaLocation="(.*?)"/
+    SESSION_PATTERN = /<session>(\d\d\d\d&#x2013;\d\d)<\/session>/
 
     def initialize indented_copy, overwrite=true, verbose=true, sleep_seconds=nil
       @indented_copy = indented_copy
@@ -157,8 +158,9 @@ module Hansard
         @buffer << line
       end
 
-      check_for_date(line)
       check_for_schema(line) unless @source_file.schema
+      check_for_session(line)
+      check_for_date(line)
       check_for_image(line) 
       check_for_column(line)  
       proxy_lines.each {|l| handle_line l}
@@ -197,7 +199,6 @@ module Hansard
       end
     end
     
-    
     def check_for_date(line)
       if (match = DATE_PATTERN.match line)
         new_date = match[1]
@@ -220,6 +221,12 @@ module Hansard
       end
     end
 
+    def check_for_session(line)
+      if (match = SESSION_PATTERN.match line)
+        @session = match[1]
+      end
+    end
+    
     def move_final_result directory_name, input_file
       size_in_mb = (File.size(input_file)/ 1048576.0)
       mb = size_in_mb.to_s[0..2]
@@ -255,9 +262,10 @@ module Hansard
       @section_name = nil
       @date = nil
       @first_date = nil
+      @session = nil
 
       File.new(input_file).each_line { |line| handle_line line }
-
+      @source_file.add_log("Missing or badly formatted session tag") unless @session
       puts 'header ' + @surrounding_buffer.size.to_s  if @verbose
       write_to_file 'header', @surrounding_buffer
 
@@ -278,7 +286,7 @@ module Hansard
       puts "original\t" + input_lines.to_s  if @verbose
 
       if total_lines != input_lines
-        raise "Number of lines don't match! Expected: #{input_lines} Got: #{total_lines}"
+        @source_file.add_log("Number of lines don't match! Expected: #{input_lines} Got: #{total_lines}")
       else
         puts "Processed expected number of lines\t" + total_lines.to_s  if @verbose
       end
