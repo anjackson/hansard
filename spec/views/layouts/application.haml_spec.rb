@@ -18,24 +18,36 @@ describe "application.haml", " in general" do
   
   it 'should render the del.icio.us box'
   
-  it 'should should have a link rel="alternate" with appropriate title pointing to the xml source if on a day page'
+  it 'should have a link rel="alternate" with appropriate title pointing to the xml source if on a day page'
   
-  it 'should should have a link rel="alternate" with appropriate title pointing to the xml output if on a day page'
+  it 'should have a link rel="alternate" with appropriate title pointing to the xml output if on a day page'
   
-  it 'should should have a link rel="author"'
+  it 'should have a link rel="author"'
   
-  it 'should should have a link rel="bookmark"'
+  it 'should not have a link rel="made"'
   
-  it 'should should have a link rel="contact"'
+  it 'should have a link rel="bookmark"'
   
-  it 'should should have a link rel="first"'
+  it 'should have a link rel="contact"'
   
-  it 'should should have a link rel="help"'
+  it 'should have a link rel="first"'
   
-  it 'should should have a link rel="index"'
+  it 'should have a link rel="help"'
   
-  it 'should should have a link rel="last"'
+  it 'should have a link rel="index"'
   
+  it 'should have a link rel="last"'
   
+  it 'should have a link rel="license"'
+  
+  it 'should have a link rel="licence"'
+  
+  it 'should have a link rel="next"'
+  
+  it 'should have a link rel="prev"'
+  
+  it 'should have a link rel="tag"'
+  
+  it 'should have a link rel="up"'
   
 end
