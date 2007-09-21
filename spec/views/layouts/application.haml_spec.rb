@@ -24,8 +24,6 @@ describe "application.haml", " in general" do
   
   it 'should have a link rel="author"'
   
-  it 'should not have a link rel="made"'
-  
   it 'should have a link rel="bookmark"'
   
   it 'should have a link rel="contact"'
