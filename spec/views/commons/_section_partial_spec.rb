@@ -42,8 +42,7 @@ describe "_section partial", "when passed oral answers" do
     render 'commons/_section.haml'
   end
 
-  it 'should show oral answers title as h2' do
-  end
+  it 'should show oral answers title as h2'
   
 end
 
@@ -115,7 +114,6 @@ describe "_section partial", "when passed a prayers section" do
     render 'commons/_section.haml'
   end
 
-  it 'should show prayers title as h2' do
-  end
+  it 'should show prayers title as h2'
 
 end
