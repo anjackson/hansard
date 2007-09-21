@@ -7,7 +7,6 @@ describe "_hansard_header partial" do
     @date_text = 'Monday 8 February 1999'
 
     @sitting = mock_model(HouseOfCommonsSitting)
-    @sitting.stub!(:markers)
     @sitting.stub!(:title).and_return(@title)
     @sitting.stub!(:date_text).and_return(@date_text)
     @sitting.stub!(:date).and_return(Date.new(1999,2,8))
@@ -31,16 +30,6 @@ describe "_hansard_header partial" do
   it 'should show date text as p' do
     do_render
     response.should have_tag('p.date', @date_text)
-  end
-
-  it 'should show date text as p' do
-    do_render
-    response.should have_tag('p', @text)
-  end
-  
-  it "should ask the sitting assigned to it for it's marker html" do
-    @controller.template.should_receive(:marker_html).and_return("")
-    do_render
   end
 
 end
