@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 %html{ :lang => 'en-GB' }
   %head
     %meta{ 'http-equiv'.to_sym=>"Content-Type", :content=>"text/html;charset=utf-8" }
@@ -5,7 +6,18 @@
     =stylesheet_link_tag "screen", :media => "screen" 
     =stylesheet_link_tag "print", :media => "print" 
     %link{ :rel => 'contact', :href => 'mailto:brookr@parliament.uk' }
-    %link{ :rel => 'licence license', :href => 'http://www.parliament.uk/site_information/parliamentary_copyright.cfm' }
+    %link{ :rel => 'author', :title => "UK Parliament", :href => "http://www.parliament.uk" }
+    %link{ :rel => 'bookmark' }
+    %link{ :rel => 'first' }
+    %link{ :rel => 'help' }
+    %link{ :rel => 'index' }
+    %link{ :rel => 'last' }
+    %link{ :rel => 'next' }
+    %link{ :rel => 'prev' }
+    %link{ :rel => 'tag' }
+    %link{ :rel => 'up' }
+    %link{ :rel => 'licence', :hreflang => "en-GB", :href => 'http://www.parliament.uk/site_information/parliamentary_copyright.cfm' }
+    %link{ :rel => 'license', :hreflang => "en-US", :href => 'http://www.parliament.uk/site_information/parliamentary_copyright.cfm' }
   %body
     #header
       -day_nav_links 
