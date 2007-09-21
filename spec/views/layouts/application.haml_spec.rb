@@ -32,30 +32,69 @@ describe "application.haml", " in general" do
   
   it 'should have a link rel="alternate" with appropriate title pointing to the xml output if on a day page'
   
-  it 'should have a link rel="author"'
+  it 'should have a link rel="author" with a link to "http://www.parliament.uk" and a title of "UK Parliament"' do
+    do_render
+    response.should have_tag("link[rel='author']", :title => "UK Parliament", :href => "http://www.parliament.uk")
+  end
   
-  it 'should have a link rel="bookmark"'
+  it 'should have a link rel="bookmark"' do
+    do_render
+    response.should have_tag("link[rel='bookmark']")
+  end
   
-  it 'should have a link rel="contact"'
+  it 'should have a link rel="contact"' do
+    do_render
+    response.should have_tag("link[rel='contact']")
+  end
   
-  it 'should have a link rel="first"'
+  it 'should have a link rel="first"' do
+    do_render
+    response.should have_tag("link[rel='first']")
+  end
   
-  it 'should have a link rel="help"'
+  it 'should have a link rel="help"' do
+    do_render
+    response.should have_tag("link[rel='help']")
+  end
   
-  it 'should have a link rel="index"'
+  it 'should have a link rel="index"' do
+    do_render
+    response.should have_tag("link[rel='index']")
+  end
   
-  it 'should have a link rel="last"'
+  it 'should have a link rel="last"' do
+    do_render
+    response.should have_tag("link[rel='last']")
+  end
   
-  it 'should have a link rel="license"'
+  it 'should have a link rel="license"' do
+    do_render
+    response.should have_tag("link[rel='license']")
+  end
   
-  it 'should have a link rel="licence"'
+  it 'should have a link rel="licence"' do
+    do_render
+    response.should have_tag("link[rel='licence']")
+  end
   
-  it 'should have a link rel="next"'
+  it 'should have a link rel="next"' do
+    do_render
+    response.should have_tag("link[rel='next']")
+  end
   
-  it 'should have a link rel="prev"'
+  it 'should have a link rel="prev"' do
+    do_render
+    response.should have_tag("link[rel='prev']")
+  end
   
-  it 'should have a link rel="tag"'
+  it 'should have a link rel="tag"' do
+    do_render
+    response.should have_tag("link[rel='tag']")
+  end
   
-  it 'should have a link rel="up"'
+  it 'should have a link rel="up"' do
+    do_render
+    response.should have_tag("link[rel='up']")
+  end
   
 end
