@@ -81,11 +81,10 @@ describe "_section partial", "when passed an oral answers section" do
     render 'commons/_section.haml'
   end
 
-  it 'should show oral answers section title as h2' do
-  end
+  it 'should show oral answers section title as h2'
 
-  it 'should show oral answers section introduction as p with class "question_introduction"' do
-  end
+  it 'should show oral answers section introduction as p with class "question_introduction"'
+  
 end
 
 describe "_section partial", "when passed a prayers section" do
