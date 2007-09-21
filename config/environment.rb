@@ -54,6 +54,7 @@ Rails::Initializer.run do |config|
   # -- all .rb files in that directory is automatically loaded
 end
 
+require 'htmlentities'
 require 'lib/acts_as_hansard_element'
 ActiveRecord::Base.send(:include, Acts::HansardElement)
 

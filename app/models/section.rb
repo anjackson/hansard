@@ -46,12 +46,16 @@ class Section < ActiveRecord::Base
     cropped_string
   end
   
+  # strip or convert anything except letters, numbers and dashes
+  # to produce a string in the format 'this-is-a-slugcase-string'
+  # and convert html entities to unicode
   def slugcase_title
-    slugcase_title = Iconv.new('US-ASCII//TRANSLIT', 'utf-8').iconv(title_cleaned_up)
-    slugcase_title.downcase!
-    slugcase_title.gsub!(/[^a-z0-9\s_-]+/, '')
-    slugcase_title.gsub!(/[\s_-]+/, '-')
-    slugcase_title
+    decoded_title = HTMLEntities.new.decode(title_cleaned_up) 
+    ascii_title = Iconv.new('US-ASCII//TRANSLIT', 'utf-8').iconv(decoded_title)
+    ascii_title.downcase!
+    ascii_title.gsub!(/[^a-z0-9\s_-]+/, '')
+    ascii_title.gsub!(/[\s_-]+/, '-')
+    ascii_title
   end
   
   def to_xml(options={})
@@ -95,7 +99,11 @@ class Section < ActiveRecord::Base
   end
   
   def title_cleaned_up
-    title.gsub(/<lb>|<\/lb>|<lb\/>/,'').squeeze(' ') if title
+    if title
+      clean_title = title.gsub(/<lb>|<\/lb>|<lb\/>/,'')
+      clean_title.squeeze!(' ')
+      clean_title
+    end
   end
   
   def title_for_linking

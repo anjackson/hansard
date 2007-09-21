@@ -126,3 +126,11 @@ th {
 	color: #999;
 	line-height: 120%;
 }
+
+.sub-section-link{
+  margin-left:	2em;
+}
+
+.sub-sub-section-link{
+  margin-left:	4em;
+}

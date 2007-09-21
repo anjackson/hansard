@@ -18,7 +18,6 @@ describe Section, " in general" do
 
 end
 
-
 describe Section, ".title_cleaned_up" do
 
   before do
@@ -30,8 +29,12 @@ describe Section, ".title_cleaned_up" do
     @section.title_cleaned_up.should == "seriously unclean title"
   end
 
+  it "should remove excess spaces" do
+    @section.title = "I    speak    quite     slowly"
+    @section.title_cleaned_up.should == "I speak quite slowly"
+  end
+  
 end
-
 
 describe Section, ".to_param" do
 
@@ -91,6 +94,12 @@ describe Section, ".create_slug" do
     @section.title = "Multi-rôle Combat Aircraft"
     @section.create_slug.should == "multi-role-combat-aircraft"
   end
+  
+  it "should return 'multi-role-combat-aircraft' for 'Multi-R&#x00F4;le Combat Aircraft'" do
+    @section.title = "Multi-R&#x00F4;le Combat Aircraft"
+    @section.create_slug.should == "multi-role-combat-aircraft"
+  end
+  
   
   it "should return 40 characters or less, without cropping words in half" do
     @section.title = "A really long title with more than 40 characters"
