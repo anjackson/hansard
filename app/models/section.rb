@@ -12,25 +12,33 @@ class Section < ActiveRecord::Base
   acts_as_hansard_element
 
   def to_slug
-    normalized_title = Iconv.new('US-ASCII//TRANSLIT', 'utf-8').iconv(title)
-    normalized_title.downcase!
-    normalized_title.gsub!(/[^a-z0-9\s_-]+/, '')
-    normalized_title.gsub!(/[\s_-]+/, '-')
-    cropped_title = truncate(normalized_title, MAX_SLUG_LENGTH+1, "")
-    if normalized_title != cropped_title
-      if cropped_title[0..-1] == "-"
-        cropped_title = truncate(cropped_title, MAX_SLUG_LENGTH, "")
+    truncate_slug(slugcase_title)
+  end
+  
+  def truncate_slug(string)
+    cropped_string = truncate(string, MAX_SLUG_LENGTH+1, "")
+    if string != cropped_string
+      if cropped_string[0..-1] == "-"
+        cropped_string = truncate(cropped_string, MAX_SLUG_LENGTH, "")
       else
         #  back to the last complete word
-        last_wordbreak = cropped_title.rindex('-')
+        last_wordbreak = cropped_string.rindex('-')
         if !last_wordbreak.nil? 
-          cropped_title = truncate(cropped_title, last_wordbreak, "")
+          cropped_string = truncate(cropped_string, last_wordbreak, "")
         else
-          cropped_title = truncate(cropped_title, MAX_SLUG_LENGTH, "")
+          cropped_string = truncate(cropped_string, MAX_SLUG_LENGTH, "")
         end
       end
     end
-    cropped_title
+    cropped_string
+  end
+  
+  def slugcase_title
+    slugcase_title = Iconv.new('US-ASCII//TRANSLIT', 'utf-8').iconv(title_cleaned_up)
+    slugcase_title.downcase!
+    slugcase_title.gsub!(/[^a-z0-9\s_-]+/, '')
+    slugcase_title.gsub!(/[\s_-]+/, '-')
+    slugcase_title
   end
   
   def to_xml(options={})
