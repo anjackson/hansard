@@ -1,0 +1,733 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  AEL Data Schema for Hansard XML conversion
+  
+       Version: Draft 5.0
+       Date   : 22/05/2006
+  Changes :
+  
+  hansard
+  housecommons
+  houselords
+  section
+  p
+  debates
+  index
+  appendix
+  
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xs:element name="hi" abstract="true"/>
+	<!-- Hansard: Root element for each bound hansard volume -->
+	<xs:element name="hansard">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="titlepage"/>
+				<xs:choice maxOccurs="unbounded">
+					<xs:element ref="frontmatter"/>
+					<xs:element ref="tablecontents"/>
+					<xs:element ref="p"/>
+					<xs:element ref="houselords"/>
+					<xs:element ref="housecommons"/>
+				</xs:choice>
+				<xs:element ref="appendix" minOccurs="0"/>
+				<xs:element ref="index" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!-- End Hansard -->
+	<!-- Title Page:  Element is used for first page of each hansard volume -->
+	<xs:element name="titlepage">
+		<xs:complexType>
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="image"/>
+				<xs:element ref="p"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<!-- End Title Page -->
+	<!-- Table of Contents: Element is used for TOC of each hansard volume -->
+	<xs:element name="tablecontents">
+		<xs:complexType>
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="image"/>
+				<xs:element ref="title"/>
+				<xs:element ref="section"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<!-- End Table of Contents -->
+	<!-- Front Matter: Element is used for information before the debates starts -->
+	<xs:element name="frontmatter">
+		<xs:complexType>
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="image"/>
+				<xs:element ref="section"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<!-- End Front Matter -->
+	<!-- House of Commons: Element is used to encode proceedings and discussions from House of Commons -->
+	<xs:element name="housecommons">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="image" minOccurs="0"/>
+				<xs:element ref="col" minOccurs="0"/>
+				<xs:element ref="title"/>
+				<xs:element ref="date"/>
+					<xs:choice minOccurs="0" maxOccurs="unbounded">
+					<xs:element ref="debates"/>
+					<xs:element ref="writtenanswers"/>
+					<xs:element ref="writtenstatements"/>
+					<xs:element ref="westminsterhall"/>
+					<xs:element ref="image"/>
+					<xs:element ref="col"/>
+					<xs:element ref="p"/>
+				</xs:choice>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!-- End House of Commons -->
+	<!-- House of Lords: Element is used to encode proceedings and discussions from House of Lords -->
+	<xs:element name="houselords">	
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="image" minOccurs="0"/>
+				<xs:element ref="col" minOccurs="0"/>
+				<xs:element ref="title"/>
+				<xs:element ref="date"/>
+				   <xs:choice minOccurs="0" maxOccurs="unbounded">
+					<xs:element ref="debates"/>
+					<xs:element ref="writtenanswers"/>
+					<xs:element ref="writtenstatements"/>
+					<xs:element ref="westminsterhall"/>
+					<xs:element ref="image"/>
+					<xs:element ref="col"/>
+					<xs:element ref="p"/>
+				</xs:choice>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!-- End House of Lords -->
+	<!-- Debates: Element is uded for Debates of handsard volume -->
+	<xs:element name="debates">
+		<xs:complexType>
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="section"/>
+				<xs:element ref="image"/>
+				<xs:element ref="col"/>
+				<xs:element ref="p"/>
+				<xs:element ref="ol"/>
+				<xs:element ref="ul"/>
+				<xs:element ref="ob"/>
+				<xs:element ref="table"/>
+				<xs:element ref="oralquestions"/>
+				<xs:element ref="grandcommitteereport"/>
+				<xs:element ref="committeewholehouse"/>
+				<xs:element ref="hi"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<!-- End Debates -->
+	<!-- Grand Committee Reports: In series 5 of the House of Lords,  Grand committee reports appear in a separately numbered sequence called ‘Official Report of the Grand Committee’. -->
+	<xs:element name="grandcommitteereport">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="image" minOccurs="0"/>
+				<xs:element ref="col" minOccurs="0"/>
+				<xs:element ref="title"/>
+				<xs:choice minOccurs="0" maxOccurs="unbounded">
+					<xs:element ref="section"/>
+					<xs:element ref="image"/>
+					<xs:element ref="col"/>
+				</xs:choice>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!-- End Grand Committee Reports -->
+	<!-- Committee of the Whole House: In series 5 of the House of Lords, the Official Report of the Committee of the Whole House appears in a separately numbered sequence called ‘Official Report of the Grand Committee on the ‘title of bill’ -->
+	<xs:element name="committeewholehouse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="image" minOccurs="0"/>
+				<xs:element ref="col" minOccurs="0"/>
+				<xs:element ref="title"/>
+				<xs:choice minOccurs="0" maxOccurs="unbounded">
+					<xs:element ref="section"/>
+					<xs:element ref="image"/>
+					<xs:element ref="col"/>
+				</xs:choice>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!-- End Committee of the Whole House -->
+	<!-- Westminster Hall : In series 6 of the House of Commons (from 1999/2000 Volume 340) there occurs a section at the end of the volume called Westminster Hall debates. -->
+	<xs:element name="westminsterhall">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="image" minOccurs="0"/>
+				<xs:element ref="col" minOccurs="0"/>
+				<xs:element ref="title"/>
+				<xs:element ref="date"/>
+				<xs:choice minOccurs="0" maxOccurs="unbounded">
+					<xs:element ref="p"/>
+					<xs:element ref="section"/>
+					<xs:element ref="oralquestions"/>
+					<xs:element ref="image"/>
+					<xs:element ref="col"/>
+				</xs:choice>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!-- End Westminster Hall -->
+	<!-- Written Statements : In series 5 of the House Lords from 2003/4 Vol 656 and in series 6 of the House of Commons, written ministerial statements appear in a separate numbered sequence after the main debates -->
+	<xs:element name="writtenstatements">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="image" minOccurs="0"/>
+				<xs:element ref="col" minOccurs="0"/>
+				<xs:element ref="title"/>
+				<xs:choice minOccurs="0" maxOccurs="unbounded">
+					<xs:element ref="date"/>
+					<xs:element ref="section"/>
+					<xs:element ref="image"/>
+					<xs:element ref="col"/>
+				</xs:choice>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!-- Written Statements -->
+	<!--
+    Written Answers: In series 5 of the House of Commons (post 1946) and House of Lords (post 1990) and continuing in series 6 of the House of Commons, written answers are in a separately numbered sequence at the end of the volume.
+    This section is usually called ‘Written Answers to Questions’
+  -->
+	<xs:element name="writtenanswers">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="image" minOccurs="0"/>
+				<xs:element ref="col" minOccurs="0"/>
+				<xs:element ref="title"/>
+				<xs:choice minOccurs="0" maxOccurs="unbounded">
+					<xs:element ref="date"/>
+					<xs:element ref="section"/>
+					<xs:element ref="image"/>
+					<xs:element ref="col"/>
+				</xs:choice>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!-- Session: Element is used for a small portion of session at start of the debates -->
+	<xs:element name="session">
+		<xs:complexType mixed="true">
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="p"/>
+				<xs:element ref="hi"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<!-- End Session -->
+	<!-- Title : Element used for all the main sections -->
+	<xs:element name="title">
+		<xs:complexType mixed="true">
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="ob"/>
+				<xs:element ref="lb"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<!-- End Title -->
+	<!-- Date : Element for date information -->
+	<xs:element name="date">
+		<xs:complexType mixed="true">
+			<xs:sequence>
+				<xs:element ref="ob" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attributeGroup ref="attlist.date"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:attributeGroup name="attlist.date">
+		<xs:attribute name="format" type="xs:date" use="required"/>
+	</xs:attributeGroup>
+	<!-- End Date -->
+	<!-- Section: Element is used to encode the unusal headings other than the above -->
+	<xs:element name="section">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="image" minOccurs="0"/>
+				<xs:element ref="col" minOccurs="0"/>
+				<xs:element ref="title"/>
+				<xs:choice minOccurs="0" maxOccurs="unbounded">
+					<xs:element ref="section"/>
+					<xs:element ref="date"/>
+					<xs:element ref="p"/>
+					<xs:element ref="ul"/>
+					<xs:element ref="ol"/>
+					<xs:element ref="list"/>
+					<xs:element ref="quote"/>
+					<xs:element ref="table"/>
+					<xs:element ref="image"/>
+					<xs:element ref="col"/>
+					<xs:element ref="division"/>
+					<xs:element ref="img"/>
+					<xs:element ref="indexdiv"/>
+				</xs:choice>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!-- End Section -->
+	<!--
+    Divisions: Division lists indicate the names of Members who take part in a vote (Division), with each division presented as a list of names, ordered by surname.
+    HTML table encodng is used for list of names
+  -->
+	<xs:element name="division">
+		<xs:complexType>
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="image"/>
+				<xs:element ref="col"/>
+				<xs:element ref="table"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<!-- End Divisions -->
+	<!-- Paragraph -->
+	<xs:element name="p">
+		<xs:complexType mixed="true">
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="session"/>
+				<xs:element ref="member"/>
+				<xs:element ref="membercontribution"/>
+				<xs:element ref="image"/>
+				<xs:element ref="col"/>
+				<xs:element ref="quote"/>
+				<xs:element ref="ol"/>
+				<xs:element ref="ul"/>
+				<xs:element ref="ob"/>
+				<xs:element ref="table"/>
+				<xs:element ref="hi"/>
+			</xs:choice>
+			<xs:attributeGroup ref="attlist.p"/>
+		</xs:complexType>
+	</xs:element>
+	<!-- End Paragraph -->
+	<!-- Member information -->
+	<xs:element name="member">
+		<xs:complexType mixed="true">
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="image"/>
+				<xs:element ref="col"/>
+				<xs:element ref="memberconstituency"/>
+				<xs:element ref="ob"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="memberconstituency">
+		<xs:complexType mixed="true">
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="image"/>
+				<xs:element ref="col"/>
+				<xs:element ref="ob"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="membercontribution">
+		<xs:complexType mixed="true">
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="image"/>
+				<xs:element ref="col"/>
+				<xs:element ref="quote"/>
+				<xs:element ref="ol"/>
+				<xs:element ref="ul"/>
+				<xs:element ref="ob"/>
+				<xs:element ref="table"/>
+				<xs:element ref="hi"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<!-- End Member information -->
+	<!-- Quote: Element is used for small font paragraph -->
+	<xs:element name="quote">
+		<xs:complexType mixed="true">
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="image"/>
+				<xs:element ref="col"/>
+				<xs:element ref="ul"/>
+				<xs:element ref="ol"/>
+				<xs:element ref="ob"/>
+				<xs:element ref="quote"/>
+				<xs:element ref="hi"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<!-- End Quote -->
+	<!-- List : These elements will be used in the Table of Contents -->
+	<xs:element name="list">
+		<xs:complexType mixed="true">
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="image"/>
+				<xs:element ref="item"/>
+				<xs:element ref="hi"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="item">
+		<xs:complexType mixed="true">
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="ob"/>
+				<xs:element ref="ref"/>
+				<xs:element ref="hi"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ref">
+		<xs:complexType mixed="true">
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="ob"/>
+				<xs:element ref="hi"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<!-- End List -->
+	<!--
+    Oral Questions: From the 1850’s in series 3, and continuing in series 4, oral questions to  ministers are indicated by the heading ‘Questions’, which appears in the text, where the question and answer sequence begins.   
+    In House of Commons series 5 and 6, oral questions are clearly discernable from the main text of debate by the heading ‘Oral Answers to Questions’
+  -->
+	<xs:element name="oralquestions">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="image" minOccurs="0"/>
+				<xs:element ref="col" minOccurs="0"/>
+				<xs:element ref="title"/>
+				<xs:choice minOccurs="0" maxOccurs="unbounded">
+					<xs:element ref="section"/>
+					<xs:element ref="image"/>
+					<xs:element ref="col"/>
+				</xs:choice>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!-- End Oral Questions -->
+	<!-- Appendix: Element is used to encode the appendix information following the debates, complex tables are considered as images-->
+	<xs:element name="appendix">
+		<xs:complexType mixed="true">
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="title"/>
+				<xs:element ref="section"/>
+				<xs:element ref="p"/>
+				<xs:element ref="image"/>
+				<xs:element ref="img"/>
+				<xs:element ref="ob"/>
+				<xs:element ref="hi"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<!-- End Appendix -->
+	<xs:element name="img">
+		<xs:complexType>
+			<xs:attributeGroup ref="attlist.img"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:attributeGroup name="attlist.img">
+		<xs:attribute name="src" use="required"/>
+	</xs:attributeGroup>
+	<!--
+    Index
+    Indexdiv - Division title
+    index-letter
+  -->
+	<xs:element name="index">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="title"/>
+				<xs:choice minOccurs="0" maxOccurs="unbounded">
+					<xs:element ref="section"/>
+					<xs:element ref="p"/>
+					<xs:element ref="image"/>
+					<xs:element ref="indexdiv"/>
+					<xs:element ref="hi"/>
+				</xs:choice>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="indexdiv">
+		<xs:complexType mixed="true">
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="index-letter"/>
+				<xs:element ref="p"/>
+				<xs:element ref="image"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="index-letter">
+		<xs:complexType mixed="true">
+			<xs:sequence>
+				<xs:element ref="ob" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!-- End Index -->
+	<!--
+    Table
+    HTML Table Structure
+  -->
+	<xs:element name="table">
+		<xs:complexType>
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="tr" maxOccurs="unbounded"/>
+				<xs:element ref="col"/>
+			</xs:choice>
+			<xs:attributeGroup ref="attlist.table"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:attributeGroup name="attlist.table">
+		<xs:attribute name="rowspan"/>
+		<xs:attribute name="colspan"/>
+		<xs:attribute name="type"/>
+	</xs:attributeGroup>
+	<xs:element name="caption">
+		<xs:complexType mixed="true">
+			<xs:sequence>
+				<xs:element ref="hi" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="thead">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="tr" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="tfoot">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="tr" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="tr">
+		<xs:complexType>
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:choice maxOccurs="unbounded">
+					<xs:element ref="th"/>
+					<xs:element ref="td"/>
+				</xs:choice>
+				<xs:element ref="hi"/>
+			</xs:choice>
+			<xs:attributeGroup ref="attlist.tr"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:attributeGroup name="attlist.tr">
+		<xs:attribute name="align">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="left"/>
+					<xs:enumeration value="center"/>
+					<xs:enumeration value="right"/>
+					<xs:enumeration value="justify"/>
+					<xs:enumeration value="char"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="valign">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="top"/>
+					<xs:enumeration value="middle"/>
+					<xs:enumeration value="bottom"/>
+					<xs:enumeration value="baseline"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:attributeGroup>
+	<xs:element name="th">
+		<xs:complexType mixed="true">
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="ob"/>
+				<xs:element ref="hi"/>
+			</xs:choice>
+			<xs:attributeGroup ref="attlist.th"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:attributeGroup name="attlist.th">
+		<xs:attribute name="align">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="left"/>
+					<xs:enumeration value="center"/>
+					<xs:enumeration value="right"/>
+					<xs:enumeration value="justify"/>
+					<xs:enumeration value="char"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="valign">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="top"/>
+					<xs:enumeration value="middle"/>
+					<xs:enumeration value="bottom"/>
+					<xs:enumeration value="baseline"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:attributeGroup>
+	<xs:element name="td">
+		<xs:complexType mixed="true">
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="p"/>
+				<xs:element ref="ob"/>
+				<xs:element ref="hi"/>
+			</xs:choice>
+			<xs:attributeGroup ref="attlist.td"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:attributeGroup name="attlist.td">
+		<xs:attribute name="rowspan"/>
+		<xs:attribute name="colspan"/>
+		<xs:attribute name="align">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="left"/>
+					<xs:enumeration value="center"/>
+					<xs:enumeration value="right"/>
+					<xs:enumeration value="justify"/>
+					<xs:enumeration value="char"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="valign">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="top"/>
+					<xs:enumeration value="middle"/>
+					<xs:enumeration value="bottom"/>
+					<xs:enumeration value="baseline"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:attributeGroup>
+	<!-- End Table -->
+	<!-- Order List : Element is used when a list of items with sequence numbers -->
+	<xs:element name="ol">
+		<xs:complexType>
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="ol"/>
+				<xs:element ref="ul"/>
+				<xs:element ref="image"/>
+				<xs:element ref="col"/>
+				<xs:element ref="li"/>
+				<xs:element ref="table"/>
+			</xs:choice>
+			<xs:attributeGroup ref="attlist.ol"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:attributeGroup name="attlist.ol">
+		<xs:attribute name="type"/>
+	</xs:attributeGroup>
+	<!-- End Order List -->
+	<!--  Unorder List : The element is used when a list of items with symbols -->
+	<xs:element name="ul">
+		<xs:complexType>
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="ol"/>
+				<xs:element ref="ul"/>
+				<xs:element ref="image"/>
+				<xs:element ref="col"/>
+				<xs:element ref="li"/>
+				<xs:element ref="table"/>
+			</xs:choice>
+			<xs:attributeGroup ref="attlist.ul"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:attributeGroup name="attlist.ul">
+		<xs:attribute name="type"/>
+	</xs:attributeGroup>
+	<xs:element name="li">
+		<xs:complexType mixed="true">
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="hi"/>
+				<xs:element ref="image"/>
+				<xs:element ref="col"/>
+				<xs:element ref="ol"/>
+				<xs:element ref="ul"/>
+				<xs:element ref="ob"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<!-- End Unorder List -->
+	<!-- Image Link -->
+	<xs:element name="image">
+		<xs:complexType>
+			<xs:attributeGroup ref="attlist.image"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:attributeGroup name="attlist.image">
+		<xs:attribute name="src" use="required"/>
+	</xs:attributeGroup>
+	<xs:attributeGroup name="attlist.p">
+		<xs:attribute name="align"/>
+	</xs:attributeGroup>
+	<!-- End Image Link -->
+	<!-- Column -->
+	<xs:element name="col" type="xs:string"/>
+	<!-- End Column -->
+	<!--
+    Emphais : 
+    b - bold
+    i - italics
+    u - underline
+    sup - Superscript
+    sub - subscript
+  -->
+	<xs:element name="b" substitutionGroup="hi">
+		<xs:complexType mixed="true">
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="ob"/>
+				<xs:element ref="hi"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="i" substitutionGroup="hi">
+		<xs:complexType mixed="true">
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="ob"/>
+				<xs:element ref="hi"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="u" substitutionGroup="hi">
+		<xs:complexType mixed="true">
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="ob"/>
+				<xs:element ref="hi"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="sup" substitutionGroup="hi">
+		<xs:complexType mixed="true">
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="ob"/>
+				<xs:element ref="hi"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="sub" substitutionGroup="hi">
+		<xs:complexType mixed="true">
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="ob"/>
+				<xs:element ref="hi"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<!-- End Emphais -->
+	<!-- Line break -->
+	<xs:element name="lb" substitutionGroup="hi">
+		<xs:complexType/>
+	</xs:element>
+	<!-- End Line break -->
+	<!-- obscured text -->
+	<xs:element name="ob">
+		<xs:complexType/>
+	</xs:element>
+	<!-- End obscured -->
+</xs:schema>
