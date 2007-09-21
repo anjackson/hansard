@@ -6,7 +6,11 @@ describe "application.haml", " in general" do
     render 'layouts/application.haml'
   end
   
-  it 'should render the HTML 5 doctype'
+  it 'should render the HTML 5 doctype of "<!DOCTYPE html>"'
+  
+  it 'should have the lang type of "en-GB"'
+  
+  it 'should not have a title which includes the text "Please give me a title"'
   
   it 'should render the Google Custom Search box if we are online'
   
