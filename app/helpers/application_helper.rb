@@ -97,17 +97,19 @@ module ApplicationHelper
   
   def delicious_badge
     javascript = <<EOF
+    <div id="delicious_box">
     <script type="text/javascript">
         if (typeof window.Delicious == "undefined") window.Delicious = {};
         Delicious.BLOGBADGE_DEFAULT_CLASS = 'delicious-blogbadge-line';
     </script>
     <script src="http://images.del.icio.us/static/js/blogbadge.js"></script>
+    </div>
 EOF
   end
   
   def google_custom_search_form    
     javascript = <<EOF
-    <!-- Google CSE Search Box Begins  -->
+    <div id="search_box">
       <form id="searchbox_002582221602550181161:owz178jujce" action="http://www.google.com/cse">
         <input type="hidden" name="cx" value="002582221602550181161:owz178jujce" />
         <input type="hidden" name="cof" value="FORID:0" />
@@ -115,8 +117,7 @@ EOF
         <input type="submit" name="sa" value="Search" />
       </form>
       <script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_002582221602550181161%3Aowz178jujce"></script>
-    <!-- Google CSE Search Box Ends -->
-    
+    </div>
 EOF
   end
   
