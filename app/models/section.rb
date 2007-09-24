@@ -10,13 +10,13 @@ class Section < ActiveRecord::Base
   before_create :create_slug
 
   MAX_SLUG_LENGTH = 40
-  
+
   acts_as_hansard_element
 
   def to_param
     slug
   end
-  
+
   def create_slug
     self.slug = truncate_slug(slugcase_title)
     index = 1
@@ -27,7 +27,7 @@ class Section < ActiveRecord::Base
     end
     self.slug = candidate_slug
   end
-  
+
   def truncate_slug(string)
     cropped_string = truncate(string, MAX_SLUG_LENGTH+1, "")
     if string != cropped_string
@@ -36,7 +36,7 @@ class Section < ActiveRecord::Base
       else
         #  back to the last complete word
         last_wordbreak = cropped_string.rindex('-')
-        if !last_wordbreak.nil? 
+        if !last_wordbreak.nil?
           cropped_string = truncate(cropped_string, last_wordbreak, "")
         else
           cropped_string = truncate(cropped_string, MAX_SLUG_LENGTH, "")
@@ -45,19 +45,19 @@ class Section < ActiveRecord::Base
     end
     cropped_string
   end
-  
+
   # strip or convert anything except letters, numbers and dashes
   # to produce a string in the format 'this-is-a-slugcase-string'
   # and convert html entities to unicode
   def slugcase_title
-    decoded_title = HTMLEntities.new.decode(title_cleaned_up) 
-    ascii_title = Iconv.new('US-ASCII//TRANSLIT', 'utf-8').iconv(decoded_title)
+    decoded_title = HTMLEntities.new.decode(title_cleaned_up)
+    ascii_title = Iconv.new('US-ASCII//TRANSLIT', 'UTF-8').iconv(decoded_title)
     ascii_title.downcase!
     ascii_title.gsub!(/[^a-z0-9\s_-]+/, '')
     ascii_title.gsub!(/[\s_-]+/, '-')
     ascii_title
   end
-  
+
   def to_xml(options={})
     xml = options[:builder] ||= Builder::XmlMarkup.new
     marker_xml(options)
@@ -74,7 +74,7 @@ class Section < ActiveRecord::Base
     xml = options[:builder] ||= Builder::XmlMarkup.new
     if title
       xml.title do
-        xml << title 
+        xml << title
       end
     end
   end
@@ -97,7 +97,7 @@ class Section < ActiveRecord::Base
   def first_image_source
     start_image_src
   end
-  
+
   def title_cleaned_up
     if title
       clean_title = title.gsub(/<lb>|<\/lb>|<lb\/>/,'')
@@ -105,7 +105,7 @@ class Section < ActiveRecord::Base
       clean_title
     end
   end
-  
+
   def title_for_linking
     title_cleaned_up.downcase.gsub(/ /, '_')
   end
