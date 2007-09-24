@@ -12,7 +12,7 @@ class Section < ActiveRecord::Base
   MAX_SLUG_LENGTH = 40
 
   acts_as_hansard_element
-
+  
   def to_param
     slug
   end

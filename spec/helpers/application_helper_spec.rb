@@ -242,17 +242,21 @@ describe ApplicationHelper, " when creating links in index entries" do
     @index = Index.new(:start_date => Date.new(2006, 5, 4), 
                       :end_date => Date.new(2006, 6, 6))
     @index_entry = IndexEntry.new(:index => @index)
-    HouseOfCommonsSitting.stub!(:find_by_column_and_date_range).and_return(HouseOfCommonsSitting.new(:date => Date.new(2006,5,5)))
+    
   end
   
   it "should replace index entries with links appropriately for the text 'Channel tunnel 758'" do
     @index_entry.text = "Channel tunnel 758"
+    sitting = HouseOfCommonsSitting.new(:date => Date.new(2006, 5, 5))
+    HouseOfCommonsSitting.stub!(:find_section_by_column_and_date_range).and_return(Section.new(:sitting => sitting))
     expected = "Channel tunnel <a href=\"/commons/2006/may/05#column_758\">758</a>"
     index_entry_links(@index_entry).should == expected
   end
 
   it "should replace index entries with links appropriately for the text 'Scotland 16&#x2013;7, 18, 59&#x2013;60w'" do
     @index_entry.text = "Scotland 16&#x2013;7, 18, 59&#x2013;60w"
+    sitting = HouseOfCommonsSitting.new(:date => Date.new(2006, 5, 5))
+    HouseOfCommonsSitting.stub!(:find_section_by_column_and_date_range).and_return(Section.new(:sitting => sitting))
     expected = "Scotland <a href=\"/commons/2006/may/05#column_16\">16</a>&#x2013;7, <a href=\"/commons/2006/may/05#column_18\">18</a>, 59&#x2013;60w"
     index_entry_links(@index_entry).should == expected
   end

@@ -23,8 +23,11 @@ module ApplicationHelper
     "<h4 class='sidenote#{extra_class}'><a name='column_#{column}' href='#column_#{column}'>Col. #{column}</a></h4>"
   end
   
-  def section_url(section)
-    url_for(params.update(:controller => "sections", :action => "show", :id => section.slug, :type => "commons"))
+  def section_url(section, sitting_params)
+    sitting_params[:type] = sitting_params[:controller]
+    url_for(sitting_params.update(:controller => "sections", 
+                                  :action => "show", 
+                                  :id => section.slug))
   end
   
   def day_link(sitting, direction)
@@ -146,9 +149,9 @@ EOF
   def index_entry_links(index_entry)
     index = index_entry.index
     basic_col = /(\s)(\d+)(,|\s|&#x2013;\d+,|&#x2013;\d+$|$)/
-    written_answer_col = /(\s)(\d+)(w)/
+    # written_answer_col = /(\s)(\d+)(w)/
     index_entry.text = create_index_links(index_entry.text, index, basic_col, HouseOfCommonsSitting)
-    index_entry.text = create_index_links(index_entry.text, index, written_answer_col, WrittenAnswersSitting)
+    # index_entry.text = create_index_links(index_entry.text, index, written_answer_col, WrittenAnswersSitting)
   end
 
   def create_index_links(entry, index, pattern, sitting_type)
@@ -156,9 +159,9 @@ EOF
       text = $1
       column = $2
       suffix = $3
-      sitting = sitting_type.find_by_column_and_date_range(column, index.start_date, index.end_date)
-      if sitting
-        text += link_to(column, sitting_date_url(sitting) + "#column_#{column}")
+      section = sitting_type.find_section_by_column_and_date_range(column, index.start_date, index.end_date)
+      if section
+        text += link_to(column, section_url(section, sitting_date_url_params(section.sitting)) + "#column_#{column}")
       else
         text += column
       end

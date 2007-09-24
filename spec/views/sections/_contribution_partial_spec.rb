@@ -7,7 +7,7 @@ describe "_contribution partial", " in general" do
     contribution.stub!(:text).and_return("")
     @controller.template.stub!(:contribution).and_return(contribution)
     @controller.template.should_receive(:marker_html).and_return("")
-    render 'commons/_contribution.haml'
+    render 'sections/_contribution.haml'
   end
   
 end
@@ -20,7 +20,7 @@ describe '_contribution partial', 'when passed quote contribution' do
     @quote.should_receive(:text).and_return @text
     @quote.should_receive(:markers)
     @controller.template.stub!(:contribution).and_return @quote
-    render 'commons/_contribution.haml'
+    render 'sections/_contribution.haml'
   end
 
   it 'should show quote text in p with class quote' do
@@ -42,7 +42,7 @@ describe '_contribution partial', 'when passed procedural contribution' do
     @procedural.should_receive(:text).and_return @text
     @controller.template.stub!(:contribution).and_return @procedural
 
-    render 'commons/_contribution.haml'
+    render 'sections/_contribution.haml'
   end
 
   it 'should show speaker in chair as p with class procedural' do
@@ -70,7 +70,7 @@ describe '_section partial', 'when passed members contribution with question_no,
 
     @controller.template.stub!(:contribution).and_return(@contribution)
 
-    render 'commons/_contribution.haml'
+    render 'sections/_contribution.haml'
   end
 
   it 'should show member contribution in p with class "member_contribution"' do
@@ -122,7 +122,7 @@ describe '_section partial', 'when passed members contribution with constituency
 
     @controller.template.stub!(:contribution).and_return(@contribution)
 
-    render 'commons/_contribution.haml'
+    render 'sections/_contribution.haml'
   end
 
   it 'should show member constituency name and colon in span with class "member_constituency"' do
@@ -148,7 +148,7 @@ describe '_section partial', 'when passed members contribution without constitue
 
     @controller.template.stub!(:contribution).and_return(@contribution)
 
-    render 'commons/_contribution.haml'
+    render 'sections/_contribution.haml'
   end
 
   it 'should show member name and colon in cite with class "member"' do

@@ -8,8 +8,13 @@ class Sitting < ActiveRecord::Base
 
   acts_as_hansard_element
 
-  def Sitting.find_by_column_and_date_range(column, start_date, end_date)
-    find(:first, :conditions => ["date >= ? and date <= ? and start_column <= ?", start_date.to_date, end_date.to_date, column.to_i], :order => "start_column desc")
+  def Sitting.find_section_by_column_and_date_range(column, start_date, end_date)
+    sitting = find(:first, :conditions => ["date >= ? and date <= ? and start_column <= ?", start_date.to_date, end_date.to_date, column.to_i], :order => "start_column desc")
+    if sitting
+      section = sitting.sections.find(:first, :conditions => ["start_column <= ?", column], :order => "start_column desc")
+    else
+      nil 
+    end
   end
   
   def Sitting.find_next(day, direction)

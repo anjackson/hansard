@@ -48,6 +48,12 @@ describe Hansard::HouseCommonsParser do
   after(:all) do
     Sitting.find(:all).each {|s| s.destroy}
   end
+  
+  it "should create a sitting whose sections all have a start_column" do
+    @sitting.sections.each do |section|
+      section.start_column.should_not be_nil
+    end 
+  end
 
   it 'should add a procedural note for an italics element after a member element' do
     contribution = @sitting.debates.sections.last.contributions.first

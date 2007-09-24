@@ -1,10 +1,10 @@
 = render :partial => 'hansard_header'
 %div.debates
   - @sitting.debates.sections.each do |section|
-    %div.section-link= link_to section.title, section_url(section)
+    %div.section-link= link_to section.title, section_url(section, params)
     - if section.is_a? OralQuestions 
       - section.sections.each do |subsection|
-        %div.sub-section-link= link_to subsection.title, section_url(subsection)      
+        %div.sub-section-link= link_to subsection.title, section_url(subsection, params)      
         - if subsection.is_a? OralQuestionsSection
           - subsection.sections.each do |subsubsection|
-            %div.sub-sub-section-link= link_to subsubsection.title, section_url(subsubsection)
+            %div.sub-sub-section-link= link_to subsubsection.title, section_url(subsubsection, params)

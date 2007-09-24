@@ -29,6 +29,14 @@ class Hansard::HouseCommonsParser
   end
 
   private
+  
+    def create_section(section_type)
+      section_type.new({
+        :start_column => @column,
+        :start_image_src => @image, 
+        :sitting => @sitting
+      })
+    end
 
     def handle_vote text, division, vote_type
       parts = text.split('(')
@@ -199,12 +207,7 @@ class Hansard::HouseCommonsParser
     end
 
     def handle_section_element section_element, debates
-      section = Section.new({
-        :start_column => @column,
-        :start_image_src => @image, 
-        :sitting => @sitting
-      })
-
+      section = create_section(Section)
       section_element.children.each do |node|
         if node.elem?
           name = node.name
@@ -327,19 +330,13 @@ class Hansard::HouseCommonsParser
           end
         end
 
-      # element.children.each do |child|
-        # text += child.elem? ?  child.to_original_html : child.to_s
-      # end
-      # text = text.gsub("\r\n","\n").strip
-
         contribution.section = question_section
         question_section.contributions << contribution
       end
     end
 
     def handle_oral_question_section section, questions
-      question_section = OralQuestionSection.new(:sitting => @sitting)
-
+      question_section = create_section(OralQuestionSection)
       section.children.each do |node|
         if node.elem?
           name = node.name
@@ -360,8 +357,7 @@ class Hansard::HouseCommonsParser
     end
 
     def handle_oral_questions_section section, oral_questions
-      questions_section = OralQuestionsSection.new(:sitting => @sitting)
-
+      questions_section = create_section(OralQuestionsSection)
       has_introduction = ((section/'p').size == 1)
       section.children.each do |node|
         if node.elem?
@@ -390,7 +386,7 @@ class Hansard::HouseCommonsParser
     end
 
     def handle_oral_questions section, debates
-      oral_questions = OralQuestions.new(:sitting => @sitting)
+      oral_questions = create_section(OralQuestions)
 
       section.children.each do |node|
         if node.elem?
@@ -428,12 +424,7 @@ class Hansard::HouseCommonsParser
     end
 
     def handle_prayers_outside_section node, debates
-      section = Section.new({
-        :start_column => @column,
-        :start_image_src => @image,
-        :sitting => @sitting
-      })
-
+      section = create_section(Section)
       section.title = node.inner_html.to_s
       element = node.next_sibling
       if (element.elem? and element.inner_html.to_s.include?('Chair'))
@@ -447,7 +438,7 @@ class Hansard::HouseCommonsParser
     end
 
     def handle_debates sitting, debates
-      sitting.debates = Debates.new(:sitting => @sitting)
+      sitting.debates = create_section(Debates)
       debates.children.each do |node|
         if node.elem?
           name = node.name

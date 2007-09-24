@@ -148,3 +148,5 @@ describe Section, ".first_image_source" do
   end
 
 end
+
+

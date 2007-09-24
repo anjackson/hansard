@@ -10,7 +10,7 @@ describe "_section partial", " in general" do
     section.stub!(:contributions).and_return([])
     @controller.template.stub!(:section).and_return(section)
     @controller.template.should_receive(:marker_html).and_return("")
-    render 'commons/_section.haml'
+    render 'sections/_section.haml'
   end
   
   it "should show timestamps with valid datetimes in the wrapping tag"
@@ -41,7 +41,7 @@ describe "_section partial", "when passed oral answers" do
 
     @controller.template.stub!(:section).and_return(@oral_questions)
 
-    render 'commons/_section.haml'
+    render 'sections/_section.haml'
   end
 
   it 'should show oral answers title as h2'
@@ -79,7 +79,7 @@ describe "_section partial", "when passed an oral answers section" do
 
     @controller.template.stub!(:section).and_return(@questions_section)
 
-    render 'commons/_section.haml'
+    render 'sections/_section.haml'
   end
 
   it 'should show oral answers section title as h2'
@@ -113,7 +113,7 @@ describe "_section partial", "when passed a prayers section" do
 
     @controller.template.stub!(:section).and_return(@prayers)
 
-    render 'commons/_section.haml'
+    render 'sections/_section.haml'
   end
 
   it 'should show prayers title as h2'
