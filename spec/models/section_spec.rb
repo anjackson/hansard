@@ -90,12 +90,12 @@ describe Section, ".create_slug" do
     @section.create_slug.should == "tax-collection-wales"
   end
 
-  it "should return 'multi-role-combat-aircraft' for 'Multi-rôle Combat Aircraft'" do
+  it "should return 'multi-role-combat-aircraft' or 'multi-rle-combat-aircraft' for 'Multi-rôle Combat Aircraft'" do
     @section.title = "Multi-rôle Combat Aircraft"
     @section.create_slug.should match(/^multi-ro?le-combat-aircraft$/)
   end
 
-  it "should return 'multi-role-combat-aircraft' for 'Multi-R&#x00F4;le Combat Aircraft'" do
+  it "should return 'multi-role-combat-aircraft' or 'multi-rle-combat-aircraft' for 'Multi-R&#x00F4;le Combat Aircraft'" do
     @section.title = "Multi-R&#x00F4;le Combat Aircraft"
     @section.create_slug.should match(/^multi-ro?le-combat-aircraft$/)
   end
