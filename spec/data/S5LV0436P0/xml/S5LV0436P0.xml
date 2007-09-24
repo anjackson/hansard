@@ -6,8 +6,6 @@ xsi:noNamespaceSchemaLocation="hansard_v8.xsd">
   <col>1</col>
   <image src="S5LV0436P0I0003"/>  
   <col>2</col>
-  </titlepage>
-  <frontmatter></frontmatter>
   <p></p>
   <col>4</col>
   <housecommons>
@@ -28,11 +26,4 @@ xsi:noNamespaceSchemaLocation="hansard_v8.xsd">
       </oralquestions>
     </debates>
   </housecommons>
-  <index>
-    <date format="1985-12-16">Monday 16 December 1985</date>
-    <indexdiv>
-      <index-letter></index-letter>
-      <p></p>
-    </indexdiv>
-  </index>
 </hansard>

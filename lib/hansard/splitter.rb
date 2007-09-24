@@ -14,8 +14,13 @@ module Hansard
 
     DATE_PATTERN = /date format="(\d\d\d\d-\d\d-\d\d)">(.*?)<\/date>/
     SCHEMA_PATTERN = /xsi:noNamespaceSchemaLocation="(.*?)"/
-    SESSION_PATTERN = /<session>(\d\d\d\d&#x2013;\d\d)<\/session>/
+    SESSION_PATTERN = /<session>(\d\d\d\d&#x2013;\d?\d?\d\d)<\/session>/
 
+    # TODO  ? add tablecontents ? and appendix for c19 and c20 files
+    REQUIRED_TAGS = ['frontmatter',
+                     'index',
+                     'titlepage']
+                     
     def initialize indented_copy, overwrite=true, verbose=true, sleep_seconds=nil
       @indented_copy = indented_copy
       @verbose = verbose
@@ -160,6 +165,7 @@ module Hansard
 
       check_for_schema(line) unless @source_file.schema
       check_for_session(line)
+      check_for_required_tags(line)
       check_for_date(line)
       check_for_image(line) 
       check_for_column(line)  
@@ -178,6 +184,17 @@ module Hansard
       end
     end
     
+    def check_for_required_tags(line)
+      REQUIRED_TAGS.each do |tag|
+        if (match = /<#{tag}>/.match line)
+          @required_tags[tag] = true
+        end
+        if (match = /<\/#{tag}>/.match line)
+          @required_tag_ends[tag] = true
+        end
+      end
+    end
+    
     def check_for_image(line)
       if (match = @image_pattern.match line)
         new_image_num = match[1].to_i
@@ -187,7 +204,7 @@ module Hansard
         @image_num = new_image_num
       end
     end
-    
+
     def check_for_column(line)
       if (match = @column_pattern.match line)
         new_column_num = match[1].to_i
@@ -263,9 +280,15 @@ module Hansard
       @date = nil
       @first_date = nil
       @session = nil
+      @required_tags = {}
+      @required_tag_ends = {}
 
       File.new(input_file).each_line { |line| handle_line line }
       @source_file.add_log("Missing or badly formatted session tag") unless @session
+      REQUIRED_TAGS.each do |tag|
+        @source_file.add_log("Missing #{tag} tag") unless @required_tags[tag]
+        @source_file.add_log("Broken #{tag} tag") if (@required_tags[tag] and not @required_tag_ends[tag])
+      end
       puts 'header ' + @surrounding_buffer.size.to_s  if @verbose
       write_to_file 'header', @surrounding_buffer
 

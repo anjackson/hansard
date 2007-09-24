@@ -24,8 +24,47 @@ describe Hansard::Splitter do
     lambda { @splitter.split(path) }.should_not raise_error
   end
 
+
 end
 
+describe Hansard::Splitter, " when splitting files from spec/data/valid_complete_file" do
+  
+  before(:all) do
+    splitter = Hansard::Splitter.new(false, overwrite=true, verbose=false)
+    path = File.join(File.dirname(__FILE__),'..','data','valid_complete_file')
+    @source_files = splitter.split(path)
+    @source_file = @source_files.first
+  end
+  
+  after(:all) do
+    SourceFile.delete_all
+  end
+  
+  it "should NOT add a log message about a missing session tag" do
+    @source_file.log.should_not match(/Missing or badly formatted session tag/)
+  end
+  
+  it "should NOT add a log message about a missing titlepage tag" do
+    @source_file.log.should_not match(/Missing titlepage tag/)
+  end
+  
+  it "should NOT add a log message about a broken titlepage tag" do
+    @source_file.log.should_not match(/Broken titlepage tag/)
+  end
+  
+  it "should NOT add log messages about any missing tags" do
+    Hansard::Splitter::REQUIRED_TAGS.each do |tag|
+      @source_file.log.should_not match(/Missing #{tag} tag/)
+    end
+  end
+  
+  it "should NOT add log messages about any broken tags" do
+    Hansard::Splitter::REQUIRED_TAGS.each do |tag|
+      @source_file.log.should_not match(/Broken #{tag} tag/)
+    end
+  end
+  
+end
 
 describe Hansard::Splitter, " when splitting files from spec/data/S5LV0436P0" do
 
@@ -54,6 +93,16 @@ describe Hansard::Splitter, " when splitting files from spec/data/S5LV0436P0" do
   
   it "should set the source file's schema" do 
     @source_file.schema.should == 'hansard_v8.xsd'
+  end
+  
+  it "should add log messages about each missing tag (except 'titlepage')" do
+    Hansard::Splitter::REQUIRED_TAGS.each do |tag|
+      @source_file.log.should match(/Missing #{tag} tag/) unless tag == "titlepage"
+    end
+  end
+  
+  it "should add a log message about a broken titlepage tag" do
+    @source_file.log.should match(/Broken titlepage tag/)
   end
   
   it "should add a log message about a missing image tag" do
