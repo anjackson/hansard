@@ -9,6 +9,12 @@ body {
   line-height: 140%;
 }
 
+#licence {
+border: 1pt solid red;
+	margin: 5% 0%;
+padding:4%;
+}
+
 h1, h2, h3 {
 	font-size: 1.2em;
   font-weight: normal;
