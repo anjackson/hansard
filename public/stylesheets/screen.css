@@ -117,14 +117,10 @@ th {
 }
 
 #footer {
-	margin-top: 1em;
-	padding-top: 1em;
-	border-top: 1pt solid #999;
 	font-size: 0.8em;
 	width: 100%;
 	font-family: "Helvetica Neue", Helvetica, Arial, Verdana, sans-serif;
 	color: #999;
-	line-height: 120%;
 }
 
 .sub-section-link{
