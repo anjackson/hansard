@@ -20,11 +20,11 @@
     %link{ :rel => 'license', :hreflang => "en-US", :href => 'http://www.parliament.uk/site_information/parliamentary_copyright.cfm' }
   %body
     #header
-      -day_nav_links 
       = google_custom_search_form
+      -day_nav_links 
+      = delicious_badge
     #content
       = yield
-      = delicious_badge
     #footer
       #copyright
         &copy; UK Parliament
