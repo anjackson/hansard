@@ -37,9 +37,9 @@ describe "application.haml", " in general" do
     response.should have_tag("link[rel='author']", :title => "UK Parliament", :href => "http://www.parliament.uk")
   end
   
-  it 'should have a link rel="bookmark"' do
+  it 'should have a link rel="bookmark" with a link to "http://www.millbanksystems.com/commons/1961/may/03/school-leavers-acton" and a title of "Historic Hansard: May 3rd 1961: School Leavers, Acton"' do
     do_render
-    response.should have_tag("link[rel='bookmark']")
+    response.should have_tag("link[rel='bookmark']", :title => "Historic Hansard: May 3rd 1961: School Leavers, Acton", :href => "http://www.millbanksystems.com/commons/1961/may/03/school-leavers-acton")
   end
   
   it 'should have a link rel="contact"' do
