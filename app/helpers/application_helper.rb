@@ -41,6 +41,27 @@ module ApplicationHelper
     end
   end
   
+  def day_nav_links_utterly_broken
+    output = "<ol id='navigation'>"
+    output << "<li><a href='#{home_url}'><strong>Historic Hansard</strong></a></li>"
+              
+      if @day
+        output << "<li><a href='" << day_link(@sitting,"<") << "'>Previous day</a></li>"
+        output << "<li><a href='" << day_link(@sitting,">") << "'>Next day</a></li>"
+        output << "<li><a href='#{sitting_date_source_url(@sitting)}'>XML source</a></li>"
+        output << "<li><a href='#{sitting_date_xml_url(@sitting)}'>XML output</a></li>"
+
+      else
+        output << "<li><a href='#{written_answers_url}'>Written Answers</a></li>"
+        output << "<li><a href='#{indices_url}'>Indices</a></li>"
+        output << "<li><a href='#{source_files_url}'>Source Files</a></li>"
+        output << "<li><a href='#{data_files_url}'>Data files</a></li>"
+          
+      end
+    output << "</ol>"
+    output 
+  end
+  
   def day_nav_links
     
     open :ol, {:id => 'navigation'} do
