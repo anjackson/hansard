@@ -2,7 +2,7 @@ class DataFile < ActiveRecord::Base
 
   belongs_to :source_file
   has_one :sitting, :foreign_key => "data_file_id"
-  
+
   validates_presence_of :name
   validates_presence_of :directory
 
@@ -41,6 +41,15 @@ class DataFile < ActiveRecord::Base
       text = self.log + (text + "\n")
       self.log = text
     end
+  end
+
+  def reset_fields
+    self.attempted_parse = false
+    self.parsed = false
+    self.attempted_save = false
+    self.saved = false
+    self.log = ''
+    self.save!
   end
 
   protected

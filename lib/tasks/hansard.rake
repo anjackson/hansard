@@ -1,5 +1,5 @@
 namespace :hansard do
-  
+
   COMMONS_PATT = 'housecommons_*xml'
   WRITTEN_PATT = 'writtenanswers_*xml'
   INDEX_PATT   = 'index.xml'
@@ -21,8 +21,8 @@ namespace :hansard do
   desc 'migrates db down and up, does db:test:clone_structure, and runs rake spec'
   task :clean => [:migrate_down, :migrate_up, :clone_structure] do
   end
-  
-  desc 'does a clean sweep and loads xml' 
+
+  desc 'does a clean sweep and loads xml'
   task :regenerate => [:migrate_down, :migrate_up, :load_new, :clone_structure] do
     puts 'Regenerated all data.'
   end
@@ -35,25 +35,53 @@ namespace :hansard do
       load_split_files source_file
     end
   end
-  
+
   desc 'loads any unloaded commons data from /data (doesn\'t re-split)'
   task :load_new_commons => [:environment] do
     reload_data_files(COMMONS_PATT, Hansard::HouseCommonsParser)
   end
-  
-  desc 'wipes and reloads commons data from /data (doesn\'t re-split)' 
+
+  desc 'wipes and reloads commons data from /data (doesn\'t re-split)'
   task :reload_commons => [:environment] do
     HouseOfCommonsSitting.destroy_all
     DataFile.delete(:conditions => "name like 'housecommons%'")
     Rake::Task['hansard:load_new_commons'].invoke
   end
-  
+
+  desc 'wipes and reloads commons data from /data for given date=yyyy-mm-dd (doesn\'t re-split)'
+  task :reload_commons_on_date => [:environment] do
+    if ENV['date']
+      date = Date.parse(ENV['date'])
+
+      date_part = date.to_s.gsub('-','_')
+      file_name = "housecommons_#{date_part}.xml"
+      data_file = DataFile.find_by_name(file_name)
+      data_file.reset_fields if data_file
+
+      sitting = HouseOfCommonsSitting.find_by_date(date)
+      if sitting
+        puts 'destroying sitting instance for ' + date.to_s
+        sitting.destroy
+      end
+
+      per_data_file(file_name) do |directory, file|
+        source_file = SourceFile.from_file(directory)
+        parse_file(file, Hansard::HouseCommonsParser, source_file)
+      end
+
+    else
+      puts ''
+      puts 'usage: rake hansard:reload_commons_on_date date=yyyy-mm-dd'
+      puts ''
+    end
+  end
+
   desc 'loads any unloaded written answer data from /data (doesn\'t re-split)'
   task :load_new_written => [:environment] do
     reload_data_files(WRITTEN_PATT, Hansard::WrittenAnswersParser)
   end
-  
-  desc 'wipes and reloads written answer data from /data (doesn\'t re-split)' 
+
+  desc 'wipes and reloads written answer data from /data (doesn\'t re-split)'
   task :reload_written => [:environment] do
     WrittenAnswersSitting.destroy_all
     DataFile.delete(:conditions => "name like 'writtenanswers%'")
@@ -64,14 +92,14 @@ namespace :hansard do
   task :load_new_index => [:environment] do
     reload_data_files(INDEX_PATT, Hansard::IndexParser)
   end
-  
-  desc 'wipes and reloads index data from /data (doesn\'t re-split)' 
+
+  desc 'wipes and reloads index data from /data (doesn\'t re-split)'
   task :reload_index => [:environment] do
     Index.destroy_all
     DataFile.delete(:conditions => "name like 'index%'")
     Rake::Task['hansard:load_new_index'].invoke
   end
-  
+
   desc 'splits Hansard XML files in /xml in to XML sections in /data, overwrites /data'
   task :split_xml => :environment do
     splitter = Hansard::Splitter.new(false, (overwrite=true), true)
@@ -105,7 +133,7 @@ namespace :hansard do
       end
     end
   end
-  
+
   def per_source_file
     @base_path = File.join(File.dirname(__FILE__),'..','..')
     Dir.mkdir(@base_path + '/data') unless File.exists?(@base_path + '/data')
@@ -129,7 +157,7 @@ namespace :hansard do
     load_source_files(source_file, WRITTEN_PATT, Hansard::WrittenAnswersParser)
     load_source_files(source_file, INDEX_PATT,   Hansard::IndexParser)
   end
-  
+
   def load_source_files(source_file, pattern, parser)
     sleep_seconds = ENV['sleep'].to_i if ENV['sleep']
     Dir.glob(source_file.result_directory+"/"+pattern).each do |file|
@@ -137,7 +165,7 @@ namespace :hansard do
       sleep sleep_seconds if sleep_seconds
     end
   end
-  
+
   def reload_data_files(pattern, parser)
     sleep_seconds = ENV['sleep'].to_i if ENV['sleep']
     per_data_file(pattern) do |directory, file|
