@@ -17,8 +17,8 @@ describe Hansard::HouseCommonsParser do
     @first_section = @sitting.debates.sections.first
 
     @oral_questions = @sitting.debates.oral_questions
-    @first_questions_section = @sitting.debates.oral_questions.sections.first
-    @first_question = @sitting.debates.oral_questions.sections.first.questions.first
+    @first_questions_section = @oral_questions.sections.first
+    @first_question = @oral_questions.sections.first.questions.first
     @first_question_contribution = @first_question.contributions.first
     @second_question_contribution = @first_question.contributions[1]
 
@@ -48,11 +48,20 @@ describe Hansard::HouseCommonsParser do
   after(:all) do
     Sitting.find(:all).each {|s| s.destroy}
   end
-  
+
   it "should create a sitting whose sections all have a start_column" do
     @sitting.sections.each do |section|
       section.start_column.should_not be_nil
-    end 
+    end
+  end
+
+  it "should add member name for contribution that doesn't have membercontribution element" do
+    @oral_questions.sections[1].title.should == 'NORTHERN IRELAND'
+    section = @oral_questions.sections[1].sections.first
+    section.title.should == 'Security'
+
+    section.contributions[0].should be_an_instance_of(MemberContribution)
+    section.contributions.first.member.should == 'Mr. Michael Latham'
   end
 
   it 'should add a procedural note for an italics element after a member element' do
@@ -77,7 +86,7 @@ describe Hansard::HouseCommonsParser do
   end
 
   it 'should add text preceding member element to question contribution memeber text' do
-    question = @sitting.debates.oral_questions.sections.last.sections.last.contributions.last
+    question = @oral_questions.sections.last.sections.last.contributions.last
     question.member.should == "The Parliamentary Under-Secretary of State for Health (Dr. Stephen Ladyman)"
   end
 
@@ -197,7 +206,7 @@ describe Hansard::HouseCommonsParser do
 
   it 'should set first oral question contribution' do
     @first_question_contribution.should_not be_nil
-    @first_question_contribution.should be_an_instance_of(OralQuestionContribution)
+    @first_question_contribution.should be_an_instance_of(MemberContribution)
   end
 
   it 'should set parent section on first oral question contribution' do
@@ -214,23 +223,23 @@ describe Hansard::HouseCommonsParser do
   end
 
   it 'should set a oral question number when number is formated as Q1.' do
-    question = @sitting.debates.oral_questions.sections.last.sections.first.contributions.first
+    question = @oral_questions.sections.last.sections.first.contributions.first
     question.question_no.should == 'Q1.'
   end
 
   it 'should set member name correctly when member element contains member constituency for a oral question' do
-    question = @sitting.debates.oral_questions.sections.last.sections.first.contributions.first
+    question = @oral_questions.sections.last.sections.first.contributions.first
     question.member.should == 'Mr. Frank Field'
   end
 
   it 'should set member constituency when member element contains member constituency for a oral question' do
-    question = @sitting.debates.oral_questions.sections.last.sections.first.contributions.first
+    question = @oral_questions.sections.last.sections.first.contributions.first
     question.member_constituency.should == '(Birkenhead)'
   end
 
   it "should add an introduction procedural contribution to an oralquestions section that has a 'p' tag within it" do
-    count = @sitting.debates.oral_questions.sections.size
-    section = @sitting.debates.oral_questions.sections[count - 2]
+    count = @oral_questions.sections.size
+    section = @oral_questions.sections[count - 2]
     section.title.should == "SCOTLAND"
     section.introduction.should_not be_nil
     section.introduction.should be_an_instance_of(ProceduralContribution)
@@ -252,7 +261,7 @@ describe Hansard::HouseCommonsParser do
 
   it 'should set second oral question contribution' do
     @second_question_contribution.should_not be_nil
-    @second_question_contribution.should be_an_instance_of(OralQuestionContribution)
+    @second_question_contribution.should be_an_instance_of(MemberContribution)
   end
 
   it 'should set parent section on second oral question contribution' do
@@ -282,17 +291,17 @@ describe Hansard::HouseCommonsParser do
 
 
   it 'should set member on a oral question contribution containing <lb>' do
-    question = @sitting.debates.oral_questions.sections.first.questions.last
+    question = @oral_questions.sections.first.questions.last
     question.contributions.first.member.should == 'Mr. Hilton'
   end
 
   it 'should set member on a oral question with two question numbers' do
-    question = @sitting.debates.oral_questions.sections.first.questions.last
+    question = @oral_questions.sections.first.questions.last
     question.contributions.first.question_no.should == '12 and 13.'
   end
 
   it 'should set member contribution on a oral question contribution containing <lb>' do
-    question = @sitting.debates.oral_questions.sections.first.questions.last
+    question = @oral_questions.sections.first.questions.last
     question.contributions.first.member_contribution.should == 'asked the Minister of Agriculture, Fisheries and Food (1) how many outbreaks of fowl pest have been confirmed in Norfolk during the past three months; how this number compares with outbreaks in previous years; and what new measures are proposed to reduce the outbreaks of this disease;<lb/>\n<col>596</col>\n(2) how much has been paid in compensation in Norfolk in respect of fowl pest during the past three months; and what is the largest amount paid to any one breeder during the same period.'
   end
 

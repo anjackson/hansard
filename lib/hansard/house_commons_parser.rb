@@ -29,11 +29,11 @@ class Hansard::HouseCommonsParser
   end
 
   private
-  
+
     def create_section(section_type)
       section_type.new({
         :start_column => @column,
-        :start_image_src => @image, 
+        :start_image_src => @image,
         :sitting => @sitting
       })
     end
@@ -251,7 +251,8 @@ class Hansard::HouseCommonsParser
       contribution_type = nil
 
       if (element.at('member') or element.at('membercontribution'))
-        contribution_type = OralQuestionContribution
+        # question_summary = element.inner_text.match /^\d+\./
+        contribution_type = MemberContribution
       elsif element.at('quote')
         contribution_type = QuoteContribution
       else
