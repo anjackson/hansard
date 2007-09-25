@@ -43,6 +43,10 @@ describe ApplicationHelper, " when formatting contribution" do
         '<p>a <sub>real</sub> change</p>'
   end
 
+  it 'should return one sidenote with a linebreak if two sidenotes appear together'
+  
+  it 'should retun quotes in a q tag with no extraneous quotemarks'
+
   it 'should return the image name linked to the source wrapped with a span with class "sidenote"' do
     format_contribution('a <i>really <image src="S6CV0089P0I0021"/> powerful</i> change').should ==
         "<p>a <i>really <span class='sidenote'><a href=\"/images/S6CV0089P0I0021.jpg\">Img. S6CV0089P0I0021</a></span> powerful</i> change</p>"
