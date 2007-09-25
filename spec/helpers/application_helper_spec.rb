@@ -18,14 +18,14 @@ describe ApplicationHelper, " when formatting contribution" do
         '<p>a <span class="quote">quote</span> from</p>'
   end
 
-  it 'should replace col element with h4 and anchor' do
+  it 'should replace col element with span with class "sidenote" and anchor' do
     format_contribution('a <col>123</col> text',['zzz']).should ==
-        "<p>a </p></zzz><h4 class='sidenote'><a name='column_123' href='#column_123'>Col. 123</a></h4><zzz><p> text</p>"
+        "<p>a </p></zzz><span class='sidenote'><a name='column_123' href='#column_123'>Col. 123</a></span><zzz><p> text</p>"
   end
 
-  it 'should replace image element with an image with appropriate markup' do
+  it 'should replace image element with an image wrapped in a span with class "sidenote"' do
     format_contribution('a <image src="S6CV0089P0I0021"/> text',['zzz']).should ==
-        "<p>a </p></zzz><h4 class='sidenote'><a href=\"/images/S6CV0089P0I0021.jpg\">Img. S6CV0089P0I0021</a></h4><zzz><p> text</p>"
+        "<p>a </p></zzz><span class='sidenote'><a href=\"/images/S6CV0089P0I0021.jpg\">Img. S6CV0089P0I0021</a></span><zzz><p> text</p>"
   end
 
   it 'should replace lb element with close and open paragraph' do
@@ -43,14 +43,14 @@ describe ApplicationHelper, " when formatting contribution" do
         '<p>a <sub>real</sub> change</p>'
   end
 
-  it 'should correctly handle image element in italics element by generating image' do
+  it 'should return the image name linked to the source wrapped with a span with class "sidenote"' do
     format_contribution('a <i>really <image src="S6CV0089P0I0021"/> powerful</i> change',['zzz']).should ==
-        "<p>a <i>really </i></p></zzz><h4 class='sidenote'><a href=\"/images/S6CV0089P0I0021.jpg\">Img. S6CV0089P0I0021</a></h4><zzz><p><i> powerful</i> change</p>"
+        "<p>a <i>really </i></p></zzz><span class='sidenote'><a href=\"/images/S6CV0089P0I0021.jpg\">Img. S6CV0089P0I0021</a></span><zzz><p><i> powerful</i> change</p>"
   end
 
-  it 'should correctly handle column element in subscript element' do
+  it 'should return the column number with an anchor wrapped with a span with class "sidenote"' do
     format_contribution('a <sub>really <col>123</col> powerful</sub> change',['zzz']).should ==
-        "<p>a <sub>really </sub></p></zzz><h4 class='sidenote'><a name='column_123' href='#column_123'>Col. 123</a></h4><zzz><p><sub> powerful</sub> change</p>"
+        "<p>a <sub>really </sub></p></zzz><span class='sidenote'><a name='column_123' href='#column_123'>Col. 123</a></span><zzz><p><sub> powerful</sub> change</p>"
   end
 end
 
@@ -286,13 +286,13 @@ describe ApplicationHelper, " when returning marker html for a model" do
     marker_html(@mock_sitting, {})
   end
   
-  it "should return an 'h4' tag with class 'sidenote' containing the text 'Image' and a blank link with the text Image: S5CV0750P0I0497" do
-    expected_tag_selector = "h4.sidenote a[href=\"/images/S5CV0750P0I0497.jpg\"]"
+  it "should return a 'span' tag with class 'sidenote' containing a link to the image source with the text 'Img. ' and the name of the image" do
+    expected_tag_selector = "span.sidenote a[href=\"/images/S5CV0750P0I0497.jpg\"]"
     image_marker("S5CV0750P0I0497").should have_tag(expected_tag_selector, :count => 1, :text => "Img. S5CV0750P0I0497")
   end
 
-  it "should return an 'h4' tag with class 'sidenote' containing the text 'Col' and the column number for a column marker" do
-    column_marker("5").should have_tag("h4.sidenote", :text => "Col. 5", :count => 1)
+  it "should return a 'span' tag with class 'sidenote' containing the text 'Col' and the column number for a column marker" do
+    column_marker("5").should have_tag("span.sidenote", :text => "Col. 5", :count => 1)
   end
   
   it "should return an anchor for the column_number for a column marker" do
