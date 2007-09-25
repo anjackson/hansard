@@ -16,11 +16,11 @@ module ApplicationHelper
   
   def image_marker(image_src)
     image_link = link_to "Img. #{image_src}", "/images/#{image_src}.jpg"
-    "<h4 class='sidenote'>#{image_link}</h4>"
+    "<span class='sidenote'>#{image_link}</span>"
   end
   
   def column_marker(column, extra_class="")
-    "<h4 class='sidenote#{extra_class}'><a name='column_#{column}' href='#column_#{column}'>Col. #{column}</a></h4>"
+    "<span class='sidenote#{extra_class}'><a name='column_#{column}' href='#column_#{column}'>Col. #{column}</a></span>"
   end
   
   def section_url(section, sitting_params)
@@ -269,6 +269,8 @@ EOF
   end
 
   def format_contribution text, outer_elements=['p']
+    # are we really searching the entire text here?
+    # can we just strip the first char if it is a colon instead?
     if text.include? ':'
       text = text.sub(':','').strip
     end
@@ -316,6 +318,7 @@ EOF
         elsif child.elem?
           name = child.name
           if name == 'quote'
+            #should be proper 'q' tags
             parts << '<span class="quote">'
             handle_contribution_part(child, parts, inner_elements, outer_elements)
             parts << '</span>'
@@ -326,8 +329,10 @@ EOF
             addition = image_marker(child.attributes['src'])
             close_add_open parts, inner_elements, outer_elements, addition
           elsif name == 'lb'
+            #should this be a br tag?
             parts << '</p><p>'
           elsif name == 'i'
+            #shouldn't be i tag, but what?
             wrap_with 'i', child, parts, inner_elements, outer_elements
           elsif name == 'sub'
             wrap_with 'sub', child, parts, inner_elements, outer_elements
@@ -336,6 +341,7 @@ EOF
             close_add_open parts, inner_elements, outer_elements, addition
           else
             # raise 'unexpected element in contribution text: ' + name
+            # gah! where's my error gone?
           end
         end
       end
