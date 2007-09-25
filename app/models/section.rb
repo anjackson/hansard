@@ -12,7 +12,7 @@ class Section < ActiveRecord::Base
   MAX_SLUG_LENGTH = 40
 
   acts_as_hansard_element
-  
+
   def to_param
     slug
   end
@@ -107,7 +107,11 @@ class Section < ActiveRecord::Base
   end
 
   def title_for_linking
-    title_cleaned_up.downcase.gsub(/ /, '_')
+    if title
+      title_cleaned_up.downcase.gsub(/ /, '_')
+    else
+      ''
+    end
   end
 
 end
