@@ -185,6 +185,18 @@ class Hansard::HouseCommonsParser
         :image_src_range => @image
       })
       procedural.text = handle_contribution_text(node, procedural)
+
+      node.children.each do |part|
+        if (part.elem? and part.name == 'member')
+          procedural.member = '' unless procedural.member
+          handle_member_name part, procedural
+        end
+      end
+
+      if (match = /^(\d+\.?)/.match procedural.text)
+        procedural.question_no = match[1]
+      end
+
       style_atts = node.attributes.reject{|att, value| att == 'id'}
       style_list = []
       style_atts.each do |att, value|
@@ -214,7 +226,7 @@ class Hansard::HouseCommonsParser
           if name == 'title'
             section.title = handle_node_text(node)
           elsif name == 'p'
-            if (match = Hansard::TIME_PATTERN.match  clean_html(node))
+            if (match = Hansard::TIME_PATTERN.match clean_html(node))
               section.time_text = match[0]
               section.time = Time.parse(match[0].gsub('.',':').gsub("&#x00B7;", ":"))
               handle_procedural_contribution node, section

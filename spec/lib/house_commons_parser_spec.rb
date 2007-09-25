@@ -55,14 +55,26 @@ describe Hansard::HouseCommonsParser do
     end
   end
 
-  it "should add member name for contribution that doesn't have membercontribution element" do
-    @oral_questions.sections[1].title.should == 'NORTHERN IRELAND'
-    section = @oral_questions.sections[1].sections.first
-    section.title.should == 'Security'
-
-    section.contributions[0].should be_an_instance_of(MemberContribution)
-    section.contributions.first.member.should == 'Mr. Michael Latham'
-  end
+  # it "should create a member contribution for a contribution that has a member element" do
+    # section = @oral_questions.sections[1].sections.first
+    # section.title.should == 'Security'
+#
+    # section.contributions.first.should be_an_instance_of(MemberContribution)
+  # end
+#
+  # it "should add member name for contribution that doesn't have membercontribution element" do
+    # section = @oral_questions.sections[1].sections.first
+    # section.title.should == 'Security'
+#
+    # section.contributions.first.member.should == 'Mr. Michael Latham'
+  # end
+#
+  # it "should add question no for contribution that has a question no" do
+    # section = @oral_questions.sections[1].sections.first
+    # section.title.should == 'Security'
+#
+    # section.contributions.first.question_no.should == '1.'
+  # end
 
   it 'should add a procedural note for an italics element after a member element' do
     contribution = @sitting.debates.sections.last.contributions.first
