@@ -268,7 +268,7 @@ EOF
     title.gsub('<lb>',' ').gsub('</lb>','').squeeze(' ')
   end
 
-  def format_contribution text, outer_elements=['p']
+  def format_contribution text, outer_elements=[]
     # are we really searching the entire text here?
     # can we just strip the first char if it is a colon instead?
     if text.include? ':'
