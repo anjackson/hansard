@@ -10,26 +10,26 @@ module ApplicationHelper
       elsif marker_type == "column"
         markers += column_marker(marker_value, extra_class=" second-sidenote")
       end
-    end 
+    end
     markers
   end
-  
+
   def image_marker(image_src)
     image_link = link_to "Img. #{image_src}", "/images/#{image_src}.jpg"
     "<span class='sidenote'>#{image_link}</span>"
   end
-  
+
   def column_marker(column, extra_class="")
     "<span class='sidenote#{extra_class}'><a name='column_#{column}' href='#column_#{column}'>Col. #{column}</a></span>"
   end
-  
+
   def section_url(section, sitting_params)
     sitting_params[:type] = sitting_params[:controller]
-    url_for(sitting_params.update(:controller => "sections", 
-                                  :action => "show", 
+    url_for(sitting_params.update(:controller => "sections",
+                                  :action => "show",
                                   :id => section.slug))
   end
-  
+
   def day_link(sitting, direction)
     next_sitting = sitting.class.find_next(sitting.date, direction)
     if next_sitting
@@ -40,11 +40,11 @@ module ApplicationHelper
       yield
     end
   end
-  
+
   def day_nav_links_utterly_broken
     output = "<ol id='navigation'>"
     output << "<li><a href='#{home_url}'><strong>Historic Hansard</strong></a></li>"
-              
+
       if @day
         output << "<li><a href='" << day_link(@sitting,"<") << "'>Previous day</a></li>"
         output << "<li><a href='" << day_link(@sitting,">") << "'>Next day</a></li>"
@@ -56,73 +56,73 @@ module ApplicationHelper
         output << "<li><a href='#{indices_url}'>Indices</a></li>"
         output << "<li><a href='#{source_files_url}'>Source Files</a></li>"
         output << "<li><a href='#{data_files_url}'>Data files</a></li>"
-          
+
       end
     output << "</ol>"
-    output 
+    output
   end
-  
+
   def day_nav_links
-    
+
     open :ol, {:id => 'navigation'} do
-      
+
       open :li do
         open :a, { :href => home_url } do
           puts "<strong>Historic Hansard</strong>"
         end
       end
-        
+
       if @day
-     
-        open :li do   
+
+        open :li do
           day_link(@sitting,"<"){ puts "Previous day" }
         end
-     
-        open :li do   
+
+        open :li do
           day_link(@sitting, ">"){ puts "Next day" }
         end
-        
+
         open :li do
           open :a, { :href => sitting_date_source_url(@sitting) } do
             puts "XML source"
           end
         end
-        
+
         open :li do
           open :a, { :href => sitting_date_xml_url(@sitting) } do
             puts "XML output"
-          end 
+          end
         end
-        
+
       else
         open :li do
           open :a, { :href => written_answers_url } do
             puts "Written Answers"
           end
         end
-          
+
         open :li do
           open :a, { :href => indices_url } do
             puts "Indices"
           end
-        end    
-        
+        end
+
         open :li do
           open :a, { :href => source_files_url } do
             puts "Source Files"
           end
         end
-        
+
         open :li do
           open :a, { :href => data_files_url } do
             puts "Data Files"
           end
         end
-          
+
       end
-    end  
+    end
   end
-  
+
   def delicious_badge
     javascript = <<EOF
     <div id="delicious_box">
@@ -134,8 +134,8 @@ module ApplicationHelper
     </div>
 EOF
   end
-  
-  def google_custom_search_form    
+
+  def google_custom_search_form
     javascript = <<EOF
     <div id="search_box">
       <form id="searchbox_002582221602550181161:owz178jujce" action="http://www.google.com/cse">
@@ -148,25 +148,25 @@ EOF
     </div>
 EOF
   end
-  
+
   def sitting_link(sitting)
     link_to sitting.title.titleize + " &ndash; " + sitting_display_date(sitting), sitting_date_url(sitting)
   end
-  
+
   def index_link(index)
     link_text = "#{index.start_date_text} &ndash; #{index.end_date_text}"
     link_to link_text, index_date_span_url(index)
   end
-  
+
   def alphabet_links(index)
     links = []
     index_link = index_date_span_url(index)
     ('A'..'Z').each do |letter|
-      links << "<a href=\"#{index_link}?letter=#{letter}\">#{letter}</a>" 
+      links << "<a href=\"#{index_link}?letter=#{letter}\">#{letter}</a>"
     end
     links.join(" ")
   end
-  
+
   def index_entry_links(index_entry)
     index = index_entry.index
     basic_col = /(\s)(\d+)(,|\s|&#x2013;\d+,|&#x2013;\d+$|$)/
@@ -191,9 +191,9 @@ EOF
     end
     entry
   end
-  
+
   def index_date_span_url(index)
-    url_for(:controller  => 'indices', 
+    url_for(:controller  => 'indices',
             :action      => 'show',
             :start_year  => index.start_date.year,
             :start_month => month_abbr(index.start_date.month),
@@ -202,52 +202,52 @@ EOF
             :end_month   => month_abbr(index.end_date.month),
             :end_day     => zero_padded_day(index.end_date.day))
   end
-  
+
   def sitting_date_url(sitting)
     url_for(sitting_date_url_params(sitting))
   end
-  
+
   def sitting_date_source_url(sitting)
-    source_params = {:action => "show_source", 
+    source_params = {:action => "show_source",
                      :format => "xml"}
     url_for(sitting_date_url_params(sitting).update(source_params))
   end
-  
+
   def sitting_date_xml_url(sitting)
     url_for(sitting_date_url_params(sitting).update(:format => "xml"))
   end
-  
+
   def sitting_date_url_params(sitting)
     {:controller => sitting_controller(sitting),
      :action     => "show",
-     :year       => sitting.date.year, 
-     :month      => month_abbr(sitting.date.month), 
+     :year       => sitting.date.year,
+     :month      => month_abbr(sitting.date.month),
      :day        => zero_padded_day(sitting.date.day)}
   end
-  
+
   def sitting_controller(sitting)
     case sitting
     when HouseOfCommonsSitting
       'commons'
     when WrittenAnswersSitting
       'written_answers'
-    else 
+    else
       raise "Can't generate a url for '#{sitting.class}"
     end
   end
-  
+
   def month_abbr(month)
     Date::ABBR_MONTHNAMES[month].downcase
   end
-  
+
   def zero_padded_day(day)
     day < 10 ? "0"+ day.to_s : day.to_s
   end
-  
+
   def sitting_display_date(sitting)
     sitting.date.strftime("%A, %B %d, %Y")
   end
-  
+
   def colon_after_member_name contribution
     if (!contribution.member_constituency and !contribution.procedural_note)
       ':'
@@ -281,7 +281,7 @@ EOF
     parts = handle_contribution_part doc.children.first, [], inner_elements, outer_elements
     '<p>'+parts.join('').squeeze(' ')+'</p>'
   end
-  
+
   def html_list(text)
     list = text.split("\n").compact
     "<ul><li>" + list.join("</li><li>") + "</li></ul>"
@@ -290,7 +290,7 @@ EOF
   def html_linebreaks(text)
     text.gsub("\n", "<br>")
   end
-  
+
   private
 
     def close_add_open parts, inner_elements, outer_elements, addition
@@ -338,6 +338,10 @@ EOF
             close_add_open parts, inner_elements, outer_elements, addition
           elsif(name == 'table')
             parts << child.to_s
+          elsif name == 'member'
+            parts << '<span class="member">'
+            handle_contribution_part(child, parts, inner_elements, outer_elements)
+            parts << '</span>'
           else
             parts << "<p class='warning'>Unhandled element in contribution text: #{name}.</p>"
           end
