@@ -13,19 +13,19 @@ describe ApplicationHelper, " when formatting contribution" do
     format_contribution('text').should == '<p>text</p>'
   end
 
-  it 'should replace quote element with span with class' do
+  it 'should replace quote element with q tag with class "quote"' do
     format_contribution('a <quote>quote</quote> from').should ==
-        '<p>a <span class="quote">quote</span> from</p>'
+        '<p>a <q class="quote">quote</q> from</p>'
   end
 
   it 'should replace col element with span with class "sidenote" and anchor' do
-    format_contribution('a <col>123</col> text',['zzz']).should ==
-        "<p>a </p></zzz><span class='sidenote'><a name='column_123' href='#column_123'>Col. 123</a></span><zzz><p> text</p>"
+    format_contribution('a <col>123</col> text').should ==
+        "<p>a <span class='sidenote'><a name='column_123' href='#column_123'>Col. 123</a></span> text</p>"
   end
 
   it 'should replace image element with an image wrapped in a span with class "sidenote"' do
-    format_contribution('a <image src="S6CV0089P0I0021"/> text',['zzz']).should ==
-        "<p>a </p></zzz><span class='sidenote'><a href=\"/images/S6CV0089P0I0021.jpg\">Img. S6CV0089P0I0021</a></span><zzz><p> text</p>"
+    format_contribution('a <image src="S6CV0089P0I0021"/> text').should ==
+        "<p>a <span class='sidenote'><a href=\"/images/S6CV0089P0I0021.jpg\">Img. S6CV0089P0I0021</a></span> text</p>"
   end
 
   it 'should replace lb element with close and open paragraph' do
@@ -44,13 +44,13 @@ describe ApplicationHelper, " when formatting contribution" do
   end
 
   it 'should return the image name linked to the source wrapped with a span with class "sidenote"' do
-    format_contribution('a <i>really <image src="S6CV0089P0I0021"/> powerful</i> change',['zzz']).should ==
-        "<p>a <i>really </i></p></zzz><span class='sidenote'><a href=\"/images/S6CV0089P0I0021.jpg\">Img. S6CV0089P0I0021</a></span><zzz><p><i> powerful</i> change</p>"
+    format_contribution('a <i>really <image src="S6CV0089P0I0021"/> powerful</i> change').should ==
+        "<p>a <i>really <span class='sidenote'><a href=\"/images/S6CV0089P0I0021.jpg\">Img. S6CV0089P0I0021</a></span> powerful</i> change</p>"
   end
 
   it 'should return the column number with an anchor wrapped with a span with class "sidenote"' do
-    format_contribution('a <sub>really <col>123</col> powerful</sub> change',['zzz']).should ==
-        "<p>a <sub>really </sub></p></zzz><span class='sidenote'><a name='column_123' href='#column_123'>Col. 123</a></span><zzz><p><sub> powerful</sub> change</p>"
+    format_contribution('a <sub>really <col>123</col> powerful</sub> change').should ==
+        "<p>a <sub>really <span class='sidenote'><a name='column_123' href='#column_123'>Col. 123</a></span> powerful</sub> change</p>"
   end
 end
 
