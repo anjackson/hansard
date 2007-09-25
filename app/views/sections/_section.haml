@@ -5,6 +5,10 @@
 - if section.is_a? OralQuestionsSection
   - if section.introduction
     %p.question_introduction= section.introduction.text
+  - else
+    %p.warning
+      Could not find introduction.text for OralQuestionsSection ID 
+      =section.id
 - else
   = render :partial => 'contribution', :collection => section.contributions
 = render :partial => 'section', :collection => section.sections
