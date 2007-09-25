@@ -318,18 +318,15 @@ EOF
         elsif child.elem?
           name = child.name
           if name == 'quote'
-            #should be proper 'q' tags
-            parts << '<span class="quote">'
+            parts << '<q class="quote">'
             handle_contribution_part(child, parts, inner_elements, outer_elements)
-            parts << '</span>'
+            parts << '</q>'
           elsif name == 'col'
-            addition = column_marker(child.inner_html)
-            close_add_open parts, inner_elements, outer_elements, addition
+            parts << column_marker(child.inner_html)
           elsif name == 'image'
-            addition = image_marker(child.attributes['src'])
-            close_add_open parts, inner_elements, outer_elements, addition
+            parts << image_marker(child.attributes['src'])
           elsif name == 'lb'
-            #should this be a br tag?
+            #should this be a br tag? doesn't look right though...
             parts << '</p><p>'
           elsif name == 'i'
             #shouldn't be i tag, but what?
@@ -339,9 +336,10 @@ EOF
           elsif(name == 'ol' or name == 'ul')
             addition = child.to_s
             close_add_open parts, inner_elements, outer_elements, addition
+          elsif(name == 'table')
+            parts << child.to_s
           else
-            # raise 'unexpected element in contribution text: ' + name
-            # gah! where's my error gone?
+            parts << "<p class='warning'>Unhandled element in contribution text: #{name}.</p>"
           end
         end
       end
