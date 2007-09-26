@@ -19,6 +19,7 @@ h1, h2, h3 {
   font-weight: normal;
 	line-height: 120%;
 border-bottom: 1pt solid #333;
+padding-bottom:0.3em;
 }
 
 #navigation {
