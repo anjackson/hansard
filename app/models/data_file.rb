@@ -8,6 +8,14 @@ class DataFile < ActiveRecord::Base
 
   before_validation_on_create :default_attributes
 
+  def self.reload_possible?
+    RAILS_ENV == 'development'
+  end
+
+  def reload_possible?
+    DataFile.reload_possible?
+  end
+
   def self.from_file file
     name = File.basename(file)
     directory = 'data' + File.dirname(file).split('data')[1]
@@ -31,6 +39,10 @@ class DataFile < ActiveRecord::Base
   def date_text
     prefix = name.split('_')[0]
     name.sub(prefix+'_','').chomp('.xml').gsub('_','/').sub('/part/', ' part ')
+  end
+
+  def date
+    Date.parse(date_text.gsub('/','-'))
   end
 
   def add_log text, persist=true

@@ -57,11 +57,11 @@ ActionController::Routing::Routes.draw do |map|
     end
 
   end
-  
+
   map.with_options(:controller => 'written_answers') do |written|
 
     written.written_answers 'writtenanswers', :action => 'index'
- 
+
     written.with_options(formatted_date_options) do |by_date|
       def_route "writtenanswers/#{date}.:format", :show, by_date
     end
@@ -79,17 +79,18 @@ ActionController::Routing::Routes.draw do |map|
   map.with_options(:controller => 'data_files') do |data_file|
     def_index_route "data_files", data_file
     def_route "data_files/warnings", :show_warnings, data_file
+    def_route "data_files/reload_commmons_for_date/:date", :reload_commmons_for_date, data_file
   end
-  
+
   map.with_options(:controller => 'source_files') do |file|
     file.source_files "source_files", :action => "index"
     file.source_file "source_files/:name", :action => "show"
   end
-  
+
   map.with_options(:controller => 'sections') do |sections|
     sections.with_options(date_options) do |by_date|
       def_route ":type/#{date}/:id", :show, by_date
     end
   end
-  
+
 end
