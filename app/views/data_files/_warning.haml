@@ -1,10 +1,14 @@
-%tr{ :id => 'a'+warning.id.to_s }
-  %td= warning.directory.split('/').last+'.xml'
+%tr{ :id => 'data_file_with_id_'+warning.id.to_s }
+  %td= warning.stripped_name
   %td= warning.type_of_data
   %td= warning.date_text
   %td= truncate(h(warning.log), 250)
   %td= warning.saved ? 'Y' : 'N'
   %td
     - if warning.reload_possible?
-      - form_remote_tag :url => { :controller => 'data_files', :action => 'reload_commmons_for_date', :date => warning.date.to_s } do
-        = submit_tag "reload"
+      - form_remote_tag :url => { :controller => 'data_files', :action => 'reload_commmons_for_date', :date => warning.date.to_s }, :before => %(Element.show('spinner')), :success  => %(Element.hide('spinner')) do
+        = submit_tag "Reload"
+        = image_tag 'spinner.gif', :id => 'spinner', :style => 'display: none'
+    - else
+      / this col shouldn't even appear. oh how I wish I could link to the source file on this page
+  
