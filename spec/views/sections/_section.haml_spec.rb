@@ -17,7 +17,7 @@ describe "_section partial", " in general" do
   
 end
 
-describe "_section partial", "when passed oral answers" do
+describe "_section partial", " when passed oral answers" do
 
   # <oralquestions>
     # <title>Oral Answers to Questions</title>
@@ -49,7 +49,7 @@ describe "_section partial", "when passed oral answers" do
 end
 
 
-describe "_section partial", "when passed an oral answers section" do
+describe "_section partial", " when passed an oral answers section" do
 
   # <section>
     # <title>SOCIAL SECURITY</title>
@@ -88,7 +88,7 @@ describe "_section partial", "when passed an oral answers section" do
   
 end
 
-describe "_section partial", "when passed a prayers section" do
+describe "_section partial", " when passed a prayers section" do
 
   # <section>
   #   <title>PRAYERS</title>
@@ -118,4 +118,42 @@ describe "_section partial", "when passed a prayers section" do
 
   it 'should show prayers title as h2'
 
+end
+
+
+describe "_section_partial", " when passed an oral questions section with contributions" do
+  
+  before do
+    @oral_questions = mock_model(OralQuestionsSection)
+    
+    @oral_questions.stub!(:markers)
+    @oral_questions.stub!(:title_cleaned_up)
+    @oral_questions.stub!(:title_for_linking).and_return("test")
+    @oral_questions.stub!(:contributions).and_return([])
+    @oral_questions.stub!(:sections).and_return([])
+  
+    @controller.template.stub!(:section).and_return(@oral_questions)
+  end
+  
+  def do_render
+    render 'sections/_section.haml'
+  end
+  
+  it "should show an introduction if there is one" do
+    @introduction = mock("intro model")
+    @introduction.stub!(:text).and_return("introduction text")
+    @oral_questions.stub!(:introduction).and_return(@introduction)
+    do_render
+    response.should have_tag("p[class=question_introduction]", :text => "introduction text")
+  end
+  
+  it "should show the contributions" do
+    contribution = mock_model(Contribution)
+    @oral_questions.stub!(:introduction)
+    @oral_questions.stub!(:contributions).and_return([contribution])
+    @controller.template.stub!(:render)
+    @controller.template.should_receive(:render).with(:partial => 'contribution', :collection => @oral_questions.contributions)
+    do_render
+  end
+  
 end
