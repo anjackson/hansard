@@ -15,9 +15,10 @@ margin:0;
 }
 
 h1, h2, h3 {
-  font-size: 1.2em;
+  font-size: 1.4em;
   font-weight: normal;
-  text-align:center;
+	line-height: 120%;
+border-bottom: 1pt solid #333;
 }
 
 #navigation {
