@@ -149,8 +149,14 @@ EOF
 EOF
   end
 
-  def sitting_link(sitting)
-    link_to sitting.title.titleize + " &ndash; " + sitting_display_date(sitting), sitting_date_url(sitting)
+  def sitting_link(sitting)    
+    sitting_url = sitting_date_url(sitting)
+    sitting_string =  sitting.title.titleize + " &ndash; " + sitting_display_date(sitting)
+    if sitting_url
+      link_to(sitting_string, sitting_date_url(sitting))
+    else
+      sitting_string
+    end
   end
 
   def index_link(index)
@@ -204,7 +210,11 @@ EOF
   end
 
   def sitting_date_url(sitting)
-    url_for(sitting_date_url_params(sitting))
+    begin
+      url_for(sitting_date_url_params(sitting))
+    rescue
+      nil
+    end
   end
 
   def sitting_date_source_url(sitting)
