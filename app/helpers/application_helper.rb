@@ -277,9 +277,9 @@ EOF
       ''
     end
   end
-
+  
   def format_section_title title
-    title.gsub('<lb>',' ').gsub('</lb>','').squeeze(' ')
+    title.gsub('<lb>',' ').gsub('<lb/>',' ').gsub('</lb>','').squeeze(' ')
   end
 
   def format_contribution text, outer_elements=[]
