@@ -46,12 +46,11 @@ h1, h2, h3 {
 }
 
 .second-sidenote {
-	margin-top: 300px;
+  margin-top: 2em;
 }
 
 
 cite {
-  display: inline;
 }
 
 blockquote {
@@ -59,7 +58,6 @@ blockquote {
 }
 
 span {
-  display: inline;
 }
 
 a {
