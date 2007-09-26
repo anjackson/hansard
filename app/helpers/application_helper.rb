@@ -99,10 +99,21 @@ module ApplicationHelper
         end
 
       else
+        
+        open :li do
+          open :a, { :href => commons_url } do
+            puts "Commons"
+          end
+        end
+        
         open :li do
           open :a, { :href => written_answers_url } do
             puts "Written Answers"
           end
+        end
+        
+        open :li do
+          puts "Lords"
         end
 
         open :li do

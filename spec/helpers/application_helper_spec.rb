@@ -161,13 +161,16 @@ describe ApplicationHelper, " when creating navigation links" do
   before do
     @sitting = mock_model(Sitting)
     @sitting.stub!(:date).and_return(Date.new(2006,3,3))
-    stub!(:sitting_date_source_url)
-    stub!(:sitting_date_xml_url)
-    stub!(:home_url)
-    stub!(:written_answers_url)
-    stub!(:indices_url)
-    stub!(:source_files_url)
-    stub!(:data_files_url)
+    [:sitting_date_source_url,
+     :sitting_date_xml_url, 
+     :home_url,
+     :commons_url,
+     :written_answers_url,
+     :indices_url, 
+     :source_files_url,
+     :data_files_url].each do |url|
+      stub!(url)
+    end
     stub!(:commons_day_link).and_yield
   end
 

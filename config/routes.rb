@@ -8,7 +8,7 @@ end
 
 ActionController::Routing::Routes.draw do |map|
 
-  map.home '', :controller => "commons", :action => "index"
+  map.home '', :controller => "days", :action => "index"
   map.search 'search', :controller => 'search', :action => "index"
 
   year_patt = /(19|20)\d\d/
@@ -43,6 +43,8 @@ ActionController::Routing::Routes.draw do |map|
   end
 
   map.with_options(:controller => 'commons') do |commons|
+
+    commons.commons 'commons', :action => 'index'
 
     commons.with_options(formatted_date_options) do |by_date|
       def_route "commons/#{date}.:format", :show, by_date
