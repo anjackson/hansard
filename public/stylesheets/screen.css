@@ -14,12 +14,23 @@ margin:0;
   
 }
 
-h1, h2, h3 {
+h1 {
+  font-size: 1.8em;
+font-weight: normal;
+	line-height: 120%;
+text-align: center;
+}
+
+.date {
+}
+
+h2, h3 {
   font-size: 1.4em;
   font-weight: normal;
 	line-height: 120%;
 border-bottom: 1pt solid #333;
 padding-bottom:0.3em;
+text-align: left;
 }
 
 #navigation {
@@ -55,6 +66,7 @@ padding-bottom:0.3em;
 cite {
 	font-style:normal;
 	font-weight:bold;
+	text-align: left;
 }
 
 blockquote {
