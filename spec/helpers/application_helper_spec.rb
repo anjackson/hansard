@@ -320,4 +320,14 @@ describe ApplicationHelper, " when formatting plain text as an html list" do
 
 end
 
+describe ApplicationHelper, " when creating a section url" do
+  
+  it "should create a url like /commons/1957/jun/25/exports-to-israel for a section from the commons on the day shown with the slug shown" do
+    section = mock_model(Section)
+    section.stub!(:slug).and_return("exports-to-israel")
+    section.stub!(:sitting).and_return(HouseOfCommonsSitting.new(:date => Date.new(1957, 6, 25)))
+    section_url(section).should == "/commons/1957/jun/25/exports-to-israel"
+  end
+   
+end
 

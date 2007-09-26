@@ -23,11 +23,15 @@ module ApplicationHelper
     "<span class='sidenote#{extra_class}'><a name='column_#{column}' href='#column_#{column}'>Col. #{column}</a></span>"
   end
 
-  def section_url(section, sitting_params)
-    sitting_params[:type] = sitting_params[:controller]
-    url_for(sitting_params.update(:controller => "sections",
-                                  :action => "show",
-                                  :id => section.slug))
+  def section_url(section)
+    types_to_controllers = { HouseOfCommonsSitting => "commons",
+                             WrittenAnswersSitting => "writtenanswers" }
+    sitting_type = section.sitting.class
+    date_params = sitting_date_url_params(section.sitting)
+    url_for(date_params.update(:controller => "sections",
+                               :action => "show",
+                               :id => section.slug,
+                               :type => types_to_controllers[sitting_type]))
   end
 
   def day_link(sitting, direction)
@@ -188,7 +192,7 @@ EOF
       suffix = $3
       section = sitting_type.find_section_by_column_and_date_range(column, index.start_date, index.end_date)
       if section
-        text += link_to(column, section_url(section, sitting_date_url_params(section.sitting)) + "#column_#{column}")
+        text += link_to(column, section_url(section) + "#column_#{column}")
       else
         text += column
       end

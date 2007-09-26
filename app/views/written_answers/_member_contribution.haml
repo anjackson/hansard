@@ -1,5 +1,0 @@
-%div.member_contribution
-  %cite.member= member_contribution.member + colon_after_member_name(member_contribution)
-  - if member_contribution.member_constituency
-    %span.member_constituency= member_contribution.member_constituency + colon_after_constituency(member_contribution)
-  %blockquote.contribution_text= format_contribution(member_contribution.text, ['blockquote'])
