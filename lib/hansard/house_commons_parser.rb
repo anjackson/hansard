@@ -359,6 +359,8 @@ class Hansard::HouseCommonsParser
             handle_question_contribution node, question_section
           elsif (name == 'col' or name == 'image')
             handle_image_or_column name, node
+          elsif name == 'section'
+            handle_oral_question_section node, question_section
           else
             log 'unexpected element in oral_question_section: ' + name + ': ' + node.to_s
           end

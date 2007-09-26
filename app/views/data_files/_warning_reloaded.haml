@@ -2,7 +2,7 @@
 %td= warning.directory.split('/').last+'.xml'
 %td= warning.type_of_data
 %td= warning.date_text
-%td= 'reloaded: ' + h(warning.log)
+%td= "reloaded (#{Time.now.to_s}): #{h(warning.log)}"
 %td= warning.saved ? 'Y' : 'N'
 %td
   - if warning.reload_possible?
