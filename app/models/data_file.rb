@@ -71,6 +71,10 @@ class DataFile < ActiveRecord::Base
     self.log = ''
     self.save!
   end
+  
+  def stripped_name
+    self.directory.split('/').last
+  end
 
   protected
     def default_attributes
