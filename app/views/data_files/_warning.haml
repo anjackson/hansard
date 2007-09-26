@@ -4,6 +4,7 @@
   %td= warning.date_text
   %td= truncate(h(warning.log), 250)
   %td= warning.saved ? 'Y' : 'N'
-  - if warning.reload_possible?
-    - form_remote_tag :url => { :controller => 'data_files', :action => 'reload_commmons_for_date', :date => warning.date.to_s } do
-      %td= submit_tag "reload"
+  %td
+    - if warning.reload_possible?
+      - form_remote_tag :url => { :controller => 'data_files', :action => 'reload_commmons_for_date', :date => warning.date.to_s } do
+        = submit_tag "reload"

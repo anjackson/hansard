@@ -1,6 +1,6 @@
 - @javascript = :defaults
 %h1.title= 'Warnings from ' + link_to('data loading', data_files_url)
-%table
+%table#data_file_warnings
   %thead
     %tr
       %th File
@@ -8,8 +8,7 @@
       %th Date
       %th Warning
       %th Saved?
-      - if DataFile.reload_possible?
-        %th Reload
+      %th= DataFile.reload_possible? ? 'Reload' : ''
   %tbody
     = render :partial => 'warning', :collection => @data_files[false] if @data_files[false]
     = render :partial => 'warning', :collection => @data_files[true] if @data_files[true]

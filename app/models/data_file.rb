@@ -13,7 +13,7 @@ class DataFile < ActiveRecord::Base
   end
 
   def reload_possible?
-    DataFile.reload_possible?
+    (DataFile.reload_possible? and !date.nil?)
   end
 
   def self.from_file file
@@ -38,11 +38,19 @@ class DataFile < ActiveRecord::Base
 
   def date_text
     prefix = name.split('_')[0]
-    name.sub(prefix+'_','').chomp('.xml').gsub('_','/').sub('/part/', ' part ')
+    name.sub(prefix+'_', '').chomp('.xml').gsub('_', '/').sub('/part/', ' part ')
   end
 
   def date
-    Date.parse(date_text.gsub('/','-'))
+    if date_text and date_text.size == 10
+      begin
+        Date.parse(date_text.gsub('/', '-'))
+      rescue Exception => e
+        nil
+      end
+    else
+      nil
+    end
   end
 
   def add_log text, persist=true

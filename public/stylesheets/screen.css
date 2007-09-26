@@ -2,7 +2,7 @@ body {
   background-color: #fff;
   color: #333;
   font-family: Lucida Grande, Georgia, Times, serif;
-margin:0;
+  margin:0;
   font-size: 1.2em;
   line-height: 140%;
 }
@@ -11,14 +11,14 @@ margin:0;
 	margin-right: 20em;
 	font-size: 0.8em;
 	line-height: 120%;
-  
+
 }
 
 h1 {
   font-size: 1.8em;
-font-weight: normal;
+  font-weight: normal;
 	line-height: 120%;
-text-align: center;
+  text-align: center;
 }
 
 .date {
@@ -28,9 +28,9 @@ h2, h3 {
   font-size: 1.4em;
   font-weight: normal;
 	line-height: 120%;
-border-bottom: 1pt solid #333;
-padding-bottom:0.3em;
-text-align: left;
+  border-bottom: 1pt solid #333;
+  padding-bottom:0.3em;
+  text-align: left;
 }
 
 #navigation {
@@ -86,20 +86,28 @@ a {
 }
 
 #content {
-	  width: 36em;
-	  text-align: justify;
+  width: 36em;
+  text-align: justify;
 	margin-top: 2em;
 	margin-bottom: 2em;
-	  margin-left: 10em;
-	  margin-right: 20em;
+  margin-left: 10em;
+  margin-right: 20em;
+}
+
+#data_file_warnings {
+  margin-left: -9em;
+}
+
+#data_file_warnings th, #data_file_warnings td {
+  font-size: 0.8em;
 }
 
 #header {
 	width: 100%;
 	padding-top: 1em;
 	padding-bottom: 0.5em;
-	  padding-left: 4em;
-background-color:#eee;
+  padding-left: 4em;
+  background-color:#eee;
 }
 
 .index-entry{
@@ -138,7 +146,7 @@ th {
 	color: #999;
 	padding-top: 0.5em;
 	padding-bottom: 1em;
-	  padding-left: 4em;
+  padding-left: 4em;
 }
 
 .sub-section-link{
