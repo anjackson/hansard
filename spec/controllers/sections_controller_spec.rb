@@ -56,7 +56,6 @@ describe SectionsController, "handling GET /commons/1999/feb/08/test-slug" do
     assigns[:section].should equal(section)
   end
   
-  
   it "should assign an empty marker options hash to the view" do
     do_get
     assigns[:marker_options].should == {}
