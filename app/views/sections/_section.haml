@@ -1,7 +1,8 @@
 = marker_html(section, @marker_options)
-%h2
-  %a{ :name => section.title_for_linking, :href => '#' + section.title_for_linking }
-    =section.title_cleaned_up
+- if section.title
+  %h2
+    %a{ :name => section.title_for_linking, :href => '#' + section.title_for_linking }
+      = section.title_cleaned_up
 - if section.is_a? OralQuestionsSection and section.introduction
   %p.question_introduction= section.introduction.text
 = render :partial => 'contribution', :collection => section.contributions
