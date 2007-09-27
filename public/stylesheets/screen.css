@@ -11,7 +11,6 @@ body {
 	margin-right: 20em;
 	font-size: 0.8em;
 	line-height: 120%;
-
 }
 
 table#data_file_warnings {
@@ -141,7 +140,8 @@ th {
 }
 
 .procedural {
-	color:#666;
+	background-color:beige;
+	padding:0.1em 0.5em;
 }
 
 #footer {
