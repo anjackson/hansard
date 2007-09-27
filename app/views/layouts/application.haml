@@ -2,30 +2,30 @@
 %html{ :lang => 'en-GB' }
   %head
     %meta{ 'http-equiv'.to_sym=>"Content-Type", :content=>"text/html;charset=utf-8" }
-    %title= "Historic Hansard: " << (@title || "Please give me a title")
+    %title= "Millbank Systems: Hansard: " << ( @title || "Please give me a title" )
     = stylesheet_link_tag "screen", :media => "screen"
     = stylesheet_link_tag "print", :media => "print"
-    - if @javascript
-      = javascript_include_tag @javascript
     %link{ :rel => 'contact', :href => 'mailto:brookr@parliament.uk' }
     %link{ :rel => 'author', :title => "UK Parliament", :href => "http://www.parliament.uk" }
-    %link{ :rel => 'bookmark' }
-    %link{ :rel => 'first' }
-    %link{ :rel => 'help' }
-    %link{ :rel => 'index' }
-    %link{ :rel => 'last' }
-    %link{ :rel => 'next' }
-    %link{ :rel => 'prev' }
-    %link{ :rel => 'tag' }
-    %link{ :rel => 'up' }
+    %link{ :rel => 'bookmark', :title => "", :href => "" }
+    %link{ :rel => 'first', :title => "", :href => "" }
+    %link{ :rel => 'help', :title => "", :href => "" }
+    %link{ :rel => 'index', :title => "", :href => "" }
+    %link{ :rel => 'last', :title => "", :href => "" }
+    %link{ :rel => 'next', :title => "", :href => "" }
+    %link{ :rel => 'prev', :title => "", :href => "" }
+    %link{ :rel => 'tag', :title => "", :href => "" }
+    %link{ :rel => 'up', :title => "", :href => "" }
     %link{ :rel => 'licence', :hreflang => "en-GB", :href => 'http://www.parliament.uk/site_information/parliamentary_copyright.cfm' }
     %link{ :rel => 'license', :hreflang => "en-US", :href => 'http://www.parliament.uk/site_information/parliamentary_copyright.cfm' }
+    - if @javascript
+      = javascript_include_tag @javascript
   %body
     #header
       = google_custom_search_form
       = day_nav_links
     #content
-      %h1= @title
+      %h1.title= @title
       = yield
     #footer
       #copyright
