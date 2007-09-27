@@ -289,7 +289,11 @@ module Hansard
       File.new(input_file).each_line { |line| handle_line line }
       if @source_file.schema
         error = validate_schema @source_file.schema, @source_file.name
-        unless error.blank?
+
+        if error.blank?
+          @source_file.xsd_validated = true
+        else
+          @source_file.xsd_validated = false
           @source_file.add_log error
         end
       end

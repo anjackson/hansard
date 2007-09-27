@@ -27,7 +27,7 @@ describe Hansard::Splitter do
 
 end
 
-describe Hansard::Splitter, " when splitting file that does validate against schema" do
+describe Hansard::Splitter, " when splitting file that does not validate against schema" do
 
   before(:all) do
     splitter = Hansard::Splitter.new(false, overwrite=true, verbose=false)
@@ -41,6 +41,10 @@ describe Hansard::Splitter, " when splitting file that does validate against sch
 
   it 'should have log_line_count of 1' do
     @source_file.log_line_count.should == 1
+  end
+
+  it 'should have xsd_validated field set to false' do
+    @source_file.xsd_validated.should be_false
   end
 
   after(:all) do
@@ -60,6 +64,10 @@ describe Hansard::Splitter, " when splitting files from spec/data/valid_complete
 
   after(:all) do
     SourceFile.delete_all
+  end
+
+  it 'should have xsd_validated field set to true' do
+    @source_file.xsd_validated.should be_true
   end
 
   it "should NOT add a log message about a missing session tag" do
