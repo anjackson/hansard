@@ -159,7 +159,7 @@ EOF
   def index_entry_links(index_entry)
     index_entry_index = index_entry.index
     # nasty: assumes house of commons, not correct yet, waiting for calendar
-    index_entry.text.gsub! /\((\d+)\.(\d+)\.(\d+)\)/, link_to('\0', '/commons/' + '19\3/\2/\1')
+    index_entry.text.gsub! /\((\d+)\.(\d+)\.(\d+)\)/, link_to('\0', '/19\3/\2/\1')
     column_reference = /(\s)(\d+)(,|\s|&#x2013;\d+,|&#x2013;\d+$|$)/
     # written_answer_col = /(\s)(\d+)(w)/
     index_entry.text = create_index_links_for_columns(index_entry.text, index_entry_index, column_reference, HouseOfCommonsSitting)
