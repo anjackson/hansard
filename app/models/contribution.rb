@@ -11,6 +11,10 @@ class Contribution < ActiveRecord::Base
       xml << text if text 
     end
   end
+  
+  def word_count
+    self.text.split(" ").length
+  end
 
   def cols
      column_range ? column_range.split(",").map{ |col| col.to_i } : []
