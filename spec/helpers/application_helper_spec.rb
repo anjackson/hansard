@@ -92,9 +92,9 @@ end
 
 describe ApplicationHelper, " when returning links" do
 
-  it "should return a link for a sitting whose text is of the form 'House Of Commons &ndash; Monday, December 16, 1985'" do
-    sitting = HouseOfCommonsSitting.new(:date => Date.new(1985, 12, 16), :title => "HOUSE OF COMMONS")
-    sitting_link(sitting).should have_tag("a", :text => "House Of Commons &ndash; Monday, December 16, 1985")
+  it "should return a link for a House of Commons sitting whose text is of the form 'Monday, December 16, 1985'" do
+    sitting = HouseOfCommonsSitting.new(:date => Date.new(1985, 12, 16))
+    sitting_link(sitting).should have_tag("a", :text => "Monday, December 16, 1985")
   end
 
   it "should return a link for an index whose text is of the form '16th December 1985 &ndash; 17th January 1986'" do
