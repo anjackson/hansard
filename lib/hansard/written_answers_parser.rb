@@ -17,7 +17,6 @@ class Hansard::WrittenAnswersParser
 
   def parse
     type = @doc.children[0].name
-
     if type == 'writtenanswers'
       create_written_answers
     else

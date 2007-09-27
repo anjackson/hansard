@@ -3,7 +3,7 @@ class Sitting < ActiveRecord::Base
   has_one :debates, :class_name => "Debates", :foreign_key => 'sitting_id'
   has_many :sections, :foreign_key => 'sitting_id'
   belongs_to :data_file 
-  
+  acts_as_present_on_date :date
   before_validation_on_create :check_date
 
   acts_as_hansard_element
@@ -15,6 +15,10 @@ class Sitting < ActiveRecord::Base
     else
       nil 
     end
+  end
+  
+  def Sitting.most_recent
+    find_next(Date.today, "<")
   end
   
   def Sitting.find_next(day, direction)
@@ -29,6 +33,18 @@ class Sitting < ActiveRecord::Base
 
   def first_image_source
     start_image_src
+  end
+  
+  def year
+    date.year if date
+  end
+  
+  def month
+    date.month if date
+  end
+  
+  def day
+    date.day if date
   end
 
   protected

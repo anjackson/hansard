@@ -1,13 +1,3 @@
 = render :partial => 'hansard_header'
 .debates
-  - @sitting.debates.sections.each do |section|
-    .section-link
-      = link_to section.title, section_url(section)
-    - if section.is_a? OralQuestions
-      - section.sections.each do |subsection|
-        .sub-section-link
-          = link_to subsection.title, section_url(subsection)
-        - if subsection.is_a? OralQuestionsSection
-          - subsection.sections.each do |subsubsection|
-            .sub-sub-section-link
-              = link_to subsubsection.title, section_url(subsubsection)
+  =render :partial => "partials/section_link", :collection => @sitting.debates.sections

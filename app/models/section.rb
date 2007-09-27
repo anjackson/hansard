@@ -16,6 +16,10 @@ class Section < ActiveRecord::Base
   def to_param
     slug
   end
+  
+  def redundant? 
+    (!title) and contributions.empty? and (!parent_section.nil?)
+  end
 
   def create_slug
     self.slug = truncate_slug(slugcase_title)

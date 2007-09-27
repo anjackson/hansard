@@ -153,10 +153,7 @@ th {
   padding-left: 4em;
 }
 
-.sub-section-link{
-  margin-left:	2em;
+div.section-link div.section-link{
+  margin-left:	1em;
 }
 
-.sub-sub-section-link{
-  margin-left:	4em;
-}

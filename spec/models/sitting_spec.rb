@@ -9,6 +9,10 @@ describe Sitting do
   it "should be valid" do
     @sitting.should be_valid
   end
+  
+  it "should be able to tell if it is present on a date" do
+    Sitting.respond_to?("present_on_date?").should == true
+  end
 
 end
 

@@ -12,8 +12,12 @@ describe "show.haml", " in general" do
     assigns[:sitting] = @sitting
     @first_section = mock_model(Section)
     @first_section.stub!(:title).and_return("First Title")
+    @first_section.stub!(:title?).and_return(true)
+    @first_section.stub!(:sections).and_return([])
     @second_section = mock_model(Section)
     @second_section.stub!(:title).and_return("Second Title")
+    @second_section.stub!(:title?).and_return(true)
+    @second_section.stub!(:sections).and_return([])
     @controller.template.stub!(:section_url).and_return("http://test.host")
     @debates.stub!(:sections).and_return([@first_section, @second_section])
   end
@@ -27,29 +31,9 @@ describe "show.haml", " in general" do
     do_render
   end
   
-  it "should display a link to each of the sections belonging to the sitting's debates with the title of the section" do
+  it "should render the 'partials/_section_link' partial, passing the sitting's debates' sections" do
+    @controller.template.should_receive(:render).with(:partial => "partials/section_link", :collection => @sitting.debates.sections)
     do_render
-    response.should have_tag('div.debates') do
-      with_tag('div.section-link', :text => "First Title")
-      with_tag('div.section-link', :text => "Second Title") 
-    end
-  end
-  
-  it "should actually link to the sections" do
-    do_render
-    response.should have_tag('div.debates') do
-      with_tag('div.section-link a[href=http://test.host]')
-      with_tag('div.section-link a[href=http://test.host]') 
-    end
-  end
-  
-  it "should display a link to each direct sub-section of an OralQuestions" do
-    @first_section.should_receive(:is_a?).with(OralQuestions).and_return(true)
-    subsection = mock_model(Section)
-    subsection.stub!(:title).and_return("Subsection Title")
-    @first_section.stub!(:sections).and_return([subsection])
-    do_render 
-    response.should have_tag('div.sub-section-link', :text => "Subsection Title")
   end
   
 end

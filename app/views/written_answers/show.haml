@@ -1,8 +1,4 @@
 = render :partial => 'hansard_header'
 .groups
-  - @sitting.groups.each do |group|
-    .section-link
-      = link_to group.title, section_url(group)
-    - group.sections.each do |section|
-      .sub-section-link
-        =link_to section.title, section_url(section)
+  =render :partial => "partials/section_link", :collection => @sitting.groups
+    
