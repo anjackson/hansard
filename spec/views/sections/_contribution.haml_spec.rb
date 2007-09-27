@@ -9,7 +9,7 @@ describe "_contribution partial", " in general" do
     @controller.template.should_receive(:marker_html).and_return("")
     render 'sections/_contribution.haml'
   end
-  
+
 end
 
 describe '_contribution partial', 'when passed quote contribution' do
@@ -19,12 +19,13 @@ describe '_contribution partial', 'when passed quote contribution' do
     @quote = mock_model(QuoteContribution)
     @quote.should_receive(:text).and_return @text
     @quote.should_receive(:markers)
+    @quote.stub!(:word_count).and_return 0
     @controller.template.stub!(:contribution).and_return @quote
     render 'sections/_contribution.haml'
   end
 
   it 'should show quote text in p with class quote' do
-    response.should have_tag('div.quote', @text.sub(': ','').sub('<i>','').sub('</i>',''))
+    response.should have_tag('div.quote', @text.sub(': ','').sub('<i>','').sub('</i>','')+"\n  0")
   end
 
   it 'should show italic text in italics' do
@@ -112,7 +113,7 @@ describe '_section partial', 'when passed members contribution with constituency
     @member = 'Mr. David Borrow'
     @member_constituency = '(South Ribble)'
     @contribution_text = ': What assessment he has made of the responses to the pensions Green Paper received to date. [68005]'
-    
+
     @contribution.stub!(:markers)
     @contribution.stub!(:text).and_return @contribution_text
     @contribution.stub!(:member).and_return @member

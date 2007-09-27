@@ -134,7 +134,11 @@ EOF
 
   def sitting_link(sitting)
     sitting_url = sitting_date_url(sitting)
-    sitting_string =  sitting.title.titleize + " &ndash; " + sitting_display_date(sitting)
+    if sitting.title
+      sitting_string = sitting.title.titleize + " &ndash; " + sitting_display_date(sitting)
+    else
+      sitting_string = sitting_display_date(sitting)
+    end
     if sitting_url
       link_to(sitting_string, sitting_date_url(sitting))
     else
