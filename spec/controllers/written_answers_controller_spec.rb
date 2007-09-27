@@ -24,6 +24,12 @@ describe WrittenAnswersController, "#route_for" do
 
 end
 
+describe WrittenAnswersController, " handling dates" do
+  
+  it_should_behave_like "a date-based controller"
+
+end
+
 describe WrittenAnswersController, " handling GET /writtenanswers" do 
   
   before do 

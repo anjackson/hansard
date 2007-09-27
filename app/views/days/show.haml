@@ -1,6 +1,6 @@
 .sittings-on-day
   = render :partial => 'partials/sitting', :collection => @sittings
-= calendar(:year => @date.year, :month => @date.month, :day => @date.day)
+= render_calendar(@date, @dates_with_material)
 
 
 

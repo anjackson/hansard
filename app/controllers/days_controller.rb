@@ -1,26 +1,23 @@
 class DaysController < ApplicationController
 
+  before_filter :check_valid_date, :only => [:show]
+  
   def index
-    @sitting = Sitting.most_recent
+    @date = Sitting.most_recent.date
+    get_calendar_data
+    render :action => "show"
   end
   
   def show
-    url_date = UrlDate.new(params)
-    if not url_date.is_valid_date?
-      redirect_date url_date
-    else
-      @date = url_date.to_date
-      @sittings = Sitting.find_all_present_on_date(@date)
-    end
+    get_calendar_data
   end
 
   private
   
-   def redirect_date date
-     params[:day] = date.day
-     params[:month] = date.month
-     headers["Status"] = "301 Moved Permanently"
-     redirect_to params
+   def get_calendar_data
+     @sittings = Sitting.find_all_present_on_date(@date)
+     first, last = @date.first_and_last_of_month
+     @dates_with_material = first.material_dates_upto(last)
    end
    
 end

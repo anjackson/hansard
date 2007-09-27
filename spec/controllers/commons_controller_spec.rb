@@ -24,6 +24,12 @@ describe CommonsController, "#route_for" do
 
 end
 
+describe CommonsController, " handling dates" do
+  
+  it_should_behave_like "a date-based controller"
+
+end
+
 describe CommonsController, " handling GET /commons" do
 
   before do 

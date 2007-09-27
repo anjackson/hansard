@@ -16,6 +16,13 @@ end
 
 describe DaysController, " handling GET /" do
   
+  before do
+    @mock_sitting = mock_model(Sitting)
+    @mock_sitting.stub!(:date).and_return("the date")
+    @controller.stub!(:get_calendar_data)
+    Sitting.stub!(:most_recent).and_return(@mock_sitting)
+  end
+  
   def do_get
     get :index
   end
@@ -25,21 +32,24 @@ describe DaysController, " handling GET /" do
     response.should be_success
   end
   
-  it "should render with the 'index' template" do
+  it "should render with the 'show' template" do
     do_get
-    response.should render_template('index')
+    response.should render_template('show')
+  end
+  
+  it "should get the calendar data" do
+    @controller.should_receive(:get_calendar_data)
+    do_get
   end
   
   it "should ask for the most recent sitting" do
-    Sitting.should_receive(:most_recent)
+    Sitting.should_receive(:most_recent).and_return(@mock_sitting)
     do_get
   end
   
-  it "should assign the sitting to the view" do
-    sitting = mock_model(Sitting)
-    Sitting.stub!(:most_recent).and_return(sitting)
+  it "should assign the most recent sitting's date to the view" do
     do_get
-    assigns[:sitting].should == sitting
+    assigns[:date].should == "the date"
   end
   
 end
@@ -71,10 +81,6 @@ describe DaysController, " handling GET /1999/feb/08" do
     assigns[:sittings].should == "sittings"
   end
   
-  it 'should redirect html requests for on_date to the canonical date url' do
-    get :show, :year => '1999', :month => '2', :day => '08'
-    response.should redirect_to({:action => "show", :year => '1999', :month => 'feb', :day => '08'})
-    response.headers["Status"].should == "301 Moved Permanently"
-  end
-  
+  it_should_behave_like "a date-based controller"
+
 end

@@ -1,5 +1,5 @@
 class WrittenAnswersController < ApplicationController
-  
+
   before_filter :check_valid_date, :only => [:show, :show_source]
   
   def index
@@ -8,7 +8,7 @@ class WrittenAnswersController < ApplicationController
   
   def show
     @day = true
-    @sitting = WrittenAnswersSitting.find_by_date(@date.to_date.to_s)
+    @sitting = WrittenAnswersSitting.find_by_date(@date.to_s)
     @marker_options = {}
     respond_to do |format|
       format.html
@@ -17,7 +17,7 @@ class WrittenAnswersController < ApplicationController
   end
   
   def show_source
-    @sitting = WrittenAnswersSitting.find_by_date(@date.to_date.to_s)
+    @sitting = WrittenAnswersSitting.find_by_date(@date.to_s)
     data = @sitting.data_file.file.read
     respond_to do |format|
       format.xml { render :xml => data }

@@ -92,8 +92,22 @@ module CalendarHelper
       day_names.push(day_names.shift)
     end
 
-    cal = %(<table class="#{options[:table_class]}" border="0" cellspacing="0" cellpadding="0">) 
-    cal << %(<caption class="#{options[:month_name_class]}"></caption><thead><tr><th colspan="7">#{Date::MONTHNAMES[options[:month]]} #{options[:year]}</th></tr><tr class="#{options[:day_name_class]}">)
+    table_class = options[:table_class]
+    month_name_class = options[:month_name_class]
+    month_name = Date::MONTHNAMES[options[:month]]
+    day_name_class = options[:day_name_class]
+    year = options[:year]
+    
+    cal  = %(<table class="#{table_class}" border="0" cellspacing="0" cellpadding="0">)
+    cal << %(<thead>)
+    cal << %(  <tr>)
+    cal << %(    <th colspan="1">#{options[:prev_year] ? options[:prev_year] : ''}</th>)
+    cal << %(    <th colspan="1">#{options[:prev_month] ? options[:prev_month] : ''}</th>)
+    cal << %(    <th class="#{month_name_class}" colspan="3">#{month_name} #{year}</th>)
+    cal << %(    <th colspan="1">#{options[:next_month] ? options[:next_month] : ''}</th>)
+    cal << %(    <th colspan="1">#{options[:next_year] ? options[:next_year] : ''}</th>)
+    cal << %(  </tr>)
+    cal << %(  <tr class="#{day_name_class}">)
     day_names.each do |d|
       unless d[options[:abbrev]].eql? d
         cal << "<th scope='col'><abbr title='#{d}'>#{d[options[:abbrev]]}</abbr></th>"

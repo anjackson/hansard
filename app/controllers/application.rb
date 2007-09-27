@@ -6,10 +6,22 @@ class ApplicationController < ActionController::Base
   include ExceptionNotifiable 
   
   def check_valid_date 
-    @date = UrlDate.new(params)
-    if not @date.is_valid_date?
-      render :text => 'not valid date' and return false
+    @url_date = UrlDate.new(params)
+    if not @url_date.is_valid_date?
+      redirect_date @url_date
     end
+    begin
+      @date = @url_date.to_date
+    rescue
+      redirect_to :action => "index"
+    end
+  end
+  
+  def redirect_date date
+    params[:day] = date.day
+    params[:month] = date.month
+    headers["Status"] = "301 Moved Permanently"
+    redirect_to params and return false
   end
   
 end

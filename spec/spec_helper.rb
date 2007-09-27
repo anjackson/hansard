@@ -5,6 +5,7 @@ require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
 require 'spec/rails'
 require 'spec/models/xml_generating_model_spec'
 require 'spec/models/shared_contribution_spec'
+require 'spec/controllers/date_based_controller_spec'
 
 Spec::Runner.configure do |config|
   config.use_transactional_fixtures = true

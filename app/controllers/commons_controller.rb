@@ -1,11 +1,14 @@
 class CommonsController < ApplicationController
   
-  caches_page :show
   before_filter :check_valid_date, :only => [:show, :show_source]
+
+  def index
+    @sittings = HouseOfCommonsSitting.find(:all, :order => "date asc")
+  end
 
   def show
     @day = true
-    @sitting = HouseOfCommonsSitting.find_by_date(@date.to_date.to_s)
+    @sitting = HouseOfCommonsSitting.find_by_date(@date.to_s)
     @marker_options = {}
     respond_to do |format|
       format.html
@@ -14,16 +17,11 @@ class CommonsController < ApplicationController
   end
   
   def show_source
-    @sitting = HouseOfCommonsSitting.find_by_date(@date.to_date.to_s)
+    @sitting = HouseOfCommonsSitting.find_by_date(@date.to_s)
     data = @sitting.data_file.file.read
     respond_to do |format|
       format.xml { render :xml => data }
     end
   end
-
-  def index
-    @sittings = HouseOfCommonsSitting.find(:all, :order => "date asc")
-  end
-  
 
 end
