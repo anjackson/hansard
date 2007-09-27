@@ -38,10 +38,23 @@ describe "source_files/show.haml", " in general" do
     response.should have_tag("div", :text => "a big error")
   end
 
-  it "should have a div showing the source file schema and validation status" do
+  it "should have a div stating validation successful if xsd_validated is true" do
     @source_file.should_receive(:schema).and_return("schema_v3.xsd")
     do_render
     response.should have_tag("div", :text => "schema_v3.xsd (valid to schema)")
   end
 
+  it "should have a div stating validation failure if xsd_validated is false" do
+    @source_file.should_receive(:schema).and_return("schema_v3.xsd")
+    @source_file.stub!(:xsd_validated).and_return(false)
+    do_render
+    response.should have_tag("div", :text => "schema_v3.xsd (not valid to schema)")
+  end
+
+  it "should have a div stating validation not run if xsd_validated is nil" do
+    @source_file.should_receive(:schema).and_return("schema_v3.xsd")
+    @source_file.stub!(:xsd_validated).and_return(nil)
+    do_render
+    response.should have_tag("div", :text => "schema_v3.xsd (validation not yet performed)")
+  end
 end
