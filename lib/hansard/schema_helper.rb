@@ -10,17 +10,18 @@ module Hansard::SchemaHelper
     schema_file = "#{RAILS_ROOT}/public/schemas/#{schema}"
     xml_file = "#{RAILS_ROOT}/xml/#{name}.xml"
 
-    stdin, stdout, stderr = popen3("xmllint --noout --schema #{schema_file} #{xml_file}")
     errors = ''
-    stderr.each do |line|
-      is_error_message = (/xml validates$/.match(line) == nil)
+    if File.exist? schema_file
+      stdin, stdout, stderr = popen3("xmllint --noout --schema #{schema_file} #{xml_file}")
+      stderr.each do |line|
+        is_error_message = (/xml validates$/.match(line) == nil)
 
-      if is_error_message
-        errors += (line.chomp + ' ')
+        if is_error_message
+          errors += (line.chomp + ' ')
+        end
       end
     end
     errors
   end
 
 end
-
