@@ -125,6 +125,12 @@ module Hansard
     def handle_line line
       @index = @index.next
 
+      @inside_oralquestions = true if line.include? '<oralquestions>'
+      @inside_oralquestions = false if line.include? '</oralquestions>'
+
+      if line.include?('<division>') && @inside_oralquestions
+        @source_file.add_log 'warning: division element should appear inside oralquestion element'
+      end
       token_element = false
 
       start_end_on_same_line = false
@@ -285,6 +291,7 @@ module Hansard
       @session = nil
       @required_tags = {}
       @required_tag_ends = {}
+      @inside_oralquestions = false
 
       File.new(input_file).each_line { |line| handle_line line }
       if @source_file.schema

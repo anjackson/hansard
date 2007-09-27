@@ -30,7 +30,10 @@ class SourceFile < ActiveRecord::Base
     puts text
     $stdout.flush
     if persist
-      text = self.log + (text + "\n")
+      unless self.log.blank?
+        text = "/n" + text
+      end
+      text = self.log + text
       self.log = text
     end
   end

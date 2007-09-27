@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hansard xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:noNamespaceSchemaLocation="hansard_v7.xsd">
+  <titlepage></titlepage>
+  <frontmatter></frontmatter>
+  <p></p>
+  <p align="center">ELEVENTH VOLUME OF SESSION <session>2002&#x2013;2003</session></p>
+  <housecommons>
+    <title></title>
+    <p></p>
+    <debates>
+      <section>
+        <title></title>
+        <p></p>
+      </section>
+      <oralquestions>
+        <section>
+          <title></title>
+          <p></p>
+          <division>
+            <table>
+            </table>
+          </division>
+        </section>
+      </oralquestions>
+    </debates>
+    <writtenanswers>
+      <title></title>
+      <group>
+        <title></title>
+        <section>
+          <title></title>
+          <body>
+            <p></p>
+          </body>
+        </section>
+      </group>
+    </writtenanswers>
+  </housecommons>
+  <index>
+    <indexdiv>
+      <index-letter></index-letter>
+      <p></p>
+    </indexdiv>
+  </index>
+</hansard>

@@ -34,17 +34,40 @@ describe Hansard::Splitter, " when splitting file that does not validate against
     path = File.join(File.dirname(__FILE__),'..','data','valid_complete_file')
 
     # stub the schema check method
-    splitter.should_receive(:validate_schema).with('hansard_v7.xsd','valid_complete_file').and_return(%q[/home/e/apps/uk/hansard/xml_new/test.xml:4: element titlepages: Schemas validity error : Element 'titlepages': This element is not expected. Expected is ( titlepage ). /home/e/apps/uk/hansard/xml_new/test.xml fails to validate])
+    @validation_error = %q[/home/e/apps/uk/hansard/xml_new/test.xml:4: element titlepages: Schemas validity error : Element 'titlepages': This element is not expected. Expected is ( titlepage ). /home/e/apps/uk/hansard/xml_new/test.xml fails to validate]
+    splitter.should_receive(:validate_schema).with('hansard_v7.xsd','valid_complete_file').and_return(@validation_error)
     @source_files = splitter.split(path)
     @source_file = @source_files.first
   end
 
-  it 'should have log_line_count of 1' do
+  it 'should add 1 log message with validation error text' do
     @source_file.log_line_count.should == 1
+    @source_file.log.should == @validation_error
   end
 
   it 'should have xsd_validated field set to false' do
     @source_file.xsd_validated.should be_false
+  end
+
+  after(:all) do
+    SourceFile.delete_all
+  end
+end
+
+describe Hansard::Splitter, " when splitting file that has division table in oralquestions section" do
+
+  before(:all) do
+    splitter = Hansard::Splitter.new(false, overwrite=true, verbose=false)
+    path = File.join(File.dirname(__FILE__),'..','data','division_in_oralquestions')
+
+    # stub the schema check method
+    splitter.should_receive(:validate_schema).with('hansard_v7.xsd','division_in_oralquestions').and_return('')
+    @source_files = splitter.split(path)
+    @source_file = @source_files.first
+  end
+
+  it 'should add error log line about division in oralquestions' do
+    @source_file.log.should == 'warning: division element should appear inside oralquestion element'
   end
 
   after(:all) do
@@ -137,15 +160,15 @@ describe Hansard::Splitter, " when splitting files from spec/data/S5LV0436P0" do
   end
 
   it "should add a log message about a missing image tag" do
-    @source_file.log.should match(/Missing image\? Got: 3, expected 2 \(last image 1\)\n/)
+    @source_file.log.should match(/Missing image\? Got: 3, expected 2 \(last image 1\)/)
   end
 
   it "should add a log message about a missing column tag" do
-    @source_file.log.should match(/Missing column\? Got: 4, expected 3 \(last column 2\)\n/)
+    @source_file.log.should match(/Missing column\? Got: 4, expected 3 \(last column 2\)/)
   end
 
   it "should not add a log message about a missing column tag in a new section" do
-    @source_file.log.should_not match(/Missing column\? Got: 1, expected 5 \(last column 4\)\n/)
+    @source_file.log.should_not match(/Missing column\? Got: 1, expected 5 \(last column 4\)/)
   end
 
   it "should add a log message if the date is not in correct format - <date format=\"1896-04-09\">Thursday, 9th April 1896.</date>" do
