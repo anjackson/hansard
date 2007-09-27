@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<hansard>
+<hansard xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:noNamespaceSchemaLocation="hansard_v7.xsd">
   <titlepage></titlepage>
   <frontmatter></frontmatter>
   <p></p>

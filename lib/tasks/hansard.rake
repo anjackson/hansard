@@ -1,4 +1,5 @@
 require File.dirname(__FILE__) + '/../hansard/parser_helper'
+require File.dirname(__FILE__) + '/../hansard/schema_helper'
 
 namespace :hansard do
 
@@ -7,6 +8,12 @@ namespace :hansard do
   INDEX_PATT   = 'index.xml'
 
   include Hansard::ParserHelper
+  include Hansard::SchemaHelper
+
+  desc 'attempts to validate XML source file against schema'
+  task :validate_schema => :environment do
+    validate_schema
+  end
 
   task :migrate_down => :environment do
     ENV['VERSION'] = '0'
