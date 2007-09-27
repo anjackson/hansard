@@ -134,6 +134,7 @@ EOF
 
   def sitting_link(sitting)
     sitting_url = sitting_date_url(sitting)
+
     if sitting.title
       sitting_string = sitting.title.titleize + " &ndash; " + sitting_display_date(sitting)
     else
@@ -275,11 +276,12 @@ EOF
       text = text.sub(':','').strip
     end
 
-    xml = '<wrapper>'+text+'</wrapper>'
+    xml = '<wrapper>' + text + '</wrapper>'
     doc = Hpricot.XML xml
     inner_elements = []
     parts = handle_contribution_part doc.children.first, [], inner_elements, outer_elements
-    '<p>'+parts.join('').squeeze(' ')+'</p>'
+    parts = '<p>' + parts.join('').squeeze(' ') + '</p>'
+    parts
   end
 
   def html_list(text)
