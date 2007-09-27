@@ -50,7 +50,7 @@ module ApplicationHelper
     open :ol, {:id => 'navigation'} do
 
       open :li do
-        puts 'MILLBANK SYSTEMS'
+        puts 'Millbank Systems'
         open :a, { :href => home_url } do
           puts "<strong>HANSARD</strong> Home"
         end
@@ -118,18 +118,6 @@ module ApplicationHelper
     end
   end
 
-  def delicious_badge
-    javascript = <<EOF
-    <div id="delicious_box">
-    <script type="text/javascript">
-        if (typeof window.Delicious == "undefined") window.Delicious = {};
-        Delicious.BLOGBADGE_DEFAULT_CLASS = 'delicious-blogbadge-line';
-    </script>
-    <script src="http://images.del.icio.us/static/js/blogbadge.js"></script>
-    </div>
-EOF
-  end
-
   def google_custom_search_form
     javascript = <<EOF
     <div id="search_box">
@@ -165,18 +153,18 @@ EOF
     ('A'..'Z').each do |letter|
       links << "<a href=\"#{index_link}?letter=#{letter}\">#{letter}</a>"
     end
-    links.join(" ")
+    links.join(' ')
   end
 
   def index_entry_links(index_entry)
-    index = index_entry.index
-    basic_col = /(\s)(\d+)(,|\s|&#x2013;\d+,|&#x2013;\d+$|$)/
+    index_entry_index = index_entry.index
+    column_reference = /(\s)(\d+)(,|\s|&#x2013;\d+,|&#x2013;\d+$|$)/
     # written_answer_col = /(\s)(\d+)(w)/
-    index_entry.text = create_index_links(index_entry.text, index, basic_col, HouseOfCommonsSitting)
+    index_entry.text = create_index_links_for_columns(index_entry.text, index_entry_index, column_reference, HouseOfCommonsSitting)
     # index_entry.text = create_index_links(index_entry.text, index, written_answer_col, WrittenAnswersSitting)
   end
 
-  def create_index_links(entry, index, pattern, sitting_type)
+  def create_index_links_for_columns(entry, index, pattern, sitting_type)
     entry.gsub!(pattern) do
       text = $1
       column = $2
@@ -232,12 +220,12 @@ EOF
 
   def sitting_controller(sitting)
     case sitting
-    when HouseOfCommonsSitting
-      'commons'
-    when WrittenAnswersSitting
-      'written_answers'
+      when HouseOfCommonsSitting
+        'commons'
+      when WrittenAnswersSitting
+        'written_answers'
     else
-      raise "Can't generate a url for '#{sitting.class}"
+      raise "Can't generate a url for '#{sitting.class}'"
     end
   end
 
@@ -293,7 +281,7 @@ EOF
   end
 
   def html_linebreaks(text)
-    text.gsub("\n", "<br>")
+    text.gsub("\n", "<br />")
   end
 
   private
