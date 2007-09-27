@@ -7,3 +7,4 @@
 - elsif contribution.is_a? QuoteContribution
   .quote
     = format_contribution(contribution.text, ['div'])
+    = contribution.word_count
