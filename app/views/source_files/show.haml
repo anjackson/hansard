@@ -1,6 +1,6 @@
 %h1=@source_file.name
 %h4 Schema:
-%div=@source_file.schema
+%div= "#{@source_file.schema} (#{xsd_valid_message(@source_file)})"
 %h4 Problems:
 %div=html_list(@source_file.log) if @source_file.log
 %h4 Files created:

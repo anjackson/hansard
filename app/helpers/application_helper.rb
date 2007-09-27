@@ -79,19 +79,19 @@ module ApplicationHelper
         end
 
       else
-        
+
         open :li do
           open :a, { :href => commons_url } do
             puts "Commons"
           end
         end
-        
+
         open :li do
           open :a, { :href => written_answers_url } do
             puts "Written Answers"
           end
         end
-        
+
         open :li do
           puts "Lords"
         end
@@ -132,7 +132,7 @@ module ApplicationHelper
 EOF
   end
 
-  def sitting_link(sitting)    
+  def sitting_link(sitting)
     sitting_url = sitting_date_url(sitting)
     sitting_string =  sitting.title.titleize + " &ndash; " + sitting_display_date(sitting)
     if sitting_url
@@ -164,7 +164,7 @@ EOF
     # written_answer_col = /(\s)(\d+)(w)/
     index_entry.text = create_index_links_for_columns(index_entry.text, index_entry_index, column_reference, HouseOfCommonsSitting)
     # index_entry.text = create_index_links(index_entry.text, index, written_answer_col, WrittenAnswersSitting)
-    
+
   end
 
   def create_index_links_for_columns(entry, index, pattern, sitting_type)
@@ -259,7 +259,7 @@ EOF
       ''
     end
   end
-  
+
   def format_section_title title
     title.gsub('<lb>',' ').gsub('<lb/>',' ').gsub('</lb>','').squeeze(' ')
   end
@@ -285,6 +285,26 @@ EOF
 
   def html_linebreaks(text)
     text.gsub("\n", "<br />")
+  end
+
+  def xsd_valid source_file
+    if source_file.xsd_validated.nil?
+      '&mdash;'
+    elsif source_file.xsd_validated
+      'Y'
+    else
+      'N'
+    end
+  end
+
+  def xsd_valid_message source_file
+    if source_file.xsd_validated.nil?
+      'validation not yet performed'
+    elsif source_file.xsd_validated
+      'valid to schema'
+    else
+      'not valid to schema'
+    end
   end
 
   private
