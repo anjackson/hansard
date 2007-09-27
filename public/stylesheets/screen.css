@@ -153,7 +153,45 @@ th {
   padding-left: 4em;
 }
 
-div.section-link div.section-link{
+div.section-link div.section-link {
   margin-left:	1em;
+}
+
+div.sittings-on-day {
+  float: right;
+  margin-right: -5em;
+}
+
+.calendar { 
+  font-size: 0.8em;
+  margin-left: -5em;
+  margin-bottom: 1em;
+}
+
+.calendar td { 
+  width: 1.5em;
+  text-align: center;
+}
+
+th.monthName  {
+  color: gray;
+  text-align: center;
+  margin: auto;
+}
+
+.dayName th {
+  color: gray;
+}
+
+.otherMonth, .day {
+  color: #ccc;
+}
+
+.specialDay {
+  color: red;
+}
+
+.weekendDay {
+  color: #eee;
 }
 

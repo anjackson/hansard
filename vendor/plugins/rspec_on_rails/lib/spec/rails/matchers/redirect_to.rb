@@ -51,7 +51,7 @@ module Spec
           if defined?(CGIMethods)
             CGIMethods.parse_query_parameters(query)
           else
-            ActionController::AbstractRequest.parse_query_parameters(query)
+            parse_query_parameters(query)
           end
         end
 
@@ -78,6 +78,18 @@ module Spec
         
         def negative_failure_message
             return %Q{expected not to be redirected to #{@expected.inspect}, but was} if @redirected
+        end
+        
+        def parse_query_parameters(query_string)
+          return {} if query_string.blank?
+          pairs = query_string.split('&').collect do |chunk|
+            next if chunk.empty?
+            key, value = chunk.split('=', 2)
+            next if key.empty?
+            value = value.nil? ? nil : CGI.unescape(value)
+            [ CGI.unescape(key), value ]
+          end.compact
+          UrlEncodedPairParser.new(pairs).result
         end
         
         def description

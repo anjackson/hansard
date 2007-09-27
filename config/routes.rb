@@ -42,6 +42,14 @@ ActionController::Routing::Routes.draw do |map|
 
   end
 
+  map.with_options(:controller => 'days') do |days|
+    
+    days.with_options(date_options) do |by_date|
+      def_route "#{date}", :show, by_date
+    end
+    
+  end
+  
   map.with_options(:controller => 'commons') do |commons|
 
     commons.commons 'commons', :action => 'index'

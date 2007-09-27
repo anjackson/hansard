@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/../../spec_helper'
 describe "_sitting.haml", " in general" do
 
   def do_render 
-    render 'commons/_sitting.haml'
+    render 'partials/_sitting.haml'
   end
 
   it "should not fail when passed a sitting with a bad date" do
