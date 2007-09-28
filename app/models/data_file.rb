@@ -58,8 +58,8 @@ class DataFile < ActiveRecord::Base
     puts text
     $stdout.flush
     if persist
-      text = self.log + (text + "\n")
-      self.log = text
+     text = self.log + (text + "\n")
+     self.log = text
     end
   end
 
