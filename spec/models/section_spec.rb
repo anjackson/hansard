@@ -25,12 +25,30 @@ describe Section, " in general" do
     @section.previous_section.should == previous_section
   end
   
+  it "should be able to give its previous linkable section" do
+    previous_section = Section.new
+    previous_linkable_section = Section.new(:title => "i have a title")
+    sitting = Sitting.new
+    sitting.sections = [previous_linkable_section, previous_section, previous_section, @section]
+    sitting.save!
+    @section.previous_linkable_section.should == previous_linkable_section
+  end
+  
   it " should be able to give its next section" do
     next_section = Section.new
     sitting = Sitting.new
     sitting.sections = [@section, next_section]
     sitting.save!
     @section.next_section.should == next_section
+  end
+  
+  it "should be able to give its next linkable section" do
+    next_section = Section.new
+    next_linkable_section = Section.new(:title => "i have a title")
+    sitting = Sitting.new
+    sitting.sections = [@section, next_section, next_linkable_section]
+    sitting.save!
+    @section.next_linkable_section.should == next_linkable_section
   end
 
   it "should be able to tell you if it is linkable" do

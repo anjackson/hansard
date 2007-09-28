@@ -17,6 +17,30 @@ class Section < ActiveRecord::Base
     slug
   end
   
+  def find_linkable_section(direction)
+    if direction == :previous
+      increment = -1
+    elsif direction == :next
+      increment = 1
+    else 
+      raise ArgumentError, "expecting direction to be :previous or :next"
+    end
+    all_sections = sitting.sections
+    position = all_sections.index(self)
+    begin 
+      position = position + increment
+    end while (all_sections.at(position) and !all_sections.at(position).linkable? and position >= 0)
+    all_sections.at(position) if position >= 0
+  end
+ 
+  def previous_linkable_section
+    find_linkable_section(:previous)
+  end
+  
+  def next_linkable_section
+    find_linkable_section(:next)
+  end
+  
   def previous_section
     all_sections = sitting.sections
     all_sections.at(all_sections.index(self) - 1)
