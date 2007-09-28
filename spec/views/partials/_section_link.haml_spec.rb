@@ -4,6 +4,7 @@ describe "_section_link.haml" do
   
   before do
     @super_section = mock_model(Section)
+    @super_section.stub!(:linkable?).and_return(true)
     @super_section.stub!(:title?).and_return(true)
     @super_section.stub!(:title).and_return("Super Title")
     @super_section.stub!(:parent_section).and_return(false)
