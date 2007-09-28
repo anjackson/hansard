@@ -49,12 +49,16 @@ describe SourceFile do
     error_types, hash = SourceFile.get_error_summary
     error_types.size.should == 3
 
+    hash['Bad date format'].should_not be_nil
+    hash['Missing column'].should_not be_nil
+    hash['Missing or badly formatted session tag'].should_not be_nil
+
     hash['Bad date format'].size.should == 2
-    hash['Missing column? Got'].size.should == 2
+    hash['Missing column'].size.should == 2
     hash['Missing or badly formatted session tag'].size.should == 1
 
     error_types[0].should == 'Bad date format'
-    error_types[1].should == 'Missing column? Got'
+    error_types[1].should == 'Missing column'
     error_types[2].should == 'Missing or badly formatted session tag'
   end
 end

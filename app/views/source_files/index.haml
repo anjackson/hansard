@@ -4,6 +4,17 @@
 
 %table
   %tr
+    %th Error types
+    %th.number File count
+    %th.percentage Percentage of files
+  - @error_types.each do |type|
+    %tr
+      %td= type
+      - error_count = @error_types_to_files[type].size.to_s
+      %td.number= error_count
+      %td.percentage= number_to_percentage(error_count.to_f / @source_files.length * 100, :precision => 1)
+%table
+  %tr
     %th
       File
     %th

@@ -20,7 +20,7 @@ class SourceFile < ActiveRecord::Base
         else
           type = error
         end
-
+        type.chomp!('? Got')
         error_types << type unless error_types.include?(type)
         error_types_to_files[type] = [] unless error_types_to_files.has_key?(type)
 

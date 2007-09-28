@@ -13,6 +13,11 @@ body {
 	line-height: 120%;
 }
 
+table {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
 table#data_file_warnings {
 	text-align:left;
 }
@@ -126,6 +131,11 @@ td {
   vertical-align: top;
 }
 
+th.number, th.percentage {
+  text-align: center;
+  padding-right: 1.5em;
+}
+
 td.number, td.percentage {
   text-align: right;
   padding-right: 1.5em;
@@ -162,13 +172,13 @@ div.sittings-on-day {
   margin-right: -5em;
 }
 
-.calendar { 
+.calendar {
   font-size: 0.8em;
   margin-left: -5em;
   margin-bottom: 1em;
 }
 
-.calendar td { 
+.calendar td {
   width: 1.5em;
   text-align: center;
 }
