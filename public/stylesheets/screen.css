@@ -7,6 +7,21 @@ body {
   line-height: 140%;
 }
 
+#navbar {
+  margin: 0;
+  font-size: 0.8em;
+  position: fixed;
+  top: 10em;
+  left: 0.5em;
+  width: 10em;
+  right: auto;
+  text-align:right;
+}
+
+#navbar li {
+  list-style-type: none;
+}
+
 #copyright {
 	margin-right: 20em;
 	font-size: 0.8em;
