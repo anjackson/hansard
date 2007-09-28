@@ -11,7 +11,7 @@ ActionController::Routing::Routes.draw do |map|
   map.home '', :controller => "days", :action => "index"
   map.search 'search', :controller => 'search', :action => "index"
 
-  year_patt = /(19|20)\d\d/
+  year_patt = /(18|19|20)\d\d/
   month_patt = /(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec|[01]?\d)/
   day_patt = /[0-3]?\d/
 

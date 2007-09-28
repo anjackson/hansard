@@ -11,7 +11,17 @@ describe DaysController, "#route_for" do
     params =  { :controller => 'days', :action => 'show', :year => '1999', :month => 'feb', :day => '08' }
     route_for(params).should == "/1999/feb/08"
   end
-
+  
+  it "should map { :controller => 'days', :action => 'show', :year => '1999', :month => 'feb'} to to /1999/feb" do
+    params =  { :controller => 'days', :action => 'show', :year => '1999', :month => 'feb' }
+    route_for(params).should == "/1999/feb"
+  end
+  
+  it "should map { :controller => 'days', :action => 'show', :year => '1999'} to to /1999" do
+    params =  { :controller => 'days', :action => 'show', :year => '1999' }
+    route_for(params).should == "/1999"
+  end
+  
 end
 
 describe DaysController, " handling GET /" do

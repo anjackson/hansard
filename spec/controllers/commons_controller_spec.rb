@@ -58,11 +58,47 @@ describe CommonsController, " handling GET /commons" do
   
 end
 
-describe CommonsController, "handling GET /commons/1999/feb/08" do
+describe CommonsController, " handling GET /commons/1999" do
 
   before do
     @sitting = mock_model(HouseOfCommonsSitting)
-    HouseOfCommonsSitting.stub!(:find_by_date).and_return(@sitting)
+    HouseOfCommonsSitting.stub!(:find_in_resolution).and_return([@sitting])
+  end
+  
+  def do_get
+    get :show, :year => '1999'
+  end
+  
+  it "should look for sittings in the year passed" do
+    HouseOfCommonsSitting.should_receive(:find_in_resolution).with(Date.new(1999, 1, 1), :year).and_return([@sitting])
+    do_get
+  end
+  
+end
+
+describe CommonsController, " handling GET /commons/1999/feb" do
+
+  before do
+    @sitting = mock_model(HouseOfCommonsSitting)
+    HouseOfCommonsSitting.stub!(:find_in_resolution).and_return([@sitting])
+  end
+  
+  def do_get
+    get :show, :year => '1999', :month => 'feb'
+  end
+  
+  it "should look for sittings in the year passed" do
+    HouseOfCommonsSitting.should_receive(:find_in_resolution).with(Date.new(1999, 2, 1), :month).and_return([@sitting])
+    do_get
+  end
+  
+end
+
+describe CommonsController, " handling GET /commons/1999/feb/08" do
+
+  before do
+    @sitting = mock_model(HouseOfCommonsSitting)
+    HouseOfCommonsSitting.stub!(:find_in_resolution).and_return([@sitting])
   end
   
   def do_get
@@ -74,14 +110,25 @@ describe CommonsController, "handling GET /commons/1999/feb/08" do
     response.should be_success
   end
   
-  it "should find the sitting requested" do
-    HouseOfCommonsSitting.should_receive(:find_by_date).with("1999-02-08").and_return(@sitting)
+  it "should look for a sitting on the date passed" do
+    HouseOfCommonsSitting.should_receive(:find_in_resolution).with(Date.new(1999, 2, 8), :day).and_return([@sitting])
     do_get
   end
   
-  it "should render with the 'show' template" do
+  it "should render with the 'show' template if there is one sitting" do
     do_get
     response.should render_template('show')
+  end
+  
+  it "should assign day to true if there is one sitting" do
+    do_get
+    assigns[:day].should be_true
+  end
+  
+  it "should render with the 'index' template if there is more than one sitting" do
+    HouseOfCommonsSitting.should_receive(:find_in_resolution).with(Date.new(1999, 2, 8), :day).and_return([@sitting, @sitting])
+    do_get
+    response.should render_template('index')
   end
 
   it "should assign the sitting for the view" do
@@ -96,12 +143,12 @@ describe CommonsController, "handling GET /commons/1999/feb/08" do
   
 end
 
-describe CommonsController, "handling GET /commons/1999/feb/08.xml" do
+describe CommonsController, " handling GET /commons/1999/feb/08.xml" do
 
   before do
     @sitting = mock_model(HouseOfCommonsSitting)
     @sitting.stub!(:to_xml)
-    HouseOfCommonsSitting.stub!(:find_by_date).and_return(@sitting)
+    HouseOfCommonsSitting.stub!(:find_in_resolution).and_return([@sitting])
   end
   
   def do_get
@@ -114,7 +161,7 @@ describe CommonsController, "handling GET /commons/1999/feb/08.xml" do
   end
   
   it "should find the sitting requested" do
-    HouseOfCommonsSitting.should_receive(:find_by_date).with("1999-02-08").and_return(@sitting)
+    HouseOfCommonsSitting.should_receive(:find_in_resolution).with(Date.new(1999, 2, 8), :day).and_return([@sitting])
     do_get
   end
   
@@ -125,7 +172,7 @@ describe CommonsController, "handling GET /commons/1999/feb/08.xml" do
 
 end
 
-describe CommonsController, "handling GET /commons/source/1999/feb/08.xml" do
+describe CommonsController, " handling GET /commons/source/1999/feb/08.xml" do
 
   before do
     @sitting = mock_model(HouseOfCommonsSitting)

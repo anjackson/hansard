@@ -58,11 +58,47 @@ describe WrittenAnswersController, " handling GET /writtenanswers" do
 
 end
 
+describe WrittenAnswersController, " handling GET /writtenanswers/1999" do
+
+  before do
+    @sitting = mock_model(WrittenAnswersSitting)
+    WrittenAnswersSitting.stub!(:find_in_resolution).and_return([@sitting])
+  end
+  
+  def do_get
+    get :show, :year => '1999'
+  end
+  
+  it "should look for sittings in the year passed" do
+    WrittenAnswersSitting.should_receive(:find_in_resolution).with(Date.new(1999, 1, 1), :year).and_return([@sitting])
+    do_get
+  end
+  
+end
+
+describe WrittenAnswersController, " handling GET /commons/1999/feb" do
+
+  before do
+    @sitting = mock_model(WrittenAnswersSitting)
+    WrittenAnswersSitting.stub!(:find_in_resolution).and_return([@sitting])
+  end
+  
+  def do_get
+    get :show, :year => '1999', :month => 'feb'
+  end
+  
+  it "should look for sittings in the year passed" do
+    WrittenAnswersSitting.should_receive(:find_in_resolution).with(Date.new(1999, 2, 1), :month).and_return([@sitting])
+    do_get
+  end
+  
+end
+
 describe WrittenAnswersController, "handling GET /writtenanswers/1999/feb/08" do
 
   before do
     @sitting = mock_model(WrittenAnswersSitting)
-    WrittenAnswersSitting.stub!(:find_by_date).and_return(@sitting)
+    WrittenAnswersSitting.stub!(:find_in_resolution).and_return([@sitting])
   end
   
   def do_get
@@ -75,7 +111,7 @@ describe WrittenAnswersController, "handling GET /writtenanswers/1999/feb/08" do
   end
   
   it "should find the sitting requested" do
-    WrittenAnswersSitting.should_receive(:find_by_date).with("1999-02-08").and_return(@sitting)
+    WrittenAnswersSitting.should_receive(:find_in_resolution).with(Date.new(1999, 2, 8), :day).and_return([@sitting])
     do_get
   end
   
@@ -101,7 +137,7 @@ describe WrittenAnswersController, "handling GET /writtenanswers/1999/feb/08.xml
   before do
     @sitting = mock_model(WrittenAnswersSitting)
     @sitting.stub!(:to_xml)
-    WrittenAnswersSitting.stub!(:find_by_date).and_return(@sitting)
+    WrittenAnswersSitting.stub!(:find_in_resolution).and_return([@sitting])
   end
   
   def do_get
@@ -114,7 +150,7 @@ describe WrittenAnswersController, "handling GET /writtenanswers/1999/feb/08.xml
   end
   
   it "should find the sitting requested" do
-    WrittenAnswersSitting.should_receive(:find_by_date).with("1999-02-08").and_return(@sitting)
+    WrittenAnswersSitting.should_receive(:find_in_resolution).with(Date.new(1999, 2, 8), :day).and_return([@sitting])
     do_get
   end
   

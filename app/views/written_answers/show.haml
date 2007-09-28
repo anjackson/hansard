@@ -1,4 +1,6 @@
-= render :partial => 'hansard_header'
-.groups
-  =render :partial => "partials/section_link", :collection => @sitting.groups
-    
+-if @sitting
+  = render :partial => 'hansard_header'
+  .debates
+    =render :partial => "partials/section_link", :collection => @sitting.groups
+-else
+  No written answers were found for this period.

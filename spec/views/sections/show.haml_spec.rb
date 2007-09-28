@@ -17,4 +17,7 @@ describe "sections/show.haml", " in general" do
     do_render
   end
 
+  it "should have a link to the next section if there is one"
+  it "should have a link to the previous section if there is one"
+  
 end

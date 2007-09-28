@@ -6,10 +6,22 @@ class ApplicationController < ActionController::Base
   include ExceptionNotifiable 
   
   def check_valid_date 
-    @url_date = UrlDate.new(params)
-    if not @url_date.is_valid_date?
-      redirect_date @url_date
+    if params[:day]
+      @resolution = :day
+    elsif params[:month]
+      @resolution = :month
+    else
+      @resolution = :year
     end
+
+    case @resolution
+      when :day;   @url_date = UrlDate.new(params)
+      when :month; @url_date = UrlDate.new(params.merge(:day=>'01'))
+      else         @url_date = UrlDate.new(params.merge(:month=>'jan',:day=>'01'))
+    end
+    
+    redirect_date @url_date if not @url_date.is_valid_date?
+    
     begin
       @date = @url_date.to_date
     rescue

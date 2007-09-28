@@ -4,19 +4,19 @@ class DaysController < ApplicationController
   
   def index
     @date = Sitting.most_recent.date
-    get_calendar_data
+    get_calendar_data(@date, :day)
     render :action => "show"
   end
   
   def show
-    get_calendar_data
+    get_calendar_data(@date, @resolution)
   end
 
   private
   
-   def get_calendar_data
-     @sittings = Sitting.find_all_present_on_date(@date)
+   def get_calendar_data(date, resolution)
      first, last = @date.first_and_last_of_month
+     @sittings = Sitting.find_in_resolution(date, resolution)
      @dates_with_material = first.material_dates_upto(last)
    end
    

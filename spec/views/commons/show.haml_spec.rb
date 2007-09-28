@@ -36,5 +36,11 @@ describe "show.haml", " in general" do
     do_render
   end
   
+  it "should give the message 'No information from the Commons was found for this period.' if no sitting is passed to it" do
+    assigns[:sitting] = nil
+    do_render
+    response.should have_tag("div.no-sittings", :text => "No information from the Commons was found for this period.")
+  end
+  
 end
 

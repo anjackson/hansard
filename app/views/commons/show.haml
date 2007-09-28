@@ -1,3 +1,7 @@
-= render :partial => 'hansard_header'
-.debates
-  =render :partial => "partials/section_link", :collection => @sitting.debates.sections
+-if @sitting
+  = render :partial => 'hansard_header'
+  .debates
+    =render :partial => "partials/section_link", :collection => @sitting.debates.sections
+-else
+  .no-sittings
+    No information from the Commons was found for this period.

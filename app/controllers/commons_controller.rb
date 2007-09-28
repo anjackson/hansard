@@ -7,9 +7,13 @@ class CommonsController < ApplicationController
   end
 
   def show
-    @day = true
-    @sitting = HouseOfCommonsSitting.find_by_date(@date.to_s)
+    @sittings = HouseOfCommonsSitting.find_in_resolution(@date, @resolution)
+    render :action => "index" and return false if @sittings.size > 1
     @marker_options = {}
+    if !@sittings.empty?
+      @sitting = @sittings.first
+      @day = true
+    end
     respond_to do |format|
       format.html
       format.xml { render :xml => @sitting.to_xml }

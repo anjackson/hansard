@@ -13,4 +13,14 @@ describe "a date-based controller", :shared => true do
     response.should redirect_to({:action => "index"})
   end
   
+  it "should treat a request with just a year and month as a request at the month resolution" do
+    get :show, :year => '1999', :month => 'feb'
+    assigns[:resolution].should == :month
+  end
+  
+  it "should treat a request with just a year as a request at the year resolution" do
+    get :show, :year => '1999'
+    assigns[:resolution].should == :year
+  end
+  
 end

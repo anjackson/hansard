@@ -21,6 +21,20 @@ class Sitting < ActiveRecord::Base
     find_next(Date.today, "<")
   end
   
+  def Sitting.find_in_resolution(date, resolution)
+    case resolution
+      when :day
+        sittings = find_all_present_on_date(date)
+      when :month
+        first, last = date.first_and_last_of_month
+        sittings = find_all_present_in_interval(first, last)
+      when :year
+        year_first, year_last = date.first_and_last_of_year
+        sittings = find_all_present_in_interval(year_first, year_last)
+    end
+    sittings
+  end
+  
   def Sitting.find_next(day, direction)
     find(:first, 
          :conditions => ["date #{direction} ?", day.to_date], 
