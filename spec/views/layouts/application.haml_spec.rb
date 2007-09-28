@@ -22,16 +22,16 @@ describe "application.haml", " in general" do
   
   it 'should not have a title which is "Millbank Systems: Hansard: Please give me a title"'
         
-  it 'should have a link rel="alternate" with appropriate title pointing to the xml source if on a day page'
+  it 'should have a link rel="alternate" with appropriate title pointing to the xml source when on a day page'
   
-  it 'should have a link rel="alternate" with appropriate title pointing to the xml output if on a day page'
+  it 'should have a link rel="alternate" with appropriate title pointing to the xml output if when a day page'
   
   it 'should have a link rel="author" with a link to "http://www.parliament.uk" and a title of "UK Parliament"' do
     do_render
     response.should have_tag("link[rel='author']", :title => "UK Parliament", :href => "http://www.parliament.uk")
   end
   
-  it 'should have a link rel="bookmark" with a link to "http://www.millbanksystems.com/commons/1961/may/03/school-leavers-acton" and a title of "Historic Hansard: May 3rd 1961: School Leavers, Acton"'   
+  it 'should have a link rel="bookmark" with a link to "http://www.millbanksystems.com/commons/1961/may/03/school-leavers-acton" and a title of "Millbank Systems: Hansard: May 3rd 1961: School Leavers, Acton"'   
   
   it 'should have a link rel="contact"' do
     do_render
