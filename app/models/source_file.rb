@@ -65,12 +65,16 @@ class SourceFile < ActiveRecord::Base
     self.log = '' if log.nil?
     puts text
     $stdout.flush
+    if text.size > 255
+      text = text[0..255]
+    end
+    
     if persist
-      unless self.log.blank?
-        text = "\n" + text
-      end
-      text = self.log + text
-      self.log = text
+     unless self.log.blank?
+       text = "\n" + text
+     end
+     text = self.log + text
+     self.log = text
     end
   end
 
