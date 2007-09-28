@@ -9,7 +9,7 @@ module Hansard::ParserHelper
     directories.each do |directory|
       Dir.glob(directory + "/*").select{|f| File.directory?(f)}.each do |d|
         Dir.glob(d+'/'+pattern).each do |file|
-          yield (d, file)
+          yield d, file
         end
       end
     end
