@@ -17,8 +17,18 @@ class Section < ActiveRecord::Base
     slug
   end
   
-  def redundant? 
-    (!title) and contributions.empty? and (!parent_section.nil?)
+  def previous_section
+    all_sections = sitting.sections
+    all_sections.at(all_sections.index(self) - 1)
+  end
+  
+  def next_section
+    all_sections = sitting.sections
+    all_sections.at(all_sections.index(self) + 1)
+  end
+  
+  def linkable?
+    title? or (! parent_section and ! contributions.empty?)
   end
 
   def create_slug

@@ -1,5 +1,5 @@
 - section = section_link
-- if (section.title? or (! section.parent_section and ! section.contributions.empty?)) 
+- if section.linkable?
   .section-link
     = link_to section.title, section_url(section)
     =render :partial => "partials/section_link", :collection => section.sections

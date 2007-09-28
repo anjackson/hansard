@@ -1,1 +1,5 @@
-= render :partial => 'section', :locals => {:section => @section}
+= render :partial => 'section', :locals => { :section => @section }
+- if @section.previous_section and @section.previous_section.linkable?
+  %a.prev-section{ :href => section_url(@section.previous_section) } Previous section
+- if @section.next_section and @section.next_section.linkable?
+  %a.next-section{ :href => section_url(@section.next_section) } Next section

@@ -11,11 +11,46 @@ describe Section, " in general" do
 
   before(:each) do
     @model = Section.new
+    @section = @model
     @mock_builder = mock_section_builder
   end
 
   it_should_behave_like "an xml-generating model"
 
+  it " should be able to give its previous section" do
+    previous_section = Section.new
+    sitting = Sitting.new
+    sitting.sections = [previous_section, @section]
+    sitting.save!
+    @section.previous_section.should == previous_section
+  end
+  
+  it " should be able to give its next section" do
+    next_section = Section.new
+    sitting = Sitting.new
+    sitting.sections = [@section, next_section]
+    sitting.save!
+    @section.next_section.should == next_section
+  end
+
+  it "should be able to tell you if it is linkable" do
+    @section.respond_to?("linkable?").should be_true
+  end
+  
+  it "should be linkable if it has a title" do
+    @section.title = "test title"
+    @section.linkable?.should be_true
+  end
+  
+  it "should be linkable if it has no title, but has contributions and no parent section" do
+    @section.contributions = [Contribution.new]
+    @section.linkable?.should be_true
+  end
+  
+  it "should not be linkable if it has no title, contributions or parent section" do
+    @section.linkable?.should_not be_true
+  end
+  
 end
 
 describe Section, ".title_cleaned_up" do
@@ -148,5 +183,7 @@ describe Section, ".first_image_source" do
   end
 
 end
+
+
 
 

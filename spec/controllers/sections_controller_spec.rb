@@ -19,9 +19,9 @@ describe SectionsController, "handling GET /commons/1999/feb/08/test-slug" do
   before do
     @sitting = mock_model(HouseOfCommonsSitting)
     HouseOfCommonsSitting.stub!(:find_by_date).and_return(@sitting)
-    @sections = mock("sitting sections")
     @sitting.stub!(:sections).and_return(@sections)
-    @sitting.sections.stub!(:find_by_slug)
+    @section = mock_model(Section)
+    @sitting.sections.stub!(:find_by_slug).and_return(@section)
   end
   
   def do_get
@@ -44,16 +44,15 @@ describe SectionsController, "handling GET /commons/1999/feb/08/test-slug" do
   end
   
   it "should find the section using the slug" do
-    @sitting.sections.should_receive(:find_by_slug)
+    @sitting.sections.should_receive(:find_by_slug).and_return(@section)
     do_get
   end
 
   it "should assign the section for the view" do
-    section = Section.new
-    @sitting.sections.should_receive(:find_by_slug).and_return(section)
+    @sitting.sections.should_receive(:find_by_slug).and_return(@section)
     do_get
     assigns[:section].should_not be_nil
-    assigns[:section].should equal(section)
+    assigns[:section].should equal(@section)
   end
   
   it "should assign an empty marker options hash to the view" do
@@ -70,7 +69,8 @@ describe SectionsController, "handling GET /writtenanswers/1999/feb/08/test-slug
     WrittenAnswersSitting.stub!(:find_by_date).and_return(@sitting)
     @sections = mock("sitting sections")
     @sitting.stub!(:sections).and_return(@sections)
-    @sitting.sections.stub!(:find_by_slug)
+    @section = mock_model(Section)
+    @sitting.sections.stub!(:find_by_slug).and_return(@section)
   end
   
   def do_get
