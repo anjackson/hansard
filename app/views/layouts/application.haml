@@ -1,4 +1,4 @@
-= '<!DOCTYPE html>'
+<!DOCTYPE html>
 %html{ :lang => 'en-GB' }
   %head
     %meta{ 'http-equiv'.to_sym=>"Content-Type", :content=>"text/html;charset=utf-8" }
@@ -21,6 +21,26 @@
     - if @javascript
       = javascript_include_tag @javascript
   %body
+    #navbar
+      %ol
+        %li
+          Gripping title
+        %li
+          = link_to ("Context links", "this_link")
+        %li
+          = link_to ("Will appear", "that_link")
+        %li
+          = link_to ("Here one day", "other_link")
+      %ol
+        %li
+          Gripping title
+        %li
+          = link_to ("Context links", "this_link")
+        %li
+          = link_to ("Will appear", "that_link")
+        %li
+          = link_to ("Here one day", "other_link")          
+
     #header
       = google_custom_search_form
       = day_nav_links
@@ -30,5 +50,4 @@
     #footer
       #copyright
         &copy; UK Parliament. Material from this site may be reproduced without formal permission for the purposes of non-commercial research, private study and for criticism, review and news reporting provided that the material is appropriately attributed. For any other re-use of the material you are required to <a href="http://www.opsi.gov.uk/click-use/system/online/pLogin.asp?referrer=Parliament">apply for a Click-Use Parliamentary Licence from the Office of Public Sector Information</a>.
-      / = link_to(image_tag("portcullis.gif", :size => "141x153", :border => 0), home_url)
 
