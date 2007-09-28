@@ -20,14 +20,8 @@ describe "application.haml", " in general" do
     response.should have_tag("html[lang='en-GB']")
   end
   
-  it 'should not have a title which is "Historic Hansard: Please give me a title"'
-  
-  it 'should render the Google Custom Search box if we are online'
-  
-  it 'should not render the Google Custom Search box if we are offline'
-  
-  it 'should render the del.icio.us box'
-  
+  it 'should not have a title which is "Millbank Systems: Hansard: Please give me a title"'
+        
   it 'should have a link rel="alternate" with appropriate title pointing to the xml source if on a day page'
   
   it 'should have a link rel="alternate" with appropriate title pointing to the xml output if on a day page'
@@ -37,7 +31,6 @@ describe "application.haml", " in general" do
     response.should have_tag("link[rel='author']", :title => "UK Parliament", :href => "http://www.parliament.uk")
   end
   
-  #[rel='bookmark'][href=http://www.millbanksystems.com/commons/1961/may/03/school-leavers-acton][title=Historic Hansard: May 3rd 1961: School Leavers, Acton]
   it 'should have a link rel="bookmark" with a link to "http://www.millbanksystems.com/commons/1961/may/03/school-leavers-acton" and a title of "Historic Hansard: May 3rd 1961: School Leavers, Acton"'   
   
   it 'should have a link rel="contact"' do
