@@ -235,9 +235,4 @@ describe Hansard::Splitter, " when splitting files from spec/data/S5LV0436P0" do
     @source_file.log.should match(/Missing or badly formatted session tag/)
   end
 
-  it "should set the source file's start date text"
-  it "should set the source file's end date text"
-  it "should set the source file's start date"
-  it "should set the source file's end date"
-
 end
