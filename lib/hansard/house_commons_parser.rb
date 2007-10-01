@@ -354,7 +354,8 @@ class Hansard::HouseCommonsParser
         if node.elem?
           name = node.name
           if name == 'title'
-            question_section.title = clean_html(node)
+            title = clean_html(node)
+            question_section.title = title
           elsif name == 'p'
             handle_question_contribution node, question_section
           elsif (name == 'col' or name == 'image')
@@ -371,14 +372,25 @@ class Hansard::HouseCommonsParser
       questions.questions << question_section
     end
 
+    def is_orders_of_the_day? title
+      /orders of the day/i.match(title)
+    end
+
     def handle_oral_questions_section section, oral_questions
+      still_in_oral_questions = true
       questions_section = create_section(OralQuestionsSection)
       has_introduction = ((section/'p').size == 1)
+
       section.children.each do |node|
-        if node.elem?
+        if still_in_oral_questions && node.elem?
           name = node.name
           if name == 'title'
-            questions_section.title = clean_html(node)
+            title = clean_html(node)
+            if is_orders_of_the_day? title
+              still_in_oral_questions = false
+              break
+            end
+            questions_section.title = title
           elsif name == 'section'
             handle_oral_question_section node, questions_section
           elsif (name == 'col' or name == 'image')
@@ -396,20 +408,32 @@ class Hansard::HouseCommonsParser
         end
       end
 
-      questions_section.parent_section = oral_questions
-      oral_questions.sections << questions_section
+      if still_in_oral_questions
+        questions_section.parent_section = oral_questions
+        oral_questions.sections << questions_section
+      end
+      still_in_oral_questions
     end
 
-    def handle_oral_questions section, debates
+    def handle_oral_questions section, debates, sitting
+      still_in_oral_questions = true
       oral_questions = create_section(OralQuestions)
 
       section.children.each do |node|
-        if node.elem?
+        unless still_in_oral_questions
+          handle_debates_child node, sitting
+        end
+        if node.elem? && still_in_oral_questions
           name = node.name
           if name == 'title'
             oral_questions.title = clean_html(node)
           elsif name == 'section'
-            handle_oral_questions_section node, oral_questions
+            still_in_oral_questions = handle_oral_questions_section(node, oral_questions)
+            unless still_in_oral_questions
+              oral_questions.parent_section = debates
+              debates.sections << oral_questions
+              handle_debates_child node, sitting
+            end
           elsif (name == 'image' or name == 'col')
             handle_image_or_column name, node
           else
@@ -418,8 +442,10 @@ class Hansard::HouseCommonsParser
         end
       end
 
-      oral_questions.parent_section = debates
-      debates.sections << oral_questions
+      if still_in_oral_questions
+        oral_questions.parent_section = debates
+        debates.sections << oral_questions
+      end
     end
 
     def handle_image_or_column name, node
@@ -452,31 +478,35 @@ class Hansard::HouseCommonsParser
       debates.sections << section
     end
 
+    def handle_debates_child node, sitting
+      if node.elem?
+        name = node.name
+        if name == "section"
+          handle_section node, sitting.debates
+        elsif name == "oralquestions"
+          handle_oral_questions node, sitting.debates, sitting
+        elsif (name == 'col' or name == 'image')
+          handle_image_or_column name, node
+        elsif (name == 'p')
+          if node.inner_html.to_s == 'PRAYERS'
+            handle_prayers_outside_section node, sitting.debates
+          elsif node.inner_html.to_s == '[Mr. SPEAKER <i>in the Chair</i>]'
+            # handled in handle_prayers_outside_section
+          else
+            raise 'unexpected paragraph in debates section: ' + node.to_s
+          end
+        else
+          raise 'unknown debates section type: ' + name
+        end
+      elsif node.text?
+        raise 'unexpected text outside of section: ' + node.to_s if node.to_s.strip.size > 0
+      end
+    end
+
     def handle_debates sitting, debates
       sitting.debates = create_section(Debates)
       debates.children.each do |node|
-        if node.elem?
-          name = node.name
-          if name == "section"
-            handle_section node, sitting.debates
-          elsif name == "oralquestions"
-            handle_oral_questions node, sitting.debates
-          elsif (name == 'col' or name == 'image')
-            handle_image_or_column name, node
-          elsif (name == 'p')
-            if node.inner_html.to_s == 'PRAYERS'
-              handle_prayers_outside_section node, sitting.debates
-            elsif node.inner_html.to_s == '[Mr. SPEAKER <i>in the Chair</i>]'
-              # handled in handle_prayers_outside_section
-            else
-              raise 'unexpected paragraph in debates section: ' + node.to_s
-            end
-          else
-            raise 'unknown debates section type: ' + name
-          end
-        elsif node.text?
-          raise 'unexpected text outside of section: ' + node.to_s if node.to_s.strip.size > 0
-        end
+        handle_debates_child node, sitting
       end
     end
 
