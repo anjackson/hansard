@@ -1,3 +1,4 @@
+- @javascript = :defaults
 %h1.title
   = @source_files.length
   Source Files
@@ -7,7 +8,7 @@
     %th Error types
     %th.number File count
     %th.percentage Percentage of files
-  - @error_types.each do |type|
+  - @error_types.each_with_index do |type, index|
     %tr
       %td= type
       - error_count = @error_types_to_files[type].size.to_s

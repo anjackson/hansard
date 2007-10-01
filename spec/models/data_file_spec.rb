@@ -18,29 +18,23 @@ describe DataFile do
   end
 
   it 'should return reload_possible is true if RAILS_ENV is development' do
-    environment = RAILS_ENV
-    RAILS_ENV = 'development'
+    ApplicationController.stub!(:is_production?).and_return(false)
     DataFile.reload_possible?.should be_true
     data_file = DataFile.new :name => 'houselords_1928_05_15.xml'
     data_file.reload_possible?.should be_true
-    RAILS_ENV = environment
   end
 
   it 'should return reload_possible is false if RAILS_ENV is development but date is nil' do
-    environment = RAILS_ENV
-    RAILS_ENV = 'development'
+    ApplicationController.stub!(:is_production?).and_return(false)
     data_file = DataFile.new :name => 'houselords_junk.xml'
     data_file.reload_possible?.should be_false
-    RAILS_ENV = environment
   end
 
   it 'should return reload_possible is false if RAILS_ENV is production' do
-    environment = RAILS_ENV
-    RAILS_ENV = 'production'
+    ApplicationController.stub!(:is_production?).and_return(true)
     DataFile.reload_possible?.should be_false
     data_file = DataFile.new
     data_file.reload_possible?.should be_false
-    RAILS_ENV = environment
   end
 
   it 'should return date text "1928/05/15" for file houselords_1928_05_15.xml' do

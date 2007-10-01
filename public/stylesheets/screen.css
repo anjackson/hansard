@@ -155,6 +155,10 @@ td.number, td.percentage {
   padding-right: 1.5em;
 }
 
+a.error_count {
+  color: blue;
+}
+
 th {
   border-bottom: 0.5em solid white;
 }

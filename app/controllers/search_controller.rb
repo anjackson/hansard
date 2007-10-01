@@ -10,11 +10,11 @@ class SearchController < ApplicationController
                        "site"    => "prototypes",
                        "client"  => "default_frontend",
                        "output"  => "xml_no_dtd",
-                       "start"   => 0, 
+                       "start"   => 0,
                        "as_sitesearch" => "rua.parliament.uk/hansard",
                        "num" => @per_page}
      @search_params.update("start" => params[:start]) if !params[:start].nil?
-     @gquery =  "#{APPLICATION_URLS[:search]}?#{hash_to_query(@search_params)}"
+     @gquery = "#{APPLICATION_URLS[:search]}?#{hash_to_query(@search_params)}"
      @xml_results = open(@gquery, :proxy => false).read
      print "RESULTS ARE #{@xml_results}"
      @result_set = ResultSet.new(@xml_results)
@@ -30,5 +30,5 @@ class SearchController < ApplicationController
       end
       params.join('&')
     end
-    
+
 end

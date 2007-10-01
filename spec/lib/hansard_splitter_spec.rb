@@ -42,7 +42,7 @@ describe Hansard::Splitter, " when splitting file that does not validate against
 
   it 'should add 1 log message with validation error text' do
     @source_file.log_line_count.should == 1
-    @source_file.log.should == @validation_error
+    @source_file.log.should == 'Schema validation failed: ' + @validation_error
   end
 
   it 'should have xsd_validated field set to false' do
@@ -67,13 +67,69 @@ describe Hansard::Splitter, " when splitting file that has division table in ora
   end
 
   it 'should add error log line about division in oralquestions' do
-    @source_file.log.should == 'warning: division element should appear inside oralquestion element'
+    @source_file.log_line_count.should == 1
+    @source_file.log.should == 'Division element inside oralquestion element'
   end
 
   after(:all) do
     SourceFile.delete_all
   end
 end
+
+describe Hansard::Splitter, ' is_orders_of_the_day?' do
+
+  it 'should return true if passed <title>Orders of the Week</title>' do
+    Hansard::Splitter.is_orders_of_the_day?("<title>Orders of the Week</title>").should be_false
+  end
+
+  it 'should return true if passed <title>Orders of the Day</title>' do
+    Hansard::Splitter.is_orders_of_the_day?("<title>Orders of the Day</title>").should be_true
+  end
+
+  it 'should return true if passed <title>ORDERS OF THE DAY</title>' do
+    Hansard::Splitter.is_orders_of_the_day?("<title>ORDERS OF THE DAY</title>").should be_true
+  end
+
+  it 'should return true if passed <title> Orders of the Day</title>' do
+    Hansard::Splitter.is_orders_of_the_day?("<title> Orders of the Day</title>").should be_true
+  end
+
+  it 'should return true if passed <title>ORDERS OF THE DAY OVERSEAS DEVELOPMENT AND CO-OPERATION BILL [Lords]</title>' do
+    Hansard::Splitter.is_orders_of_the_day?("<title>ORDERS OF THE DAY OVERSEAS DEVELOPMENT AND CO-OPERATION BILL [Lords]</title>").should be_true
+  end
+
+  it 'should return true if passed <section><title>ORDERS OF THE DAY SUPPLY</title>' do
+    Hansard::Splitter.is_orders_of_the_day?("<section><title>ORDERS OF THE DAY SUPPLY</title>").should be_true
+  end
+
+  it 'should return true if passed <title>ORDERS OF THE DAY<lb/> SUPPLY</title>' do
+    Hansard::Splitter.is_orders_of_the_day?("<title>ORDERS OF THE DAY<lb/> SUPPLY</title>").should be_true
+  end
+
+end
+
+describe Hansard::Splitter, " when splitting file that has <title>ORDERS OF THE DAY</title> in oralquestions section" do
+
+  before(:all) do
+    splitter = Hansard::Splitter.new(false, overwrite=true, verbose=false)
+    path = File.join(File.dirname(__FILE__),'..','data','orders_of_the_day_inside_oralquestions')
+
+    # stub the schema check method
+    splitter.should_receive(:validate_schema).with('hansard_v7.xsd','orders_of_the_day_inside_oralquestions').and_return('')
+    @source_files = splitter.split(path)
+    @source_file = @source_files.first
+  end
+
+  it 'should add error log line about ORDERS OF THE DAY in oralquestions' do
+    @source_file.log.should == 'Orders of the Day title in oralquestions'
+    @source_file.log_line_count.should == 1
+  end
+
+  after(:all) do
+    SourceFile.delete_all
+  end
+end
+
 
 describe Hansard::Splitter, " when splitting files from spec/data/valid_complete_file" do
 

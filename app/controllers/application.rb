@@ -3,9 +3,13 @@
 
 class ApplicationController < ActionController::Base
   helper :all # include all helpers, all the time
-  include ExceptionNotifiable 
-  
-  def check_valid_date 
+  include ExceptionNotifiable
+
+  def self.is_production?
+    RAILS_ENV == 'production'
+  end
+
+  def check_valid_date
     if params[:day]
       @resolution = :day
     elsif params[:month]
@@ -19,21 +23,21 @@ class ApplicationController < ActionController::Base
       when :month; @url_date = UrlDate.new(params.merge(:day=>'01'))
       else         @url_date = UrlDate.new(params.merge(:month=>'jan',:day=>'01'))
     end
-    
+
     redirect_date @url_date if not @url_date.is_valid_date?
-    
+
     begin
       @date = @url_date.to_date
     rescue
       redirect_to :action => "index"
     end
   end
-  
+
   def redirect_date date
     params[:day] = date.day
     params[:month] = date.month
     headers["Status"] = "301 Moved Permanently"
     redirect_to params and return false
   end
-  
+
 end

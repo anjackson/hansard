@@ -122,14 +122,29 @@ module Hansard
       @date = nil
     end
 
+    def self.is_orders_of_the_day? line
+      if line.include?('title')
+        if /orders of the day/i.match(line)
+          true
+        else
+          false
+        end
+      else
+        false
+      end
+    end
+
     def handle_line line
       @index = @index.next
 
       @inside_oralquestions = true if line.include? '<oralquestions>'
       @inside_oralquestions = false if line.include? '</oralquestions>'
 
-      if line.include?('<division>') && @inside_oralquestions
-        @source_file.add_log 'warning: division element should appear inside oralquestion element'
+      if @inside_oralquestions && line.include?('<division>')
+        @source_file.add_log 'Division element inside oralquestion element'
+      end
+      if @inside_oralquestions && Hansard::Splitter.is_orders_of_the_day?(line)
+        @source_file.add_log 'Orders of the Day title in oralquestions'
       end
       token_element = false
 
@@ -301,7 +316,7 @@ module Hansard
           @source_file.xsd_validated = true
         else
           @source_file.xsd_validated = false
-          @source_file.add_log error
+          @source_file.add_log 'Schema validation failed: ' + error
         end
       end
       @source_file.add_log("Missing or badly formatted session tag") unless @session
