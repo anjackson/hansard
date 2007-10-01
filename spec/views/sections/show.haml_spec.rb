@@ -4,16 +4,8 @@ describe "sections/show.haml", " in general" do
 
   before do
     @section = mock_model(Section)
-    @prev = mock_model(Section)
-    @prev.stub!(:linkable?)
-    @prev.stub!(:title).and_return("previous section title")
-    @next = mock_model(Section)
-    @next.stub!(:linkable?)    
-    @next.stub!(:title).and_return("next section title")
     @section.stub!(:title).and_return("section name")
     @controller.template.stub!(:render)
-    @section.stub!(:previous_linkable_section).and_return(@prev)
-    @section.stub!(:next_linkable_section).and_return(@next)  
     @controller.template.stub!(:section_url)
     assigns[:section] = @section
   end
