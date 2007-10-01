@@ -25,7 +25,7 @@ describe '_contribution partial', 'when passed quote contribution' do
   end
 
   it 'should show quote text in p with class quote' do
-    response.should have_tag('div.quote', @text.sub(': ','').sub('<i>','').sub('</i>','')+"\n  0")
+    response.should have_tag('div.quote', @text.sub(': ','').sub('<i>','').sub('</i>',''))
   end
 
   it 'should show italic text in italics' do
