@@ -18,14 +18,14 @@ body {
   text-align:right;
 }
 
-#navbar li {
-  list-style-type: none;
+.next-section {
+	float:right;
+	display:block;
 }
 
-#copyright {
-	margin-right: 20em;
-	font-size: 0.8em;
-	line-height: 120%;
+#navbar li {
+  list-style-type: none;
+  line-height: 130%;
 }
 
 table {
@@ -85,7 +85,6 @@ h2, h3 {
   margin-top: 2em;
 }
 
-
 cite {
 	font-style:normal;
 	font-weight:bold;
@@ -95,7 +94,6 @@ cite {
 blockquote {
   display: inline;
 }
-
 
 a {
   text-decoration: none;
@@ -115,6 +113,7 @@ a {
 	margin-bottom: 2em;
   margin-left: 10em;
   margin-right: 20em;
+min-height:36em;
 }
 
 #data_file_warnings {
@@ -165,17 +164,17 @@ th {
 }
 
 .procedural {
-	background-color:beige;
+	border-left:4pt solid #eee;
 	padding:0.1em 0.5em;
+	margin:1em;
 }
 
 #footer {
-	width: 100%;
-	border-top: 1pt solid #999;
 	color: #999;
 	padding-top: 0.5em;
 	padding-bottom: 1em;
-  padding-left: 4em;
+	font-size: 0.8em;
+	line-height: 120%;
 }
 
 div.section-link div.section-link {
