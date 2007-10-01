@@ -27,6 +27,8 @@ describe ApplicationHelper, " when formatting contribution" do
     format_contribution('a <image src="S6CV0089P0I0021"/> text').should ==
         "<p>a <span class='sidenote'><a href=\"/images/S6CV0089P0I0021.jpg\">Img. S6CV0089P0I0021</a></span> text</p>"
   end
+  
+  it 'should not produce a col element thus: "Col. 0"'
 
   it 'should replace lb element with close and open paragraph' do
     format_contribution('a <lb></lb> break').should ==
