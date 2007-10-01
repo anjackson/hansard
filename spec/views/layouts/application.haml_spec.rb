@@ -19,12 +19,10 @@ describe "application.haml", " in general" do
     do_render
     response.should have_tag("html[lang='en-GB']")
   end
-  
-  it 'should not have a title which is "Millbank Systems: Hansard: Please give me a title"'
         
   it 'should have a link rel="alternate" with appropriate title pointing to the xml source when on a day page'
   
-  it 'should have a link rel="alternate" with appropriate title pointing to the xml output if when a day page'
+  it 'should have a link rel="alternate" with appropriate title pointing to the xml output when on a day page'
   
   it 'should have a link rel="author" with a link to "http://www.parliament.uk" and a title of "UK Parliament"' do
     do_render
