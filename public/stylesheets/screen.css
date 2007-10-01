@@ -126,8 +126,8 @@ min-height:36em;
 
 #header {
 	width: 100%;
-	padding-top: 1em;
-	padding-bottom: 0.5em;
+	padding-top: 0.1em;
+	padding-bottom: 0.1em;
   padding-left: 4em;
   background-color:#eee;
 }
