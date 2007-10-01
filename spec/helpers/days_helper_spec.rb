@@ -119,3 +119,18 @@ describe DaysHelper, " when finding the first day with material in the next or p
   end
   
 end
+
+describe DaysHelper, " when using section_previous_and_next_links to create links for a section" do
+  
+  it "should not have any text about the previous section if there isn't one"
+  
+  it "should not have any text about the next section if there isn't one"
+     
+  it "should have a link to the previous section if there is one and it is linkable"
+    
+  it "should have a link to the next section if there is one and it is linkable"
+    
+end
+
+
+
