@@ -7,3 +7,6 @@
 - elsif contribution.is_a? QuoteContribution
   .quote
     = format_contribution(contribution.text, ['div'])
+- elsif contribution.is_a? TableContribution
+  .table
+    = format_contribution(contribution.text, ['div'])

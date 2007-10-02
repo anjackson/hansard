@@ -29,9 +29,6 @@ describe Hansard::HouseCommonsParser do
     debates.sections[1].sections.size.should == 1
     debates.sections[3].sections.size.should == 1
     debates.sections.size.should == 4
-
-    p @sitting.to_xml
   end
-
 
 end

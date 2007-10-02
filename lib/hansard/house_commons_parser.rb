@@ -218,6 +218,16 @@ class Hansard::HouseCommonsParser
       debate.contributions << quote
     end
 
+    def handle_table_element node, debate
+      table = TableContribution.new({
+        :column_range => @column,
+        :image_src_range => @image,
+        :text => clean_text(node.to_s).strip
+      })
+      table.section = debate
+      debate.contributions << table
+    end
+
     def handle_section_element section_element, debates
       section = create_section(Section)
       section_element.children.each do |node|
@@ -241,6 +251,8 @@ class Hansard::HouseCommonsParser
             handle_image_or_column name, node
           elsif name == 'section'
             handle_section_element node, section
+          elsif name == 'table'
+            handle_table_element node, section
           elsif name == 'division'
             handle_division node, section
           elsif name == 'ul'
@@ -538,7 +550,10 @@ class Hansard::HouseCommonsParser
     end
 
     def clean_html node
-      node.inner_html.chars.gsub("\r\n","\n").to_s
+      clean_text node.inner_html
     end
 
+    def clean_text text
+      text.chars.gsub("\r\n","\n").to_s
+    end
 end

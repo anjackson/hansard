@@ -12,6 +12,31 @@ describe "_contribution partial", " in general" do
 
 end
 
+describe '_contribution partial', 'when passed table contribution' do
+
+  before do
+    @text = %Q[<table type="span">\n          <tr>\n            <td align="right"><i>Unsecured Loans</i></td>\n            <td></td>\n          </tr>\n        </table>]
+    @table = mock_model(TableContribution)
+    @table.should_receive(:text).and_return @text
+    @table.should_receive(:markers)
+    @controller.template.stub!(:contribution).and_return @table
+    render 'sections/_contribution.haml'
+  end
+
+  it 'should show table text "as is" within a div with class table' do
+    response.should have_tag('div.table') do
+      with_tag('table') do
+        with_tag('tr') do
+          with_tag('td') do
+            with_tag('i', 'Unsecured Loans')
+          end
+        end
+      end
+    end
+  end
+
+end
+
 describe '_contribution partial', 'when passed quote contribution' do
 
   before do
