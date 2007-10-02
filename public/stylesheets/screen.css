@@ -108,7 +108,7 @@ a {
 
 #content {
   width: 36em;
-  text-align: justify;
+  /* text-align: justify; */
 	margin-top: 2em;
 	margin-bottom: 2em;
   margin-left: 10em;
