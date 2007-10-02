@@ -20,7 +20,7 @@ describe ApplicationHelper, " when formatting contribution" do
 
   it 'should replace col element with span with class "sidenote" and anchor' do
     format_contribution('a <col>123</col> text').should ==
-        "<p>a <span class='sidenote'><a name='column_123' href='#column_123'>Col. 123</a></span> text</p>"
+        "<p>a <span class='sidenote second-sidenote'><a name='column_123' href='#column_123'>Col. 123</a></span> text</p>"
   end
 
   it 'should replace image element with an image wrapped in a span with class "sidenote"' do
@@ -58,7 +58,7 @@ describe ApplicationHelper, " when formatting contribution" do
 
   it 'should return the column number with an anchor wrapped with a span with class "sidenote"' do
     format_contribution('a <sub>really <col>123</col> powerful</sub> change').should ==
-        "<p>a <sub>really <span class='sidenote'><a name='column_123' href='#column_123'>Col. 123</a></span> powerful</sub> change</p>"
+        "<p>a <sub>really <span class='sidenote second-sidenote'><a name='column_123' href='#column_123'>Col. 123</a></span> powerful</sub> change</p>"
   end
 
   it "should convert a member element in to a span element with class 'member'" do
@@ -300,7 +300,7 @@ describe ApplicationHelper, " when returning marker html for a model" do
 
   it "should return a column marker tag if the model yields a column" do
     @mock_sitting.stub!(:markers).and_yield("column", "column number")
-    should_receive(:column_marker).with("column number", " second-sidenote").and_return("")
+    should_receive(:column_marker).with("column number").and_return("")
     marker_html(@mock_sitting, {})
   end
 
