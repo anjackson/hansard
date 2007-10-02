@@ -123,12 +123,16 @@ module Hansard
     end
 
     def self.is_orders_of_the_day? line
-      if line.include?('title')
-        if /orders of the day/i.match(line)
-          true
-        else
-          false
-        end
+      if line.include?('<title')
+        /orders of the day/i.match(line) ? true : false
+      else
+        false
+      end
+    end
+
+    def self.is_business_of_the_house? line
+      if line.include?('<title')
+        /business of the house/i.match(line) ? true : false
       else
         false
       end
@@ -142,6 +146,9 @@ module Hansard
 
       if @inside_oralquestions && line.include?('<division>')
         @source_file.add_log 'Division element inside oralquestion element'
+      end
+      if @inside_oralquestions && Hansard::Splitter.is_business_of_the_house?(line)
+        @source_file.add_log 'Business of the House title in oralquestions'
       end
       if @inside_oralquestions && Hansard::Splitter.is_orders_of_the_day?(line)
         @source_file.add_log 'Orders of the Day title in oralquestions'

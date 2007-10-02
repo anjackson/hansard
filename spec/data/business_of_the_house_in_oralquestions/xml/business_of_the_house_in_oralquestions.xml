@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hansard xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="hansard_v7.xsd">
+  <titlepage></titlepage>
+  <frontmatter></frontmatter>
+  <p></p>
+  <p align="center">ELEVENTH VOLUME OF SESSION <session>2002&#x2013;2003</session>
+  </p>
+  <housecommons>
+    <image src="S5CV0855P0I0009"/>
+    <col>1</col>
+    <title>HOUSE OF COMMONS</title>
+    <date format="1973-04-16">Monday 16th April 1973</date>
+    <p></p>
+    <debates>
+      <oralquestions>
+        <title>ORAL ANSWERS TO QUESTIONS</title>
+        <section>
+          <title>TRADE AND INDUSTRY</title>
+          <section>
+            <title>North Sea Oil and Gas</title>
+            <p id="S5CV0855P0-00313">1. <member> Mr. Strang</member>
+              <membercontribution> asked the Secretary of State for Trade and Industry if he will make a further statement on the progress made in implementing the recommendations of the IMEG report.</membercontribution>
+            </p>
+          </section>
+          <section>
+            <title>BUSINESS OF THE HOUSE</title>
+            <p id="S5CV0855P0-00476">
+              <i>Ordered,</i>
+              <quote>That if the Northern Ireland Assembly Bill be committed to a Committee of the whole House, further proceedings on the Bill shall stand postponed and that as soon as the proceedings on any Resolution come to by the House on Northern Ireland Assembly [<i>Money</i>] have been concluded, this House will immediately resolve itself into a Committee on the Bill.&#x2014;[Mr. <i>John Slradling Thomas.</i>]</quote>
+            </p>
+          </section>
+        </section>
+        <section>
+          <title>ORDERS OF THE DAY</title>
+        </section>
+      </oralquestions>
+    </debates>
+  </housecommons>
+  <index>
+    <indexdiv>
+      <index-letter></index-letter>
+      <p></p>
+    </indexdiv>
+  </index>
+</hansard>

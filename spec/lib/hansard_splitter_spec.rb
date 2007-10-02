@@ -108,6 +108,30 @@ describe Hansard::Splitter, ' is_orders_of_the_day?' do
 
 end
 
+
+describe Hansard::Splitter, " when splitting file that has <title>BUSINESS OF THE HOUSE</title> in oralquestions section" do
+
+  before(:all) do
+    splitter = Hansard::Splitter.new(false, overwrite=true, verbose=false)
+    path = File.join(File.dirname(__FILE__),'..','data','business_of_the_house_in_oralquestions')
+
+    # stub the schema check method
+    splitter.should_receive(:validate_schema).with('hansard_v7.xsd','business_of_the_house_in_oralquestions').and_return('')
+    @source_files = splitter.split(path)
+    @source_file = @source_files.first
+  end
+
+  it 'should add error log line about BUSINESS OF THE HOUSE in oralquestions' do
+    @source_file.log.should == "Business of the House title in oralquestions\nOrders of the Day title in oralquestions"
+    @source_file.log_line_count.should == 2
+  end
+
+  after(:all) do
+    SourceFile.delete_all
+  end
+end
+
+
 describe Hansard::Splitter, " when splitting file that has <title>ORDERS OF THE DAY</title> in oralquestions section" do
 
   before(:all) do
