@@ -2,6 +2,10 @@ require 'hpricot'
 
 module ApplicationHelper
 
+  def intro section
+    section.introduction.text
+  end
+  
   def marker_html(model, options)
     markers = ''
     model.markers(options) do |marker_type, marker_value|
@@ -270,10 +274,12 @@ EOF
   end
 
   def format_contribution text, outer_elements=[]
-    # are we really searching the entire text here?
-    # can we just strip the first char if it is a colon instead?
     if text.include? ':'
       text = text.sub(':','').strip
+    end
+
+    if text.include? "<quote>"
+      text = text.gsub('<quote>"','<quote>').gsub('"</quote>','</quote>')
     end
 
     xml = '<wrapper>' + text + '</wrapper>'

@@ -5,8 +5,10 @@
 - elsif contribution.is_a? MemberContribution
   = render :partial => 'member_contribution', :object => contribution
 - elsif contribution.is_a? QuoteContribution
+<<<<<<< .mine
+  %q.quote= format_contribution(contribution.text, ['div'])=======
   .quote
     = format_contribution(contribution.text, ['div'])
 - elsif contribution.is_a? TableContribution
   .table
-    = format_contribution(contribution.text, ['div'])
+    = format_contribution(contribution.text, ['div'])>>>>>>> .r1977

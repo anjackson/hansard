@@ -47,7 +47,9 @@ describe ApplicationHelper, " when formatting contribution" do
 
   it 'should return one sidenote with a linebreak if two sidenotes appear together'
 
-  it 'should retun quotes in a q tag with no extraneous quotemarks'
+  it ' should return quotes in a q tag with no extraneous quotemarks' do
+    format_contribution('test quote :<quote>"quoted text goes here"</quote>').should == '<p>test quote <q class="quote">quoted text goes here</q></p>'
+  end
 
   it 'should return the image name linked to the source wrapped with a span with class "sidenote"' do
     format_contribution('a <i>really <image src="S6CV0089P0I0021"/> powerful</i> change').should ==

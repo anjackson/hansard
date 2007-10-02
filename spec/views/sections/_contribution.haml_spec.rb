@@ -40,7 +40,7 @@ end
 describe '_contribution partial', 'when passed quote contribution' do
 
   before do
-    @text = ': That Sir Antony Buck and Mr. Robert Key be discharged from the Select Committee on the Armed Forces Bill and that Mr. Tony Baldry and Mr. Nicholas Soames be added to the Committee.&#x2014;<i>(Mr. Maude.]</i>'
+    @text = ': <quote>"That Sir Antony Buck and Mr. Robert Key be discharged from the Select Committee on the Armed Forces Bill and that Mr. Tony Baldry and Mr. Nicholas Soames be added to the Committee."</quote>&#x2014;<i>(Mr. Maude.]</i>'
     @quote = mock_model(QuoteContribution)
     @quote.should_receive(:text).and_return @text
     @quote.should_receive(:markers)
@@ -49,8 +49,8 @@ describe '_contribution partial', 'when passed quote contribution' do
     render 'sections/_contribution.haml'
   end
 
-  it 'should show quote text in p with class quote' do
-    response.should have_tag('div.quote', @text.sub(': ','').sub('<i>','').sub('</i>',''))
+  it 'should show quote text in q with class quote' do
+    response.should have_tag('q.quote', @text.sub(': ','').sub('<i>','').sub('</i>','').gsub('"','').sub('<quote>','').sub('</quote>','').squeeze(' '))
   end
 
   it 'should show italic text in italics' do
