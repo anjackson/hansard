@@ -1,0 +1,42 @@
+<housecommons>
+  <image src="S5CV0976P1I0146"/>
+  <col>274</col>
+  <title>HOUSE OF COMMONS</title>
+  <date format="1979-12-18">Tuesday 18 December 1979</date>
+  <p></p>
+  <debates>
+    <oralquestions>
+      <title>ORAL ANSWERS TO<lb/> QUESTIONS</title>
+      <section>
+        <title>EDUCATION AND SCIENCE</title>
+        <section>
+          <title>Nursery Schools</title>
+          <p id="S5CV0976P1-01073">
+            <table>
+              <tr>
+                <td colspan="7" align="right">JANUARY 1979</td>
+              </tr>
+              <tr>
+                <td>
+                  <i>Local Education Authority</i>
+                </td>
+              </tr>
+            </table>
+          </p>
+          <image src="S5CV0976P1I0147"/>
+          <col>275</col>
+          <table>
+            <tr>
+              <td colspan="3">
+                <i>Local Education Authority&#x2014;cont.</i>
+              </td>
+              <td align="right">
+                <i>per cent.</i>
+              </td>
+            </tr>
+          </table>
+        </section>
+      </section>
+    </oralquestions>
+  </debates>
+</housecommons>

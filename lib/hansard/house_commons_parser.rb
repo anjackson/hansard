@@ -219,11 +219,19 @@ class Hansard::HouseCommonsParser
     end
 
     def handle_table_element node, debate
+      if node.name == 'p'
+        text = clean_html(node).strip
+      else
+        text = clean_text(node.to_s).strip
+      end
       table = TableContribution.new({
         :column_range => @column,
         :image_src_range => @image,
-        :text => clean_text(node.to_s).strip
+        :text => text
       })
+      if (id = node.attributes['id'])
+        table.xml_id = id
+      end
       table.section = debate
       debate.contributions << table
     end
@@ -236,11 +244,13 @@ class Hansard::HouseCommonsParser
           if name == 'title'
             section.title = handle_node_text(node)
           elsif name == 'p'
-            if (match = Hansard::TIME_PATTERN.match clean_html(node))
+            inner_html = clean_html(node).strip
+
+            if (match = Hansard::TIME_PATTERN.match inner_html)
               section.time_text = match[0]
               section.time = Time.parse(match[0].gsub('.',':').gsub("&#x00B7;", ":"))
               handle_procedural_contribution node, section
-            elsif clean_html(node).include? 'membercontribution'
+            elsif inner_html.include? 'membercontribution'
               handle_member_contribution node, section
             else
               handle_procedural_contribution node, section
@@ -369,11 +379,18 @@ class Hansard::HouseCommonsParser
             title = clean_html(node)
             question_section.title = title
           elsif name == 'p'
-            handle_question_contribution node, question_section
+            inner_html = clean_html(node).strip
+            if inner_html.starts_with?('<table>') && inner_html.ends_with?('</table>')
+              handle_table_element node, question_section
+            else
+              handle_question_contribution node, question_section
+            end
           elsif (name == 'col' or name == 'image')
             handle_image_or_column name, node
           elsif name == 'section'
             handle_oral_question_section node, question_section
+          elsif name == 'table'
+            handle_table_element node, question_section
           else
             log 'unexpected element in oral_question_section: ' + name + ': ' + node.to_s
           end
