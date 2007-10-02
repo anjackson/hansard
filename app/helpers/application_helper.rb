@@ -15,7 +15,7 @@ module ApplicationHelper
         markers += column_marker(marker_value)
       end
     end
-    markers
+    markers.sub("</span><span class='sidenote'>", "<br />")
   end
 
   def image_marker(image_src)
@@ -24,7 +24,7 @@ module ApplicationHelper
   end
 
   def column_marker(column)
-    "<span class='sidenote second-sidenote'><a name='column_#{column}' href='#column_#{column}'>Col. #{column}</a></span>"
+    "<span class='sidenote'><a name='column_#{column}' href='#column_#{column}'>Col. #{column}</a></span>"
   end
 
   def section_url(section)
@@ -287,6 +287,7 @@ EOF
     inner_elements = []
     parts = handle_contribution_part doc.children.first, [], inner_elements, outer_elements
     parts = '<p>' + parts.join('').squeeze(' ') + '</p>'
+    parts.gsub!(/<\/span>\s<span class='sidenote'>/,"<br />")
     parts
   end
 

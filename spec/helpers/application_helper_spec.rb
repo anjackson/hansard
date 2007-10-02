@@ -20,7 +20,7 @@ describe ApplicationHelper, " when formatting contribution" do
 
   it 'should replace col element with span with class "sidenote" and anchor' do
     format_contribution('a <col>123</col> text').should ==
-        "<p>a <span class='sidenote second-sidenote'><a name='column_123' href='#column_123'>Col. 123</a></span> text</p>"
+        "<p>a <span class='sidenote'><a name='column_123' href='#column_123'>Col. 123</a></span> text</p>"
   end
 
   it 'should replace image element with an image wrapped in a span with class "sidenote"' do
@@ -45,8 +45,6 @@ describe ApplicationHelper, " when formatting contribution" do
         '<p>a <sub>real</sub> change</p>'
   end
 
-  it 'should return one sidenote with a linebreak if two sidenotes appear together'
-
   it ' should return quotes in a q tag with no extraneous quotemarks' do
     format_contribution('test quote :<quote>"quoted text goes here"</quote>').should == '<p>test quote <q class="quote">quoted text goes here</q></p>'
   end
@@ -58,7 +56,7 @@ describe ApplicationHelper, " when formatting contribution" do
 
   it 'should return the column number with an anchor wrapped with a span with class "sidenote"' do
     format_contribution('a <sub>really <col>123</col> powerful</sub> change').should ==
-        "<p>a <sub>really <span class='sidenote second-sidenote'><a name='column_123' href='#column_123'>Col. 123</a></span> powerful</sub> change</p>"
+        "<p>a <sub>really <span class='sidenote'><a name='column_123' href='#column_123'>Col. 123</a></span> powerful</sub> change</p>"
   end
 
   it "should convert a member element in to a span element with class 'member'" do
@@ -317,6 +315,12 @@ describe ApplicationHelper, " when returning marker html for a model" do
     column_marker("5").should have_tag("a[name=column_5]", :count => 1)
   end
 
+  it 'should return one sidenote with a linebreak if two sidenotes appear together within a contribution' do
+    format_contribution("<col>911</col>   <image src=\"S6CV0089P0I0466\"/>").should == "<p><span class='sidenote'><a name='column_911' href='#column_911'>Col. 911</a><br \/><a href=\"/images/S6CV0089P0I0466.jpg\">Img. S6CV0089P0I0466</a></span></p>"
+  end
+
+  it 'should return one sidenote with a linebreak if two sidenotes appear together outside a contribution'
+  
 end
 
 describe ApplicationHelper, " when formatting plain text as an html list" do
