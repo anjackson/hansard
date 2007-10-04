@@ -347,9 +347,13 @@ class Hansard::HouseCommonsParser
                 contribution.member = text.gsub("\r\n","\n").strip + ' '
               elsif !@unexpected
                 if element.at('membercontribution')
-                  log 'unexpected text: ' + text
-                  log 'will suppress rest of unexpected messages'
-                  @unexpected = true
+                  if text == ':'
+                    contribution.text += node.to_s.squeeze(' ')
+                  else
+                    log 'unexpected text: ' + text + ' in contribution ' + contribution.inspect
+                    log 'will suppress rest of unexpected messages'
+                    @unexpected = true
+                  end
                 else
                   in_member_contribution_text = true
                   suffix = node.to_s.ends_with?("\r\n") ? '\n' : ''
