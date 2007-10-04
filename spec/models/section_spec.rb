@@ -199,9 +199,25 @@ describe Section, ".first_image_source" do
     section = Section.new(:start_image_src => nil)
     section.first_image_source.should be_nil
   end
-
+  
 end
 
 
+describe Section, ".first_col" do
 
+  it "should return the first column number " do
+    section = Section.new(:start_column => 42)
+    section.first_col.should == 42
+  end
+  
+  it "should return nil if the contribution has no column numbers " do
+    section = Section.new(:start_column => nil)
+    section.first_col.should be_nil
+  end
 
+  it "should not return a number less than 1" do
+    section = Section.new(:start_column => 0)
+    section.first_col.should be_nil
+  end
+
+end

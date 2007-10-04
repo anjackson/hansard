@@ -27,8 +27,6 @@ describe ApplicationHelper, " when formatting contribution" do
     format_contribution('a <image src="S6CV0089P0I0021"/> text').should ==
         "<p>a <span class='sidenote'><a href=\"/images/S6CV0089P0I0021.jpg\">Img. S6CV0089P0I0021</a></span> text</p>"
   end
-  
-  it 'should not produce a col element thus: "Col. 0"'
 
   it 'should replace lb element with close and open paragraph' do
     format_contribution('a <lb></lb> break').should ==
@@ -301,7 +299,7 @@ describe ApplicationHelper, " when returning marker html for a model" do
     should_receive(:column_marker).with("column number").and_return("")
     marker_html(@mock_sitting, {})
   end
-
+  
   it "should return a 'span' tag with class 'sidenote' containing a link to the image source with the text 'Img. ' and the name of the image" do
     expected_tag_selector = "span.sidenote a[href=\"/images/S5CV0750P0I0497.jpg\"]"
     image_marker("S5CV0750P0I0497").should have_tag(expected_tag_selector, :count => 1, :text => "Img. S5CV0750P0I0497")
@@ -320,10 +318,16 @@ describe ApplicationHelper, " when returning marker html for a model" do
     format_contribution("<col>911</col>   <image src=\"S6CV0089P0I0466\"/>").should == expected
   end
 
+  it 'should not produce a col element thus: "Col. 0"' do
+    section = Section.new(:start_column => 0)
+
+    marker_html(section, {}).should == ''
+  end
+
   it 'should return one sidenote with a linebreak if two sidenotes appear together outside a contribution' do
     section = Section.new
     section.stub!(:first_image_source).and_return("S6CV0089P0I0472")
-    section.stub!(:first_col).and_return("925")
+    section.stub!(:first_col).and_return(925)
 
     marker_html(section, {}).should == %q[<span class='sidenote'><a href="/images/S6CV0089P0I0472.jpg">Img. S6CV0089P0I0472</a><br /><a name='column_925' href='#column_925'>Col. 925</a></span>]
   end
