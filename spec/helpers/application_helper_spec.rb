@@ -316,10 +316,17 @@ describe ApplicationHelper, " when returning marker html for a model" do
   end
 
   it 'should return one sidenote with a linebreak if two sidenotes appear together within a contribution' do
-    format_contribution("<col>911</col>   <image src=\"S6CV0089P0I0466\"/>").should == "<p><span class='sidenote'><a name='column_911' href='#column_911'>Col. 911</a><br \/><a href=\"/images/S6CV0089P0I0466.jpg\">Img. S6CV0089P0I0466</a></span></p>"
+    expected = "<p><span class='sidenote'><a name='column_911' href='#column_911'>Col. 911</a><br \/><a href=\"/images/S6CV0089P0I0466.jpg\">Img. S6CV0089P0I0466</a></span></p>"
+    format_contribution("<col>911</col>   <image src=\"S6CV0089P0I0466\"/>").should == expected
   end
 
-  it 'should return one sidenote with a linebreak if two sidenotes appear together outside a contribution'
+  it 'should return one sidenote with a linebreak if two sidenotes appear together outside a contribution' do
+    section = Section.new
+    section.stub!(:first_image_source).and_return("S6CV0089P0I0472")
+    section.stub!(:first_col).and_return("925")
+
+    marker_html(section, {}).should == %q[<span class='sidenote'><a href="/images/S6CV0089P0I0472.jpg">Img. S6CV0089P0I0472</a><br /><a name='column_925' href='#column_925'>Col. 925</a></span>]
+  end
   
 end
 

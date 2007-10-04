@@ -34,27 +34,27 @@ module Acts
 
       def image_marker(options)
         images = find_images_in_text
-        if !images.empty?
-          options[:current_image_src] = images.last
-        else
+        if images.empty?
           if first_image_source and first_image_source != options[:current_image_src]
             # yield the marker so that it can be rendered
             options[:current_image_src] = first_image_source
             yield "image", first_image_source
           end
+        else
+          options[:current_image_src] = images.last
         end
       end
 
       def column_marker(options)
         text_cols = find_columns_in_text
-        if !text_cols.empty?
-          options[:current_column] = text_cols.last
-        else
+        if text_cols.empty?
           if first_col and first_col != options[:current_column]
             # yield the marker so that it can be rendered
             options[:current_column] = first_col
             yield "column", first_col
           end
+        else
+          options[:current_column] = text_cols.last
         end
       end
 

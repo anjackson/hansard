@@ -6,9 +6,9 @@ module ApplicationHelper
     section.introduction.text
   end
   
-  def marker_html(model, options)
+  def marker_html(section_or_contribution, options)
     markers = ''
-    model.markers(options) do |marker_type, marker_value|
+    section_or_contribution.markers(options) do |marker_type, marker_value|
       if marker_type == "image"
         markers += image_marker(marker_value)
       elsif marker_type == "column"
