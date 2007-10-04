@@ -131,6 +131,41 @@ describe '_section partial', 'when passed members contribution with question_no,
 
 end
 
+describe '_contribution partial', 'when passed member contribution with ordered list' do
+
+  before do
+    @contribution = mock_model(MemberContribution)
+
+    @member = 'Mr. David Borrow'
+    # @member_constituency = '(South Ribble)'
+    # @question_no = '1.'
+    @contribution.stub!(:markers)
+    @contribution.stub!(:member).and_return @member
+    @contribution.stub!(:member_constituency).and_return @member_constituency
+    @contribution.stub!(:question_no).and_return nil
+    @contribution.stub!(:procedural_note).and_return nil
+
+    @controller.template.stub!(:contribution).and_return(@contribution)
+  end
+
+  it 'should add ol element with css class name "hide_numbering" if numbering is list item text' do
+    @contribution_text = ": I have to notify the House, in accordance with the Royal Assent Act 1967...<ol>\n            <li>1. Companies Act 1980.</li>\n          </ol>"
+    @contribution.stub!(:text).and_return @contribution_text
+    render 'sections/_contribution.haml'
+    response.should have_tag('ol.hide_numbering')
+  end
+
+  it 'should add ol element with no css class name if numbering is not in list item text' do
+    @contribution_text = ": I have to notify the House, in accordance with the Royal Assent Act 1967...<ol>\n            <li>Companies Act 1980.</li>\n          </ol>"
+    @contribution.stub!(:text).and_return @contribution_text
+    render 'sections/_contribution.haml'
+    response.should have_tag('ol')
+  end
+
+  it 'should have Robert Brook write css for "ol.hide_numbering li", delete spec once done'
+
+end
+
 describe '_section partial', 'when passed members contribution with constituency' do
 
   before do

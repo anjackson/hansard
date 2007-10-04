@@ -5,7 +5,7 @@ module ApplicationHelper
   def intro section
     section.introduction.text
   end
-  
+
   def marker_html(section_or_contribution, options)
     markers = ''
     section_or_contribution.markers(options) do |marker_type, marker_value|
@@ -364,6 +364,10 @@ EOF
             wrap_with 'sub', child, parts, inner_elements, outer_elements
           elsif(name == 'ol' or name == 'ul')
             addition = child.to_s
+            list_has_numbering = /<li>\d+\. /.match addition
+            if list_has_numbering
+              addition.sub!('<ol','<ol class="hide_numbering"')
+            end
             close_add_open parts, inner_elements, outer_elements, addition
           elsif(name == 'table')
             parts << child.to_s
