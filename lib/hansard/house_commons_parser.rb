@@ -162,7 +162,11 @@ class Hansard::HouseCommonsParser
           if name == 'member'
             handle_member_name node, contribution
           elsif name == 'i'
-            contribution.procedural_note = node.to_s
+            if contribution.procedural_note
+              contribution.procedural_note += node.to_s
+            else
+              contribution.procedural_note = node.to_s
+            end
           elsif name == 'membercontribution'
             handle_contribution_text node, contribution
           else
@@ -296,6 +300,80 @@ class Hansard::HouseCommonsParser
       contribution_type
     end
 
+    def handle_element_in_question_contribution node, contribution, element, in_member_contribution_text, in_between_member_and_member_contribution
+      name = node.name
+      if name == 'member'
+        handle_member_name node, contribution
+        in_between_member_and_member_contribution = true
+      elsif name == 'membercontribution'
+        handle_contribution_text node, contribution
+        in_between_member_and_member_contribution = false
+      elsif name == 'i'
+        if in_member_contribution_text
+          handle_contribution_text element, contribution
+        else
+          if contribution.procedural_note
+            contribution.procedural_note += node.to_s
+          else
+            contribution.procedural_note = node.to_s
+          end
+        end
+      elsif (name == 'col' or name == 'image')
+        handle_image_or_column name, node
+        if in_member_contribution_text
+          contribution.text += node.to_s
+        end
+      elsif name == 'lb'
+        if in_member_contribution_text
+          contribution.text += node.to_s.sub('<lb></lb>', '<lb/>')
+        end
+      else
+        raise 'unexpected element in question_contribution: ' + name + ': ' + node.to_s
+      end
+
+      in_between_member_and_member_contribution
+    end
+
+    def handle_text_in_question_contribution node, contribution, element, in_member_contribution_text, in_between_member_and_member_contribution
+      text = node.to_s.strip
+      if (match = /^(Q?\d+\.? and \d+\.?)/.match text)
+        contribution.question_no = match[1]
+      elsif (match = /^(Q?\d+\.?)/.match text)
+        contribution.question_no = match[1]
+      elsif text.size > 0
+        if contribution.member.size == 0
+          contribution.member = text.gsub("\r\n","\n").strip + ' '
+        elsif !@unexpected
+          if element.at('membercontribution')
+            if text == ':'
+              contribution.text += node.to_s.squeeze(' ')
+            elsif text == ']' || text == '.'
+              contribution.text += text
+            elsif in_between_member_and_member_contribution && (text == '(')
+              contribution.procedural_note = '('
+            elsif in_between_member_and_member_contribution && (text == ')')
+              contribution.procedural_note += ')'
+            else
+              log 'unexpected text: ' + text + ' in contribution ' + contribution.inspect
+              log 'will suppress rest of unexpected messages'
+              @unexpected = true
+            end
+          else
+            in_member_contribution_text = true
+            suffix = node.to_s.ends_with?("\r\n") ? '\n' : ''
+            prefix = node.to_s.starts_with?("\r\n") ? '\n' : ''
+            contribution.text += prefix + text.gsub("\r\n","\n").strip + suffix
+          end
+        end
+      elsif node.to_s == "\r\n"
+        if in_member_contribution_text
+          contribution.text += '\n'
+        end
+      end
+
+      return in_member_contribution_text, in_between_member_and_member_contribution
+    end
+
     def handle_question_contribution element, question_section
       contribution_type = get_contribution_type_for_question(element)
 
@@ -307,65 +385,18 @@ class Hansard::HouseCommonsParser
         contribution = contribution_type.new({
            :xml_id => element.attributes['id'],
            :column_range => @column,
-           :image_src_range => @image
-        })
-
-        contribution.member = ''
-        contribution.text = ''
+           :image_src_range => @image,
+           :member => '',
+           :text => ''})
 
         in_member_contribution_text = false
+        in_between_member_and_member_contribution = false
         element.children.each do |node|
           if node.elem?
-            name = node.name
-            if name == 'member'
-              handle_member_name node, contribution
-            elsif name == 'membercontribution'
-              handle_contribution_text node, contribution
-            elsif name == 'i'
-              handle_contribution_text element, contribution
-            elsif (name == 'col' or name == 'image')
-              handle_image_or_column name, node
-              if in_member_contribution_text
-                contribution.text += node.to_s
-              end
-            elsif name == 'lb'
-              if in_member_contribution_text
-                contribution.text += node.to_s.sub('<lb></lb>', '<lb/>')
-              end
-            else
-              raise 'unexpected element in question_contribution: ' + name + ': ' + node.to_s
-            end
+            in_between_member_and_member_contribution = handle_element_in_question_contribution node, contribution, element, in_member_contribution_text, in_between_member_and_member_contribution
 
           elsif node.text?
-            text = node.to_s.strip
-            if (match = /^(Q?\d+\.? and \d+\.?)/.match text)
-              contribution.question_no = match[1]
-            elsif (match = /^(Q?\d+\.?)/.match text)
-              contribution.question_no = match[1]
-            elsif text.size > 0
-              if contribution.member.size == 0
-                contribution.member = text.gsub("\r\n","\n").strip + ' '
-              elsif !@unexpected
-                if element.at('membercontribution')
-                  if text == ':'
-                    contribution.text += node.to_s.squeeze(' ')
-                  else
-                    log 'unexpected text: ' + text + ' in contribution ' + contribution.inspect
-                    log 'will suppress rest of unexpected messages'
-                    @unexpected = true
-                  end
-                else
-                  in_member_contribution_text = true
-                  suffix = node.to_s.ends_with?("\r\n") ? '\n' : ''
-                  prefix = node.to_s.starts_with?("\r\n") ? '\n' : ''
-                  contribution.text += prefix + text.gsub("\r\n","\n").strip + suffix
-                end
-              end
-            elsif node.to_s == "\r\n"
-              if in_member_contribution_text
-                contribution.text += '\n'
-              end
-            end
+            in_member_contribution_text, in_between_member_and_member_contribution = handle_text_in_question_contribution node, contribution, element, in_member_contribution_text, in_between_member_and_member_contribution
           end
         end
 
@@ -476,7 +507,6 @@ class Hansard::HouseCommonsParser
         questions_section.parent_section = oral_questions
         oral_questions.sections << questions_section
       end
-      p 'YYY ' + non_oral_question_nodes.inspect
       return still_in_oral_questions, non_oral_question_nodes
     end
 
