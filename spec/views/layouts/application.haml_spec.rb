@@ -19,11 +19,7 @@ describe "application.haml", " in general" do
     do_render
     response.should have_tag("html[lang='en-GB']")
   end
-        
-  it 'should have a link rel="alternate" with appropriate title pointing to the xml source when on a day page'
-  
-  it 'should have a link rel="alternate" with appropriate title pointing to the xml output when on a day page'
-  
+   
   it 'should have a link rel="author" with a link to "http://www.parliament.uk" and a title of "UK Parliament"' do
     do_render
     response.should have_tag("link[rel='author']", :title => "UK Parliament", :href => "http://www.parliament.uk")
@@ -86,4 +82,46 @@ describe "application.haml", " in general" do
     response.should have_tag("link[rel='up']")
   end
   
+end
+
+
+describe "application.haml", " when on a day page" do
+
+  before do
+    @title = 'hello world'
+    @day = Date.new(2004, 9, 16)
+    @sitting = mock_model(HouseOfCommonsSitting)
+    @sitting.stub!(:date).and_return(@day)
+
+    assigns[:sitting] = @sitting
+    assigns[:day] = @day
+    assigns[:title] = @title
+  end
+
+  def do_render
+    render 'layouts/application.haml'
+  end
+
+  it 'should have a link rel="alternate" with appropriate title pointing to the xml source ' do
+    do_render
+    
+    response.body.should assert_tag(:link, :attributes => { 
+      :rel => "alternate", 
+      :type => "text/xml",
+      :title => "Source file for: hello world", 
+      :href => "/commons/source/2004/sep/16.xml"
+    })
+  end
+
+  it 'should have a link rel="alternate" with appropriate title pointing to the xml output ' do
+    do_render
+    
+    response.body.should assert_tag(:link, :attributes => { 
+      :rel => "alternate", 
+      :type => "text/xml",
+      :title => "XML file for: hello world", 
+      :href => "/commons/2004/sep/16.xml"
+    })
+  end
+
 end

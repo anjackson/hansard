@@ -19,6 +19,9 @@
     %link{ :rel => 'up', :title => "", :href => "" }
     %link{ :rel => 'licence', :hreflang => "en-GB", :href => 'http://www.parliament.uk/site_information/parliamentary_copyright.cfm' }
     %link{ :rel => 'license', :hreflang => "en-US", :href => 'http://www.parliament.uk/site_information/parliamentary_copyright.cfm' }
+    - if @day
+      %link{ :rel => 'alternate', :type => 'text/xml', :title => 'Source file for: ' << ( @title || "Please give me a title" ), :href => sitting_date_source_url(@sitting) }
+      %link{ :rel => 'alternate', :type => 'text/xml', :title => 'XML file for: ' << ( @title || "Please give me a title" ), :href => sitting_date_xml_url(@sitting) }
     - if @javascript
       = javascript_include_tag @javascript
   %body
