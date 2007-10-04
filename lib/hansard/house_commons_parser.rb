@@ -120,7 +120,7 @@ class Hansard::HouseCommonsParser
       text = text.gsub("\r\n","\n").strip
     end
 
-    def handle_contribution_text element, contribution
+    def set_columns_and_images_on_contribution element, contribution
       (element/'col').each do |col|
         handle_image_or_column "col", col
         contribution.column_range += ','+@column
@@ -129,6 +129,10 @@ class Hansard::HouseCommonsParser
         handle_image_or_column "image", image
         contribution.image_src_range += ','+@image
       end
+    end
+
+    def handle_contribution_text element, contribution
+      set_columns_and_images_on_contribution element, contribution
       contribution.text = handle_node_text element
     end
 
@@ -169,6 +173,9 @@ class Hansard::HouseCommonsParser
             end
           elsif name == 'membercontribution'
             handle_contribution_text node, contribution
+          elsif name == 'ol'
+            set_columns_and_images_on_contribution element, contribution
+            contribution.text += clean_text(node.to_s)
           else
             unless @unexpected
               log 'unexpected element: ' + name + ': ' + node.to_s
