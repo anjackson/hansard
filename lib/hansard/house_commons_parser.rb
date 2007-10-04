@@ -160,33 +160,54 @@ class Hansard::HouseCommonsParser
       })
       contribution.member = ''
 
+      still_in_member_contribution = true
+
       element.children.each do |node|
         if node.elem?
           name = node.name
-          if name == 'member'
-            handle_member_name node, contribution
-          elsif name == 'i'
-            if contribution.procedural_note
-              contribution.procedural_note += node.to_s
+
+          if still_in_member_contribution
+            if name == 'member'
+              handle_member_name node, contribution
+            elsif name == 'i'
+              if contribution.procedural_note
+                contribution.procedural_note += node.to_s
+              else
+                contribution.procedural_note = node.to_s
+              end
+            elsif name == 'membercontribution'
+              handle_contribution_text node, contribution
+            elsif name == 'ol'
+              set_columns_and_images_on_contribution element, contribution
+              contribution.text += clean_text(node.to_s)
+            elsif name == 'quote'
+              still_in_member_contribution = false
+              contribution.section = debate
+              debate.contributions << contribution
+              handle_quote_contribution node, debate
             else
-              contribution.procedural_note = node.to_s
-            end
-          elsif name == 'membercontribution'
-            handle_contribution_text node, contribution
-          elsif name == 'ol'
-            set_columns_and_images_on_contribution element, contribution
-            contribution.text += clean_text(node.to_s)
-          else
-            unless @unexpected
               log 'unexpected element: ' + name + ': ' + node.to_s
-              log 'will suppress rest of unexpected messages'
             end
-            @unexpected = true
+          else
+            if name == 'quote'
+              handle_quote_contribution node, debate
+            else
+              log 'unexpected element: ' + name + ': ' + node.to_s
+            end
+          end
+        end
+
+        if node.text?
+          unless node.to_s.strip.empty?
+            log 'unexpected text: ' + node.to_s.strip
           end
         end
       end
-      contribution.section = debate
-      debate.contributions << contribution
+
+      if still_in_member_contribution
+        contribution.section = debate
+        debate.contributions << contribution
+      end
     end
 
     def handle_procedural_contribution node, debate
