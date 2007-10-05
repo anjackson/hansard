@@ -268,16 +268,36 @@ module Hansard
       end
     end
 
+    def log_bad_date_format text
+      @source_file.add_log("Bad date format: #{text}")
+    end
+
     def check_for_date(line)
       if (match = DATE_PATTERN.match line)
         new_date = match[1]
         new_date_text = match[2]
-        begin
-          if Date.parse(new_date_text.gsub(/\.|,/, '')) != Date.parse(new_date)
-            @source_file.add_log("Bad date format: #{match[0]}")
+
+        if (minutes_date = /From Minutes of ([^ ]*) (\d+)/.match(line))
+          begin
+            month_day = "#{minutes_date[1]} #{minutes_date[2]}"
+            date = Date.parse(month_day)
+            formatted_date = Date.parse(new_date)
+            date = Date.new(formatted_date.year, date.month, date.day)
+            if date != formatted_date
+              log_bad_date_format match[0]
+            end
+          rescue
+            log_bad_date_format match[0]
           end
-        rescue
-          @source_file.add_log("Bad date format: #{match[0]}")
+        else
+          begin
+            date = Date.parse(new_date_text.gsub(/\.|,/, ''))
+            if date != Date.parse(new_date)
+              log_bad_date_format match[0]
+            end
+          rescue
+            log_bad_date_format match[0]
+          end
         end
         @date = new_date
         @first_date = new_date unless @first_date

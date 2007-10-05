@@ -54,6 +54,25 @@ describe Hansard::Splitter, " when splitting file that does not validate against
   end
 end
 
+describe Hansard::Splitter, " when splitting file that has date text in 'From Minutes of' format" do
+
+  before(:all) do
+    splitter = Hansard::Splitter.new(false, overwrite=true, verbose=false)
+    path = File.join(File.dirname(__FILE__),'..','data','from_minutes_of_date')
+    @source_files = splitter.split(path)
+    @source_file = @source_files.first
+  end
+
+  it 'should accept that 1922-05-09 is valid date for "[From Minutes of May 9.]"' do
+    @source_file.log_line_count.should == 1
+    @source_file.log.should == "Missing or badly formatted session tag"
+  end
+
+  after(:all) do
+    SourceFile.delete_all
+  end
+end
+
 describe Hansard::Splitter, " when splitting file that has division table with no AYES heading" do
 
   before(:all) do
