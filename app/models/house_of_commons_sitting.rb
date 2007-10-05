@@ -4,6 +4,11 @@ class HouseOfCommonsSitting < Sitting
 
   alias :to_activerecord_xml :to_xml
 
+  def self.all_grouped_by_year
+    sittings = HouseOfCommonsSitting.find(:all, :order => "date asc")
+    sittings.in_groups_by { |s| s.date.year }
+  end
+
   def to_xml(options={})
     xml = options[:builder] ||= Builder::XmlMarkup.new(:indent => 1)
     xml.housecommons do

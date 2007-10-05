@@ -1,9 +1,9 @@
 class CommonsController < ApplicationController
-  
+
   before_filter :check_valid_date, :only => [:show, :show_source]
 
   def index
-    @sittings = HouseOfCommonsSitting.find(:all, :order => "date asc")
+    @sittings_by_year = HouseOfCommonsSitting.all_grouped_by_year
   end
 
   def show
@@ -19,7 +19,7 @@ class CommonsController < ApplicationController
       format.xml { render :xml => @sitting.to_xml }
     end
   end
-  
+
   def show_source
     @sitting = HouseOfCommonsSitting.find_by_date(@date.to_s)
     data = @sitting.data_file.file.read
