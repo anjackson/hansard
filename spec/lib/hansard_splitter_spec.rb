@@ -54,6 +54,28 @@ describe Hansard::Splitter, " when splitting file that does not validate against
   end
 end
 
+describe Hansard::Splitter, " when splitting file that has division table with no AYES heading" do
+
+  before(:all) do
+    splitter = Hansard::Splitter.new(false, overwrite=true, verbose=false)
+    path = File.join(File.dirname(__FILE__),'..','data','division_without_ayes_heading')
+
+    # stub the schema check method
+    splitter.should_receive(:validate_schema).with('hansard_v7.xsd','division_without_ayes_heading').and_return('')
+    @source_files = splitter.split(path)
+    @source_file = @source_files.first
+  end
+
+  it 'should add error log line about division not having AYES heading' do
+    @source_file.log.should == 'Division missing AYES heading'
+    @source_file.log_line_count.should == 1
+  end
+
+  after(:all) do
+    SourceFile.delete_all
+  end
+end
+
 describe Hansard::Splitter, " when splitting file that has division table in oralquestions section" do
 
   before(:all) do

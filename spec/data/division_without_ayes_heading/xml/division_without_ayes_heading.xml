@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hansard xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="hansard_v7.xsd">
+  <titlepage></titlepage>
+  <frontmatter></frontmatter>
+  <p></p>
+  <p id="S5CV0661P0-00261" align="center">FOURTEENTH VOLUME OF SESSION <session>1961&#x2013;62</session></p>
+  <housecommons>
+    <image src="S5CV0661P0I0470"/>
+    <col>1</col>
+    <title>HOUSE OF COMMONS</title>
+    <date format="1962-06-26">Tuesday, 26th June, 1962</date>
+    <p></p>
+    <debates>
+      <section>
+        <title>DISTRIBUTION OF INDUSTRY</title>
+        <division>
+          <table type="span">
+            <tr>
+              <td>Abse, Leo</td>
+              <td>Bellenger, Rt. Hon. F. J.</td>
+            </tr>
+            <tr>
+              <td>Hynd, John (Attercliffe)</td>
+              <td>
+                <b>TELLERS FOR THE AYES:</b>
+              </td>
+            </tr>
+            <tr>
+              <td>Irvine, A. J. (Edge Hill)</td>
+              <td>Proctor, W. T.</td>
+            </tr>
+          </table>
+          <table type="span">
+            <tr>
+              <td colspan="3" align="center">
+                <b>NOES</b>
+              </td>
+            </tr>
+            <tr>
+              <td>Agnew, Sir Peter</td>
+              <td>Black, Sir Cyril</td>
+            </tr>
+            <tr>
+              <td>Kershaw, Anthony</td>
+              <td>
+                <b>TELLERS FOR THE NOES:</b>
+              </td>
+            </tr>
+            <tr>
+              <td>Kimball, Marcus</td>
+              <td>Proudfoot, Wilfred</td>
+            </tr>
+            <tr>
+              <td>Kirk, Peter</td>
+              <td>Pym, Francis</td>
+            </tr>
+          </table>
+        </division>
+      </section>
+    </debates>
+  </housecommons>
+  <index>
+    <indexdiv>
+      <index-letter></index-letter>
+      <p></p>
+    </indexdiv>
+  </index>
+</hansard>

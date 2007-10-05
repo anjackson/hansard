@@ -21,6 +21,7 @@ class SourceFile < ActiveRecord::Base
           type = error
         end
         type.chomp!('? Got')
+        type.strip!
         error_types << type unless error_types.include?(type)
         error_types_to_files[type] = [] unless error_types_to_files.has_key?(type)
 
@@ -68,7 +69,7 @@ class SourceFile < ActiveRecord::Base
     if text.size > 255
       text = text[0..255]
     end
-    
+
     if persist
      unless self.log.blank?
        text = "\n" + text

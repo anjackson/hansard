@@ -11,6 +11,7 @@ module Hansard::SchemaHelper
     xml_file = "#{RAILS_ROOT}/xml/#{name}.xml"
 
     errors = ''
+    schema_file.downcase!
     stdin, stdout, stderr = popen3("xmllint --noout --schema #{schema_file} #{xml_file}")
     stderr.each do |line|
       is_error_message = (/xml validates$/.match(line) == nil)

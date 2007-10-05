@@ -42,7 +42,7 @@ class DataFile < ActiveRecord::Base
   end
 
   def date
-    if date_text and date_text.size == 10
+    if date_text && date_text.size == 10
       begin
         Date.parse(date_text.gsub('/', '-'))
       rescue Exception => e

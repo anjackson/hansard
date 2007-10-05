@@ -138,11 +138,27 @@ module Hansard
       end
     end
 
-    def handle_line line
-      @index = @index.next
-
+    def check_for_issues line
       @inside_oralquestions = true if line.include? '<oralquestions>'
       @inside_oralquestions = false if line.include? '</oralquestions>'
+
+      if line.include? '<division>'
+        @inside_division = true
+        @hit_ayes = false
+
+      elsif line.include? '</division>'
+        @inside_division = false
+        @hit_ayes = false
+
+      elsif @inside_division
+        upcase = line.upcase
+        if upcase.include?('AYES') && !upcase.include?('TELLERS FOR THE AYES')
+          @hit_ayes = true
+        end
+        if upcase.include?('TELLERS FOR THE AYES') && !@hit_ayes
+          @source_file.add_log 'Division missing AYES heading'
+        end
+      end
 
       if @inside_oralquestions && line.include?('<division>')
         @source_file.add_log 'Division element inside oralquestion element'
@@ -153,6 +169,12 @@ module Hansard
       if @inside_oralquestions && Hansard::Splitter.is_orders_of_the_day?(line)
         @source_file.add_log 'Orders of the Day title in oralquestions'
       end
+    end
+
+    def handle_line line
+      @index = @index.next
+
+      check_for_issues line
       token_element = false
 
       start_end_on_same_line = false
