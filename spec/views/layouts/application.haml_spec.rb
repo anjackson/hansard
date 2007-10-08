@@ -25,7 +25,16 @@ describe "application.haml", " in general" do
     response.should have_tag("link[rel='author']", :title => "UK Parliament", :href => "http://www.parliament.uk")
   end
   
-  it 'should have a link rel="bookmark" with a link to "http://www.millbanksystems.com/commons/1961/may/03/school-leavers-acton" and a title of "Millbank Systems: Hansard: May 3rd 1961: School Leavers, Acton"'   
+  it 'should have a link rel="bookmark" with a link to the current page and a title of "Millbank Systems: Hansard: May 3rd 1961: School Leavers, Acton"' do
+    @title = "May 3rd 1961: School Leavers, Acton"
+    assigns[:title] = @title
+    do_render
+    response.should assert_tag(:link, :attributes => {
+      :rel => "bookmark",
+      :title => "Millbank Systems: Hansard: " << @title,
+      :href => request.request_uri
+    })
+  end
   
   it 'should have a link rel="contact"' do
     do_render
