@@ -162,8 +162,6 @@ describe '_contribution partial', 'when passed member contribution with ordered 
     response.should have_tag('ol')
   end
 
-  it 'should have Robert Brook write css for "ol.hide_numbering li", delete spec once done'
-
 end
 
 describe '_section partial', 'when passed members contribution with constituency' do

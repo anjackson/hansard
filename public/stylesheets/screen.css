@@ -223,3 +223,6 @@ th.monthName  {
   color: #eee;
 }
 
+ol.hide_numbering li {
+  list-style-type: none;
+}
