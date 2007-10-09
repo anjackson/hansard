@@ -214,10 +214,9 @@ class Hansard::HouseParser
       time = TimeContribution.new({
         :xml_id => node.attributes['id'],
         :column_range => @column,
-        :image_src_range => @image
+        :image_src_range => @image,
+        :text => clean_html(node)
       })
-      time.text = clean_html(node)
-      time.time = Time.parse(time_text.gsub('.',':').gsub("&#x00B7;", ":"))
 
       time.section = debate
       debate.contributions << time

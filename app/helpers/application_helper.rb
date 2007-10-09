@@ -273,6 +273,10 @@ EOF
     title.gsub('<lb>',' ').gsub('<lb/>',' ').gsub('</lb>','').squeeze(' ')
   end
 
+  def format_time time_contribution
+    %Q[<abbr class="dtstart" title="#{time_contribution.timestamp}">#{time_contribution.text}</abbr>]
+  end
+
   def format_contribution text, outer_elements=[]
     if text.include? ':'
       text = text.sub(':','').strip

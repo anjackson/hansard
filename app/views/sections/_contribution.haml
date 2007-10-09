@@ -1,5 +1,8 @@
 = marker_html(contribution, @marker_options)
-- if contribution.is_a? ProceduralContribution
+- if contribution.is_a? TimeContribution
+  .time
+    = format_time(contribution)
+- elsif contribution.is_a? ProceduralContribution
   .procedural
     = format_contribution(contribution.text, ['div'])
 - elsif contribution.is_a? MemberContribution

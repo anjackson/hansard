@@ -14,8 +14,6 @@ describe "_section partial", " in general" do
     render 'sections/_section.haml'
   end
 
-  it "should show timestamps with valid datetimes in the wrapping tag"
-
 end
 
 

@@ -58,6 +58,39 @@ describe '_contribution partial', 'when passed quote contribution' do
   end
 end
 
+describe '_contribution partial', 'when passed time contribution' do
+
+  before do
+    @text = '3.30 pm'
+
+    @time = mock_model(TimeContribution)
+    @time.should_receive(:markers)
+    @time.should_receive(:text).and_return @text
+    @time.should_receive(:timestamp).and_return Time.parse('1985-12-16T15:30:00').xmlschema
+    @controller.template.stub!(:contribution).and_return @time
+
+    render 'sections/_contribution.haml'
+  end
+
+  it 'should have div with class time' do
+    response.should have_tag('div.time')
+  end
+
+  it 'should have abbr with class dtstart nested in div with class time' do
+    response.should have_tag('div.time abbr.dtstart')
+  end
+
+  it 'should show time text in abbr element' do
+    response.should have_tag('div.time abbr.dtstart', @text)
+  end
+
+  it 'should show timestamp in in title attribute of abbr element' do
+    response.should have_tag('div.time abbr[title="1985-12-16T15:30:00+00:00"]')
+  end
+
+end
+
+
 describe '_contribution partial', 'when passed procedural contribution' do
 
   before do
