@@ -23,7 +23,6 @@ describe Hansard::HouseCommonsParser do
     @second_question_contribution = @first_question.contributions[1]
 
     @third_section = @sitting.debates.sections[2]
-    @third_section_first_contribution = @third_section.contributions.first
     @third_section_second_contribution = @third_section.contributions[1]
 
     @seventh_section = @sitting.debates.sections[6]
@@ -322,6 +321,31 @@ describe Hansard::HouseCommonsParser do
     @third_section.should be_an_instance_of(Section)
   end
 
+  it 'should create time contribution for a p element containing the text "3.30 pm"' do
+    @third_section.contributions[0].should be_an_instance_of(TimeContribution)
+  end
+
+  it 'should set xml_id correctly on a time contribution instance' do
+    @third_section.contributions[0].xml_id.should == 'S6CV0089P0-00525'
+  end
+
+  it 'should set text correctly on time contribution for a p element containing the text "3.30 pm"' do
+    @third_section.contributions[0].text.should == '3.30 pm'
+  end
+
+  it 'should set time correctly on time contribution for a p element containing the text "3.30 pm"' do
+    @third_section.contributions[0].time.strftime('%H:%M:%S').should == '15:30:00'
+  end
+
+  it 'should set column range correctly on a time contribution' do
+    @third_section.contributions[0].column_range.should == '21'
+  end
+
+  it 'should set contribution parent correctly on a time contribution' do
+    @third_section.contributions[0].section_id.should == @third_section.id
+    @third_section.contributions[0].section.should == @third_section
+  end
+
   it 'should set time text on third section in debates' do
     @third_section.time_text.should == '3.30 pm'
   end
@@ -346,30 +370,6 @@ describe Hansard::HouseCommonsParser do
     @third_section.parent_section_id.should == @sitting.debates.id
     @third_section.parent_section.should == @sitting.debates
   end
-
-
-  it 'should set first (procedural) contribution on third section' do
-    @third_section_first_contribution.should_not be_nil
-    @third_section_first_contribution.should be_an_instance_of(ProceduralContribution)
-  end
-
-  it 'should set first (procedural) contribution text on third section' do
-    @third_section_first_contribution.text.should == '3.30 pm'
-  end
-
-  it 'should set first (procedural) contribution xml id on third section' do
-    @third_section_first_contribution.xml_id.should == 'S6CV0089P0-00525'
-  end
-
-  it 'should set first (procedural) contribution column range on third section' do
-    @third_section_first_contribution.column_range.should == '21'
-  end
-
-  it 'should set first (procedural) contribution parent on third section' do
-    @third_section_first_contribution.section_id.should == @third_section.id
-    @third_section_first_contribution.section.should == @third_section
-  end
-
 
   it 'should set second (member) contribution on third section' do
     @third_section_second_contribution.should_not be_nil
@@ -411,8 +411,8 @@ describe Hansard::HouseCommonsParser do
   end
 
 
-  it 'should create procedural contribution for time stamp paragraphs containing middle dot (&#x00B7;)' do
-    @seventh_section_first_contribution.should be_an_instance_of(ProceduralContribution)
+  it 'should create time contribution for a time stamp paragraph containing middle dot (&#x00B7;)' do
+    @seventh_section_first_contribution.should be_an_instance_of(TimeContribution)
   end
 
   it 'should add member constituency to contribution if constituency is present' do

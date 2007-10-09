@@ -1,0 +1,2 @@
+class TimeContribution < ProceduralContribution
+end
