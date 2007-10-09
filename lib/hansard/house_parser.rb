@@ -294,8 +294,6 @@ class Hansard::HouseParser
 
             if (match = Hansard::TIME_PATTERN.match inner_html)
               time_text = match[0]
-              section.time_text = time_text
-              section.time = Time.parse(time_text.gsub('.',':').gsub("&#x00B7;", ":"))
               handle_time_contribution node, section, time_text
             elsif inner_html.include? 'membercontribution'
               handle_member_contribution node, section

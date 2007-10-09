@@ -346,14 +346,6 @@ describe Hansard::HouseCommonsParser do
     @third_section.contributions[0].section.should == @third_section
   end
 
-  it 'should set time text on third section in debates' do
-    @third_section.time_text.should == '3.30 pm'
-  end
-
-  it 'should set time on third section in debates' do
-    @third_section.time.strftime('%H:%M:%S').should == '15:30:00'
-  end
-
   it 'should set title on third section in debates' do
     @third_section.title.should == 'Social Security White Paper'
   end
