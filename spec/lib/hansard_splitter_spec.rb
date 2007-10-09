@@ -64,7 +64,7 @@ describe Hansard::Splitter, " when splitting file that has date text in 'From Mi
   end
 
   it 'should accept that 1922-05-09 is valid date for "[From Minutes of May 9.]"' do
-    @source_file.log_line_count.should == 2
+    @source_file.log_line_count.should == 1
     @source_file.log.should match /Missing or badly formatted session tag/
   end
 
