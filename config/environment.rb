@@ -54,7 +54,7 @@ Rails::Initializer.run do |config|
   # -- all .rb files in that directory is automatically loaded
 end
 
-require File.dirname(__FILE__) + '/../vendor/plugins/htmlentities-4.0.0/lib/htmlentities'
+require 'htmlentities'
 require 'lib/acts_as_hansard_element'
 require 'lib/in_groups_by'
 
