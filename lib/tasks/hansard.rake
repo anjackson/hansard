@@ -3,9 +3,10 @@ require File.dirname(__FILE__) + '/../hansard/schema_helper'
 
 namespace :hansard do
 
-  COMMONS_PATT = 'housecommons_*xml'
-  WRITTEN_PATT = 'writtenanswers_*xml'
-  INDEX_PATT   = 'index.xml'
+  COMMONS_PATTERN = 'housecommons_*xml'
+  LORDS_PATTERN = 'houselords_*xml'
+  WRITTEN_PATTERN = 'writtenanswers_*xml'
+  INDEX_PATTERN   = 'index.xml'
 
   include Hansard::ParserHelper
   include Hansard::SchemaHelper
@@ -49,7 +50,12 @@ namespace :hansard do
 
   desc 'loads any unloaded commons data from /data (doesn\'t re-split)'
   task :load_new_commons => [:environment] do
-    reload_data_files(COMMONS_PATT, Hansard::HouseCommonsParser)
+    reload_data_files(COMMONS_PATTERN, Hansard::HouseCommonsParser)
+  end
+
+  desc 'loads any unloaded lords data from /data (doesn\'t re-split)'
+  task :load_new_lords => [:environment] do
+    reload_data_files(LORDS_PATTERN, Hansard::HouseLordsParser)
   end
 
   desc 'wipes and reloads commons data from /data (doesn\'t re-split)'
@@ -73,7 +79,7 @@ namespace :hansard do
 
   desc 'loads any unloaded written answer data from /data (doesn\'t re-split)'
   task :load_new_written => [:environment] do
-    reload_data_files(WRITTEN_PATT, Hansard::WrittenAnswersParser)
+    reload_data_files(WRITTEN_PATTERN, Hansard::WrittenAnswersParser)
   end
 
   desc 'wipes and reloads written answer data from /data (doesn\'t re-split)'
@@ -85,7 +91,7 @@ namespace :hansard do
 
   desc 'loads any unloaded index data from /data (doesn\'t re-split)'
   task :load_new_index => [:environment] do
-    reload_data_files(INDEX_PATT, Hansard::IndexParser)
+    reload_data_files(INDEX_PATTERN, Hansard::IndexParser)
   end
 
   desc 'wipes and reloads index data from /data (doesn\'t re-split)'
@@ -135,9 +141,9 @@ namespace :hansard do
   end
 
   def load_split_files(source_file)
-    load_source_files(source_file, COMMONS_PATT, Hansard::HouseCommonsParser)
-    load_source_files(source_file, WRITTEN_PATT, Hansard::WrittenAnswersParser)
-    load_source_files(source_file, INDEX_PATT,   Hansard::IndexParser)
+    load_source_files(source_file, COMMONS_PATTERN, Hansard::HouseCommonsParser)
+    load_source_files(source_file, WRITTEN_PATTERN, Hansard::WrittenAnswersParser)
+    load_source_files(source_file, INDEX_PATTERN,   Hansard::IndexParser)
   end
 
   def load_source_files(source_file, pattern, parser)

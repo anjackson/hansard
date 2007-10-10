@@ -43,13 +43,29 @@ ActionController::Routing::Routes.draw do |map|
   end
 
   map.with_options(:controller => 'days') do |days|
-    
+
     days.with_options(date_options) do |by_date|
       def_route "#{date}", :show, by_date
     end
-    
+
   end
-  
+
+  map.with_options(:controller => 'lords') do |lords|
+    lords.lords 'lords', :action => 'index'
+
+    lords.with_options(formatted_date_options) do |by_date|
+      def_route "lords/#{date}.:format", :show, by_date
+    end
+
+    lords.with_options(date_options) do |by_date|
+      def_route "lords/#{date}", :show, by_date
+    end
+
+    lords.with_options(formatted_date_options) do |by_date|
+      def_route "lords/source/#{date}.:format", :show_source, by_date
+    end
+  end
+
   map.with_options(:controller => 'commons') do |commons|
 
     commons.commons 'commons', :action => 'index'

@@ -17,9 +17,9 @@ describe "_hansard_header partial" do
 
 
   end
-  
+
   def do_render
-    render "/commons/_hansard_header.haml"
+    render "/partials/_hansard_header.haml"
   end
 
   it 'should show title as h1' do

@@ -29,6 +29,7 @@ module ApplicationHelper
 
   def section_url(section)
     types_to_controllers = { HouseOfCommonsSitting => "commons",
+                             HouseOfLordsSitting => "lords",
                              WrittenAnswersSitting => "writtenanswers" }
     sitting_type = section.sitting.class
     date_params = sitting_date_url_params(section.sitting)
@@ -234,6 +235,8 @@ EOF
     case sitting
       when HouseOfCommonsSitting
         'commons'
+      when HouseOfLordsSitting
+        'lords'
       when WrittenAnswersSitting
         'written_answers'
     else
