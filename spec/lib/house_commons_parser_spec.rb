@@ -608,5 +608,4 @@ describe Hansard::HouseCommonsParser do
   end
 
   it_should_behave_like "All sittings"
-  it_should_behave_like "All commons sittings"
 end

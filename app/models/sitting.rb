@@ -1,11 +1,12 @@
 class Sitting < ActiveRecord::Base
 
-  has_one :debates, :class_name => "Debates", :foreign_key => 'sitting_id'
+  has_one :debates, :class_name => "Debates", :foreign_key => "sitting_id", :dependent => :destroy
   has_many :sections, :foreign_key => 'sitting_id'
-  belongs_to :data_file 
+  belongs_to :data_file
   acts_as_present_on_date :date
-  before_validation_on_create :check_date
+  before_validation_on_create :check_date, :default_sitting_text_to_nil
 
+  alias :to_activerecord_xml :to_xml
   acts_as_hansard_element
 
   def Sitting.find_section_by_column_and_date_range(column, start_date, end_date)
@@ -13,14 +14,14 @@ class Sitting < ActiveRecord::Base
     if sitting
       section = sitting.sections.find(:first, :conditions => ["start_column <= ?", column], :order => "start_column desc")
     else
-      nil 
+      nil
     end
   end
-  
+
   def Sitting.most_recent
     find_next(Date.today, "<")
   end
-  
+
   def Sitting.find_in_resolution(date, resolution)
     case resolution
       when :day
@@ -34,10 +35,10 @@ class Sitting < ActiveRecord::Base
     end
     sittings
   end
-  
+
   def Sitting.find_next(day, direction)
-    find(:first, 
-         :conditions => ["date #{direction} ?", day.to_date], 
+    find(:first,
+         :conditions => ["date #{direction} ?", day.to_date],
          :order => "date #{direction == ">" ? "asc" : "desc"}")
   end
 
@@ -48,15 +49,15 @@ class Sitting < ActiveRecord::Base
   def first_image_source
     start_image_src
   end
-  
+
   def year
     date.year if date
   end
-  
+
   def month
     date.month if date
   end
-  
+
   def day
     date.day if date
   end
@@ -71,4 +72,9 @@ class Sitting < ActiveRecord::Base
       end
     end
 
+    def default_sitting_text_to_nil
+      if self.text.blank?
+        self.text = nil
+      end
+    end
 end

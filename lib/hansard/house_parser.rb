@@ -22,7 +22,9 @@ class Hansard::HouseParser
     type = @doc.children[0].name
 
     if type == 'housecommons'
-      create_house_commons
+      create_house_sitting 'housecommons', HouseOfCommonsSitting
+    elsif type == 'houselords'
+      create_house_sitting 'houselords', HouseOfLordsSitting
     else
       raise 'cannot create sitting, unrecognized type: ' + type
     end
@@ -490,27 +492,27 @@ class Hansard::HouseParser
       end
     end
 
-    def create_house_commons
-      @column =  clean_html(@doc.at('housecommons/col'))
-      @image =  @doc.at('housecommons/image').attributes['src']
+    def create_house_sitting house_type, house_model
+      @column =  clean_html(@doc.at(house_type + '/col'))
+      @image =  @doc.at(house_type + '/image').attributes['src']
 
-      @sitting = HouseOfCommonsSitting.new({
+      @sitting = house_model.new({
         :start_column => @column,
         :start_image_src => @image,
-        :title => clean_html(@doc.at('housecommons/title')),
-        :text => clean_html(@doc.at('housecommons/p')),
-        :date_text => clean_html(@doc.at('housecommons/date')),
-        :date => @doc.at('housecommons/date').attributes['format']
+        :title => clean_html(@doc.at(house_type + '/title')),
+        :text => clean_html(@doc.at(house_type + '/p')),
+        :date_text => clean_html(@doc.at(house_type + '/date')),
+        :date => @doc.at(house_type + '/date').attributes['format']
       })
 
-      if (texts = (@doc/'housecommons/p'))
+      if ( texts = (@doc/(house_type + '/p')) )
         @sitting.text = ''
         texts.each do |text|
           @sitting.text += text.to_s
         end
       end
 
-      if (debates = @doc.at('housecommons/debates'))
+      if (debates = @doc.at(house_type + '/debates'))
         handle_debates @sitting, debates
       end
 
@@ -518,7 +520,11 @@ class Hansard::HouseParser
     end
 
     def clean_html node
-      clean_text node.inner_html
+      if node
+        clean_text node.inner_html
+      else
+        nil
+      end
     end
 
     def clean_text text
