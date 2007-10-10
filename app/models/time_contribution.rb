@@ -2,6 +2,12 @@ class TimeContribution < ProceduralContribution
 
   before_validation_on_create :populate_time
 
+  def timestamp
+    date = section.sitting.date
+    Time.utc(date.year, date.month, date.day, time.hour, time.min).xmlschema
+  end
+
+
   protected
 
     def populate_time
