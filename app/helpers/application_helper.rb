@@ -98,7 +98,9 @@ module ApplicationHelper
         end
 
         open :li do
-          puts "Lords"
+          open :a, { :href => lords_url } do
+            puts "Lords"
+          end
         end
 
         open :li do
