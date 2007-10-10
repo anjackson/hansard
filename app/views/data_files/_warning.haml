@@ -1,12 +1,17 @@
-%tr{ :id => 'data_file_with_id_'+warning.id.to_s }
-  %td= warning.stripped_name
-  %td= warning.type_of_data
-  %td= warning.date_text
-  %td= truncate(h(warning.log), 250)
-  %td= warning.saved ? 'Y' : 'N'
+- data_file = warning
+%tr{ :id => 'data_file_with_id_'+data_file.id.to_s }
+  %td= data_file.stripped_name
+  %td= data_file.type_of_data
+  %td= data_file.date_text
+  %td= truncate(h(data_file.log), 250)
+  %td= data_file.saved ? 'Y' : 'N'
   %td
-    - if warning.reload_possible?
-      - form_remote_tag :url => { :controller => 'data_files', :action => 'reload_commmons_for_date', :date => warning.date.to_s }, :before => %[Element.show('spinner')], :success  => %[Element.hide('spinner')] do
+    - if data_file.reload_possible?
+      - if data_file.name.include? 'commons'
+        - action = 'reload_commmons_for_date'
+      - elsif data_file.name.include? 'lords'
+        - action = 'reload_lords_for_date'
+      - form_remote_tag :url => { :controller => 'data_files', :action => action, :date => data_file.date.to_s }, :before => %[Element.show('spinner')], :success  => %[Element.hide('spinner')] do
         = submit_tag "Reload"
         = image_tag 'spinner.gif', :id => 'spinner', :style => 'display: none'
     - else

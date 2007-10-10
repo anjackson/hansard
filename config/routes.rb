@@ -106,6 +106,7 @@ ActionController::Routing::Routes.draw do |map|
     def_index_route "data_files", data_file
     def_route "data_files/warnings", :show_warnings, data_file
     def_route "data_files/reload_commmons_for_date/:date", :reload_commmons_for_date, data_file
+    def_route "data_files/reload_lords_for_date/:date", :reload_lords_for_date, data_file
   end
 
   map.with_options(:controller => 'source_files') do |file|

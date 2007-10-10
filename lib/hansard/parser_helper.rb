@@ -15,13 +15,13 @@ module Hansard::ParserHelper
     end
   end
 
-  def reload_commons_on_date date
+  def reload_sitting_on_date date, house_type, sitting_model, parser_type
     date_part = date.to_s.gsub('-','_')
-    file_name = "housecommons_#{date_part}.xml"
+    file_name = "house#{house_type}_#{date_part}.xml"
     data_file = DataFile.find_by_name(file_name)
     data_file.reset_fields if data_file
 
-    sitting = HouseOfCommonsSitting.find_by_date(date)
+    sitting = sitting_model.find_by_date(date)
     if sitting
       puts 'destroying sitting instance for ' + date.to_s
       sitting.destroy
@@ -29,7 +29,7 @@ module Hansard::ParserHelper
 
     per_data_file(file_name) do |directory, file|
       source_file = SourceFile.from_file(directory)
-      parse_file(file, Hansard::HouseCommonsParser, source_file)
+      parse_file(file, parser_type, source_file)
     end
     data_file
   end

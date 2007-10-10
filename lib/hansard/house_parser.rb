@@ -188,13 +188,13 @@ class Hansard::HouseParser
               debate.contributions << contribution
               handle_quote_contribution node, debate
             else
-              log 'unexpected element: ' + name + ': ' + node.to_s
+              log 'unexpected element inside member contribution: ' + name + ': ' + node.to_s
             end
           else
             if name == 'quote'
               handle_quote_contribution node, debate
             else
-              log 'unexpected element: ' + name + ': ' + node.to_s
+              log 'unexpected element in member contribution: ' + name + ': ' + node.to_s
             end
           end
         end
