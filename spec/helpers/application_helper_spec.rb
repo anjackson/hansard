@@ -347,24 +347,25 @@ end
 
 describe ApplicationHelper, " when creating a section url" do
 
-  it "should create a url like /commons/1957/jun/25/exports-to-israel for a section from the commons on the day shown with the slug shown" do
+  def create_section sitting_model
     section = mock_model(Section)
     section.stub!(:slug).and_return("exports-to-israel")
-    section.stub!(:sitting).and_return(HouseOfCommonsSitting.new(:date => Date.new(1957, 6, 25)))
+    section.stub!(:sitting).and_return(sitting_model.new(:date => Date.new(1957, 6, 25)))
+    section
+  end
+
+  it "should create a url like /commons/1957/jun/25/exports-to-israel for a section from the commons on the day shown with the slug shown" do
+    section = create_section HouseOfCommonsSitting
     section_url(section).should == "/commons/1957/jun/25/exports-to-israel"
   end
 
   it "should create a url like /lords/1957/jun/25/exports-to-israel for a section from the lords on the day shown with the slug shown" do
-    section = mock_model(Section)
-    section.stub!(:slug).and_return("exports-to-israel")
-    section.stub!(:sitting).and_return(HouseOfLordsSitting.new(:date => Date.new(1957, 6, 25)))
+    section = create_section HouseOfLordsSitting
     section_url(section).should == "/lords/1957/jun/25/exports-to-israel"
   end
 
   it "should create a url like /written_answers/1957/jun/25/exports-to-israel for a section from a written answer on the day shown with the slug shown" do
-    section = mock_model(Section)
-    section.stub!(:slug).and_return("exports-to-israel")
-    section.stub!(:sitting).and_return(WrittenAnswersSitting.new(:date => Date.new(1957, 6, 25)))
+    section = create_section WrittenAnswersSitting
     section_url(section).should == "/written_answers/1957/jun/25/exports-to-israel"
   end
 end
