@@ -4,11 +4,15 @@ class WrittenAnswersSitting < Sitting
 
   alias :to_activerecord_xml :to_xml
 
+  def self.uri_component
+    'written_answers'
+  end
+
   def to_xml(options={})
     xml = options[:builder] ||= Builder::XmlMarkup.new(:indent => 1)
     xml.writtenanswers do
       marker_xml(options)
-      xml.title do 
+      xml.title do
         xml << title
       end
       xml.date(date_text, :format => date.strftime("%Y-%m-%d"))

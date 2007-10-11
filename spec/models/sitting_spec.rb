@@ -1,5 +1,19 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
+describe Sitting, ' uri_component_to_sitting_model' do
+  it 'should return HouseOfCommonsSitting when passed "commons"' do
+    Sitting.uri_component_to_sitting_model('commons').should == HouseOfCommonsSitting
+  end
+
+  it 'should return HouseOfLordsSitting when passed "lords"' do
+    Sitting.uri_component_to_sitting_model('lords').should == HouseOfLordsSitting
+  end
+
+  it 'should return WrittenAnswersSitting when passed "written_answers"' do
+    Sitting.uri_component_to_sitting_model('written_answers').should == WrittenAnswersSitting
+  end
+end
+
 describe Sitting do
 
   before(:each) do
@@ -9,7 +23,7 @@ describe Sitting do
   it "should be valid" do
     @sitting.should be_valid
   end
-  
+
   it "should be able to tell if it is present on a date" do
     Sitting.respond_to?("present_on_date?").should == true
   end
@@ -42,16 +56,16 @@ describe Sitting, ".find_section_by_column_and_date_range" do
     @second_section = Section.new(:start_column => "55")
     @second_sitting.sections << @second_section
   end
-  
+
   it "should return the correct sitting for a column that is the start column of a sitting" do
     Sitting.find_section_by_column_and_date_range(44, @start_date, @end_date).should == @first_section
     Sitting.find_section_by_column_and_date_range(55, @start_date, @end_date).should == @second_section
   end
-    
+
   it "should return the correct sitting for a column that is within a sitting" do
     Sitting.find_section_by_column_and_date_range(45, @start_date, @end_date).should == @first_section
     Sitting.find_section_by_column_and_date_range(56, @start_date, @end_date).should == @second_section
   end
-  
+
 end
 

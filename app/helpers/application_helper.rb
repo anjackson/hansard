@@ -28,15 +28,12 @@ module ApplicationHelper
   end
 
   def section_url(section)
-    types_to_controllers = { HouseOfCommonsSitting => "commons",
-                             HouseOfLordsSitting => "lords",
-                             WrittenAnswersSitting => "writtenanswers" }
-    sitting_type = section.sitting.class
+    sitting_type = section.sitting.uri_component
     date_params = sitting_date_url_params(section.sitting)
     url_for(date_params.update(:controller => "sections",
                                :action => "show",
                                :id => section.slug,
-                               :type => types_to_controllers[sitting_type]))
+                               :type => sitting_type))
   end
 
   def day_link(sitting, direction)

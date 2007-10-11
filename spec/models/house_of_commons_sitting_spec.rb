@@ -17,10 +17,13 @@ def mock_housecommons_builder
   mock_builder
 end
 
-
 describe HouseOfCommonsSitting, ', the class' do
   it 'should respond to find_by_date' do
     lambda {HouseOfCommonsSitting.find_by_date('1999-02-08')}.should_not raise_error
+  end
+
+  it 'should have uri_component equal to "commons"' do
+    HouseOfCommonsSitting.uri_component.should == 'commons'
   end
 end
 
@@ -40,6 +43,10 @@ describe HouseOfCommonsSitting, 'an instance' do
   it 'should have debates' do
     @sitting.debates.should_not be_nil
     @sitting.debates.should be_an_instance_of(Debates)
+  end
+
+  it 'should have uri_component equal to "commons"' do
+    @sitting.uri_component.should == 'commons'
   end
 
 end

@@ -5,6 +5,10 @@ class HouseOfLordsSitting < Sitting
     sittings.in_groups_by { |s| s.date.year }
   end
 
+  def self.uri_component
+    'lords'
+  end
+
   def to_xml(options={})
     xml = options[:builder] ||= Builder::XmlMarkup.new(:indent => 1)
     xml.houselords do

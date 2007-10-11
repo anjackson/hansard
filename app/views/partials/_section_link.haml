@@ -2,6 +2,6 @@
 - if section.linkable?
   .section-link
     = link_to section.title, section_url(section)
-    =render :partial => "partials/section_link", :collection => section.sections
+    = render :partial => "partials/section_link", :collection => section.sections
 - else
   =render :partial => "partials/section_link", :collection => section.sections

@@ -42,6 +42,21 @@ class Sitting < ActiveRecord::Base
          :order => "date #{direction == ">" ? "asc" : "desc"}")
   end
 
+  def Sitting.uri_component_to_sitting_model type
+    case type
+      when HouseOfCommonsSitting.uri_component
+        HouseOfCommonsSitting
+      when HouseOfLordsSitting.uri_component
+        HouseOfLordsSitting
+      when WrittenAnswersSitting.uri_component
+        WrittenAnswersSitting
+    end
+  end
+
+  def uri_component
+    self.class.uri_component
+  end
+
   def first_col
     start_column ? start_column.to_i : nil
   end

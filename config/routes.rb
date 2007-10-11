@@ -1,9 +1,15 @@
-def def_route path, action, map
+def make_route path, action, map
   map.method_missing action, path, :action => action.to_s
 end
 
-def def_index_route path, map
+def make_index_route path, map
   map.method_missing path.to_sym, path, :action => 'index'
+end
+
+def with_controller name, map
+  map.with_options(:controller => name.to_s) do |sub_map|
+    yield sub_map
+  end
 end
 
 ActionController::Routing::Routes.draw do |map|
@@ -32,91 +38,74 @@ ActionController::Routing::Routes.draw do |map|
   date = ':year/:month/:day'
   date_span = ':start_year/:start_month/:start_day/:end_year/:end_month/:end_day'
 
-  map.with_options(:controller => 'indices') do |indexes|
+  with_controller :indices, map do |indices|
+    make_index_route 'indices', indices
 
-    indexes.indices 'indices', :action => 'index'
-
-    indexes.with_options(date_span_options) do |by_date_span|
-      def_route "indices/#{date_span}", :show, by_date_span
+    indices.with_options(date_span_options) do |by_date_span|
+      make_route "indices/#{date_span}", :show, by_date_span
     end
-
   end
 
-  map.with_options(:controller => 'days') do |days|
-
+  with_controller :days, map do |days|
     days.with_options(date_options) do |by_date|
-      def_route "#{date}", :show, by_date
+      make_route "#{date}", :show, by_date
     end
-
   end
 
-  map.with_options(:controller => 'lords') do |lords|
-    lords.lords 'lords', :action => 'index'
+  with_controller :lords, map do |lords|
+    make_index_route 'lords', lords
 
     lords.with_options(formatted_date_options) do |by_date|
-      def_route "lords/#{date}.:format", :show, by_date
+      make_route "lords/#{date}.:format", :show, by_date
+      make_route "lords/source/#{date}.:format", :show_source, by_date
     end
 
     lords.with_options(date_options) do |by_date|
-      def_route "lords/#{date}", :show, by_date
-    end
-
-    lords.with_options(formatted_date_options) do |by_date|
-      def_route "lords/source/#{date}.:format", :show_source, by_date
+      make_route "lords/#{date}", :show, by_date
     end
   end
 
-  map.with_options(:controller => 'commons') do |commons|
-
-    commons.commons 'commons', :action => 'index'
+  with_controller :commons, map do |commons|
+    make_index_route 'commons', commons
 
     commons.with_options(formatted_date_options) do |by_date|
-      def_route "commons/#{date}.:format", :show, by_date
+      make_route "commons/#{date}.:format", :show, by_date
+      make_route "commons/source/#{date}.:format", :show_source, by_date
     end
 
     commons.with_options(date_options) do |by_date|
-      def_route "commons/#{date}", :show, by_date
+      make_route "commons/#{date}", :show, by_date
     end
-
-    commons.with_options(formatted_date_options) do |by_date|
-      def_route "commons/source/#{date}.:format", :show_source, by_date
-    end
-
   end
 
-  map.with_options(:controller => 'written_answers') do |written|
-
-    written.written_answers 'writtenanswers', :action => 'index'
+  with_controller :written_answers, map do |written|
+    make_index_route 'written_answers', written
 
     written.with_options(formatted_date_options) do |by_date|
-      def_route "writtenanswers/#{date}.:format", :show, by_date
+      make_route "written_answers/#{date}.:format", :show, by_date
+      make_route "written_answers/source/#{date}.:format", :show_source, by_date
     end
 
     written.with_options(date_options) do |by_date|
-      def_route "writtenanswers/#{date}", :show, by_date
+      make_route "written_answers/#{date}", :show, by_date
     end
-
-    written.with_options(formatted_date_options) do |by_date|
-      def_route "writtenanswers/source/#{date}.:format", :show_source, by_date
-    end
-
   end
 
-  map.with_options(:controller => 'data_files') do |data_file|
-    def_index_route "data_files", data_file
-    def_route "data_files/warnings", :show_warnings, data_file
-    def_route "data_files/reload_commmons_for_date/:date", :reload_commmons_for_date, data_file
-    def_route "data_files/reload_lords_for_date/:date", :reload_lords_for_date, data_file
+  with_controller :data_files, map do |data_file|
+    make_index_route "data_files", data_file
+    make_route "data_files/warnings", :show_warnings, data_file
+    make_route "data_files/reload_commmons_for_date/:date", :reload_commmons_for_date, data_file
+    make_route "data_files/reload_lords_for_date/:date", :reload_lords_for_date, data_file
   end
 
-  map.with_options(:controller => 'source_files') do |file|
-    file.source_files "source_files", :action => "index"
+  with_controller :source_files, map do |file|
+    make_index_route "source_files", file
     file.source_file "source_files/:name", :action => "show"
   end
 
-  map.with_options(:controller => 'sections') do |sections|
+  with_controller :sections, map do |sections|
     sections.with_options(date_options) do |by_date|
-      def_route ":type/#{date}/:id", :show, by_date
+      make_route ":type/#{date}/:id", :show, by_date
     end
   end
 
