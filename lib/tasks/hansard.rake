@@ -149,7 +149,8 @@ namespace :hansard do
 
   def load_source_files(source_file, pattern, parser)
     sleep_seconds = ENV['sleep'].to_i if ENV['sleep']
-    Dir.glob(source_file.result_directory+"/"+pattern).each do |file|
+
+    Dir.glob(source_file.result_directory + "/" + pattern).each do |file|
       parse_file(file, parser, source_file)
       sleep sleep_seconds if sleep_seconds
     end
@@ -157,6 +158,7 @@ namespace :hansard do
 
   def reload_data_files(pattern, parser)
     sleep_seconds = ENV['sleep'].to_i if ENV['sleep']
+
     per_data_file(pattern) do |directory, file|
       source_file = SourceFile.from_file(directory)
       parse_file(file, parser, source_file)
