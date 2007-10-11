@@ -77,6 +77,18 @@ namespace :hansard do
     end
   end
 
+  desc 'wipes and reloads lords data from /data for given date=yyyy-mm-dd (doesn\'t re-split)'
+  task :reload_lords_on_date => [:environment] do
+    if ENV['date']
+      date = Date.parse(ENV['date'])
+      reload_lords_on_date date
+    else
+      puts ''
+      puts 'usage: rake hansard:reload_lords_on_date date=yyyy-mm-dd'
+      puts ''
+    end
+  end
+
   desc 'loads any unloaded written answer data from /data (doesn\'t re-split)'
   task :load_new_written => [:environment] do
     reload_data_files(WRITTEN_PATTERN, Hansard::WrittenAnswersParser)

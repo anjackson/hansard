@@ -14,7 +14,7 @@ class DataFilesController < ApplicationController
     if request.post?
       if DataFile.reload_possible?
         date = Date.parse(params['date'])
-        data_file = reload_sitting_on_date(date, 'lords', HouseOfLordsSitting, Hansard::HouseLordsParser)
+        data_file = reload_lords_on_date(date)
         @data_file = DataFile.find(data_file.id)
       else
         render :text => ''
@@ -28,7 +28,7 @@ class DataFilesController < ApplicationController
     if request.post?
       if DataFile.reload_possible?
         date = Date.parse(params['date'])
-        data_file = reload_sitting_on_date(date, 'commons', HouseOfCommonsSitting, Hansard::HouseCommonsParser)
+        data_file = reload_commons_on_date(date)
         @data_file = DataFile.find(data_file.id)
       else
         render :text => ''

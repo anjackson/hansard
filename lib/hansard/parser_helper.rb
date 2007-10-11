@@ -15,6 +15,14 @@ module Hansard::ParserHelper
     end
   end
 
+  def reload_commons_on_date date
+    reload_sitting_on_date(date, 'commons', HouseOfCommonsSitting, Hansard::HouseCommonsParser)
+  end
+
+  def reload_lords_on_date date
+     reload_sitting_on_date(date, 'lords', HouseOfLordsSitting, Hansard::HouseLordsParser)
+  end
+
   def reload_sitting_on_date date, house_type, sitting_model, parser_type
     date_part = date.to_s.gsub('-','_')
     file_name = "house#{house_type}_#{date_part}.xml"
