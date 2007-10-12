@@ -26,6 +26,7 @@ describe SectionsController, "handling GET /commons/1999/feb/08/test-slug" do
     HouseOfCommonsSitting.stub!(:find_by_date).and_return(@sitting)
     @sitting.stub!(:sections).and_return(@sections)
     @section = mock_model(Section)
+    @section.stub!(:title).and_return('Title')
     @sitting.sections.stub!(:find_by_slug).and_return(@section)
   end
 
@@ -75,6 +76,7 @@ describe SectionsController, "handling GET /written_answers/1999/feb/08/test-slu
     @sections = mock("sitting sections")
     @sitting.stub!(:sections).and_return(@sections)
     @section = mock_model(Section)
+    @section.stub!(:title).and_return('Title')
     @sitting.sections.stub!(:find_by_slug).and_return(@section)
   end
 

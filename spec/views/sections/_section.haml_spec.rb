@@ -16,7 +16,6 @@ describe "_section partial", " in general" do
 
 end
 
-
 describe "_section_partial", " when passed an oral questions section with contributions" do
 
   before do
@@ -74,3 +73,4 @@ describe "_section_partial", " when passed an oral questions section with contri
   end
 
 end
+

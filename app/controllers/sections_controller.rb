@@ -8,6 +8,7 @@ class SectionsController < ApplicationController
     @sitting = sitting_model.find_by_date(@date.to_date.to_s)
     @section = @sitting.sections.find_by_slug(params[:id])
     @marker_options = {}
+    @title = @section.title
   end
 
 end
