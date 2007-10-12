@@ -21,16 +21,12 @@ class Hansard::HouseParser
   def parse
     type = @doc.children[0].name
 
-    begin
-      if type == 'housecommons'
-        create_house_sitting 'housecommons', HouseOfCommonsSitting
-      elsif type == 'houselords'
-        create_house_sitting 'houselords', HouseOfLordsSitting
-      else
-        raise 'cannot create sitting, unrecognized type: ' + type
-      end
-    rescue Exception => e
-      debugger
+    if type == 'housecommons'
+      create_house_sitting('housecommons', HouseOfCommonsSitting)
+    elsif type == 'houselords'
+      create_house_sitting('houselords', HouseOfLordsSitting)
+    else
+      raise 'cannot create sitting, unrecognized type: ' + type
     end
   end
 

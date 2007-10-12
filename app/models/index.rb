@@ -17,7 +17,18 @@ class Index < ActiveRecord::Base
   end
 
   def decade
-    year = start_date.year
-    year - (year % 10)
+    year = if start_date
+             start_date.year
+           elsif end_date
+             end_date.year
+           else
+             nil
+           end
+
+    if year
+      year - (year % 10)
+    else
+      0
+    end
   end
 end

@@ -61,3 +61,33 @@ describe Index, ".entries, when supplied a letter of the alphabet" do
   end
 
 end
+
+describe Index, " destroy" do
+
+  it 'should destroy index_entries' do
+    index = Index.create :title => 'APRIL 1 – JUNE 30 1919.',
+      :start_date => Date.new(1919,4,1),
+      :end_date => Date.new(1919,6,30)
+
+    entry = IndexEntry.new(:text          => 'Alien Enemies',
+                          :entry_context => '',
+                          :letter        => 'A')
+    child_entry = IndexEntry.new(:text          => 'German combatant prisoners, number and work of, 398.',
+                           :entry_context => '',
+                           :letter        => 'A',
+                           :parent_entry  => entry)
+
+    index.index_entries << entry
+    index.index_entries << child_entry
+    index.save!
+
+    Index.find(:all).size.should == 1
+    IndexEntry.find(:all).size.should == 2
+
+    index.destroy
+
+    Index.find(:all).size.should == 0
+    IndexEntry.find(:all).size.should == 0
+  end
+
+end
