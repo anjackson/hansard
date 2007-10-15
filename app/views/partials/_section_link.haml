@@ -4,7 +4,7 @@
     - section_id = 'move_section_'+section.id.to_s
     %span{ :onmouseover => "Element.show('#{section_id}'); return false;", :onmouseout => "Element.hide('#{section_id}'); return false;" }
       %span.section-link= link_to section.title, section_url(section)
-      %span{ :id => section_id, :style => "display:none;" } ← →
+      %span{ :id => section_id, :style => "display:none;" }= section_nesting_link_text section
     = render :partial => "partials/section_link", :collection => section.sections
 - else
   = render :partial => "partials/section_link", :collection => section.sections

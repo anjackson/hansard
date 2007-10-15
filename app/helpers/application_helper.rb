@@ -326,6 +326,20 @@ EOF
     end
   end
 
+  def section_nesting_link_text section
+    if section.can_be_nested?
+      if section.can_be_unnested?
+        '← →'
+      else
+        '→'
+      end
+    elsif section.can_be_unnested?
+      '←'
+    else
+      nil
+    end
+  end
+
   private
 
     def close_add_open parts, inner_elements, outer_elements, addition

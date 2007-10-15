@@ -157,6 +157,36 @@ class Section < ActiveRecord::Base
     end
   end
 
+  def preceding_sibling
+    if parent_section
+      index = parent_section.sections.index(self)
+      if index > 0
+        parent_section.sections[index - 1]
+      else
+        nil
+      end
+    else
+      index = sitting.sections.index(self)
+      if index > 0
+        sitting.sections[index - 1]
+      else
+        nil
+      end
+    end
+  end
+
+  def can_be_nested?
+    preceding_sibling ? true : false
+  end
+
+  def can_be_unnested?
+    if parent_section
+      parent_section.is_a?(Debates) ? false : true
+    else
+      false
+    end
+  end
+
   def is_a_parent?
     (sections.size > 0) ? true : false
   end

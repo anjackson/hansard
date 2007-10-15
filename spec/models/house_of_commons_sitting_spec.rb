@@ -112,6 +112,7 @@ end
 describe HouseOfCommonsSitting, " destroy" do
 
   it 'should destroy child debates, oral questions, sections, contributions, divisions and votes' do
+    Section.delete_all
     sitting = HouseOfCommonsSitting.new
     sitting.debates = Debates.new(:sitting => sitting)
 

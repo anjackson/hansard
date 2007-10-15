@@ -20,9 +20,9 @@ describe "sections/show.haml", " in general" do
 end
 
 describe 'sections/show.haml', 'when passed a section with nested sections' do
+
   before do
     sitting = Sitting.create
-
     @title = 'TRANSPORT'
     parent = Section.create(:title => @title, :sitting_id => sitting.id)
     first  = Section.create(:title => 'Heavy Goods Vehicles (Public Weighbridge Facilities)', :sitting_id => sitting.id)

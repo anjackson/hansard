@@ -1,7 +1,7 @@
 class Sitting < ActiveRecord::Base
 
   has_one :debates, :class_name => "Debates", :foreign_key => "sitting_id", :dependent => :destroy
-  has_many :sections, :foreign_key => 'sitting_id'
+  has_many :sections, :foreign_key => 'sitting_id', :dependent => :destroy
   belongs_to :data_file
   acts_as_present_on_date :date
   before_validation_on_create :check_date, :default_sitting_text_to_nil
