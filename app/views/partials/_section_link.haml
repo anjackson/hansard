@@ -1,7 +1,10 @@
 - section = section_link
 - if section.linkable?
-  .section-link
-    = link_to section.title, section_url(section)
+  .section-line
+    - section_id = 'move_section_'+section.id.to_s
+    %span{ :onmouseover => "Element.show('#{section_id}'); return false;", :onmouseout => "Element.hide('#{section_id}'); return false;" }
+      %span.section-link= link_to section.title, section_url(section)
+      %span{ :id => section_id, :style => "display:none;" } ← →
     = render :partial => "partials/section_link", :collection => section.sections
 - else
-  =render :partial => "partials/section_link", :collection => section.sections
+  = render :partial => "partials/section_link", :collection => section.sections

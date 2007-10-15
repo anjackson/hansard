@@ -334,6 +334,7 @@ class Hansard::Splitter
       puts "No dates found in #{input_file} so deleting results of split!"
       FileUtils.remove_dir result_directory, true
       FileUtils.remove_dir @result_path, true
+      @source_file
     end
   end
 
