@@ -9,6 +9,11 @@ class Sitting < ActiveRecord::Base
   alias :to_activerecord_xml :to_xml
   acts_as_hansard_element
 
+  def self.all_grouped_by_year
+    sittings = self.find(:all, :order => "date asc")
+    sittings.in_groups_by { |s| s.date.year }
+  end
+  
   def Sitting.find_section_by_column_and_date_range(column, start_date, end_date)
     sitting = find(:first, :conditions => ["date >= ? and date <= ? and start_column <= ?", start_date.to_date, end_date.to_date, column.to_i], :order => "start_column desc")
     if sitting

@@ -34,7 +34,7 @@ describe WrittenAnswersController, " handling GET /writtenanswers" do
 
   before do
     @sitting = mock_model(WrittenAnswersSitting)
-    WrittenAnswersSitting.stub!(:find).and_return([@sitting])
+    WrittenAnswersSitting.stub!(:all_grouped_by_year).and_return([@sitting])
   end
 
   def do_get
@@ -46,8 +46,8 @@ describe WrittenAnswersController, " handling GET /writtenanswers" do
     response.should be_success
   end
 
-  it "should get all the sittings in ascending date order" do
-    WrittenAnswersSitting.should_receive(:find).with(:all, :order => "date asc").and_return([@sitting])
+  it "should get all the sittings grouped by year" do
+    WrittenAnswersSitting.should_receive(:all_grouped_by_year).and_return([@sitting])
     do_get
   end
 

@@ -3,7 +3,7 @@ class WrittenAnswersController < ApplicationController
   before_filter :check_valid_date, :only => [:show, :show_source]
   
   def index
-    @sittings = WrittenAnswersSitting.find(:all, :order => "date asc")
+    @sittings_by_year = WrittenAnswersSitting.all_grouped_by_year
   end
   
   def show

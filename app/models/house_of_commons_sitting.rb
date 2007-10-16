@@ -1,9 +1,5 @@
 class HouseOfCommonsSitting < Sitting
 
-  def self.all_grouped_by_year
-    sittings = HouseOfCommonsSitting.find(:all, :order => "date asc")
-    sittings.in_groups_by { |s| s.date.year }
-  end
 
   def self.uri_component
     'commons'

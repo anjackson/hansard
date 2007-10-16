@@ -1,10 +1,5 @@
 class HouseOfLordsSitting < Sitting
 
-  def self.all_grouped_by_year
-    sittings = HouseOfLordsSitting.find(:all, :order => "date asc")
-    sittings.in_groups_by { |s| s.date.year }
-  end
-
   def self.uri_component
     'lords'
   end
