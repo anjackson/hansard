@@ -289,7 +289,7 @@ EOF
     inner_elements = []
     parts = handle_contribution_part doc.children.first, [], inner_elements, outer_elements
     parts = '<p>' + parts.join('').squeeze(' ') + '</p>'
-    parts.gsub!(/<\/span>\s<span class='sidenote'>/,"<br />")
+    parts.gsub!(/<\/span>\s*<span class='sidenote'>/,"<br />")
     parts
   end
 

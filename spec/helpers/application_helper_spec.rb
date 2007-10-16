@@ -57,6 +57,11 @@ describe ApplicationHelper, " when formatting contribution" do
         "<p>a <sub>really <span class='sidenote'><a name='column_123' href='#column_123'>Col. 123</a></span> powerful</sub> change</p>"
   end
 
+  it "should split a consecutive image and column tag with a linebreak" do
+    format_contribution("<image src=\"S6CV0089P0I0021\"/>   \n\n <col>123</col>").should  ==
+    '<p><span class=\'sidenote\'><a href="/images/S6CV0089P0I0021.jpg">Img. S6CV0089P0I0021</a><br /><a name=\'column_123\' href=\'#column_123\'>Col. 123</a></span></p>'
+  end
+  
   it "should convert a member element in to a span element with class 'member'" do
     text = "1. <member>Mr. Michael Latham</member> asked the Secretary of State for Northern Ireland whether he will make a further statement on the security situation."
     expected = '<p>1. <span class="member">Mr. Michael Latham</span> asked the Secretary of State for Northern Ireland whether he will make a further statement on the security situation.</p>'

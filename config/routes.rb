@@ -104,7 +104,7 @@ ActionController::Routing::Routes.draw do |map|
   end
 
   with_controller :sections, map do |sections|
-    sections.with_options(date_options) do |by_date|
+    sections.with_options(formatted_date_options) do |by_date|
       make_route ":type/#{date}/:id", :show, by_date
       make_route ":type/#{date}/:id/nest", :nest, by_date
       make_route ":type/#{date}/:id/unnest", :unnest, by_date
