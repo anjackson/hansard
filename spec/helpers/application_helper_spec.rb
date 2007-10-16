@@ -372,24 +372,35 @@ end
 
 describe ApplicationHelper, "when creating section nest, unnest link text" do
 
-  it 'should display only right arrow for a section with a preceding sibling and no parent_section' do
-    section = Section.new
-    section.stub!(:can_be_nested?).and_return true
-    section.stub!(:can_be_unnested?).and_return false
-    # section_nesting_link_text(section).should == '→'
+  before do
+    @section = Section.new
+    @section.stub!(:id_hash).and_return({
+      :id    => 'slug',
+      :year  => '1999',
+      :month => 'dec',
+      :day   => '31',
+      :type  => 'commons'})
   end
 
-  it 'should display only left arrow for a section with a parent section and no preceding sibling' do
-    section = Section.new
-    section.stub!(:can_be_nested?).and_return false
-    section.stub!(:can_be_unnested?).and_return true
-    # section_nesting_link_text(section).should == '←'
+  it 'should display only right arrow for a section that can be nested' do
+    @section.stub!(:can_be_nested?).and_return true
+    @section.stub!(:can_be_unnested?).and_return false
+    section_nesting_buttons(@section).should_not have_tag('input[value="&larr;"]')
+    section_nesting_buttons(@section).should have_tag('input[value="&rarr;"]')
   end
 
-  it 'should display both a left and a right arrow for a section that has a parent and a preceding sibling' do
-    section = Section.new
-    section.stub!(:can_be_nested?).and_return true
-    section.stub!(:can_be_unnested?).and_return true
-    # section_nesting_link_text(section).should == '← →'
+  it 'should display only left arrow for a section that can be unnested' do
+    @section.stub!(:can_be_nested?).and_return false
+    @section.stub!(:can_be_unnested?).and_return true
+    section_nesting_buttons(@section).should have_tag('input[value="&larr;"]')
+    section_nesting_buttons(@section).should_not have_tag('input[value="&rarr;"]')
+  end
+
+  it 'should display both a left and a right arrow for a section that can be both nested and unnested' do
+    @section.stub!(:can_be_nested?).and_return true
+    @section.stub!(:can_be_unnested?).and_return true
+    buttons = section_nesting_buttons(@section)
+    buttons.should have_tag('input[value="&larr;"]')
+    buttons.should have_tag('input[value="&rarr;"]')
   end
 end
