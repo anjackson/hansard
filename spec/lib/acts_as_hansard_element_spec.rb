@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe "a class that acts_as_hansard_element" do
   
   before do
-    self.class.send(:include, Acts::HansardElement)
+    self.class.send(:include, Acts::HansardElement) if self.class.respond_to? "include"
   end
   
   it "should include Acts::HansardElement::InstanceMethods" do
