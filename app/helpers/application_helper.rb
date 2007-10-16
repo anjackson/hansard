@@ -48,9 +48,9 @@ module ApplicationHelper
     open :ol, {:id => 'navigation'} do
 
       open :li do
-        puts 'Millbank Systems'
+        puts 'UK Parliament'
         open :a, { :href => home_url } do
-          puts "<strong>HANSARD</strong> Home"
+          puts "<strong>HANSARD</strong> Calendar"
         end
       end
 
