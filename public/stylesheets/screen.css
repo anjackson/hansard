@@ -168,9 +168,7 @@ th {
 }
 
 .procedural {
-	border-left:4pt solid #eee;
-	padding:0.1em 0.5em;
-	margin:1em;
+	font-style: italic;
 }
 
 #footer {
