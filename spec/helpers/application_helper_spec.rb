@@ -349,8 +349,13 @@ describe ApplicationHelper, " when creating a section url" do
 
   def create_section sitting_model
     section = mock_model(Section)
-    section.stub!(:slug).and_return("exports-to-israel")
     section.stub!(:sitting).and_return(sitting_model.new(:date => Date.new(1957, 6, 25)))
+    section.stub!(:id_hash).and_return({
+      :id    => "exports-to-israel",
+      :year  => '1957',
+      :month => 'jun',
+      :day   => '25',
+      :type  => sitting_model.uri_component})
     section
   end
 

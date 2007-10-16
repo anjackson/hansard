@@ -28,12 +28,8 @@ module ApplicationHelper
   end
 
   def section_url(section)
-    sitting_type = section.sitting.uri_component
-    date_params = sitting_date_url_params(section.sitting)
-    url_for(date_params.update(:controller => "sections",
-                               :action => "show",
-                               :id => section.slug,
-                               :type => sitting_type))
+    params = section.id_hash
+    url_for(params.merge!(:controller => "sections", :action => "show"))
   end
 
   def day_link(sitting, direction)
