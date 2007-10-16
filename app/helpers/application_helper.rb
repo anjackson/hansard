@@ -131,7 +131,7 @@ module ApplicationHelper
         <input name="q" type="text" size="40" />
         <input type="submit" name="sa" value="Search" />
       </form>
-<!--      <script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_002582221602550181161%3Aowz178jujce"></script> --!>
+      <script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_002582221602550181161%3Aowz178jujce"></script>
     </div>
 EOF
   end
