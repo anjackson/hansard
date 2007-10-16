@@ -326,21 +326,31 @@ EOF
     end
   end
 
-  def section_nesting_link_text section
+  def section_nesting_buttons section
     if section.can_be_nested?
       if section.can_be_unnested?
-        '← →'
+        section_unnest_button(section) + ' ' + section_nest_button(section)
       else
-        '→'
+        section_nest_button(section)
       end
     elsif section.can_be_unnested?
-      '←'
+      section_unnest_button(section)
     else
       nil
     end
   end
 
   private
+
+    def section_nest_button section
+      params = section.id_hash.merge(:action => 'nest', :controller => 'sections')
+      button_to('→', params).gsub('div','span')
+    end
+
+    def section_unnest_button section
+      params = section.id_hash.merge(:action => 'unnest', :controller => 'sections')
+      button_to('←', params).gsub('div','span')
+    end
 
     def close_add_open parts, inner_elements, outer_elements, addition
       inner_elements.each { |e| parts << "</#{e}>" }

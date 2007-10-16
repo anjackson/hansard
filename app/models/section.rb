@@ -17,6 +17,14 @@ class Section < ActiveRecord::Base
     slug
   end
 
+  def id_hash
+    {:id    => slug,
+     :year  => sitting.date.year,
+     :month => month_abbreviation,
+     :day   => zero_padded_day,
+     :type  => sitting.uri_component}
+  end
+
   def find_linkable_section(direction)
     if direction == :previous
       increment = -1
@@ -202,4 +210,16 @@ class Section < ActiveRecord::Base
       self.save!
     end
   end
+
+  protected
+    def month_abbreviation
+      month = sitting.date.month
+      Date::ABBR_MONTHNAMES[month].downcase
+    end
+
+    def zero_padded_day
+      day = sitting.date.day
+      day < 10 ? "0"+ day.to_s : day.to_s
+    end
+
 end

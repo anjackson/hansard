@@ -185,6 +185,10 @@ div.section-line div.section-line {
   margin-left:	1em;
 }
 
+.button-to {
+  display: inline;
+}
+
 div.sittings-in-interval{
   float: right;
   margin-right: -5em;

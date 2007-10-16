@@ -17,6 +17,15 @@ describe SectionsController, "#route_for" do
     route_for(params).should == "/written_answers/1999/feb/08/test-slug"
   end
 
+  it "should map { :controller => 'sections', :action => 'show', :year => '1999', :month => 'feb', :day => '08', :id => 'test-slug', :type => 'commons', :action => 'nest' } to /commons/1999/feb/08/test-slug/nest" do
+    params =  { :controller => 'sections', :action => 'show', :year => '1999', :month => 'feb', :day => '08', :id => 'test-slug', :type => 'commons', :action => 'nest' }
+    route_for(params).should == "/commons/1999/feb/08/test-slug/nest"
+  end
+
+  it "should map { :controller => 'sections', :action => 'show', :year => '1999', :month => 'feb', :day => '08', :id => 'test-slug', :type => 'commons', :action => 'nest' } to /commons/1999/feb/08/test-slug/unnest" do
+    params =  { :controller => 'sections', :action => 'show', :year => '1999', :month => 'feb', :day => '08', :id => 'test-slug', :type => 'commons', :action => 'unnest' }
+    route_for(params).should == "/commons/1999/feb/08/test-slug/unnest"
+  end
 end
 
 describe SectionsController, "handling GET /commons/1999/feb/08/test-slug" do
