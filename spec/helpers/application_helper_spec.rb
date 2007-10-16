@@ -133,16 +133,14 @@ describe ApplicationHelper, " when creating a link for a sitting's next or previ
   it "should yield in the context of a link to the sitting if a sitting can be found" do
     stub!(:sitting_date_url).and_return("http://test.url")
     HouseOfCommonsSitting.stub!(:find).and_return(@sitting)
-    capture_haml{
-      day_link(@sitting, ">"){ puts "moo" }
-    }.should have_tag("a[href=http://test.url]", :text => "moo")
+    result = capture_haml{ day_link(@sitting, ">"){ puts "moo" } }
+    result.should have_tag("a[href=http://test.url]", :text => "moo")
   end
 
   it "should yield in without a link if no sitting can be found" do
     HouseOfCommonsSitting.stub!(:find).and_return(nil)
-    capture_haml{
-      day_link(@sitting, ">"){ puts "moo" }
-    }.should == "moo\n"
+    result = capture_haml{ day_link(@sitting, ">"){ puts "moo" } }
+    result.should == "moo\n"
   end
 
   it "should look for the first sitting with a date larger than the sitting date passed for direction '>'" do
@@ -184,76 +182,66 @@ describe ApplicationHelper, " when creating navigation links" do
 
   it "should include an 'ol' tag containing an 'li' tag containing a link to the root if @day is not true" do
     should_receive(:home_url).and_return("http://test.url")
-    capture_haml{
-      day_nav_links
-    }.should have_tag("ol li a[href=http://test.url]")
+    result = capture_haml{ day_nav_links }
+    result.should have_tag("ol li a[href=http://test.url]")
   end
 
   it "should include an 'ol' tag containing an 'li' tag containing a link to the indices url if @day is not true" do
     should_receive(:indices_url).and_return("http://test.url")
-    capture_haml{
-      day_nav_links
-    }.should have_tag("ol li a[href=http://test.url]")
+    result = capture_haml{ day_nav_links }
+    result.should have_tag("ol li a[href=http://test.url]")
   end
 
   it "should include an 'ol' tag containing an 'li' tag containing a link to the writtenanswers url if @day is not true" do
     should_receive(:written_answers_url).and_return("http://test.url")
-    capture_haml{
-      day_nav_links
-    }.should have_tag("ol li a[href=http://test.url]")
+    result = capture_haml{ day_nav_links }
+    result.should have_tag("ol li a[href=http://test.url]")
   end
 
   it "should include an 'ol' tag containing an 'li' tag containing a link to the sourcefiles url if @day is not true" do
     should_receive(:source_files_url).and_return("http://test.url")
-    capture_haml{
-      day_nav_links
-    }.should have_tag("ol li a[href=http://test.url]")
+    result = capture_haml{ day_nav_links }
+    result.should have_tag("ol li a[href=http://test.url]")
   end
 
   it "should include an 'ol' tag containing an 'li' tag containing a link to the datafiles url if @day is not true" do
     should_receive(:data_files_url).and_return("http://test.url")
-    capture_haml{
-      day_nav_links
-    }.should have_tag("ol li a[href=http://test.url]")
+    result = capture_haml{ day_nav_links }
+    result.should have_tag("ol li a[href=http://test.url]")
   end
 
   it "should write content to the page if @day is true" do
     @day = true
-    capture_haml{
-      day_nav_links
-    }.should_not == ''
+    result = capture_haml{ day_nav_links }
+    result.should_not == ''
   end
 
   it "should include an 'ol' tag containing an 'li' tag containing a link to the source xml with the text 'XML source'" do
     @day = true
     should_receive(:sitting_date_source_url).and_return("http://test.url")
-    capture_haml{
-      day_nav_links
-    }.should have_tag("ol li a[href=http://test.url]", :text => "XML source")
+    result = capture_haml{ day_nav_links }
+    result.should have_tag("ol li a[href=http://test.url]", :text => "XML source")
   end
 
   it "should include an 'ol' tag containing an 'li' tag containing a link to the generated xml with the text 'XML output'" do
     @day = true
     should_receive(:sitting_date_xml_url).and_return("http://test.url")
-    capture_haml{
-      day_nav_links
-    }.should have_tag("ol li a[href=http://test.url]", :text => "XML output")
+    result = capture_haml{ day_nav_links }
+    result.should have_tag("ol li a[href=http://test.url]", :text => "XML output")
   end
 
   it "should include an 'ol' tag containing an 'li' tag containing the text 'Previous day'" do
     @day = true
     should_receive(:commons_day_link).any_number_of_times.and_yield
-    capture_haml{
-      day_nav_links
-    }.should have_tag("ol li", :text => "Previous day")
+    result = capture_haml{ day_nav_links }
+    result.should have_tag("ol li", :text => "Previous day")
   end
 
   it "should include an 'ol' tag containing an 'li' tag containing the text 'Next day'" do
     @day = true
     should_receive(:commons_day_link).any_number_of_times.and_yield
-    capture_haml{
-      day_nav_links
-    }.should have_tag("ol li", :text => "Next day")
+    result = capture_haml{ day_nav_links }
+    result.should have_tag("ol li", :text => "Next day")
   end
 
 end
