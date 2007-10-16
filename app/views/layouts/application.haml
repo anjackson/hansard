@@ -5,19 +5,6 @@
     %title= "Millbank Systems: Hansard: " << ( @title || "Please give me a title" )
     = stylesheet_link_tag "screen", :media => "screen"
     = stylesheet_link_tag "print", :media => "print"
-    %link{ :rel => 'contact', :href => 'mailto:brookr@parliament.uk' }
-    %link{ :rel => 'author', :title => "UK Parliament", :href => "http://www.parliament.uk" }
-    %link{ :rel => 'bookmark', :title => "Millbank Systems: Hansard: " << ( @title || "Please give me a title" ), :href => request.request_uri }
-    %link{ :rel => 'first', :title => "", :href => "" }
-    %link{ :rel => 'help', :title => "", :href => "" }
-    %link{ :rel => 'index', :title => "", :href => "" }
-    %link{ :rel => 'last', :title => "", :href => "" }
-    %link{ :rel => 'next', :title => "", :href => "" }
-    %link{ :rel => 'prev', :title => "", :href => "" }
-    %link{ :rel => 'tag', :title => "", :href => "" }
-    %link{ :rel => 'up', :title => "", :href => "" }
-    %link{ :rel => 'licence', :hreflang => "en-GB", :href => 'http://www.parliament.uk/site_information/parliamentary_copyright.cfm' }
-    %link{ :rel => 'license', :hreflang => "en-US", :href => 'http://www.parliament.uk/site_information/parliamentary_copyright.cfm' }
     - if @day
       %link{ :rel => 'alternate', :type => 'text/xml', :title => 'Source file for: ' << ( @title || "Please give me a title" ), :href => sitting_date_source_url(@sitting) }
       %link{ :rel => 'alternate', :type => 'text/xml', :title => 'XML file for: ' << ( @title || "Please give me a title" ), :href => sitting_date_xml_url(@sitting) }
