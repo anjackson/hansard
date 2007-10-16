@@ -229,14 +229,14 @@ module SectionSpecHelper
 
   def make_written_answers
     @answers = WrittenAnswersSitting.create
-    @parent = create_section 'TRANSPORT', @answers
-    @first  = create_section 'Heavy Goods Vehicles (Public Weighbridge Facilities)', @answers, @parent
-    @second = create_section 'Driving Licences (Overseas Recognition)', @answers, @parent
-    @third  = create_section 'Public Boards (Appointments)', @answers, @parent
+    @parent_answer = create_section 'TRANSPORT', @answers
+    @first_answer  = create_section 'Heavy Goods Vehicles (Public Weighbridge Facilities)', @answers, @parent_answer
+    @second_answer = create_section 'Driving Licences (Overseas Recognition)', @answers, @parent_answer
+    @third_answer  = create_section 'Public Boards (Appointments)', @answers, @parent_answer
     @solo_answer   = create_section 'HEALTH', @answers
 
-    @parent.sections = [@first, @second, @third]
-    @answers.sections = [@parent, @solo_answer]
+    @parent_answer.sections = [@first_answer, @second_answer, @third_answer]
+    @answers.sections = [@parent_answer, @solo_answer]
     @answers.save!
   end
 
@@ -247,11 +247,11 @@ module SectionSpecHelper
     @sitting.debates = @debates
     @sitting.sections = [@debates]
     @sitting.save!
-    @parent = create_section 'TRANSPORT', @sitting
+    @parent = create_section 'TRANSPORT', @sitting, @debates
     @first  = create_section 'Heavy Goods Vehicles (Public Weighbridge Facilities)', @sitting, @parent
     @second = create_section 'Driving Licences (Overseas Recognition)', @sitting, @parent
     @third  = create_section 'Public Boards (Appointments)', @sitting, @parent
-    @solo   = create_section 'HEALTH', @sitting
+    @solo   = create_section 'HEALTH', @sitting, @debates
 
     @parent.sections = [@first, @second, @third]
     @debates.sections = [@parent, @solo]
@@ -269,11 +269,11 @@ describe Section, 'when it has a parent section' do
   after do; destroy_sitting; end
 
   it 'should return for preceding_sibling a preceding section with the same parent section' do
-    @second.preceding_sibling.should == @first
+    @second_answer.preceding_sibling.should == @first_answer
   end
 
   it 'should return nil for preceding_sibling if there is no preceding section with the same parent section' do
-    @first.preceding_sibling.should be_nil
+    @first_answer.preceding_sibling.should be_nil
   end
 
 end
@@ -284,11 +284,11 @@ describe Section, 'when it is directly under sitting' do
   after(:all) do; destroy_sitting; end
 
   it 'should return for preceding_sibling a preceding section that is directly under sitting' do
-    @solo_answer.preceding_sibling.should == @parent
+    @solo_answer.preceding_sibling.should == @parent_answer
   end
 
   it 'should return nil for preceding_sibling if there is no preceding section directly under sitting' do
-    @parent.preceding_sibling.should be_nil
+    @parent_answer.preceding_sibling.should be_nil
   end
 end
 
@@ -306,9 +306,12 @@ describe Section, 'when a section is directly under debates section' do
   end
 
   it 'should unnest so new parent section id is the debates section id' do
-    @first.parent_section_id == @parent.id
+    @first.parent_section_id.should == @parent.id
+    @first.can_be_unnested?.should be_true
+    @first.parent_section.parent_section.should == @debates
     @first.unnest!
-    @first.parent_section_id == @debates.id
+    @first.reload
+    @first.parent_section.should == @debates
   end
 end
 
@@ -318,9 +321,57 @@ describe Section, 'when it has a preceding sibling section' do
   after do; destroy_sitting; end
 
   it 'should nest so new parent id is the former preceding sibling id' do
-    @second.parent_section_id == @parent.id
+    @second.parent_section_id.should == @parent.id
     @second.nest!
-    @second.parent_section_id == @first.id
+    @second.parent_section_id.should == @first.id
+  end
+end
+
+describe Section, 'when it has following sibling sections' do
+  include SectionSpecHelper
+  before do; make_sitting; end
+  after do; destroy_sitting; end
+
+  it 'should have following_siblings return array of following sibling sections' do
+    @first.following_siblings.should == [@second, @third]
+  end
+end
+
+describe Section, 'when it has a following sibling section' do
+  include SectionSpecHelper
+  before do; make_sitting; end
+  after do; destroy_sitting; end
+
+  it 'should have following_siblings return array containing the one following sibling section' do
+    @second.following_siblings.should == [@third]
+  end
+end
+
+describe Section, 'when it has no following sibling sections' do
+  include SectionSpecHelper
+  before do; make_sitting; end
+  after do; destroy_sitting; end
+
+  it 'should have following_siblings return an empty array' do
+    @third.following_siblings.should == []
+  end
+end
+
+describe Section, 'when unnested and there are following sibling sections' do
+  include SectionSpecHelper
+  before do; make_sitting; end
+  after do; destroy_sitting; end
+
+  it 'should unnest section and following sibling sections' do
+    @first.parent_section_id.should  == @parent.id
+    @second.parent_section_id.should == @parent.id
+    @third.parent_section_id.should  == @parent.id
+
+    @first.should_receive(:following_siblings).and_return([@second, @third])
+    @second.should_receive(:unnest!).with(false)
+    @third.should_receive(:unnest!).with(false)
+    @first.unnest!
+    @first.parent_section_id.should  == @debates.id
   end
 end
 

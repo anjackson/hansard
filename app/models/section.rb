@@ -165,6 +165,18 @@ class Section < ActiveRecord::Base
     end
   end
 
+  def following_siblings
+    sections = sitting.sections
+    index = sections.index(self)
+    index = index.next
+    siblings = []
+    while(index < sections.size and sections[index].parent_section == parent_section)
+      siblings << sections[index]
+      index = index.next
+    end
+    siblings
+  end
+
   def preceding_sibling
     if parent_section
       index = parent_section.sections.index(self)
@@ -195,10 +207,15 @@ class Section < ActiveRecord::Base
     end
   end
 
-  def unnest!
+  def unnest! traverse_following_siblings=true
     if can_be_unnested?
       new_parent = parent_section.parent_section
-      self.parent_section_id = new_parent.id
+      if traverse_following_siblings
+        self.following_siblings.each do |sibling|
+          sibling.unnest!(false)
+        end
+      end
+      self.parent_section = new_parent
       self.save!
     end
   end
@@ -206,7 +223,7 @@ class Section < ActiveRecord::Base
   def nest!
     if can_be_nested?
       new_parent = preceding_sibling
-      self.parent_section_id = new_parent.id
+      self.parent_section = new_parent
       self.save!
     end
   end
@@ -221,5 +238,4 @@ class Section < ActiveRecord::Base
       day = sitting.date.day
       day < 10 ? "0"+ day.to_s : day.to_s
     end
-
 end
