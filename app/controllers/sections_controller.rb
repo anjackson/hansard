@@ -13,7 +13,7 @@ class SectionsController < ApplicationController
       @sitting, @section = find_sitting_and_section params[:type], @date, params[:id]
       @section.nest!
       params.delete(:action)
-      redirect_to request.request_uri.sub('/nest','').sub('/'+@section.slug,'')
+      redirect_to request.request_uri.sub('/nest','').sub('/'+@section.slug,'')+'#section_'+@section.id.to_s
     end
   end
 
@@ -22,7 +22,7 @@ class SectionsController < ApplicationController
       @sitting, @section = find_sitting_and_section params[:type], @date, params[:id]
       @section.unnest!
       params.delete(:action)
-      redirect_to request.request_uri.sub('/unnest','').sub('/'+@section.slug,'')
+      redirect_to request.request_uri.sub('/unnest','').sub('/'+@section.slug,'')+'#section_'+@section.id.to_s
     end
   end
 

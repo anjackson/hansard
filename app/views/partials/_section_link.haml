@@ -1,10 +1,11 @@
 - section = section_link
 - if section.linkable?
   .section-line
-    - section_id = 'move_section_'+section.id.to_s
-    %span{ :onmouseover => "Element.show('#{section_id}'); return false;", :onmouseout => "Element.hide('#{section_id}'); return false;" }
-      %span.section-link= link_to section.title, section_url(section)
-      %span{ :id => section_id, :style => "display:none;" }= section_nesting_buttons section
+    - section_id = 'section_'+section.id.to_s
+    - move_section_id = 'move_'+section_id
+    %span{ :onmouseover => "Element.show('#{move_section_id}'); return false;", :onmouseout => "Element.hide('#{move_section_id}'); return false;" }
+      %span.section-link{ :id => section_id }= link_to section.title, section_url(section)
+      %span{ :id => move_section_id, :style => "display:none;" }= section_nesting_buttons section
     = render :partial => "partials/section_link", :collection => section.sections
 - else
   = render :partial => "partials/section_link", :collection => section.sections
