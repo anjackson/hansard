@@ -187,11 +187,19 @@ class Section < ActiveRecord::Base
     end
   end
 
-  def is_a_parent?
-    (sections.size > 0) ? true : false
+  def unnest!
+    if can_be_unnested?
+      new_parent = parent_section.parent_section
+      self.parent_section_id = new_parent.id
+      self.save!
+    end
   end
 
-  def is_a_child?
-    parent_section ? true : false
+  def nest!
+    if can_be_nested?
+      new_parent = preceding_sibling
+      self.parent_section_id = new_parent.id
+      self.save!
+    end
   end
 end
