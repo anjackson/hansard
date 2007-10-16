@@ -113,7 +113,7 @@ module Hansard::ParserHelper
 
   def split_file file
     source_file = @splitter.split_file @base_path, file
-    puts 'RESULT DIR ' + source_file.result_directory
+    puts 'RESULT DIR ' + source_file.result_directory if source_file.result_directory
     source_file
   end
 

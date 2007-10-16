@@ -39,7 +39,9 @@ namespace :hansard do
     @splitter = Hansard::Splitter.new(false, (overwrite=true), true)
     per_source_file do |file|
       source_file = split_file file
-      load_split_files source_file
+      if source_file.result_directory
+        load_split_files source_file
+      end
     end
   end
 
