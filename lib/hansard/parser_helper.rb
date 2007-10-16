@@ -95,7 +95,6 @@ module Hansard::ParserHelper
       rescue Exception => e
         data_file.add_log "parsing FAILED\t" + e.to_s
         data_file.save!
-        raise e
       end
     end
   end
