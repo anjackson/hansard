@@ -8,7 +8,10 @@ class LordsController < ApplicationController
 
   def show
     @sittings = HouseOfLordsSitting.find_in_resolution(@date, @resolution)
-    render :action => "index" and return false if @sittings.size > 1
+    if @sittings.size > 1
+      @sittings_by_year = @sittings
+      render :action => "index" and return false 
+    end
     @marker_options = {}
     if !@sittings.empty?
       @sitting = @sittings.first
