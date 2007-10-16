@@ -135,7 +135,7 @@ class Section < ActiveRecord::Base
   def first_col
     if start_column
       if start_column.to_i > 0
-        return start_column
+        return start_column.to_i
       end
     end
     return nil
