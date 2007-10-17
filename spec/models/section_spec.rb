@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../spec_helper'
+require File.dirname(__FILE__) + '/section_spec_helper'
 
 def mock_section_builder
   mock_builder = mock("xml builder")
@@ -219,50 +219,6 @@ describe Section, ".first_col" do
   end
 end
 
-module SectionSpecHelper
-
-  def create_section title, sitting, parent=nil
-    section = Section.create(:title => title, :sitting_id => sitting.id, :parent_section_id => (parent ? parent.id : nil) )
-    section.parent_section = parent if parent
-    section
-  end
-
-  def make_written_answers
-    @answers = WrittenAnswersSitting.create
-    @parent_answer = create_section 'TRANSPORT', @answers
-    @first_answer  = create_section 'Heavy Goods Vehicles (Public Weighbridge Facilities)', @answers, @parent_answer
-    @second_answer = create_section 'Driving Licences (Overseas Recognition)', @answers, @parent_answer
-    @third_answer  = create_section 'Public Boards (Appointments)', @answers, @parent_answer
-    @solo_answer   = create_section 'HEALTH', @answers
-
-    @parent_answer.sections = [@first_answer, @second_answer, @third_answer]
-    @answers.sections = [@parent_answer, @solo_answer]
-    @answers.save!
-  end
-
-  def make_sitting
-    @sitting = HouseOfCommonsSitting.create
-    @debates = Debates.create(:sitting_id => @sitting.id)
-    @debates.sitting = @sitting
-    @sitting.debates = @debates
-    @sitting.sections = [@debates]
-    @sitting.save!
-    @parent = create_section 'TRANSPORT', @sitting, @debates
-    @first  = create_section 'Heavy Goods Vehicles (Public Weighbridge Facilities)', @sitting, @parent
-    @second = create_section 'Driving Licences (Overseas Recognition)', @sitting, @parent
-    @third  = create_section 'Public Boards (Appointments)', @sitting, @parent
-    @solo   = create_section 'HEALTH', @sitting, @debates
-
-    @parent.sections = [@first, @second, @third]
-    @debates.sections = [@parent, @solo]
-    @sitting.save!
-  end
-
-  def destroy_sitting
-    Sitting.find(:all).each {|s| s.destroy}
-  end
-end
-
 describe Section, 'when it has a parent section' do
   include SectionSpecHelper
   before do; make_written_answers; end
@@ -372,6 +328,26 @@ describe Section, 'when unnested and there are following sibling sections' do
     @third.should_receive(:unnest!).with(false)
     @first.unnest!
     @first.parent_section_id.should  == @debates.id
+  end
+end
+
+describe Section, 'when it has an OralQuestionsSection as a parent' do
+  include SectionSpecHelper
+  before do; make_sitting_with_oral_answers; end
+  after do; destroy_sitting; end
+
+  it 'should unnest section and following sibling sections' do
+    @first_question.parent_section_id.should == @oral_questions_section.id
+    @second_question.parent_section_id.should == @oral_questions_section.id
+    @third_question.parent_section_id.should == @oral_questions_section.id
+    @oral_questions.sections.size.should == 1
+    @first_question.should_receive(:following_siblings).and_return([@second_question, @third_question])
+    @first_question.unnest!
+    @first_question.parent_section_id.should == @oral_questions.id
+    @second_question.parent_section_id.should == @oral_questions.id
+    @third_question.parent_section_id.should == @oral_questions.id
+    @oral_questions.reload
+    @oral_questions.sections.size.should == 4
   end
 end
 
