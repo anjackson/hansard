@@ -9,4 +9,3 @@ describe "commons show.haml", " in general" do
   it_should_behave_like "show.haml"
 
 end
-

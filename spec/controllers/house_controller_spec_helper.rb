@@ -22,6 +22,10 @@ describe "controller that has routes correctly configured", :shared => true do
     route_for(params).should == "/#{@house_type}/source/1999/feb/08.xml"
   end
 
+  it "should map { :controller => @house_type, :action => 'edit', :year => '1999', :month => 'feb', :day => '08' } to /@house_type/source/1999/feb/08/edit" do
+    params = { :controller => @house_type, :action => 'edit', :year => '1999', :month => 'feb', :day => '08'}
+    route_for(params).should == "/#{@house_type}/1999/feb/08/edit"
+  end
 end
 
 describe " handling GET /<house_type>", :shared => true do

@@ -57,6 +57,7 @@ ActionController::Routing::Routes.draw do |map|
 
     lords.with_options(formatted_date_options) do |by_date|
       make_route "lords/#{date}.:format", :show, by_date
+      make_route "lords/#{date}/edit", :edit, by_date
       make_route "lords/source/#{date}.:format", :show_source, by_date
     end
 
@@ -70,6 +71,7 @@ ActionController::Routing::Routes.draw do |map|
 
     commons.with_options(formatted_date_options) do |by_date|
       make_route "commons/#{date}.:format", :show, by_date
+      make_route "commons/#{date}/edit", :edit, by_date
       make_route "commons/source/#{date}.:format", :show_source, by_date
     end
 
@@ -83,6 +85,7 @@ ActionController::Routing::Routes.draw do |map|
 
     written.with_options(formatted_date_options) do |by_date|
       make_route "written_answers/#{date}.:format", :show, by_date
+      make_route "written_answers/#{date}/edit", :edit, by_date
       make_route "written_answers/source/#{date}.:format", :show_source, by_date
     end
 

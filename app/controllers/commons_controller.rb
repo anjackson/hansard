@@ -6,11 +6,15 @@ class CommonsController < ApplicationController
     @sittings_by_year = HouseOfCommonsSitting.all_grouped_by_year
   end
 
+  def edit_commons
+
+  end
+
   def show
     @sittings = HouseOfCommonsSitting.find_in_resolution(@date, @resolution)
     if @sittings.size > 1
       @sittings_by_year = [@sittings]
-      render :action => "index" and return false 
+      render :action => "index" and return false
     end
     @marker_options = {}
     if !@sittings.empty?

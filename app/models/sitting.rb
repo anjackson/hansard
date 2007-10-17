@@ -13,7 +13,7 @@ class Sitting < ActiveRecord::Base
     sittings = self.find(:all, :order => "date asc")
     sittings.in_groups_by { |s| s.date.year }
   end
-  
+
   def Sitting.find_section_by_column_and_date_range(column, start_date, end_date)
     sitting = find(:first, :conditions => ["date >= ? and date <= ? and start_column <= ?", start_date.to_date, end_date.to_date, column.to_i], :order => "start_column desc")
     if sitting
@@ -82,7 +82,25 @@ class Sitting < ActiveRecord::Base
     date.day if date
   end
 
+  def id_hash
+    {:year  => year,
+     :month => month_abbreviation,
+     :day   => zero_padded_day,
+     :type  => uri_component}
+  end
+
   protected
+
+    def month_abbreviation
+      Date::ABBR_MONTHNAMES[date.month].downcase if date
+    end
+
+    def zero_padded_day
+      if date
+        day = date.day
+        day < 10 ? "0"+ day.to_s : day.to_s
+      end
+    end
 
     def check_date
       if self.date

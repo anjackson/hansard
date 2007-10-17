@@ -202,28 +202,25 @@ EOF
 
   def sitting_date_url(sitting)
     begin
-      url_for(sitting_date_url_params(sitting))
+      url_for(sitting_date_url_params(sitting, :action => "show"))
     rescue
       nil
     end
   end
 
   def sitting_date_source_url(sitting)
-    source_params = {:action => "show_source",
-                     :format => "xml"}
-    url_for(sitting_date_url_params(sitting).update(source_params))
+    url_for(sitting_date_url_params(sitting, :action => "show_source", :format => "xml"))
   end
 
   def sitting_date_xml_url(sitting)
-    url_for(sitting_date_url_params(sitting).update(:format => "xml"))
+    url_for(sitting_date_url_params(sitting, :action => "show", :format => "xml"))
   end
 
-  def sitting_date_url_params(sitting)
-    { :controller => sitting_controller(sitting),
-      :action     => "show",
-      :year       => sitting.date.year,
-      :month      => month_abbr(sitting.date.month),
-      :day        => zero_padded_day(sitting.date.day) }
+  def sitting_date_url_params(sitting, options)
+    params = sitting.id_hash
+    params.delete(:type)
+    params.merge!(:controller => sitting_controller(sitting))
+    params.merge!(options)
   end
 
   def sitting_controller(sitting)

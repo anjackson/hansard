@@ -1,8 +1,8 @@
 - @javascript = 'prototype'
--if @sitting
+- if @sitting
   = render :partial => 'partials/hansard_header'
   .debates
     =render :partial => "partials/section_link", :collection => @sitting.debates.sections
--else
+- else
   .no-sittings
     No information from the Commons was found for this period.

@@ -14,8 +14,6 @@ describe "_hansard_header partial" do
     @sitting.stub!(:start_image_src).and_return('S6CV0325P0I0008')
     @sitting.stub!(:text).and_return("<p><i>The House met at half-past Two o'clock</i></p>")
     assigns[:sitting] = @sitting
-
-
   end
 
   def do_render
@@ -27,9 +25,15 @@ describe "_hansard_header partial" do
     response.should have_tag('h1.title', @title)
   end
 
-  it 'should show date text as p' do
+  it 'should show date text in element with class "date"' do
     do_render
-    response.should have_tag('p.date', @date_text)
+    response.should have_tag('.date', @date_text)
+  end
+
+  it "should show a link to 'edit this page'" do
+    do_render
+    response.should have_tag("a")
+    response.should have_tag("a", 'edit this page')
   end
 
 end
