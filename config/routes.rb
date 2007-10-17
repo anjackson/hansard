@@ -56,8 +56,11 @@ ActionController::Routing::Routes.draw do |map|
     make_index_route 'lords', lords
 
     lords.with_options(formatted_date_options) do |by_date|
+      make_route "lords/#{date}/:part_id.:format", :show, by_date
+      make_route "lords/source/#{date}/:part_id.:format", :show_source, by_date
       make_route "lords/#{date}.:format", :show, by_date
       make_route "lords/source/#{date}.:format", :show_source, by_date
+      make_route "lords/#{date}/:part_id", :show, by_date
     end
 
     lords.with_options(date_options) do |by_date|
@@ -69,8 +72,11 @@ ActionController::Routing::Routes.draw do |map|
     make_index_route 'commons', commons
 
     commons.with_options(formatted_date_options) do |by_date|
+      make_route "commons/#{date}/:part_id.:format", :show, by_date
+      make_route "commons/source/#{date}/:part_id.:format", :show_source, by_date
       make_route "commons/#{date}.:format", :show, by_date
       make_route "commons/source/#{date}.:format", :show_source, by_date
+      make_route "commons/#{date}/:part_id", :show, by_date
     end
 
     commons.with_options(date_options) do |by_date|
@@ -82,8 +88,11 @@ ActionController::Routing::Routes.draw do |map|
     make_index_route 'written_answers', written
 
     written.with_options(formatted_date_options) do |by_date|
+      make_route "written_answers/#{date}/:part_id.:format", :show, by_date
+      make_route "written_answers/source/#{date}/:part_id.:format", :show_source, by_date
       make_route "written_answers/#{date}.:format", :show, by_date
       make_route "written_answers/source/#{date}.:format", :show_source, by_date
+      make_route "written_answers/#{date}/:part_id", :show, by_date
     end
 
     written.with_options(date_options) do |by_date|

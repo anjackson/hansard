@@ -19,8 +19,6 @@ describe Hansard::HouseCommonsParser do
   it "should have Orders of the Day section outside of the OralQuestionsSection" do
     debates = @sitting.debates
 
-    p @sitting.to_xml
-
     debates.sections[0].title.should == 'ORAL ANSWERS TO QUESTIONS'
 
     debates.sections[0].sections[0].title.should == 'TRADE AND INDUSTRY'

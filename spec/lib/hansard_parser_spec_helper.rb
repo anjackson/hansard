@@ -34,6 +34,10 @@ describe "All sittings or written answers", :shared => true do
     @sitting.text.should == @sitting_text
   end
 
+  it 'should set the part id of the sitting' do
+    @sitting.part_id.should == @sitting_part_id
+  end
+  
 end
 
 describe "All sittings", :shared => true do
@@ -44,4 +48,6 @@ describe "All sittings", :shared => true do
     @sitting.debates.should_not be_nil
     @sitting.debates.should be_an_instance_of(Debates)
   end
+
+  
 end

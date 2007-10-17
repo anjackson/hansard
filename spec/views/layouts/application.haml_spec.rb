@@ -30,7 +30,7 @@ describe "application.haml", " when on a day page" do
     @day = Date.new(2004, 9, 16)
     @sitting = mock_model(HouseOfCommonsSitting)
     @sitting.stub!(:date).and_return(@day)
-
+    @sitting.stub!(:part_id)
     assigns[:sitting] = @sitting
     assigns[:day] = @day
     assigns[:title] = @title

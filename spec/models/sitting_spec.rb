@@ -44,6 +44,33 @@ describe Sitting, ".first_image_source" do
 
 end
 
+describe Sitting, ".find_in_resolution" do
+  
+  before do
+    @date = Date.new(2006, 12, 18)
+    @first_sitting = Sitting.new(:date => @date, :part_id => 1)
+    @second_sitting = Sitting.new(:date => @date, :part_id => 2)
+    @third_sitting = Sitting.new(:date => @date, :part_id => 3)
+  end
+  
+  it "should only return sittings on a date with the specified part_id if passed the resolution :day, and a part_id" do
+    Sitting.stub!(:find_all_present_on_date).and_return([@first_sitting, @second_sitting, @third_sitting])
+    Sitting.find_in_resolution(@date, :day, 3).should == [@third_sitting]
+  end
+
+  it "should return all sittings on a date if passed a date and the resolution :day" do
+    Sitting.stub!(:find_all_present_on_date).and_return([@first_sitting, @second_sitting, @third_sitting])
+    Sitting.find_in_resolution(@date, :day).should == [@first_sitting, @second_sitting, @third_sitting]
+  end
+  
+  it "should return all sittings in the month of a date that have the given part_id if passed the resolution :month and a part_id" do
+    Sitting.stub!(:find_all_present_in_interval).and_return([@first_sitting, @second_sitting, @third_sitting])
+    Sitting.find_in_resolution(@date, :month, 2).should == [@second_sitting]
+  end
+  
+end
+
+
 describe Sitting, ".find_section_by_column_and_date_range" do
 
   before do

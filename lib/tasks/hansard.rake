@@ -60,6 +60,13 @@ namespace :hansard do
       puts ''; puts 'usage: rake hansard:reload_commons_on_date date=yyyy-mm-dd'; puts ''
     end
   end
+  
+  desc 'wipes and reloads lords data from /data (doesn\'t re-split)'
+  task :reload_lords => [:environment] do
+    HouseOfLordsSitting.destroy_all
+    DataFile.delete(:conditions => "name like 'houselords%'")
+    Rake::Task['hansard:load_new_lords'].invoke
+  end
 
   desc 'wipes and reloads lords data from /data for given date=yyyy-mm-dd (doesn\'t re-split)'
   task :reload_lords_on_date => [:environment] do

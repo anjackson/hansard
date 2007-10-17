@@ -4,6 +4,7 @@ describe Hansard::WrittenAnswersParser, " when run against 'spec/data/writtenans
 
   before(:all) do
     file = 'writtenanswers_example.xml'
+    @sitting_part_id = 1
     @sitting = Hansard::WrittenAnswersParser.new(File.dirname(__FILE__) + "/../data/#{file}", nil).parse
     @sitting.save!
 
@@ -28,8 +29,6 @@ describe Hansard::WrittenAnswersParser, " when run against 'spec/data/writtenans
   after(:all) do
     Sitting.find(:all).each {|s| s.destroy}
   end
-
-  it_should_behave_like "All sittings or written answers"
 
   it "should create groups for the sitting" do
     @sitting.groups.size.should > 0
@@ -90,4 +89,6 @@ describe Hansard::WrittenAnswersParser, " when run against 'spec/data/writtenans
     @third_contribution.text.should == "The storage, handling and related costs of United Kingdom intervention products (including barley and feedwheat) in 1984 were &#x00A3;46&#x00B7;4 million. We have no figures for storage costs incurred by other member states."
   end
 
+  it_should_behave_like "All sittings or written answers"
+  
 end

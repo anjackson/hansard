@@ -7,8 +7,12 @@ class WrittenAnswersController < ApplicationController
   end
   
   def show
-    @sittings = WrittenAnswersSitting.find_in_resolution(@date, @resolution)
-    render :action => "index" and return false if @sittings.size > 1
+    @part_id = params[:part_id].to_i if params[:part_id]
+    @sittings = WrittenAnswersSitting.find_in_resolution(@date, @resolution, @part_id)
+    if @sittings.size > 1
+      @sittings_by_year = [@sittings]
+      render :action => "index" and return false 
+    end
     @marker_options = {}
     if !@sittings.empty?
       @sitting = @sittings.first

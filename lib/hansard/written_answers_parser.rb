@@ -9,6 +9,11 @@ class Hansard::WrittenAnswersParser
     @unexpected = false
     @doc = Hpricot.XML open(file)
     @filename = File.basename(file)
+    if /part_(\d+)/.match file
+      @part_id = $1
+    else  
+      @part_id = 1
+    end
   end
 
   def log text
@@ -62,7 +67,8 @@ class Hansard::WrittenAnswersParser
       :start_image_src => @image,
       :title => handle_node_text(@doc.at('writtenanswers/title')),
       :date_text => date_text,
-      :date => date
+      :date => date, 
+      :part_id => @part_id
     })
 
     if (texts = (@doc/'writtenanswers/p'))
