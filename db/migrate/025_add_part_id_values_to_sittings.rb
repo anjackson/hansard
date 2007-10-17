@@ -1,9 +1,9 @@
 class AddPartIdValuesToSittings < ActiveRecord::Migration
   def self.up
     Sitting.find(:all).each do |sitting|
-      if /part_(\d+)/.match sitting.data_file.name
+      if (sitting.data_file and /part_(\d+)/.match sitting.data_file.name)
         sitting.part_id = $1
-      else  
+      else
         sitting.part_id = 1
       end
       sitting.save!
