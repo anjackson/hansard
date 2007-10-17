@@ -16,5 +16,4 @@ describe Hansard::HouseLordsParser do
     @data_file.log.should == nil
   end
 
-
 end
