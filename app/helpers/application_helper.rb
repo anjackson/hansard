@@ -43,6 +43,32 @@ module ApplicationHelper
     end
   end
 
+  def day_nav_links_new_needs_new_day_link_no_haml
+    daynavlinks = ""
+    daynavlinks << "<ol id='navigation'>"
+    daynavlinks << "<li>UK Parliament <a href='#{home_url}'><strong>HANSARD</strong> Calendar</a></li>"
+
+      if @day
+        daynavlinks << "<li>" << day_link(@sitting,"<"){ "Previous day" } << "</li>"
+        daynavlinks << "<li>" << day_link(@sitting,">"){ "Next day" } << "</li>"
+        daynavlinks << "<li><a href='#{sitting_date_source_url(@sitting)}'>XML source</a></li>"
+        daynavlinks << "<li><a href='#{sitting_date_xml_url(@sitting)}'>XML output</a></li>"
+
+      else
+        daynavlinks << "<li><a href='#{commons_url}'>Commons</a></li>"
+        daynavlinks << "<li><a href='#{written_answers_url}'>Written Answers</a></li>"
+        daynavlinks << "<li><a href='#{lords_url}'>Lords</a></li>"
+        daynavlinks << "<li><a href='#{indices_url}'>Indices</a></li>"
+        daynavlinks << "<li><a href='#{source_files_url}'>Source Files</a></li>"
+        daynavlinks << "<li><a href='#{source_files_url}'>Source Files</a></li>"
+        daynavlinks << "<li><a href='#{data_files_url}'>Data Files</a></li>"
+
+      end
+      daynavlinks << "</ol>"
+    
+    daynavlinks
+  end
+
   def day_nav_links
 
     open :ol, {:id => 'navigation'} do
