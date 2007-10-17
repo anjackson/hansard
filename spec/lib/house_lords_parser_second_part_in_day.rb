@@ -15,9 +15,6 @@ describe Hansard::HouseLordsParser do
   it 'should work' do
     @data_file.log.should == nil
   end
-  
-  it "should set the part id correctly for the second sitting in a day" do
-    @sitting.part_id.should == 2
-  end
+
 
 end

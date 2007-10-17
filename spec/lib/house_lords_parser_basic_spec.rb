@@ -12,7 +12,6 @@ describe Hansard::HouseLordsParser do
     @sitting_text = nil
 
     file = 'houselords_example.xml'
-    @sitting_part_id = 1
     @sitting = Hansard::HouseLordsParser.new(File.dirname(__FILE__) + "/../data/#{file}", @logger).parse
     @sitting.save!
   end

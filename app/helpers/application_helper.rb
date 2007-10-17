@@ -219,15 +219,11 @@ EOF
   end
 
   def sitting_date_url_params(sitting)
-    params = {:controller => sitting_controller(sitting),
-              :action     => "show",
-              :year       => sitting.date.year,
-              :month      => month_abbr(sitting.date.month),
-              :day        => zero_padded_day(sitting.date.day)}
-    if sitting.part_id and sitting.part_id > 1
-      params.update({:part_id => sitting.part_id})
-    end
-    params
+    { :controller => sitting_controller(sitting),
+      :action     => "show",
+      :year       => sitting.date.year,
+      :month      => month_abbr(sitting.date.month),
+      :day        => zero_padded_day(sitting.date.day) }
   end
 
   def sitting_controller(sitting)

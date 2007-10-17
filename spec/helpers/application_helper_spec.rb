@@ -73,13 +73,8 @@ end
 describe ApplicationHelper, " when returning the date-based urls" do
 
   it "should return a url in the format /commons/1985/dec/06 for a house of commons sitting" do
-    sitting = HouseOfCommonsSitting.new(:date => Date.new(1985, 12, 6), :part_id => 1)
+    sitting = HouseOfCommonsSitting.new(:date => Date.new(1985, 12, 6))
     sitting_date_url(sitting).should == '/commons/1985/dec/06'
-  end
-  
-  it "should return a url including a part_id segment for the second, third etc sittings on a day" do
-    sitting = HouseOfCommonsSitting.new(:date => Date.new(1985, 12, 6), :part_id => 2)
-    sitting_date_url(sitting).should == '/commons/1985/dec/06/2'
   end
 
   it "should return a url in the format /commons/source/1985/dec/06.xml for a house of commons sitting source" do

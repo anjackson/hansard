@@ -12,11 +12,6 @@ class Hansard::HouseParser
     @logger = logger
     @unexpected = false
     @doc = Hpricot.XML open(file)
-    if /part_(\d+)/.match file
-      @part_id = $1
-    else  
-      @part_id = 1
-    end
   end
 
   def log text
@@ -507,8 +502,7 @@ class Hansard::HouseParser
         :title => clean_html(@doc.at(house_type + '/title')),
         :text => clean_html(@doc.at(house_type + '/p')),
         :date_text => clean_html(@doc.at(house_type + '/date')),
-        :date => @doc.at(house_type + '/date').attributes['format'],
-        :part_id => @part_id
+        :date => @doc.at(house_type + '/date').attributes['format']
       })
 
       if ( texts = (@doc/(house_type + '/p')) )

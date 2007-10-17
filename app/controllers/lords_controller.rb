@@ -7,8 +7,7 @@ class LordsController < ApplicationController
   end
 
   def show
-    @part_id = params[:part_id].to_i if params[:part_id]
-    @sittings = HouseOfLordsSitting.find_in_resolution(@date, @resolution, @part_id)
+    @sittings = HouseOfLordsSitting.find_in_resolution(@date, @resolution)
     if @sittings.size > 1
       @sittings_by_year = [@sittings]
       render :action => "index" and return false 

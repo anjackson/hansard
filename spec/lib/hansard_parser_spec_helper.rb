@@ -33,10 +33,6 @@ describe "All sittings or written answers", :shared => true do
   it 'should set sitting opening text, if any' do
     @sitting.text.should == @sitting_text
   end
-
-  it 'should set the part id of the sitting' do
-    @sitting.part_id.should == @sitting_part_id
-  end
   
 end
 

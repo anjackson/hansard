@@ -27,7 +27,7 @@ class Sitting < ActiveRecord::Base
     find_next(Date.today, "<")
   end
 
-  def Sitting.find_in_resolution(date, resolution, part_id=nil)
+  def Sitting.find_in_resolution(date, resolution)
     case resolution
       when :day
         sittings = find_all_present_on_date(date)
@@ -37,9 +37,6 @@ class Sitting < ActiveRecord::Base
       when :year
         year_first, year_last = date.first_and_last_of_year
         sittings = find_all_present_in_interval(year_first, year_last)
-    end
-    if part_id 
-      sittings = sittings.select{|sitting| sitting.part_id == part_id}
     end
     sittings
   end

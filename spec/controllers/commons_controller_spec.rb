@@ -56,16 +56,6 @@ describe CommonsController, " handling GET /commons/1999/feb/08" do
 
 end
 
-describe CommonsController, " handling GET /commons/1999/feb/08/2" do
-
-  before(:all) do
-    @sitting_model = HouseOfCommonsSitting
-  end
-    
-  it_should_behave_like " handling GET /<house_type>/1999/feb/08/2"
-
-end
-
 describe CommonsController, " handling GET /commons/1999/feb/08.xml" do
 
   before(:all) do

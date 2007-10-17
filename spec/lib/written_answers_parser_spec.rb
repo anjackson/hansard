@@ -4,7 +4,6 @@ describe Hansard::WrittenAnswersParser, " when run against 'spec/data/writtenans
 
   before(:all) do
     file = 'writtenanswers_example.xml'
-    @sitting_part_id = 1
     @sitting = Hansard::WrittenAnswersParser.new(File.dirname(__FILE__) + "/../data/#{file}", nil).parse
     @sitting.save!
 

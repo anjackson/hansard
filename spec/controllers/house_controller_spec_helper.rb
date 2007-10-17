@@ -66,7 +66,7 @@ describe " handling GET /<house_type>/1999", :shared => true do
   end
 
   it "should look for sittings in the year passed" do
-    @sitting_model.should_receive(:find_in_resolution).with(Date.new(1999, 1, 1), :year, nil).and_return([@sitting])
+    @sitting_model.should_receive(:find_in_resolution).with(Date.new(1999, 1, 1), :year).and_return([@sitting])
     do_get
   end
 
@@ -84,7 +84,7 @@ describe " handling GET /<house_type>/1999/feb", :shared => true do
   end
 
   it "should look for sittings in the year passed" do
-    @sitting_model.should_receive(:find_in_resolution).with(Date.new(1999, 2, 1), :month, nil).and_return([@sitting])
+    @sitting_model.should_receive(:find_in_resolution).with(Date.new(1999, 2, 1), :month).and_return([@sitting])
     do_get
   end
 
@@ -107,7 +107,7 @@ describe " handling GET /<house_type>/1999/feb/08", :shared => true do
   end
 
   it "should look for a sitting on the date passed" do
-    @sitting_model.should_receive(:find_in_resolution).with(Date.new(1999, 2, 8), :day, nil).and_return([@sitting])
+    @sitting_model.should_receive(:find_in_resolution).with(Date.new(1999, 2, 8), :day).and_return([@sitting])
     do_get
   end
 
@@ -122,56 +122,7 @@ describe " handling GET /<house_type>/1999/feb/08", :shared => true do
   end
 
   it "should render with the 'index' template if there is more than one sitting" do
-    @sitting_model.should_receive(:find_in_resolution).with(Date.new(1999, 2, 8), :day, nil).and_return([@sitting, @sitting])
-    do_get
-    response.should render_template('index')
-  end
-
-  it "should assign the sitting for the view" do
-    do_get
-    assigns[:sitting].should equal(@sitting)
-  end
-
-  it "should assign an empty marker options hash to the view" do
-    do_get
-    assigns[:marker_options].should == {}
-  end
-
-end
-
-describe " handling GET /<house_type>/1999/feb/08/2", :shared => true do
-
-  before do
-    @sitting = mock_model(@sitting_model)
-    @sitting_model.stub!(:find_in_resolution).and_return([@sitting])
-  end
-
-  def do_get
-    get :show, :year => '1999', :month => 'feb', :day => '08', :part_id => "2"
-  end
-
-  it "should be successful" do
-    do_get
-    response.should be_success
-  end
-
-  it "should look for a sitting on the date passed" do
-    @sitting_model.should_receive(:find_in_resolution).with(Date.new(1999, 2, 8), :day, 2).and_return([@sitting])
-    do_get
-  end
-
-  it "should render with the 'show' template if there is one sitting" do
-    do_get
-    response.should render_template('show')
-  end
-
-  it "should assign day to true if there is one sitting" do
-    do_get
-    assigns[:day].should be_true
-  end
-
-  it "should render with the 'index' template if there is more than one sitting" do
-    @sitting_model.should_receive(:find_in_resolution).with(Date.new(1999, 2, 8), :day, 2).and_return([@sitting, @sitting])
+    @sitting_model.should_receive(:find_in_resolution).with(Date.new(1999, 2, 8), :day).and_return([@sitting, @sitting])
     do_get
     response.should render_template('index')
   end
@@ -206,7 +157,7 @@ describe " handling GET /<house_type>/1999/feb/08.xml", :shared => true do
   end
 
   it "should find the sitting requested" do
-    @sitting_model.should_receive(:find_in_resolution).with(Date.new(1999, 2, 8), :day, nil).and_return([@sitting])
+    @sitting_model.should_receive(:find_in_resolution).with(Date.new(1999, 2, 8), :day).and_return([@sitting])
     do_get
   end
 
