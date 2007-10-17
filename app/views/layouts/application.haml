@@ -13,7 +13,7 @@
   %body
     #navbar
       %p
-      = section_previous_and_next_links(@section) if @section
+      = section_nav_links(@section) if @section
     #header
       = google_custom_search_form
       = day_nav_links
