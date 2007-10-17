@@ -34,24 +34,6 @@ describe "_section_partial", " when passed an oral questions section with contri
     render 'sections/_section.haml'
   end
 
-  it "should show an introduction if there is one and when a title is present" do
-    @introduction = mock("intro model")
-    @oral_questions.stub!(:title).and_return("Some title")
-    @introduction.stub!(:text).and_return("introduction text")
-    @oral_questions.stub!(:introduction).and_return(@introduction)
-    do_render
-    response.should have_tag("p[class=question_introduction]", :text => "introduction text")
-  end
-
-  it "should show an introduction if there is one even when a title is present but has no text" do
-    @introduction = mock("intro model")
-    @oral_questions.stub!(:title).and_return("")
-    @introduction.stub!(:text).and_return("introduction text")
-    @oral_questions.stub!(:introduction).and_return(@introduction)
-    do_render
-    response.should have_tag("p[class=question_introduction]", :text => "introduction text")
-  end
-
   it "should show the contributions when a title is present" do
     contribution = mock_model(Contribution)
     @oral_questions.stub!(:title)
