@@ -36,6 +36,7 @@
 <% @result_set.results.each do |contribution| %>
   <div class="search-result">
     <%= link_to (contribution.section.title or contribution.section.sitting.title), section_url(contribution.section) + "##{contribution.xml_id}" %>
+      <div class="search-result-fragment"> <%= CGI::unescapeHTML( @result_set.highlights[contribution.id]["text"].to_s)  -%></div>
     <div class="search-result-date"> 
     <%= contribution.section.sitting.title %>  <%= contribution.section.sitting.date_text %>
     </div>

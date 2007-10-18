@@ -261,3 +261,7 @@ ol.hide_numbering li {
   float: right;
   width: 25%;
 }
+
+.highlight{
+  font-weight: bold;
+}

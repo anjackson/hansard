@@ -6,11 +6,14 @@ class SearchController < ApplicationController
   def index
     @query = params[:query]
     @member = params[:member]
+    highlight_options = {:fields =>"text", 
+                         :prefix => "<span class='highlight'>",
+                         :suffix => "</span>"}
     if @member
-      @result_set = Contribution.find_by_solr("text:#{@query} AND member:\"#{@member}\"") 
+      @result_set = Contribution.find_by_solr("text:#{@query} AND member:\"#{@member}\"", :highlight=> highlight_options) 
     else
       @member_facets = []
-      @result_set = Contribution.find_by_solr("text:#{@query}", 
+      @result_set = Contribution.find_by_solr("text:#{@query}", :highlight => highlight_options,
                                               :facets => {:fields =>[:member]})
       unless @result_set.facets["facet_fields"].empty?
         found_facets = @result_set.facets["facet_fields"]["member_facet"]
