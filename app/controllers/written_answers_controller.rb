@@ -1,5 +1,6 @@
 class WrittenAnswersController < ApplicationController
 
+  caches_page :index
   before_filter :check_valid_date, :only => [:show, :show_source]
   
   def index
