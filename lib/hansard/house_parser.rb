@@ -91,7 +91,7 @@ class Hansard::HouseParser
     end
 
     def handle_division node, debate
-      placeholder = DivisionPlaceholder.new
+      placeholder = DivisionPlaceholder.new(:xml_id => node.attributes['id'])
       division = Division.new({
         :name => node.at('table/tr[1]/td[1]/b/text()').to_s,
         :time_text => node.at('table/tr[1]/td[2]/b/text()').to_s
@@ -161,7 +161,7 @@ class Hansard::HouseParser
          :image_src_range => @image
       })
       contribution.member = ''
-
+      log 'member contribution without id: ' + element.to_s unless element.attributes['id']
       still_in_member_contribution = true
 
       element.children.each do |node|
@@ -219,7 +219,7 @@ class Hansard::HouseParser
         :image_src_range => @image,
         :text => clean_html(node)
       })
-
+      log 'time contribution without id: ' + node.to_s unless node.attributes['id']
       time.section = debate
       debate.contributions << time
       time
@@ -231,6 +231,7 @@ class Hansard::HouseParser
         :column_range => @column,
         :image_src_range => @image
       })
+      log 'procedural contribution without id: ' + node.to_s unless node.attributes['id']
       procedural.text = handle_contribution_text(node, procedural)
 
       node.children.each do |part|
@@ -259,8 +260,10 @@ class Hansard::HouseParser
       quote = QuoteContribution.new({
         :column_range => @column,
         :image_src_range => @image,
-        :text => clean_html(node).strip
+        :text => clean_html(node).strip, 
+        :xml_id => node.attributes['id']
       })
+      log 'quote contribution without id: ' + node.to_s unless node.attributes['id']
       quote.section = debate
       debate.contributions << quote
     end
@@ -278,6 +281,8 @@ class Hansard::HouseParser
       })
       if (id = node.attributes['id'])
         table.xml_id = id
+      else
+        log 'table contribution without id: ' + node.to_s unless node.attributes['id']
       end
       table.section = debate
       debate.contributions << table
@@ -430,7 +435,8 @@ class Hansard::HouseParser
            :image_src_range => @image,
            :member => '',
            :text => ''})
-
+       
+        log " #{contribution_type} without id: " + element.to_s unless element.attributes['id']
         in_member_contribution_text = false
         in_between_member_and_member_contribution = false
         element.children.each do |node|
