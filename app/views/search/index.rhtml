@@ -10,8 +10,9 @@
 
 		
       <li class="member-facet">
-	<% if times > 1 %> 
+	<% if times > 1 %><span style="font-size:1.<%= times %>em">
          <%=link_to "<strong>#{times}, #{member}</strong>", :controller => "search", :action => "index", :member => member, :query => @query %>
+</span>
 <% else %>
 <%=link_to "#{member}", :controller => "search", :action => "index", :member => member, :query => @query %>
 
