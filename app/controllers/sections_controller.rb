@@ -1,5 +1,7 @@
 class SectionsController < ApplicationController
 
+  in_place_edit_for :section, :title
+
   before_filter :check_valid_date, :only => [:show, :nest, :unnest]
 
   def show

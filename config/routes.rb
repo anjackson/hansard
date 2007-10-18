@@ -106,8 +106,10 @@ ActionController::Routing::Routes.draw do |map|
     file.source_file "source_files/:name", :action => "show"
   end
 
-  with_controller :sections, map do |sections|
-    sections.with_options(formatted_date_options) do |by_date|
+  with_controller :sections, map do |section|
+    make_route 'set_section_title/:id', :set_section_title, section
+
+    section.with_options(formatted_date_options) do |by_date|
       make_route ":type/#{date}/:id", :show, by_date
       make_route ":type/#{date}/:id/nest", :nest, by_date
       make_route ":type/#{date}/:id/unnest", :unnest, by_date
