@@ -425,6 +425,8 @@ EOF
           elsif name == 'i'
             #shouldn't be i tag, but what?
             wrap_with 'i', child, parts, inner_elements, outer_elements
+          elsif name == 'b'
+            wrap_with 'b', child, parts, inner_elements, outer_elements
           elsif name == 'sub'
             wrap_with 'sub', child, parts, inner_elements, outer_elements
           elsif(name == 'ol' or name == 'ul')

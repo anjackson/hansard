@@ -37,6 +37,11 @@ describe ApplicationHelper, " when formatting contribution" do
     format_contribution('a <i>real</i> change').should ==
         '<p>a <i>real</i> change</p>'
   end
+  
+  it 'should leave bold element unchanged' do
+    format_contribution('a <b>real</b> change').should ==
+        '<p>a <b>real</b> change</p>'  
+  end
 
   it 'should leave subscript element unchanged' do
     format_contribution('a <sub>real</sub> change').should ==
