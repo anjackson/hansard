@@ -1,5 +1,5 @@
 <% if @member %>
-  <% @title = "Search: <code>#{@query}</code> spoken by #{@member}"-%>
+  <% @title = "Search: <code>#{@query}</code> spoken by #{format_member_name(@member)}"-%>
 <% else %>
   <% @title = "Search: <code>#{@query}</code>"-%>
   <% if @member_facets and !@member_facets.empty? %>
@@ -14,7 +14,7 @@
          <%=link_to "<strong>#{times}, #{member}</strong>", :controller => "search", :action => "index", :member => member, :query => @query %>
 </span>
 <% else %>
-<%=link_to "#{member}", :controller => "search", :action => "index", :member => member, :query => @query %>
+<%=link_to format_member_name(member), :controller => "search", :action => "index", :member => member, :query => @query %>
 
 <% end %>
       </li>
@@ -36,7 +36,9 @@
 <% @result_set.results.each do |contribution| %>
   <div class="search-result">
     <%= link_to (contribution.section.title or contribution.section.sitting.title), section_url(contribution.section) + "##{contribution.xml_id}" %>
-      <div class="search-result-fragment"> <%= CGI::unescapeHTML( @result_set.highlights[contribution.id]["text"].to_s)  -%></div>
+      <div class="search-result-fragment"> 
+        <%= format_result_fragment(@result_set.highlights[contribution.id]["text"].join("..."))  -%>
+      </div>
     <div class="search-result-date"> 
     <%= contribution.section.sitting.title %>  <%= contribution.section.sitting.date_text %>
     </div>
