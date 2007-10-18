@@ -157,10 +157,10 @@ module ApplicationHelper
     </div>
 EOF
   end
-  # @query
+  
   def solr_search_form
     "<form action='/search'>
-    <input name='query' type='text' size='40'  accesskey='s' />
+    <input name='query' type='text' size='40'  accesskey='s' value='#{@query || ""}' />
     <input type='submit' name='sa' value='Search' />
     </form>"
   end
