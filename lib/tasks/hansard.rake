@@ -29,13 +29,13 @@ namespace :hansard do
   task :clean => [:migrate_down, :migrate_up, :clone_structure] do
   end
 
-  desc 'does a clean sweep and loads xml'
+  desc 'does a clean sweep and loads xml, reindexes with solr'
   task :regenerate => [:migrate_down, :migrate_up, :load_new, :clone_structure] do
     puts 'Regenerated all data.'
   end
 
-  desc 'splits files in /xml, loads anything not loaded'
-  task :load_new => :environment do
+  desc 'splits files in /xml, loads anything not loaded, reindexes with solr'
+  task :load_new => [:environment, "solr:disable_save"] do
     @splitter = Hansard::Splitter.new(false, (overwrite=true), true)
     per_source_file do |file|
       source_file = split_file file
@@ -43,6 +43,9 @@ namespace :hansard do
         load_split_files source_file
       end
     end
+    Rake::Task["solr:enable_save"].invoke
+    Rake::Task["solr:start"].invoke
+    Rake::Task['solr:reindex'].invoke
   end
 
   desc 'wipes and reloads commons data from /data (doesn\'t re-split)'

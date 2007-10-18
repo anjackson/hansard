@@ -36,7 +36,7 @@ describe WrittenAnswersController, " handling GET /writtenanswers/1999" do
 
 end
 
-describe WrittenAnswersController, " handling GET /commons/1999/feb" do
+describe WrittenAnswersController, " handling GET /writtenanswers/1999/feb" do
 
   before(:all) do
     @sitting_model = WrittenAnswersSitting
@@ -57,7 +57,7 @@ describe WrittenAnswersController, "handling GET /writtenanswers/1999/feb/08" do
 end
 
 
-describe WrittenAnswersController, " handling GET /commons/source/1999/feb/08.xml" do
+describe WrittenAnswersController, " handling GET /writtenanswers/source/1999/feb/08.xml" do
 
   before(:all) do
     @sitting_model = WrittenAnswersSitting
