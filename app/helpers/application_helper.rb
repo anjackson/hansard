@@ -144,13 +144,13 @@ module ApplicationHelper
     end
   end
 
-  def google_custom_search_form
+  def google_custom_search_form(default_query="")
     javascript = <<EOF
     <div id="search_box">
       <form id="searchbox_002582221602550181161:owz178jujce" action="http://www.google.com/cse">
         <input type="hidden" name="cx" value="002582221602550181161:owz178jujce" />
         <input type="hidden" name="cof" value="FORID:0" />
-        <input name="q" type="text" size="40" />
+        <input name="q" type="text" size="40" value="#{default_query}" />
         <input type="submit" name="sa" value="Search" />
       </form>
       <script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_002582221602550181161%3Aowz178jujce"></script>
