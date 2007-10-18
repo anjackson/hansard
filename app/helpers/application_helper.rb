@@ -159,10 +159,7 @@ EOF
   end
   
   def solr_search_form
-    "<form action='/search'>
-    <input name='query' type='text' size='40'  accesskey='s' value='#{@query || ""}' />
-    <input type='submit' name='sa' value='Search' />
-    </form>"
+    "<form action='/search'><input name='query' type='text' size='40'  accesskey='s' value='#{@query || ""}' /><input type='submit' name='sa' value='Search' /></form>"
   end
 
   def sitting_link(sitting)
