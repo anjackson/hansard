@@ -6,10 +6,10 @@ describe "a class that acts_as_hansard_element" do
     self.class.send(:include, Acts::HansardElement) 
   end
   
-  it "should include Acts::HansardElement::InstanceMethods" do
-    self.class.should_receive(:include).with(Acts::HansardElement::InstanceMethods)
-    self.class.acts_as_hansard_element
-  end
+  # it "should include Acts::HansardElement::InstanceMethods" do
+  #   self.class.should_receive(:include).with(Acts::HansardElement::InstanceMethods)
+  #   self.class.acts_as_hansard_element
+  # end
   
   it "should be extended with Acts::HansardElement::SingletonMethods" do
     self.class.should_receive(:extend).with(Acts::HansardElement::SingletonMethods)
