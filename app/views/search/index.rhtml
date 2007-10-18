@@ -10,7 +10,7 @@
 
 		
       <li class="member-facet">
-	<% if times > 1 %><span style="font-size:1.<%= times %>em">
+	<% if times > 1 %><span style="font-size:<%= 1 + 0.05 * times.to_f %>em">
          <%=link_to "<strong>#{times}, #{member}</strong>", :controller => "search", :action => "index", :member => member, :query => @query %>
 </span>
 <% else %>
@@ -31,7 +31,7 @@
 <% if @result_set.results.empty? %>
 <h3>No results found for <code><%= @query %></code>.</h3>
 <% else %>
-First <%= pluralize(@result_set.results.size, "result")%> of <%= @result_set.total_hits %>.
+<h3>First <%= pluralize(@result_set.results.size, "result")%> of <%= @result_set.total_hits %></h3>
 <% end %>
 <% @result_set.results.each do |contribution| %>
   <div class="search-result">
