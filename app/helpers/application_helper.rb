@@ -182,7 +182,12 @@ EOF
 
   def index_link(index)
     link_text = "#{index.start_date_text} &ndash; #{index.end_date_text}"
-    link_to link_text, index_date_span_url(index)
+    url = index_date_span_url(index)
+    if url
+      link_to link_text, url
+    else
+      link_text
+    end
   end
 
   def alphabet_links(index)
@@ -223,14 +228,18 @@ EOF
   end
 
   def index_date_span_url(index)
-    url_for(:controller  => 'indices',
-            :action      => 'show',
-            :start_year  => index.start_date.year,
-            :start_month => month_abbr(index.start_date.month),
-            :start_day   => zero_padded_day(index.start_date.day),
-            :end_year    => index.end_date.year,
-            :end_month   => month_abbr(index.end_date.month),
-            :end_day     => zero_padded_day(index.end_date.day))
+    begin 
+      url_for(:controller  => 'indices',
+              :action      => 'show',
+              :start_year  => index.start_date.year,
+              :start_month => month_abbr(index.start_date.month),
+              :start_day   => zero_padded_day(index.start_date.day),
+              :end_year    => index.end_date.year,
+              :end_month   => month_abbr(index.end_date.month),
+              :end_day     => zero_padded_day(index.end_date.day))
+    rescue
+      nil
+    end
   end
 
   def sitting_date_url(sitting)
