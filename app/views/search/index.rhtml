@@ -30,10 +30,15 @@
 <div class="search-results">
 <% if @result_set.results.empty? %>
 <h3>No results found for <code><%= @query %></code>.</h3>
+<%= google_custom_search_form(@query) %>
+
 <% else %>
 <h3>First <%= pluralize(@result_set.results.size, "result")%> of <%= @result_set.total_hits %></h3>
+
+
 <% end %>
 <% @result_set.results.each do |contribution| %>
+
   <div class="search-result">
     <%= link_to (contribution.section.title or contribution.section.sitting.title), section_url(contribution.section) + "##{contribution.xml_id}" %>
       <div class="search-result-fragment"> 
@@ -41,7 +46,9 @@
       </div>
     <div class="search-result-date"> 
     <%= contribution.section.sitting.title %>  <%= contribution.section.sitting.date_text %>
-    </div>
-  </div>
+    </span><br/>
+      <span class="search-result-fragment"> <%= CGI::unescapeHTML( @result_set.highlights[contribution.id]["text"].to_s)  -%></span>
+    
+  </p>
 <% end %>
 <div>
