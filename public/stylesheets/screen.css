@@ -37,6 +37,16 @@ padding: 0;}
   line-height: 150%;
 }
 
+#arrow-navigation {
+  margin: 0;
+}
+
+#arrow-navigation li {
+  list-style-type: none;
+  line-height: 150%;
+margin-bottom:1em;
+}
+
 table {
   margin-top: 1em;
   margin-bottom: 1em;
@@ -182,10 +192,8 @@ th {
 
 #footer {
 	color: #999;
-	padding-top: 1em;
-	padding-bottom: 1em;
+	padding: 1em;
 	font-size: 0.8em;
-	line-height: 120%;
 }
 
 div.section-line div.section-line {
