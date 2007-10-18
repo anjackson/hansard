@@ -42,6 +42,11 @@ describe ApplicationHelper, " when formatting contribution" do
     format_contribution('a <sub>real</sub> change').should ==
         '<p>a <sub>real</sub> change</p>'
   end
+  
+  it 'should leave superscript element unchanged' do
+    format_contribution('a <sup>real</sup> change').should ==
+        '<p>a <sup>real</sup> change</p>'
+  end 
 
   it ' should return quotes in a q tag with no extraneous quotemarks' do
     format_contribution('test quote :<quote>"quoted text goes here"</quote>').should == '<p>test quote <q class="quote">quoted text goes here</q></p>'
@@ -68,6 +73,7 @@ describe ApplicationHelper, " when formatting contribution" do
 
     format_contribution(text).should == expected
   end
+  
 end
 
 describe ApplicationHelper, " when returning the date-based urls" do

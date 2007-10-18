@@ -436,6 +436,8 @@ EOF
             close_add_open parts, inner_elements, outer_elements, addition
           elsif(name == 'table')
             parts << child.to_s
+          elsif name == 'sup'
+            wrap_with 'sup', child, parts, inner_elements, outer_elements
           elsif name == 'member'
             parts << '<span class="member">'
             handle_contribution_part(child, parts, inner_elements, outer_elements)
