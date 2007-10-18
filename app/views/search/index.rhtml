@@ -1,17 +1,25 @@
 <% if @member %>
-  <% @title = "Search: '#{@query}' spoken by #{@member}"-%>
+  <% @title = "Search: <code>#{@query}</code> spoken by #{@member}"-%>
 <% else %>
-  <% @title = "Search: '#{@query}'"-%>
+  <% @title = "Search: <code>#{@query}</code>"-%>
   <% if @member_facets and !@member_facets.empty? %>
     <div class="sidenote">
-    Refine results by person speaking:
+    <p>By speaker:</p>
+<ol id="by-member-facet">
      <% @member_facets.each do |member, times| %>
 
-      <div class="member-facet"> 
-         <%=link_to "#{member} #{times}", :controller => "search", :action => "index", :member => member, :query => @query %>
-      </div>
+		
+      <li class="member-facet">
+	<% if times > 1 %> 
+         <%=link_to "<strong>#{times}, #{member}</strong>", :controller => "search", :action => "index", :member => member, :query => @query %>
+<% else %>
+<%=link_to "#{member}", :controller => "search", :action => "index", :member => member, :query => @query %>
+
+<% end %>
+      </li>
 
     <% end %>
+</ol>
     </div>
   <% end %>
 
@@ -20,7 +28,7 @@
 
 <div class="search-results">
 <% if @result_set.results.empty? %>
-Sorry, no results.
+<h3>No results found for <code><%= @query %></code>.</h3>
 <% else %>
 First <%= pluralize(@result_set.results.size, "result")%> of <%= @result_set.total_hits %>.
 <% end %>
