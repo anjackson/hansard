@@ -71,7 +71,7 @@ describe ApplicationHelper, " when formatting contribution" do
     format_contribution("<image src=\"S6CV0089P0I0021\"/>   \n\n <col>123</col>").should  ==
     '<p><span class=\'sidenote\'><a href="/images/S6CV0089P0I0021.jpg">Img. S6CV0089P0I0021</a><br /><a name=\'column_123\' href=\'#column_123\'>Col. 123</a></span></p>'
   end
-
+  
   it "should convert a member element in to a span element with class 'member'" do
     text = "1. <member>Mr. Michael Latham</member> asked the Secretary of State for Northern Ireland whether he will make a further statement on the security situation."
     expected = '<p>1. <span class="member">Mr. Michael Latham</span> asked the Secretary of State for Northern Ireland whether he will make a further statement on the security situation.</p>'
@@ -86,11 +86,6 @@ describe ApplicationHelper, " when returning the date-based urls" do
   it "should return a url in the format /commons/1985/dec/06 for a house of commons sitting" do
     sitting = HouseOfCommonsSitting.new(:date => Date.new(1985, 12, 6))
     sitting_date_url(sitting).should == '/commons/1985/dec/06'
-  end
-
-  it "should return a url in the format /commons/1985/dec/06/edit for editing a house of commons sitting" do
-    sitting = HouseOfCommonsSitting.new(:date => Date.new(1985, 12, 6))
-    edit_sitting_url(sitting).should == '/commons/1985/dec/06/edit'
   end
 
   it "should return a url in the format /commons/source/1985/dec/06.xml for a house of commons sitting source" do
@@ -399,22 +394,23 @@ describe ApplicationHelper, "when creating section nest, unnest link text" do
   it 'should display only right arrow for a section that can be nested' do
     @section.stub!(:can_be_nested?).and_return true
     @section.stub!(:can_be_unnested?).and_return false
-    section_nesting_buttons(@section).should_not have_tag('input[value="&larr;"]')
-    section_nesting_buttons(@section).should have_tag('input[value="&rarr;"]')
+    p section_nesting_buttons(@section).to_s
+    section_nesting_buttons(@section).should_not have_tag('input[value="&lt;-"]')
+    section_nesting_buttons(@section).should have_tag('input[value="-&gt;"]')
   end
 
   it 'should display only left arrow for a section that can be unnested' do
     @section.stub!(:can_be_nested?).and_return false
     @section.stub!(:can_be_unnested?).and_return true
-    section_nesting_buttons(@section).should have_tag('input[value="&larr;"]')
-    section_nesting_buttons(@section).should_not have_tag('input[value="&rarr;"]')
+    section_nesting_buttons(@section).should have_tag('input[value="&lt;-"]')
+    section_nesting_buttons(@section).should_not have_tag('input[value="-&gt;"]')
   end
 
   it 'should display both a left and a right arrow for a section that can be both nested and unnested' do
     @section.stub!(:can_be_nested?).and_return true
     @section.stub!(:can_be_unnested?).and_return true
     buttons = section_nesting_buttons(@section)
-    buttons.should have_tag('input[value="&larr;"]')
-    buttons.should have_tag('input[value="&rarr;"]')
+    buttons.should have_tag('input[value="&lt;-"]')
+    buttons.should have_tag('input[value="-&gt;"]')
   end
 end
