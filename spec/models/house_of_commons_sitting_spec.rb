@@ -132,6 +132,7 @@ describe HouseOfCommonsSitting, " destroy" do
     sitting.debates.sections[2].contributions[1].division.votes << AyeVote.new(:name=>'Agnew, Sir Peter')
     sitting.debates.sections[2].contributions[1].division.votes << NoeVote.new(:name=>'Abse, Leo')
 
+
     sitting.save!
 
     Sitting.find(:all).size.should == 1

@@ -29,8 +29,12 @@ class SectionsController < ApplicationController
   private
     def find_sitting_and_section type, date, slug
       sitting_model = Sitting.uri_component_to_sitting_model(type)
-      sitting = sitting_model.find_by_date(date.to_date.to_s)
-      section = sitting.sections.find_by_slug(slug)
-      return sitting, section
+      sittings = sitting_model.find_all_by_date(date.to_date.to_s)
+      sitting = nil
+      sittings.each do |sitting|
+        section = sitting.sections.find_by_slug(slug)
+        return sitting, section if section
+      end
+      
     end
 end

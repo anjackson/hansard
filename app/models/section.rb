@@ -9,6 +9,8 @@ class Section < ActiveRecord::Base
   alias :to_activerecord_xml :to_xml
   before_create :create_slug
 
+ 
+  
   MAX_SLUG_LENGTH = 40
 
   acts_as_hansard_element

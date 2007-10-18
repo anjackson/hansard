@@ -126,7 +126,7 @@ describe '_section partial', 'when passed members contribution with question_no,
     @contribution.stub!(:member_constituency).and_return @member_constituency
     @contribution.stub!(:question_no).and_return @question_no
     @contribution.stub!(:procedural_note).and_return '<i>(seated and covered)</i>'
-
+    @contribution.stub!(:xml_id)
     @controller.template.stub!(:contribution).and_return(@contribution)
 
     render 'sections/_contribution.haml'
@@ -177,7 +177,7 @@ describe '_contribution partial', 'when passed member contribution with ordered 
     @contribution.stub!(:member_constituency).and_return @member_constituency
     @contribution.stub!(:question_no).and_return nil
     @contribution.stub!(:procedural_note).and_return nil
-
+    @contribution.stub!(:xml_id)
     @controller.template.stub!(:contribution).and_return(@contribution)
   end
 
@@ -211,7 +211,7 @@ describe '_section partial', 'when passed members contribution with constituency
     @contribution.stub!(:member_constituency).and_return @member_constituency
     @contribution.stub!(:question_no).and_return nil
     @contribution.stub!(:procedural_note).and_return nil
-
+    @contribution.stub!(:xml_id)
     @controller.template.stub!(:contribution).and_return(@contribution)
 
     render 'sections/_contribution.haml'
@@ -237,7 +237,7 @@ describe '_section partial', 'when passed members contribution without constitue
     @contribution.stub!(:member_constituency).and_return nil
     @contribution.stub!(:question_no).and_return nil
     @contribution.stub!(:procedural_note).and_return nil
-
+    @contribution.stub!(:xml_id)
     @controller.template.stub!(:contribution).and_return(@contribution)
 
     render 'sections/_contribution.haml'

@@ -157,6 +157,13 @@ module ApplicationHelper
     </div>
 EOF
   end
+  
+  def solr_search_form
+    "<form action='/search'>
+    <input name='query' type='text' size='40' />
+    <input type='submit' name='sa' value='Search' />
+    </form>"
+  end
 
   def sitting_link(sitting)
     sitting_url = sitting_date_url(sitting)

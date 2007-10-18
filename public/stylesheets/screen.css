@@ -228,3 +228,17 @@ th.monthName  {
 ol.hide_numbering li {
   list-style-type: none;
 }
+
+.search-result {
+  padding: 3px;
+}
+
+.search-result-date {
+  font-size: 0.8em;
+	color: #666;
+}
+
+.facets{
+  float: right;
+  width: 25%;
+}

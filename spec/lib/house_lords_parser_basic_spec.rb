@@ -3,6 +3,7 @@ require File.dirname(__FILE__) + '/hansard_parser_spec_helper'
 describe Hansard::HouseLordsParser do
 
   before(:all) do
+    Contribution.stub!(:acts_as_solr)
     @sitting_type = HouseOfLordsSitting
     @sitting_date = Date.new(1909, 9, 20)
     @sitting_date_text = 'Monday, 20th September, 1909.'

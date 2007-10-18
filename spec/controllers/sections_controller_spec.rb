@@ -32,7 +32,7 @@ describe SectionsController, "handling GET /commons/1999/feb/08/test-slug" do
 
   before do
     @sitting = mock_model(HouseOfCommonsSitting)
-    HouseOfCommonsSitting.stub!(:find_by_date).and_return(@sitting)
+    HouseOfCommonsSitting.stub!(:find_all_by_date).and_return([@sitting])
     @sitting.stub!(:sections).and_return(@sections)
     @section = mock_model(Section)
     @section.stub!(:title).and_return('Title')
@@ -49,7 +49,7 @@ describe SectionsController, "handling GET /commons/1999/feb/08/test-slug" do
   end
 
   it "should find the sitting requested" do
-    HouseOfCommonsSitting.should_receive(:find_by_date).with("1999-02-08").and_return(@sitting)
+    HouseOfCommonsSitting.should_receive(:find_all_by_date).with("1999-02-08").and_return([@sitting])
     do_get
   end
 
@@ -81,7 +81,7 @@ describe SectionsController, "handling GET /written_answers/1999/feb/08/test-slu
 
   before do
     @sitting = mock_model(WrittenAnswersSitting)
-    WrittenAnswersSitting.stub!(:find_by_date).and_return(@sitting)
+    WrittenAnswersSitting.stub!(:find_all_by_date).and_return([@sitting])
     @sections = mock("sitting sections")
     @sitting.stub!(:sections).and_return(@sections)
     @section = mock_model(Section)
@@ -94,7 +94,7 @@ describe SectionsController, "handling GET /written_answers/1999/feb/08/test-slu
   end
 
   it "should find the sitting requested" do
-    WrittenAnswersSitting.should_receive(:find_by_date).with("1999-02-08").and_return(@sitting)
+    WrittenAnswersSitting.should_receive(:find_all_by_date).with("1999-02-08").and_return([@sitting])
     do_get
   end
 

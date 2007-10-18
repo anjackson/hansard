@@ -7,6 +7,14 @@ require 'spec/models/xml_generating_model_spec'
 require 'spec/models/shared_contribution_spec'
 require 'spec/controllers/date_based_controller_spec'
 
+module ActsAsSolr #:nodoc:
+	module ActsMethods #:nodoc:
+    def acts_as_solr(options)
+    end
+	end#module ActsMethods
+end#module ActsAsSolr
+
+
 Spec::Runner.configure do |config|
   config.use_transactional_fixtures = true
   config.use_instantiated_fixtures  = false
@@ -31,4 +39,7 @@ Spec::Runner.configure do |config|
   #
   # If you declare global fixtures, be aware that they will be declared
   # for all of your examples, even those that don't use them.
+  config.before(:each) do
+
+  end
 end

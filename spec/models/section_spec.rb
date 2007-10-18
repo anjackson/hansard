@@ -10,6 +10,7 @@ end
 describe Section, " in general" do
 
   before(:each) do
+    Section.stub!(:acts_as_solr)
     @model = Section.new
     @section = @model
     @mock_builder = mock_section_builder

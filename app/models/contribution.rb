@@ -3,6 +3,7 @@ class Contribution < ActiveRecord::Base
   belongs_to :section
   alias :to_activerecord_xml :to_xml
   acts_as_hansard_element
+  acts_as_solr :fields => [:text, {:member => :facet}], :facets => [:member]
 
   def to_xml(options={})
     xml = options[:builder] ||= Builder::XmlMarkup.new
