@@ -99,3 +99,72 @@ describe SectionsController, "handling GET /written_answers/1999/feb/08/test-slu
   end
 
 end
+
+describe SectionsController, 'handling POST /commons/1999/feb/08/trade-and-industry/nest or unnest' do
+
+  before do
+    @sitting = mock_model(HouseOfCommonsSitting)
+    @section = mock_model(Section)
+    @section.stub!(:nest!)
+    @section.stub!(:unnest!)
+    @section.stub!(:slug).and_return('trade-and-industry')
+    @section.stub!(:id).and_return(123)
+    @section.stub!(:parent_section_id).and_return(nil)
+    @controller.stub!(:find_sitting_and_section).and_return([@sitting, @section])
+  end
+
+  def do_post action
+    post action, :year => '1999', :month => 'feb', :day => '08', :id => "trade-and-industry", :type => "commons"
+  end
+
+  it 'should on nest find sitting and section with appropriate parameters' do
+    @controller.should_receive(:find_sitting_and_section).
+        with('commons', Date.new(1999,2,8), "trade-and-industry").
+        and_return([@sitting, @section])
+    do_post :nest
+  end
+
+  it 'should nest section' do
+    @section.should_receive(:nest!)
+    do_post :nest
+  end
+
+  it "should on nest redirect to anchor id of section on edit view if section doesn't have a parent section" do
+    do_post :nest
+    response.should be_redirect
+    response.should redirect_to('http://test.host/commons/1999/feb/08/edit#section_123')
+  end
+
+  it "should on nest redirect to anchor id of parent section on edit view" do
+    @section.stub!(:parent_section_id).and_return(122)
+    do_post :nest
+    response.should be_redirect
+    response.should redirect_to('http://test.host/commons/1999/feb/08/edit#section_122')
+  end
+
+  it 'should on unnest find sitting and section with appropriate parameters' do
+    @controller.should_receive(:find_sitting_and_section).
+        with('commons', Date.new(1999,2,8), "trade-and-industry").
+        and_return([@sitting, @section])
+    do_post :unnest
+  end
+
+  it 'should unnest section' do
+    @section.should_receive(:unnest!)
+    do_post :unnest
+  end
+
+  it "should on unnest redirect to anchor id of section on edit view if section doesn't have a parent section" do
+    do_post :unnest
+    response.should be_redirect
+    response.should redirect_to('http://test.host/commons/1999/feb/08/edit#section_123')
+  end
+
+  it "should on unnest redirect to anchor id of parent section on edit view" do
+    @section.stub!(:parent_section_id).and_return(122)
+    do_post :unnest
+    response.should be_redirect
+    response.should redirect_to('http://test.host/commons/1999/feb/08/edit#section_122')
+  end
+
+end

@@ -71,7 +71,7 @@ describe ApplicationHelper, " when formatting contribution" do
     format_contribution("<image src=\"S6CV0089P0I0021\"/>   \n\n <col>123</col>").should  ==
     '<p><span class=\'sidenote\'><a href="/images/S6CV0089P0I0021.jpg">Img. S6CV0089P0I0021</a><br /><a name=\'column_123\' href=\'#column_123\'>Col. 123</a></span></p>'
   end
-  
+
   it "should convert a member element in to a span element with class 'member'" do
     text = "1. <member>Mr. Michael Latham</member> asked the Secretary of State for Northern Ireland whether he will make a further statement on the security situation."
     expected = '<p>1. <span class="member">Mr. Michael Latham</span> asked the Secretary of State for Northern Ireland whether he will make a further statement on the security situation.</p>'
@@ -86,6 +86,11 @@ describe ApplicationHelper, " when returning the date-based urls" do
   it "should return a url in the format /commons/1985/dec/06 for a house of commons sitting" do
     sitting = HouseOfCommonsSitting.new(:date => Date.new(1985, 12, 6))
     sitting_date_url(sitting).should == '/commons/1985/dec/06'
+  end
+
+  it "should return a url in the format /commons/1985/dec/06/edit for editing a house of commons sitting" do
+    sitting = HouseOfCommonsSitting.new(:date => Date.new(1985, 12, 6))
+    edit_sitting_url(sitting).should == '/commons/1985/dec/06/edit'
   end
 
   it "should return a url in the format /commons/source/1985/dec/06.xml for a house of commons sitting source" do

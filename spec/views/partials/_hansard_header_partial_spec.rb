@@ -13,6 +13,7 @@ describe "_hansard_header partial" do
     @sitting.stub!(:start_column).and_return(1)
     @sitting.stub!(:start_image_src).and_return('S6CV0325P0I0008')
     @sitting.stub!(:text).and_return("<p><i>The House met at half-past Two o'clock</i></p>")
+    @sitting.stub!(:id_hash).and_return(:year => 1999, :month=>'feb',:day => '08',:type=>'commons')
     assigns[:sitting] = @sitting
   end
 

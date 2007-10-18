@@ -1,5 +1,8 @@
+- on_edit_page = false unless on_edit_page
 %h1.title= @sitting.title
 %p
   %span.date= @sitting.date_text
-  %span= '('+ link_to('edit this page', '' ) + ')'
-
+  - if on_edit_page
+    %span= '('+ link_to('stop editing', sitting_date_url(@sitting)) + ')'
+  - else
+    %span= '('+ edit_sitting_link(@sitting) + ')'

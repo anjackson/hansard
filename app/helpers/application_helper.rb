@@ -65,7 +65,7 @@ module ApplicationHelper
 
       end
       daynavlinks << "</ol>"
-    
+
     daynavlinks
   end
 
@@ -248,6 +248,14 @@ EOF
     rescue
       nil
     end
+  end
+
+  def edit_sitting_link(sitting)
+    link_to('edit this page', edit_sitting_url(sitting))
+  end
+
+  def edit_sitting_url(sitting)
+    url_for(sitting_date_url_params(sitting, :action => "edit"))
   end
 
   def sitting_date_source_url(sitting)

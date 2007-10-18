@@ -56,6 +56,16 @@ describe CommonsController, " handling GET /commons/1999/feb/08" do
 
 end
 
+describe CommonsController, " handling GET /commons/1999/feb/08/edit" do
+
+  before(:all) do
+    @sitting_model = HouseOfCommonsSitting
+  end
+
+  it_should_behave_like " handling GET /<house_type>/1999/feb/08/edit"
+
+end
+
 describe CommonsController, " handling GET /commons/1999/feb/08.xml" do
 
   before(:all) do
@@ -63,6 +73,7 @@ describe CommonsController, " handling GET /commons/1999/feb/08.xml" do
   end
 
   it_should_behave_like " handling GET /<house_type>/1999/feb/08.xml"
+
 end
 
 describe CommonsController, " handling GET /commons/source/1999/feb/08.xml" do
@@ -72,6 +83,7 @@ describe CommonsController, " handling GET /commons/source/1999/feb/08.xml" do
   end
 
   it_should_behave_like " handling GET /<house_type>/source/1999/feb/08.xml"
+
 end
 
 describe CommonsController, " handling GET /commons/year/month/day.xml with real data and views" do
@@ -81,4 +93,5 @@ describe CommonsController, " handling GET /commons/year/month/day.xml with real
   end
 
   it_should_behave_like " handling GET /<house_type>/year/month/day.xml with real data and views"
+
 end

@@ -33,13 +33,13 @@ describe "_section_link.haml" do
   end
 
   it "should render the template 'partials/section_link' with each of the section's subsections" do
-    @controller.template.should_receive(:render).with(:partial => "partials/section_link", :collection => @super_section.sections)
+    @controller.template.should_receive(:render).with(:partial => "partials/section_link", :collection => @super_section.sections, :locals => {:on_edit_page => false})
     do_render
   end
 
   it "should render the template 'partials/section_link' with each of the section's subsections if the section does not have a title" do
     @super_section.stub!(:title?).and_return(false)
-    @controller.template.should_receive(:render).with(:partial => "partials/section_link", :collection => @super_section.sections)
+    @controller.template.should_receive(:render).with(:partial => "partials/section_link", :collection => @super_section.sections, :locals => {:on_edit_page => false})
     do_render
   end
 

@@ -9,8 +9,18 @@ class Sitting < ActiveRecord::Base
   alias :to_activerecord_xml :to_xml
   acts_as_hansard_element
 
-  def self.all_grouped_by_year
-    sittings = self.find(:all, :order => "date asc")
+  def Sitting.find_sitting_and_section type, date, slug
+    sitting_model = Sitting.uri_component_to_sitting_model(type)
+    sittings = sitting_model.find_all_by_date(date.to_date.to_s)
+
+    sittings.each do |sitting|
+      section = sitting.sections.find_by_slug(slug)
+      return sitting, section if section
+    end
+  end
+
+  def self.all_grouped_by_year # important - leave as self.all_grouped_by_year
+    sittings = find(:all, :order => "date asc")
     sittings.in_groups_by { |s| s.date.year }
   end
 
@@ -27,7 +37,7 @@ class Sitting < ActiveRecord::Base
     find_next(Date.today, "<")
   end
 
-  def Sitting.find_in_resolution(date, resolution)
+  def self.find_in_resolution(date, resolution) # important - leave as self.find_in_resolution
     case resolution
       when :day
         sittings = find_all_present_on_date(date)

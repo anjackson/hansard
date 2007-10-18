@@ -33,7 +33,7 @@ describe " handling GET /<house_type>", :shared => true do
   before do
     @sitting = mock_model(@sitting_model)
     sittings_by_year = [[@sitting]]
-    @sitting_model.stub!(:all_grouped_by_year).and_return(sittings_by_year)
+    @controller.stub!(:all_grouped_by_year).and_return(sittings_by_year)
   end
 
   def do_get
@@ -52,7 +52,7 @@ describe " handling GET /<house_type>", :shared => true do
 
   it "should ask for all the sittings in cronological order" do
     sittings_by_year = [[@sitting]]
-    @sitting_model.stub!(:all_grouped_by_year).and_return(sittings_by_year)
+    @controller.stub!(:all_grouped_by_year).and_return(sittings_by_year)
     do_get
   end
 
@@ -62,7 +62,7 @@ describe " handling GET /<house_type>/1999", :shared => true do
 
   before do
     @sitting = mock_model(@sitting_model)
-    @sitting_model.stub!(:find_in_resolution).and_return([@sitting])
+    @controller.stub!(:find_in_resolution).and_return([@sitting])
   end
 
   def do_get
@@ -70,7 +70,7 @@ describe " handling GET /<house_type>/1999", :shared => true do
   end
 
   it "should look for sittings in the year passed" do
-    @sitting_model.should_receive(:find_in_resolution).with(Date.new(1999, 1, 1), :year).and_return([@sitting])
+    @controller.should_receive(:find_in_resolution).with(Date.new(1999, 1, 1), :year).and_return([@sitting])
     do_get
   end
 
@@ -80,7 +80,7 @@ describe " handling GET /<house_type>/1999/feb", :shared => true do
 
   before do
     @sitting = mock_model(@sitting_model)
-    @sitting_model.stub!(:find_in_resolution).and_return([@sitting])
+    @controller.stub!(:find_in_resolution).and_return([@sitting])
   end
 
   def do_get
@@ -88,7 +88,7 @@ describe " handling GET /<house_type>/1999/feb", :shared => true do
   end
 
   it "should look for sittings in the year passed" do
-    @sitting_model.should_receive(:find_in_resolution).with(Date.new(1999, 2, 1), :month).and_return([@sitting])
+    @controller.should_receive(:find_in_resolution).with(Date.new(1999, 2, 1), :month).and_return([@sitting])
     do_get
   end
 
@@ -98,7 +98,7 @@ describe " handling GET /<house_type>/1999/feb/08", :shared => true do
 
   before do
     @sitting = mock_model(@sitting_model)
-    @sitting_model.stub!(:find_in_resolution).and_return([@sitting])
+    @controller.stub!(:find_in_resolution).and_return([@sitting])
   end
 
   def do_get
@@ -111,7 +111,7 @@ describe " handling GET /<house_type>/1999/feb/08", :shared => true do
   end
 
   it "should look for a sitting on the date passed" do
-    @sitting_model.should_receive(:find_in_resolution).with(Date.new(1999, 2, 8), :day).and_return([@sitting])
+    @controller.should_receive(:find_in_resolution).with(Date.new(1999, 2, 8), :day).and_return([@sitting])
     do_get
   end
 
@@ -126,7 +126,7 @@ describe " handling GET /<house_type>/1999/feb/08", :shared => true do
   end
 
   it "should render with the 'index' template if there is more than one sitting" do
-    @sitting_model.should_receive(:find_in_resolution).with(Date.new(1999, 2, 8), :day).and_return([@sitting, @sitting])
+    @controller.should_receive(:find_in_resolution).with(Date.new(1999, 2, 8), :day).and_return([@sitting, @sitting])
     do_get
     response.should render_template('index')
   end
@@ -143,12 +143,49 @@ describe " handling GET /<house_type>/1999/feb/08", :shared => true do
 
 end
 
+describe " handling GET /<house_type>/1999/feb/08/edit", :shared => true do
+
+  before do
+    @sitting = mock_model(@sitting_model)
+    @controller.stub!(:find_in_resolution).and_return([@sitting])
+  end
+
+  def do_get
+    get :edit, :year => '1999', :month => 'feb', :day => '08'
+  end
+
+  it "should be successful" do
+    do_get
+    response.should be_success
+  end
+
+  it "should look for a sitting on the date being edited" do
+    @controller.should_receive(:find_in_resolution).with(Date.new(1999, 2, 8), :day).and_return([@sitting])
+    do_get
+  end
+
+  it "should render with the 'edit' template if there is one sitting" do
+    do_get
+    response.should render_template('edit')
+  end
+
+  it "should assign day to true if there is one sitting" do
+    do_get
+    assigns[:day].should be_true
+  end
+
+  it "should assign the sitting for the view" do
+    do_get
+    assigns[:sitting].should equal(@sitting)
+  end
+end
+
 describe " handling GET /<house_type>/1999/feb/08.xml", :shared => true do
 
   before do
     @sitting = mock_model(@sitting_model)
     @sitting.stub!(:to_xml)
-    @sitting_model.stub!(:find_in_resolution).and_return([@sitting])
+    @controller.stub!(:find_in_resolution).and_return([@sitting])
   end
 
   def do_get
@@ -161,7 +198,7 @@ describe " handling GET /<house_type>/1999/feb/08.xml", :shared => true do
   end
 
   it "should find the sitting requested" do
-    @sitting_model.should_receive(:find_in_resolution).with(Date.new(1999, 2, 8), :day).and_return([@sitting])
+    @controller.should_receive(:find_in_resolution).with(Date.new(1999, 2, 8), :day).and_return([@sitting])
     do_get
   end
 
@@ -181,7 +218,7 @@ describe " handling GET /<house_type>/source/1999/feb/08.xml", :shared => true d
     @file = mock("a file")
     @file.stub!(:read)
     @data_file.stub!(:file).and_return(@file)
-    @sitting_model.stub!(:find_by_date).and_return(@sitting)
+    @controller.stub!(:find_by_date).and_return(@sitting)
   end
 
   def do_get
@@ -194,7 +231,7 @@ describe " handling GET /<house_type>/source/1999/feb/08.xml", :shared => true d
   end
 
   it "should find the sitting requested" do
-    @sitting_model.should_receive(:find_by_date).with("1999-02-08").and_return(@sitting)
+    @controller.should_receive(:find_by_date).with("1999-02-08").and_return(@sitting)
     do_get
   end
 
