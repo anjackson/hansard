@@ -10,6 +10,7 @@
       %link{ :rel => 'alternate', :type => 'text/xml', :title => 'XML file for: ' << ( @title || "Please give me a title" ), :href => sitting_date_xml_url(@sitting) }
     - if @javascript
       = javascript_include_tag @javascript
+    = javascript_include_tag 'se_hilite_src'
   %body
     #navbar
       %p

@@ -221,8 +221,8 @@ div.sittings-in-interval{
 }
 
 .calendar a {
-  font-weight:bold;
-font-size:120%;
+  font-weight: bold;
+  font-size: 120%;
 }
 
 .calendar td {
@@ -267,7 +267,7 @@ ol.hide_numbering li {
   width: 25%;
 }
 
-.highlight{
+.highlight, .hilite {
   font-weight: bold;
 }
 
