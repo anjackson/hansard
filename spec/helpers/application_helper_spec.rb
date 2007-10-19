@@ -189,6 +189,7 @@ describe ApplicationHelper, " when creating navigation links" do
         :home_url,
         :commons_url,
         :lords_url,
+        :lords_reports_url,
         :written_answers_url,
         :indices_url,
         :source_files_url,

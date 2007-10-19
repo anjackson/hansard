@@ -1,12 +1,19 @@
 module SearchHelper
   
+  def hit_fragment(result_set, contribution)
+    fragment = result_set.highlights[contribution.id]["text"].join("...")
+    format_result_fragment(fragment) 
+  end
+  
   def format_result_fragment(fragment)
     # unescape any full html entities
     fragment = CGI::unescapeHTML(fragment)
-    
-    # get rid of leading punctuation
-    fragment.gsub!(/^(\.|,|\(|\)|:)/, '')
-    
+    leading_punctuation = /^(\/|\\|;|\.|,|\(|\)|:)/
+    leading_tag_closure = /^[^<]*?>/
+    problems = [leading_punctuation, leading_tag_closure]
+    problems.each do |problem|
+      fragment.gsub!(problem, '')
+    end
     fragment
   end
 
@@ -32,11 +39,6 @@ module SearchHelper
     link_text = contribution.section.title || contribution.section.sitting.title
     url = section_url(contribution.section) + "##{contribution.xml_id}"
     link_to link_text, url
-  end
-  
-  def hit_fragment(result_set, contribution)
-    fragment = result_set.highlights[contribution.id]["text"].join("...")
-    format_result_fragment(fragment) 
   end
   
   def member_facet_link(member, times, query)

@@ -51,47 +51,21 @@ ActionController::Routing::Routes.draw do |map|
       make_route "#{date}", :show, by_date
     end
   end
+  
+  %w[lords commons written_answers lords_reports].each do |controller_name|
+    with_controller controller_name.to_sym, map do |controller|
+       make_index_route controller_name, controller
 
-  with_controller :lords, map do |lords|
-    make_index_route 'lords', lords
+       controller.with_options(formatted_date_options) do |by_date|
+         make_route "#{controller_name}/#{date}.:format", :show, by_date
+         make_route "#{controller_name}/#{date}/edit", :edit, by_date
+         make_route "#{controller_name}/source/#{date}.:format", :show_source, by_date
+       end
 
-    lords.with_options(formatted_date_options) do |by_date|
-      make_route "lords/#{date}.:format", :show, by_date
-      make_route "lords/#{date}/edit", :edit, by_date
-      make_route "lords/source/#{date}.:format", :show_source, by_date
-    end
-
-    lords.with_options(date_options) do |by_date|
-      make_route "lords/#{date}", :show, by_date
-    end
-  end
-
-  with_controller :commons, map do |commons|
-    make_index_route 'commons', commons
-
-    commons.with_options(formatted_date_options) do |by_date|
-      make_route "commons/#{date}.:format", :show, by_date
-      make_route "commons/#{date}/edit", :edit, by_date
-      make_route "commons/source/#{date}.:format", :show_source, by_date
-    end
-
-    commons.with_options(date_options) do |by_date|
-      make_route "commons/#{date}", :show, by_date
-    end
-  end
-
-  with_controller :written_answers, map do |written|
-    make_index_route 'written_answers', written
-
-    written.with_options(formatted_date_options) do |by_date|
-      make_route "written_answers/#{date}.:format", :show, by_date
-      make_route "written_answers/#{date}/edit", :edit, by_date
-      make_route "written_answers/source/#{date}.:format", :show_source, by_date
-    end
-
-    written.with_options(date_options) do |by_date|
-      make_route "written_answers/#{date}", :show, by_date
-    end
+       controller.with_options(date_options) do |by_date|
+         make_route "#{controller_name}/#{date}", :show, by_date
+       end
+     end
   end
 
   with_controller :members, map do |member|

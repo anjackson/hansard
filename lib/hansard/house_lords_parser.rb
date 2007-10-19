@@ -4,6 +4,7 @@ end
 
 class Hansard::HouseLordsParser < Hansard::HouseParser
 
+  
   protected
 
     def handle_debates_child node, sitting

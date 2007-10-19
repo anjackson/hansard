@@ -16,4 +16,8 @@ describe Hansard::HouseLordsParser do
     @data_file.log.should == nil
   end
 
+  it 'should create a LordsReport Sitting type' do 
+    @sitting.should be_a_kind_of(HouseOfLordsReport)
+  end
+  
 end

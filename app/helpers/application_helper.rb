@@ -95,6 +95,12 @@ module ApplicationHelper
             puts "Lords"
           end
         end
+        
+        open :li do
+          open :a, { :href => lords_reports_url } do
+            puts "Lords Reports"
+          end
+        end
 
         open :li do
           open :a, { :href => indices_url } do
@@ -250,6 +256,8 @@ EOF
         'commons'
       when HouseOfLordsSitting
         'lords'
+      when HouseOfLordsReport
+        'lords_reports'
       when WrittenAnswersSitting
         'written_answers'
     else

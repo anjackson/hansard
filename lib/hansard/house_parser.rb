@@ -12,6 +12,7 @@ class Hansard::HouseParser
     @logger = logger
     @unexpected = false
     @doc = Hpricot.XML open(file)
+    @file = file
   end
 
   def log text
@@ -23,6 +24,8 @@ class Hansard::HouseParser
 
     if type == 'housecommons'
       create_house_sitting('housecommons', HouseOfCommonsSitting)
+    elsif type == 'houselords' and /part_2/.match(@file)
+      create_house_sitting('houselords', HouseOfLordsReport)
     elsif type == 'houselords'
       create_house_sitting('houselords', HouseOfLordsSitting)
     else

@@ -1,5 +1,17 @@
 module SectionsHelper
   
+  def section_in_place_edit(section)
+    "<span class='in_place_editor_field' id='section_title_#{section.id}_in_place_editor'>
+      #{section.title}
+    </span>
+    <script type='text/javascript'>
+       //<![CDATA[
+          new Ajax.InPlaceEditor('section_title_#{section.id}_in_place_editor', '#{url_for(:controller => 'sections', :action => 'set_section_title', :id => section.id)}')
+       //]]>
+    </script>
+    </span>"
+  end
+  
   def section_nav_links(section)
     the_links = ""
 

@@ -63,6 +63,8 @@ class Sitting < ActiveRecord::Base
         HouseOfCommonsSitting
       when HouseOfLordsSitting.uri_component
         HouseOfLordsSitting
+      when HouseOfLordsReport.uri_component
+        HouseOfLordsReport
       when WrittenAnswersSitting.uri_component
         WrittenAnswersSitting
     end
