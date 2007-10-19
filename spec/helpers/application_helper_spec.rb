@@ -353,7 +353,7 @@ describe ApplicationHelper, " when returning marker html for a model" do
     should_receive(:image_tag).with("dummypage.jpg", :border => 0).and_return(img_tag)
 
     marker_html(section, {}).should ==
-        %Q[<span class='sidenote'><a href='/images/#{img}.jpg' alt='#{img}' title='#{img}'>#{img_tag}</a><br /><br /><a name='column_#{col}' href='#column_#{col}'>Col. #{col}</a></span>]
+        %Q[<span class='sidenote'><a href='/images/#{img}.jpg' alt='#{img}' title='#{img}' class='image-thumbnail'><figure>#{img_tag}<legend>Img. #{img}</legend></figure></a><br /><a name='column_#{col}' href='#column_#{col}'>Col. #{col}</a></span>]
   end
 
 end
