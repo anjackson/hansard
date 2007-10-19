@@ -2,6 +2,15 @@ class MemberContribution < Contribution
 
   alias :to_activerecord_xml :to_xml
 
+  def self.find_all_members
+    sql = %Q[select distinct member, count(member) AS count_by_member from contributions where type = 'MemberContribution' group by member;]
+    contributions = self.find_by_sql(sql)
+    self::const_set('Member', Struct.new(:name, :contribution_count)) unless self::constants.include? 'Member'
+    contributions.collect do |c|
+      Member.new(c.member, c.attributes['count_by_member'])
+    end
+  end
+
   def member_contribution
     text
   end

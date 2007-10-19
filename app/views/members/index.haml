@@ -4,7 +4,7 @@
       %td Member Name
       %td= 'Count of <br />contributions'
   %tbody
-    - @contributions.each do |contribution|
+    - @members.each do |member|
       %tr
-        %td.member= contribution.member
-        %td.number= contribution.attributes['count_by_member']
+        %td.member= member.name
+        %td.number= member.contribution_count

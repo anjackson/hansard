@@ -96,6 +96,7 @@ ActionController::Routing::Routes.draw do |map|
 
   with_controller :members, map do |member|
     make_index_route 'members', member
+    make_route "members/:name", :show, member
   end
 
   with_controller :data_files, map do |data_file|
