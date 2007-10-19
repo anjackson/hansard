@@ -200,8 +200,13 @@ div.section-line div.section-line {
   margin-left:	1em;
 }
 
-.button-to {
+.button-to, .inplaceeditor-form {
   display: inline;
+}
+
+.editor_ok_button {
+  margin-left: 1em;
+  margin-right: 1em;
 }
 
 div.sittings-in-interval{
