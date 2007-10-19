@@ -35,7 +35,7 @@ namespace :solr do
     optimize     = env_to_bool('OPTIMIZE',     true)
     start_server = env_to_bool('START_SERVER', false)
     clear_first   = env_to_bool('CLEAR',       true)
-    batch_size   = ENV['BATCH'].to_i.nonzero? || 50
+    batch_size   = ENV['BATCH'].to_i.nonzero? || 300
 
     if start_server
       puts "Starting Solr server..."
