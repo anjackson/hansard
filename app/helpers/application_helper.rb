@@ -19,8 +19,8 @@ module ApplicationHelper
   end
 
   def image_marker(image_src)
-    image_link = link_to "Img. #{image_src}", "/images/#{image_src}.jpg"
-    "<span class='sidenote'>#{image_link}</span>"
+    dummy_image = image_tag "dummypage.jpg", :border => 0
+    "<span class='sidenote'><a href='/images/#{image_src}.jpg'>#{dummy_image}</a></span>"
   end
 
   def column_marker(column)
