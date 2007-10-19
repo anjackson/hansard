@@ -20,7 +20,7 @@ module ApplicationHelper
 
   def image_marker(image_src)
     dummy_image = image_tag "dummypage.jpg", :border => 0
-    "<span class='sidenote'><a href='/images/#{image_src}.jpg' alt='#{image_src}' title='#{image_src}'>#{dummy_image}</a><br/></span>"
+    "<span class='sidenote'><a href='/images/#{image_src}.jpg' alt='#{image_src}' title='#{image_src}'>#{dummy_image}</a><br /></span>"
   end
 
   def column_marker(column)
@@ -157,7 +157,7 @@ module ApplicationHelper
     </div>
 EOF
   end
-  
+
   def solr_search_form
     "<form action='/search'><input name='query' type='text' size='40'  accesskey='s' value='#{@query || ""}' /><input type='submit' name='sa' value='Search' /></form>"
   end
@@ -225,7 +225,7 @@ EOF
   end
 
   def index_date_span_url(index)
-    begin 
+    begin
       url_for(:controller  => 'indices',
               :action      => 'show',
               :start_year  => index.start_date.year,

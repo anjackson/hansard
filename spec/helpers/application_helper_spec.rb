@@ -37,21 +37,21 @@ describe ApplicationHelper, " when formatting contribution" do
     format_contribution('a <i>real</i> change').should ==
         '<p>a <i>real</i> change</p>'
   end
-  
+
   it 'should leave bold element unchanged' do
     format_contribution('a <b>real</b> change').should ==
-        '<p>a <b>real</b> change</p>'  
+        '<p>a <b>real</b> change</p>'
   end
 
   it 'should leave subscript element unchanged' do
     format_contribution('a <sub>real</sub> change').should ==
         '<p>a <sub>real</sub> change</p>'
   end
-  
+
   it 'should leave superscript element unchanged' do
     format_contribution('a <sup>real</sup> change').should ==
         '<p>a <sup>real</sup> change</p>'
-  end 
+  end
 
   it ' should return quotes in a q tag with no extraneous quotemarks' do
     format_contribution('test quote :<quote>"quoted text goes here"</quote>').should == '<p>test quote <q class="quote">quoted text goes here</q></p>'
@@ -71,14 +71,14 @@ describe ApplicationHelper, " when formatting contribution" do
     format_contribution("<image src=\"S6CV0089P0I0021\"/>   \n\n <col>123</col>").should  ==
     '<p><span class=\'sidenote\'><a href="/images/S6CV0089P0I0021.jpg">Img. S6CV0089P0I0021</a><br /><a name=\'column_123\' href=\'#column_123\'>Col. 123</a></span></p>'
   end
-  
+
   it "should convert a member element in to a span element with class 'member'" do
     text = "1. <member>Mr. Michael Latham</member> asked the Secretary of State for Northern Ireland whether he will make a further statement on the security situation."
     expected = '<p>1. <span class="member">Mr. Michael Latham</span> asked the Secretary of State for Northern Ireland whether he will make a further statement on the security situation.</p>'
 
     format_contribution(text).should == expected
   end
-  
+
 end
 
 describe ApplicationHelper, " when returning the date-based urls" do
@@ -321,7 +321,10 @@ describe ApplicationHelper, " when returning marker html for a model" do
   end
 
   it 'should return one sidenote with a linebreak if two sidenotes appear together within a contribution' do
-    expected = "<p><span class='sidenote'><a name='column_911' href='#column_911'>Col. 911</a><br \/><a href=\"/images/S6CV0089P0I0466.jpg\">Img. S6CV0089P0I0466</a></span></p>"
+    img_tag = '<img alt="Dummypage" border="0" src="/images/dummypage.jpg" />'
+    should_receive(:image_tag).with("dummypage.jpg", :border => 0).and_return(img_tag)
+
+    expected = %Q[<p><span class='sidenote'><a name='column_911' href='#column_911'>Col. 911</a><br /><a href='/images/S6CV0089P0I0466.jpg' alt='S6CV0089P0I0466' title='S6CV0089P0I0466'>#{img_tag}</a><br /></span></p>]
     format_contribution("<col>911</col>   <image src=\"S6CV0089P0I0466\"/>").should == expected
   end
 
@@ -333,10 +336,15 @@ describe ApplicationHelper, " when returning marker html for a model" do
 
   it 'should return one sidenote with a linebreak if two sidenotes appear together outside a contribution' do
     section = Section.new
-    section.stub!(:first_image_source).and_return("S6CV0089P0I0472")
-    section.stub!(:first_col).and_return(925)
+    img = "S6CV0089P0I0472"
+    section.stub!(:first_image_source).and_return(img)
+    col = '925'
+    section.stub!(:first_col).and_return(col.to_i)
+    img_tag = '<img alt="Dummypage" border="0" src="/images/dummypage.jpg" />'
+    should_receive(:image_tag).with("dummypage.jpg", :border => 0).and_return(img_tag)
 
-    marker_html(section, {}).should == %q[<span class='sidenote'><a href="/images/S6CV0089P0I0472.jpg">Img. S6CV0089P0I0472</a><br /><a name='column_925' href='#column_925'>Col. 925</a></span>]
+    marker_html(section, {}).should ==
+        %Q[<span class='sidenote'><a href='/images/#{img}.jpg' alt='#{img}' title='#{img}'>#{img_tag}</a><br /><br /><a name='column_#{col}' href='#column_#{col}'>Col. #{col}</a></span>]
   end
 
 end
