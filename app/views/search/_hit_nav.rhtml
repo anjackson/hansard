@@ -1,8 +1,0 @@
-<div id="hit-nav">
-<% if @result_set.first >  1 %>
-  <%= link_to "Previous Page", :query => @query, :controller => "search", :start => ((@result_set.first - 1) - @per_page) %>
-<% end %>
-<% if @result_set.last < @result_set.total and @result_set.last == ((@result_set.first - 1) + @per_page) %>
-  <%= link_to "Next Page", :query => @query, :controller => "search", :start => @result_set.last %>
-<% end %>
-</div>
