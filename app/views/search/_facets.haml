@@ -1,0 +1,7 @@
+- member_facets(@result_set) do |member_facets|
+  .sidenote
+    %p By speaker:
+    %ol#by-member-facet
+      - member_facets.each do |member, times|
+        %li.member-facet
+          = member_facet_link(member, times, @query)

@@ -1,0 +1,8 @@
+%p.search-result
+  = hit_link(contribution)
+  #search-result-fragment
+    = hit_fragment(@result_set, contribution)
+  .search-result-details 
+    = contribution.section.sitting.title 
+    = contribution.section.sitting.date_text 
+

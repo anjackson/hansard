@@ -6,34 +6,42 @@ class SearchController < ApplicationController
   def index
     @query = params[:query]
     @member = params[:member]
-    highlight_options = {:fields =>"text", 
-                         :prefix => "<span class='highlight'>",
-                         :suffix => "</span>"}
+    @page = (params[:page] or 1).to_i
+    @num_per_page = 10
+    
+    @search_options = pagination_options.merge(highlight_options)   
     if @member
-      @result_set = Contribution.find_by_solr("text:#{@query} AND member:\"#{@member}\"", :highlight=> highlight_options) 
+      query = members_speech_search(@member, @query)
     else
-      @member_facets = []
-      @result_set = Contribution.find_by_solr("text:#{@query}", :highlight => highlight_options,
-                                              :facets => {:fields =>[:member]})
-      unless @result_set.facets["facet_fields"].empty?
-        found_facets = @result_set.facets["facet_fields"]["member_facet"]
-        found_facets = found_facets.select{|member,value| value > 0}
-        found_facets.sort{|a,b| b[1]<=>a[1]}.each do |member|
-          @member_facets << member
-        end
-      end 
+      query = text_search(@query)
+      @search_options = @search_options.merge(facet_options)
     end 
+    @result_set = Contribution.find_by_solr(query, @search_options) 
+    @paginator = WillPaginate::Collection.new(@page, @num_per_page, @result_set.total_hits) 
   end
   
-  
   private
-
-    def hash_to_query(hash)
-      params = []
-      hash.each do |k,v|
-        params << k+'='+v.to_s
-      end
-      params.join('&')
+    
+    def text_search(query)
+      "text:#{query}"
     end
-
+    
+    def members_speech_search(member, query)
+      "text:#{query} AND member:\"#{member}\""
+    end
+    
+    def highlight_options
+      { :highlight => {:fields =>"text", 
+                      :prefix => "<span class='highlight'>",
+                      :suffix => "</span>" }  }
+    end
+    
+    def pagination_options
+      { :offset => (@page - 1) * @num_per_page }
+    end
+    
+    def facet_options
+      { :facets => { :fields =>[:member] } }
+    end
+    
 end

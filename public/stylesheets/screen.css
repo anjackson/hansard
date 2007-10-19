@@ -257,7 +257,7 @@ ol.hide_numbering li {
   padding: 3px;
 }
 
-.search-result-date {
+.search-result-details {
   font-size: 0.8em;
 	color: #666;
 }
@@ -269,4 +269,8 @@ ol.hide_numbering li {
 
 .highlight{
   font-weight: bold;
+}
+
+.bottom-pagination{
+  padding-top: 1em;
 }
