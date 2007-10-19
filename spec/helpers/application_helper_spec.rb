@@ -28,7 +28,7 @@ describe ApplicationHelper, " when formatting contribution" do
     should_receive(:image_tag).with("dummypage.jpg", :border => 0).and_return(img_tag)
 
     format_contribution('a <image src="S6CV0089P0I0021"/> text').should ==
-        "<p>a <span class='sidenote'><a href=\"/images/S6CV0089P0I0021.jpg\">Img. S6CV0089P0I0021</a></span> text</p>"
+        "<p>a <span class='sidenote'><a href='/images/S6CV0089P0I0021.jpg' alt='S6CV0089P0I0021' title='S6CV0089P0I0021' class='image-thumbnail'><figure><img alt=\"Dummypage\" border=\"0\" src=\"/images/dummypage.jpg\" /><legend>Img. S6CV0089P0I0021</legend></figure></a></span> text</p>"
   end
 
   it 'should replace lb element with close and open paragraph' do
@@ -65,7 +65,7 @@ describe ApplicationHelper, " when formatting contribution" do
     should_receive(:image_tag).with("dummypage.jpg", :border => 0).and_return(img_tag)
 
     format_contribution('a <i>really <image src="S6CV0089P0I0021"/> powerful</i> change').should ==
-        "<p>a <i>really <span class='sidenote'><a href=\"/images/S6CV0089P0I0021.jpg\">Img. S6CV0089P0I0021</a></span> powerful</i> change</p>"
+        "<p>a <i>really <span class='sidenote'><a href='/images/S6CV0089P0I0021.jpg' alt='S6CV0089P0I0021' title='S6CV0089P0I0021' class='image-thumbnail'><figure><img alt=\"Dummypage\" border=\"0\" src=\"/images/dummypage.jpg\" /><legend>Img. S6CV0089P0I0021</legend></figure></a></span> powerful</i> change</p>"
   end
 
   it 'should return the column number with an anchor wrapped with a span with class "sidenote"' do
@@ -78,7 +78,7 @@ describe ApplicationHelper, " when formatting contribution" do
     should_receive(:image_tag).with("dummypage.jpg", :border => 0).and_return(img_tag)
 
     format_contribution("<image src=\"S6CV0089P0I0021\"/>   \n\n <col>123</col>").should  ==
-    '<p><span class=\'sidenote\'><a href="/images/S6CV0089P0I0021.jpg">Img. S6CV0089P0I0021</a><br /><a name=\'column_123\' href=\'#column_123\'>Col. 123</a></span></p>'
+    "<p><span class='sidenote'><a href='/images/S6CV0089P0I0021.jpg' alt='S6CV0089P0I0021' title='S6CV0089P0I0021' class='image-thumbnail'><figure><img alt=\"Dummypage\" border=\"0\" src=\"/images/dummypage.jpg\" /><legend>Img. S6CV0089P0I0021</legend></figure></a><br /><a name='column_123' href='#column_123'>Col. 123</a></span></p>"
   end
 
   it "should convert a member element in to a span element with class 'member'" do
