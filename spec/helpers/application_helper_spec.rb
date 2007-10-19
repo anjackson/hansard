@@ -333,7 +333,7 @@ describe ApplicationHelper, " when returning marker html for a model" do
     img_tag = '<img alt="Dummypage" border="0" src="/images/dummypage.jpg" />'
     should_receive(:image_tag).with("dummypage.jpg", :border => 0).and_return(img_tag)
 
-    expected = %Q[<p><span class='sidenote'><a name='column_911' href='#column_911'>Col. 911</a><br /><a href='/images/S6CV0089P0I0466.jpg' alt='S6CV0089P0I0466' title='S6CV0089P0I0466'>#{img_tag}</a><br /></span></p>]
+    expected = %Q[<p><span class='sidenote'><a name='column_911' href='#column_911'>Col. 911</a><br /><a href='/images/S6CV0089P0I0466.jpg' alt='S6CV0089P0I0466' title='S6CV0089P0I0466' class='image-thumbnail'><figure>#{img_tag}<legend>Img. S6CV0089P0I0466</legend></figure></a></span></p>]
     format_contribution("<col>911</col>   <image src=\"S6CV0089P0I0466\"/>").should == expected
   end
 
