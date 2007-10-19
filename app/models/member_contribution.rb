@@ -5,7 +5,15 @@ class MemberContribution < Contribution
   def member_contribution
     text
   end
-  
+
+  def count_by_member= count
+    @count_by_member = count
+  end
+
+  def count_by_member
+    @count_by_member
+  end
+
   def to_xml(options={})
     xml = options[:builder] ||= Builder::XmlMarkup.new
     marker_xml(options)
@@ -20,5 +28,5 @@ class MemberContribution < Contribution
       end
     end
   end
-  
+
 end

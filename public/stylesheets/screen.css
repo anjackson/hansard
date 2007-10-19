@@ -164,6 +164,10 @@ td {
   vertical-align: top;
 }
 
+td.member {
+  width: 15em;
+}
+
 th.number, th.percentage {
   text-align: center;
   padding-right: 1.5em;

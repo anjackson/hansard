@@ -1,0 +1,10 @@
+%table
+  %thead
+    %tr
+      %td Member Name
+      %td= 'Count of <br />contributions'
+  %tbody
+    - @contributions.each do |contribution|
+      %tr
+        %td.member= contribution.member
+        %td.number= contribution.attributes['count_by_member']

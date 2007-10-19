@@ -94,6 +94,10 @@ ActionController::Routing::Routes.draw do |map|
     end
   end
 
+  with_controller :members, map do |member|
+    make_index_route 'members', member
+  end
+
   with_controller :data_files, map do |data_file|
     make_index_route "data_files", data_file
     make_route "data_files/warnings", :show_warnings, data_file
