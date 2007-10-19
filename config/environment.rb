@@ -56,9 +56,11 @@ end
 
 require 'htmlentities'
 require 'lib/acts_as_hansard_element'
+require 'lib/acts_as_slugged'
 require 'lib/in_groups_by'
 
 ActiveRecord::Base.send(:include, Acts::HansardElement)
+ActiveRecord::Base.send(:include, Acts::Slugged)
 
 PRODUCTION_HOST = "rua.parliament.uk"
 SEARCH_HOST     = "10.100.10.76"

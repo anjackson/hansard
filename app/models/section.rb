@@ -9,11 +9,8 @@ class Section < ActiveRecord::Base
   alias :to_activerecord_xml :to_xml
   before_create :create_slug
 
- 
-  
-  MAX_SLUG_LENGTH = 40
-
   acts_as_hansard_element
+  acts_as_slugged
 
   def to_param
     slug
@@ -59,47 +56,6 @@ class Section < ActiveRecord::Base
 
   def linkable?
     title? or (! parent_section and ! contributions.empty?)
-  end
-
-  def create_slug
-    self.slug = truncate_slug(slugcase_title)
-    index = 1
-    candidate_slug = self.slug
-    while slug_exists = sitting.sections.find_by_slug(candidate_slug)
-      candidate_slug = "#{self.slug}-#{index}"
-      index += 1
-    end
-    self.slug = candidate_slug
-  end
-
-  def truncate_slug(string)
-    cropped_string = truncate(string, MAX_SLUG_LENGTH+1, "")
-    if string != cropped_string
-      if cropped_string[0..-1] == "-"
-        cropped_string = truncate(cropped_string, MAX_SLUG_LENGTH, "")
-      else
-        #  back to the last complete word
-        last_wordbreak = cropped_string.rindex('-')
-        if !last_wordbreak.nil?
-          cropped_string = truncate(cropped_string, last_wordbreak, "")
-        else
-          cropped_string = truncate(cropped_string, MAX_SLUG_LENGTH, "")
-        end
-      end
-    end
-    cropped_string
-  end
-
-  # strip or convert anything except letters, numbers and dashes
-  # to produce a string in the format 'this-is-a-slugcase-string'
-  # and convert html entities to unicode
-  def slugcase_title
-    decoded_title = HTMLEntities.new.decode(title_cleaned_up)
-    ascii_title = Iconv.new('US-ASCII//TRANSLIT', 'UTF-8').iconv(decoded_title)
-    ascii_title.downcase!
-    ascii_title.gsub!(/[^a-z0-9\s_-]+/, '')
-    ascii_title.gsub!(/[\s_-]+/, '-')
-    ascii_title
   end
 
   def to_xml(options={})
@@ -225,4 +181,9 @@ class Section < ActiveRecord::Base
       self.save!
     end
   end
+
+  def create_slug
+    self.slug = make_slug(title_cleaned_up) {|candidate_slug| sitting.sections.find_by_slug(candidate_slug)}
+  end
+
 end

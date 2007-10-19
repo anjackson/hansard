@@ -5,7 +5,6 @@ class MemberContribution < Contribution
   def self.find_all_members
     sql = %Q[select distinct member, count(member) AS count_by_member from contributions where type = 'MemberContribution' group by member;]
     contributions = self.find_by_sql(sql)
-    self::const_set('Member', Struct.new(:name, :contribution_count)) unless self::constants.include? 'Member'
     contributions.collect do |c|
       Member.new(c.member, c.attributes['count_by_member'])
     end
@@ -13,14 +12,6 @@ class MemberContribution < Contribution
 
   def member_contribution
     text
-  end
-
-  def count_by_member= count
-    @count_by_member = count
-  end
-
-  def count_by_member
-    @count_by_member
   end
 
   def to_xml(options={})
@@ -37,5 +28,15 @@ class MemberContribution < Contribution
       end
     end
   end
+
+  private
+
+    def count_by_member= count
+      @count_by_member = count
+    end
+
+    def count_by_member
+      @count_by_member
+    end
 
 end

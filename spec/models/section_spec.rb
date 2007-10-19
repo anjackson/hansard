@@ -122,7 +122,10 @@ describe Section, " on creation" do
     @existing_title_section.sitting = Sitting.new
     @existing_title_section.sitting.sections.stub!(:find_by_slug)
     @existing_title_section.sitting.sections.should_receive(:find_by_slug).with("new-slug").and_return(@section)
-    @existing_title_section.create_slug.should_not == "new-slug"
+    @existing_title_section.save!
+    @existing_title_section.slug.should_not == "new-slug"
+
+    @existing_title_section.destroy
   end
 
 end
