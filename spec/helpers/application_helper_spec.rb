@@ -24,6 +24,9 @@ describe ApplicationHelper, " when formatting contribution" do
   end
 
   it 'should replace image element with an image wrapped in a span with class "sidenote"' do
+    img_tag = '<img alt="Dummypage" border="0" src="/images/dummypage.jpg" />'
+    should_receive(:image_tag).with("dummypage.jpg", :border => 0).and_return(img_tag)
+
     format_contribution('a <image src="S6CV0089P0I0021"/> text').should ==
         "<p>a <span class='sidenote'><a href=\"/images/S6CV0089P0I0021.jpg\">Img. S6CV0089P0I0021</a></span> text</p>"
   end
@@ -58,6 +61,9 @@ describe ApplicationHelper, " when formatting contribution" do
   end
 
   it 'should return the image name linked to the source wrapped with a span with class "sidenote"' do
+    img_tag = '<img alt="Dummypage" border="0" src="/images/dummypage.jpg" />'
+    should_receive(:image_tag).with("dummypage.jpg", :border => 0).and_return(img_tag)
+
     format_contribution('a <i>really <image src="S6CV0089P0I0021"/> powerful</i> change').should ==
         "<p>a <i>really <span class='sidenote'><a href=\"/images/S6CV0089P0I0021.jpg\">Img. S6CV0089P0I0021</a></span> powerful</i> change</p>"
   end
@@ -68,6 +74,9 @@ describe ApplicationHelper, " when formatting contribution" do
   end
 
   it "should split a consecutive image and column tag with a linebreak" do
+    img_tag = '<img alt="Dummypage" border="0" src="/images/dummypage.jpg" />'
+    should_receive(:image_tag).with("dummypage.jpg", :border => 0).and_return(img_tag)
+
     format_contribution("<image src=\"S6CV0089P0I0021\"/>   \n\n <col>123</col>").should  ==
     '<p><span class=\'sidenote\'><a href="/images/S6CV0089P0I0021.jpg">Img. S6CV0089P0I0021</a><br /><a name=\'column_123\' href=\'#column_123\'>Col. 123</a></span></p>'
   end
