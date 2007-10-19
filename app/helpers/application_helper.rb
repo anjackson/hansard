@@ -20,7 +20,7 @@ module ApplicationHelper
 
   def image_marker(image_src)
     dummy_image = image_tag "dummypage.jpg", :border => 0
-    "<span class='sidenote'><a href='/images/#{image_src}.jpg' alt='#{image_src}' title='#{image_src}'>#{dummy_image}</a><br /></span>"
+    "<span class='sidenote'><a href='/images/#{image_src}.jpg' alt='#{image_src}' title='#{image_src}' class='image-thumbnail'><figure>#{dummy_image}<legend>Img. #{image_src}</legend></figure></a></span>"
   end
 
   def column_marker(column)
