@@ -3,9 +3,10 @@
 a {
   text-decoration: none;
 }
-#hd {min-width: 800px;}
+#hd {min-width: 900px;}
 
 #search {float:right;}
+
 
 tr.total { 
     color: green;
@@ -32,9 +33,12 @@ th {text-align:left;
 	}
 	#ft {
 		padding:1em 0;
+		min-width: 900px;
 	}
 	
-	#yui-main {	font-size:146.5%;}
+	#yui-main {	font-size:146.5%;
+		text-align: justify;}
+	#yui-main .first {min-width: 600px;}
 
 /*
 
