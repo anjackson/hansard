@@ -111,14 +111,6 @@ class Section < ActiveRecord::Base
     end
   end
 
-  def title_for_linking
-    if title
-      plain_title.downcase.gsub(/ /, '_')
-    else
-      ''
-    end
-  end
-
   def following_siblings
     sections = sitting.sections
     index = sections.index(self)
