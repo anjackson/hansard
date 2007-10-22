@@ -7,7 +7,7 @@ class SectionsController < ApplicationController
   def show
     @sitting, @section = find_sitting_and_section(params[:type], @date, params[:id])
     @marker_options = {}
-    @title = @section.title
+    @title = @section.plain_title
   end
 
   def nest

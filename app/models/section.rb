@@ -103,7 +103,7 @@ class Section < ActiveRecord::Base
     start_image_src
   end
 
-  def title_cleaned_up
+  def plain_title
     if title
       clean_title = title.gsub(/<lb>|<\/lb>|<lb\/>/,'')
       clean_title.squeeze!(' ')
@@ -113,7 +113,7 @@ class Section < ActiveRecord::Base
 
   def title_for_linking
     if title
-      title_cleaned_up.downcase.gsub(/ /, '_')
+      plain_title.downcase.gsub(/ /, '_')
     else
       ''
     end
@@ -183,7 +183,7 @@ class Section < ActiveRecord::Base
   end
 
   def create_slug
-    self.slug = make_slug(title_cleaned_up) {|candidate_slug| sitting.sections.find_by_slug(candidate_slug)}
+    self.slug = make_slug(plain_title) {|candidate_slug| sitting.sections.find_by_slug(candidate_slug)}
   end
 
 end

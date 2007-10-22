@@ -40,7 +40,8 @@ describe SectionsController, "handling GET /commons/1999/feb/08/test-slug" do
     HouseOfCommonsSitting.stub!(:find_all_by_date).and_return([@sitting])
     @sitting.stub!(:sections).and_return(@sections)
     @section = mock_model(Section)
-    @section.stub!(:title).and_return('Title')
+    @section.stub!(:title).and_return('Titl<lb/>e')
+    @section.stub!(:plain_title).and_return('Title')
     @sitting.sections.stub!(:find_by_slug).and_return(@section)
   end
 
@@ -63,6 +64,12 @@ describe SectionsController, "handling GET /commons/1999/feb/08/test-slug" do
     response.should render_template('show')
   end
 
+  it "should assign the plain title (no tags) of the section to the view" do
+    do_get
+    assigns[:title].should_not be_nil
+    assigns[:title].should == @section.plain_title
+  end
+  
   it "should find the section using the slug" do
     @sitting.sections.should_receive(:find_by_slug).and_return(@section)
     do_get
@@ -91,6 +98,7 @@ describe SectionsController, "handling GET /written_answers/1999/feb/08/test-slu
     @sitting.stub!(:sections).and_return(@sections)
     @section = mock_model(Section)
     @section.stub!(:title).and_return('Title')
+    @section.stub!(:plain_title).and_return('Title')
     @sitting.sections.stub!(:find_by_slug).and_return(@section)
   end
 

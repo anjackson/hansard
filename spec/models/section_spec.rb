@@ -72,7 +72,7 @@ describe Section, " in general" do
 
 end
 
-describe Section, ".title_cleaned_up" do
+describe Section, ".plain_title" do
 
   before do
     @section = Section.new(:sitting => Sitting.new)
@@ -80,12 +80,12 @@ describe Section, ".title_cleaned_up" do
 
   it "should get rid of <lb>, <lb/> and </lb>" do
     @section.title = "seriously <lb>unclean <lb/>title</lb>"
-    @section.title_cleaned_up.should == "seriously unclean title"
+    @section.plain_title.should == "seriously unclean title"
   end
 
   it "should remove excess spaces" do
     @section.title = "I    speak    quite     slowly"
-    @section.title_cleaned_up.should == "I speak quite slowly"
+    @section.plain_title.should == "I speak quite slowly"
   end
 
 end
