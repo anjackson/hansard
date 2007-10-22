@@ -3,7 +3,6 @@ a {text-decoration:none;}
 #search{float:right;}
 
 #footer {font-size:0.8em;
-
 	padding:1em 0;
 }
 
@@ -23,7 +22,7 @@ list-style-type: none;
 padding-right: 1em;
 }
 
-#navigation-by-links ul
+ul#navigation-by-links
 {
 margin: 0;
 padding: 0;
