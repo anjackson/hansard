@@ -28,7 +28,7 @@ describe ApplicationHelper, " when formatting contribution" do
     should_receive(:image_tag).with("dummypage.jpg", :border => 0).and_return(img_tag)
 
     format_contribution('a <image src="S6CV0089P0I0021"/> text').should ==
-        "<p>a <span class='sidenote'><a href='/images/S6CV0089P0I0021.jpg' alt='S6CV0089P0I0021' title='S6CV0089P0I0021' class='image-thumbnail'><figure><img alt=\"Dummypage\" border=\"0\" src=\"/images/dummypage.jpg\" /><legend>Img. S6CV0089P0I0021</legend></figure></a></span> text</p>"
+        "<p>a <span class='sidenote'><a href='/images/S6CV0089P0I0021.jpg' alt='S6CV0089P0I0021' title='S6CV0089P0I0021' class='image-thumbnail'><figure><img alt=\"Dummypage\" border=\"0\" src=\"/images/dummypage.jpg\" /><br/><legend>Img. S6CV0089P0I0021</legend></figure></a></span> text</p>"
   end
 
   it 'should replace lb element with close and open paragraph' do
@@ -65,7 +65,7 @@ describe ApplicationHelper, " when formatting contribution" do
     should_receive(:image_tag).with("dummypage.jpg", :border => 0).and_return(img_tag)
 
     format_contribution('a <i>really <image src="S6CV0089P0I0021"/> powerful</i> change').should ==
-        "<p>a <i>really <span class='sidenote'><a href='/images/S6CV0089P0I0021.jpg' alt='S6CV0089P0I0021' title='S6CV0089P0I0021' class='image-thumbnail'><figure><img alt=\"Dummypage\" border=\"0\" src=\"/images/dummypage.jpg\" /><legend>Img. S6CV0089P0I0021</legend></figure></a></span> powerful</i> change</p>"
+        "<p>a <i>really <span class='sidenote'><a href='/images/S6CV0089P0I0021.jpg' alt='S6CV0089P0I0021' title='S6CV0089P0I0021' class='image-thumbnail'><figure><img alt=\"Dummypage\" border=\"0\" src=\"/images/dummypage.jpg\" /><br/><legend>Img. S6CV0089P0I0021</legend></figure></a></span> powerful</i> change</p>"
   end
 
   it 'should return the column number with an anchor wrapped with a span with class "sidenote"' do
@@ -78,7 +78,7 @@ describe ApplicationHelper, " when formatting contribution" do
     should_receive(:image_tag).with("dummypage.jpg", :border => 0).and_return(img_tag)
 
     format_contribution("<image src=\"S6CV0089P0I0021\"/>   \n\n <col>123</col>").should  ==
-    "<p><span class='sidenote'><a href='/images/S6CV0089P0I0021.jpg' alt='S6CV0089P0I0021' title='S6CV0089P0I0021' class='image-thumbnail'><figure><img alt=\"Dummypage\" border=\"0\" src=\"/images/dummypage.jpg\" /><legend>Img. S6CV0089P0I0021</legend></figure></a><br /><a name='column_123' href='#column_123'>Col. 123</a></span></p>"
+    "<p><span class='sidenote'><a href='/images/S6CV0089P0I0021.jpg' alt='S6CV0089P0I0021' title='S6CV0089P0I0021' class='image-thumbnail'><figure><img alt=\"Dummypage\" border=\"0\" src=\"/images/dummypage.jpg\" /><br/><legend>Img. S6CV0089P0I0021</legend></figure></a><br /><a name='column_123' href='#column_123'>Col. 123</a></span></p>"
   end
 
   it "should convert a member element in to a span element with class 'member'" do
@@ -337,7 +337,7 @@ describe ApplicationHelper, " when returning marker html for a model" do
     img_tag = '<img alt="Dummypage" border="0" src="/images/dummypage.jpg" />'
     should_receive(:image_tag).with("dummypage.jpg", :border => 0).and_return(img_tag)
 
-    expected = %Q[<p><span class='sidenote'><a name='column_911' href='#column_911'>Col. 911</a><br /><a href='/images/S6CV0089P0I0466.jpg' alt='S6CV0089P0I0466' title='S6CV0089P0I0466' class='image-thumbnail'><figure>#{img_tag}<legend>Img. S6CV0089P0I0466</legend></figure></a></span></p>]
+    expected = %Q[<p><span class='sidenote'><a name='column_911' href='#column_911'>Col. 911</a><br /><a href='/images/S6CV0089P0I0466.jpg' alt='S6CV0089P0I0466' title='S6CV0089P0I0466' class='image-thumbnail'><figure>#{img_tag}<br/><legend>Img. S6CV0089P0I0466</legend></figure></a></span></p>]
     format_contribution("<col>911</col>   <image src=\"S6CV0089P0I0466\"/>").should == expected
   end
 
@@ -357,7 +357,7 @@ describe ApplicationHelper, " when returning marker html for a model" do
     should_receive(:image_tag).with("dummypage.jpg", :border => 0).and_return(img_tag)
 
     marker_html(section, {}).should ==
-        %Q[<span class='sidenote'><a href='/images/#{img}.jpg' alt='#{img}' title='#{img}' class='image-thumbnail'><figure>#{img_tag}<legend>Img. #{img}</legend></figure></a><br /><a name='column_#{col}' href='#column_#{col}'>Col. #{col}</a></span>]
+        %Q[<span class='sidenote'><a href='/images/#{img}.jpg' alt='#{img}' title='#{img}' class='image-thumbnail'><figure>#{img_tag}<br/><legend>Img. #{img}</legend></figure></a><br /><a name='column_#{col}' href='#column_#{col}'>Col. #{col}</a></span>]
   end
 
 end
