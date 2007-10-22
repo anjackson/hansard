@@ -1,8 +1,11 @@
-#custom-doc { width: 90%; min-width: 250px;
+#doc3 { 
 	font-size:108%;}
 a {
   text-decoration: none;
 }
+#hd {min-width: 800px;}
+
+#search {float:right;}
 
 tr.total { 
     color: green;
