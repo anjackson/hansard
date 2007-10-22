@@ -1,4 +1,3 @@
-
 require File.dirname(__FILE__) + '/../../spec_helper'
 
 describe "application.haml", " in general" do
@@ -47,26 +46,26 @@ describe "application.haml", " when on a day page" do
     render 'layouts/application.haml'
   end
 
-  it 'should have a link rel="alternate" with appropriate title pointing to the xml source ' do
-    do_render
-
-    response.body.should assert_tag(:link, :attributes => {
-      :rel => "alternate",
-      :type => "text/xml",
-      :title => "Source file for: hello world",
-      :href => "/commons/source/2004/sep/16.xml"
-    })
-  end
-
-  it 'should have a link rel="alternate" with appropriate title pointing to the xml output ' do
-    do_render
-
-    response.body.should assert_tag(:link, :attributes => {
-      :rel => "alternate",
-      :type => "text/xml",
-      :title => "XML file for: hello world",
-      :href => "/commons/2004/sep/16.xml"
-    })
-  end
+  # it 'should have a link rel="alternate" with appropriate title pointing to the xml source ' do
+  #     do_render
+  # 
+  #     response.body.should assert_tag(:link, :attributes => {
+  #       :rel => "alternate",
+  #       :type => "text/xml",
+  #       :title => "Source file for: hello world",
+  #       :href => "/commons/source/2004/sep/16.xml"
+  #     })
+  #   end
+  # 
+  #   it 'should have a link rel="alternate" with appropriate title pointing to the xml output ' do
+  #     do_render
+  # 
+  #     response.body.should assert_tag(:link, :attributes => {
+  #       :rel => "alternate",
+  #       :type => "text/xml",
+  #       :title => "XML file for: hello world",
+  #       :href => "/commons/2004/sep/16.xml"
+  #     })
+  #   end
 
 end
