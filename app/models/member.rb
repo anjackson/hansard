@@ -18,8 +18,9 @@ class Member
     members.select{|m| m.slug == slug}.first
   end
 
-  def contributions_in_groups_by_year
-    contributions.sort_by{|c| c.date}.in_groups_by {|c| c.year}
+  def contributions_in_groups_by_year_and_section
+    by_section = contributions.sort_by{|c| c.section_id}.in_groups_by {|c| c.section_id}
+    by_section.sort_by{|s| s.first.date}.in_groups_by {|s| s.first.year}
   end
 
   def contributions

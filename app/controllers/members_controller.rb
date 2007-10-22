@@ -8,7 +8,7 @@ class MembersController < ApplicationController
 
   def show_member
     @member = find_member params[:name]
-    @contributions_in_groups_by_year = @member.contributions_in_groups_by_year
+    @contributions_in_groups_by_year_and_section = @member.contributions_in_groups_by_year_and_section
   end
 
   protected

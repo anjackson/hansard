@@ -22,11 +22,11 @@ describe MembersController do
   it 'should handle show_member action' do
     name = 'mr_boyes'
     member = mock(Member)
-    contributions = []
-    member.stub!(:contributions_in_groups_by_year).and_return(contributions)
+    contributions = [[]]
+    member.stub!(:contributions_in_groups_by_year_and_section).and_return(contributions)
     @controller.should_receive(:find_member).with(name).and_return(member)
     get :show_member, :name => name
     assigns[:member].should == member
-    assigns[:contributions_in_groups_by_year].should == contributions
+    assigns[:contributions_in_groups_by_year_and_section].should == contributions
   end
 end
