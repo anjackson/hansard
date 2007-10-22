@@ -14,6 +14,7 @@ h1 {font-weight:normal;
 	border-bottom: 1pt solid black;
 	padding-bottom: 1em;
 	}
+	h2 {font-weight:normal;}
 
 #navigation-by-links li
 {
@@ -33,6 +34,24 @@ padding: 0;
 width:18%;
 display:block;
 float:left;
+}
+
+#parent-section {
+width:18%;
+	position: fixed;
+	top: 5em;
+}
+
+#previous-section {
+	width:18%;
+	position: fixed;
+	top: 10em;
+}
+
+#next-section {
+	width:18%;
+	position: fixed;
+	top: 15em;
 }
 
 #content {width:60%;
