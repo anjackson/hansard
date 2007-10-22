@@ -4,7 +4,7 @@ class Member
 
   include Acts::Slugged::InstanceMethods
 
-  def initialize(name, contribution_count)
+  def initialize(name, contribution_count=0)
     @name, @contribution_count = name, contribution_count
     @slug = make_slug(name, :truncate => false) {|candidate_slug| duplicate_found = false}
   end

@@ -1,7 +1,7 @@
 .member_contribution{:id => member_contribution.xml_id}
   - if member_contribution.question_no
     %span.question_no= member_contribution.question_no
-  %cite.member= member_contribution.member + colon_after_member_name(member_contribution)
+  %cite.member= link_to_member(member_contribution.member) + colon_after_member_name(member_contribution)
   - if member_contribution.member_constituency
     %span.member_constituency= member_contribution.member_constituency + colon_after_constituency(member_contribution)
   - if member_contribution.procedural_note

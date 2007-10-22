@@ -2,6 +2,11 @@ require 'hpricot'
 
 module ApplicationHelper
 
+  def link_to_member(member_name)
+    member = Member.new(member_name)
+    link_to member.name, show_member_url(:name => member.slug)
+  end
+
   def intro section
     section.introduction.text
   end
@@ -94,7 +99,7 @@ module ApplicationHelper
             puts "Lords"
           end
         end
-        
+
         open :li do
           open :a, { :href => lords_reports_url } do
             puts "Lords Reports"
@@ -118,13 +123,13 @@ module ApplicationHelper
             puts "Data Files"
           end
         end
-        
+
       end
-      
+
     end
   end
 
-  
+
   def search_form
       open :form, { :action => "#{search_url}", :id => 'search' } do
         open :input, { :name => 'query', :type => 'text', :size => '20', :accesskey => 's', :value => ''}
