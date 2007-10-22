@@ -7,9 +7,33 @@ def mock_section_builder
   mock_builder
 end
 
+describe Section, " in a sitting on a date" do
+
+  before(:each) do
+    sitting = mock(Sitting)
+    @year = 1999
+    @date = Date.new(@year,12,31)
+    sitting.stub!(:year).and_return(@year)
+    sitting.stub!(:date).and_return(@date)
+
+    @model = Section.new
+    @model.stub!(:create_slug).and_return('')
+    @model.stub!(:sitting).and_return(sitting)
+  end
+
+  it "should return year based on parent sitting's year" do
+    @model.year.should == @year
+  end
+
+  it "should return date based on parent sitting's year" do
+    @model.date.should == @date
+  end
+end
+
 describe Section, " in general" do
 
   before(:each) do
+
     Section.stub!(:acts_as_solr)
     @model = Section.new
     @section = @model

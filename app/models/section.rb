@@ -12,6 +12,14 @@ class Section < ActiveRecord::Base
   acts_as_hansard_element
   acts_as_slugged
 
+  def year
+    sitting.year
+  end
+
+  def date
+    sitting.date
+  end
+
   def to_param
     slug
   end

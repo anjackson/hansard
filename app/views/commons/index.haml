@@ -1,4 +1,4 @@
 - @title = "Commons"
 - @sittings_by_year.each do |sittings_in_year|
-  %h2= sittings_in_year[0].date.year
+  %h2= sittings_in_year[0].year
   = render :partial => 'partials/sitting', :collection => sittings_in_year

@@ -8,11 +8,19 @@ class Contribution < ActiveRecord::Base
   def to_xml(options={})
     xml = options[:builder] ||= Builder::XmlMarkup.new
     marker_xml(options)
-    xml_para(options) do 
-      xml << text if text 
+    xml_para(options) do
+      xml << text if text
     end
   end
-  
+
+  def year
+    section.year
+  end
+
+  def date
+    section.date
+  end
+
   def word_count
     self.text.split(" ").length
   end
@@ -24,23 +32,23 @@ class Contribution < ActiveRecord::Base
   def image_sources
      image_src_range ? image_src_range.split(",").map{ |image_src| image_src } : []
   end
-  
+
   def first_image_source
-    image_sources.empty? ? nil : image_sources.first  
+    image_sources.empty? ? nil : image_sources.first
   end
-    
+
   def last_image_source
     image_sources.empty? ? nil : image_sources.last
   end
-  
+
   def first_col
-    cols.empty? ? nil : cols.first  
+    cols.empty? ? nil : cols.first
   end
-    
+
   def last_col
     cols.empty? ? nil : cols.last
   end
-  
+
   def xml_para(options)
     xml = options[:builder] ||= Builder::XmlMarkup.new
     attribute_hash = {}

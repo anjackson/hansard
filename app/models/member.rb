@@ -17,4 +17,12 @@ class Member
     members = MemberContribution.find_all_members
     members.select{|m| m.slug == slug}.first
   end
+
+  def contributions_in_groups_by_year
+    contributions.sort_by{|c| c.year}.in_groups_by {|c| c.year}
+  end
+
+  def contributions
+    MemberContribution.find_all_by_member(self.name)
+  end
 end
