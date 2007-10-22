@@ -1,5 +1,7 @@
 class MembersController < ApplicationController
 
+  caches_page :index
+  
   def index
     @members = find_all_members
   end
