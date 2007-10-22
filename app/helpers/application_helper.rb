@@ -35,7 +35,7 @@ module ApplicationHelper
   def day_link(sitting, direction)
     next_sitting = sitting.class.find_next(sitting.date, direction)
     if next_sitting
-      open :a, { :href => sitting_date_url(next_sitting) } do
+      open :a, { :class => 'yuimenubaritemlabel', :href => sitting_date_url(next_sitting) } do
         yield
       end
     else
@@ -44,84 +44,97 @@ module ApplicationHelper
   end
 
   def day_nav_links
+    
+    open :div, { :class => 'yuimenubar yuimenubarnav' } do
+    
+    open :div, { :class => 'bd' } do
 
-    open :ol, {:id => 'navigation'} do
+    open :ul, { :class => 'first-of-type' } do
 
-      open :li do
-        puts 'UK Parliament'
-        open :a, { :href => home_url } do
+      open :li, { :class => 'yuimenubaritem first-of-type' } do
+        open :a, { :class => 'yuimenubaritemlabel', :href => home_url } do
           puts "<strong>HANSARD</strong> Calendar"
         end
       end
 
       if @day
 
-        open :li do
+        open :li, { :class => 'yuimenubaritem' } do
           day_link(@sitting,"<"){ puts "Previous day" }
         end
 
-        open :li do
+        open :li, { :class => 'yuimenubaritem' } do
           day_link(@sitting, ">"){ puts "Next day" }
         end
 
-        open :li do
-          open :a, { :href => sitting_date_source_url(@sitting) } do
+        open :li, { :class => 'yuimenubaritem' } do
+          open :a, { :class => 'yuimenubaritemlabel', :href => sitting_date_source_url(@sitting) } do
             puts "XML source"
           end
         end
 
-        open :li do
-          open :a, { :href => sitting_date_xml_url(@sitting) } do
+        open :li, { :class => 'yuimenubaritem' } do
+          open :a, { :class => 'yuimenubaritemlabel', :href => sitting_date_xml_url(@sitting) } do
             puts "XML output"
           end
         end
 
       else
 
-        open :li do
-          open :a, { :href => commons_url } do
+        open :li, { :class => 'yuimenubaritem' } do
+          open :a, { :class => 'yuimenubaritemlabel', :href => commons_url } do
             puts "Commons"
           end
         end
 
-        open :li do
-          open :a, { :href => written_answers_url } do
+        open :li, { :class => 'yuimenubaritem' } do
+          open :a, { :class => 'yuimenubaritemlabel', :href => written_answers_url } do
             puts "Written Answers"
           end
         end
 
-        open :li do
-          open :a, { :href => lords_url } do
+        open :li, { :class => 'yuimenubaritem' } do
+          open :a, { :class => 'yuimenubaritemlabel', :href => lords_url } do
             puts "Lords"
           end
         end
         
-        open :li do
-          open :a, { :href => lords_reports_url } do
+        open :li, { :class => 'yuimenubaritem' } do
+          open :a, { :class => 'yuimenubaritemlabel', :href => lords_reports_url } do
             puts "Lords Reports"
           end
         end
 
-        open :li do
-          open :a, { :href => indices_url } do
+        open :li, { :class => 'yuimenubaritem' } do
+          open :a, { :class => 'yuimenubaritemlabel', :href => indices_url } do
             puts "Indices"
           end
         end
 
-        open :li do
-          open :a, { :href => source_files_url } do
+        open :li, { :class => 'yuimenubaritem' } do
+          open :a, { :class => 'yuimenubaritemlabel', :href => source_files_url } do
             puts "Source Files"
           end
         end
 
-        open :li do
-          open :a, { :href => data_files_url } do
+        open :li, { :class => 'yuimenubaritem' } do
+          open :a, { :class => 'yuimenubaritemlabel', :href => data_files_url } do
             puts "Data Files"
           end
         end
-
+        
       end
+      
+      open :li, { :class => 'yuimenubaritem' } do
+        open :form, { :action => '/search', :class => 'yuimenubaritemlabel' } do
+          open :input, { :name => 'query', :type => 'text', :size => '20', :accesskey => 's', :value => ''}
+          open :input, { :name => 'sa', :type => 'submit', :value => 'Search'}
+        end
+      end
+      
     end
+  end
+  end
   end
 
   def google_custom_search_form(default_query="")
@@ -316,6 +329,7 @@ EOF
     parts = handle_contribution_part doc.children.first, [], inner_elements, outer_elements
     parts = '<p>' + parts.join('').squeeze(' ') + '</p>'
     parts.gsub!(/<\/span>\s*<span class='sidenote'>/,"<br />")
+    parts.sub!("&#x00B7;", ".")
     parts
   end
 

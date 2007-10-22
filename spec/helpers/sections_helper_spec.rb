@@ -24,7 +24,7 @@ describe SectionsHelper, " when using section_nav_links to create links for a se
   end
    
    
-  it "should have a link to the sitting showing the sitting's title and date text" do
+  it "should have a link to the sitting showing the sitting's title and date text with class 'section-sitting'" do
     section_nav_links(@section).should have_tag("a.section-sitting", :text => "sitting title sitting date text")
   end
   
@@ -38,12 +38,12 @@ describe SectionsHelper, " when using section_nav_links to create links for a se
     section_nav_links(@section).should_not have_tag("a.next-section")
   end
      
-  it "should have a link to the previous section if there is one and it is linkable" do
+  it "should have a link to the previous section with class 'previous-section' if there is one and it is linkable" do
     should_receive(:section_url).with(@prev).and_return("http://www.test-prev.url")      
-    section_nav_links(@section).should have_tag("a.prev-section[href=http://www.test-prev.url]", :text => "previous section title")
+    section_nav_links(@section).should have_tag("a.previous-section[href=http://www.test-prev.url]", :text => "previous section title")
   end
   
-  it "should have a link to the next section if there is one and it is linkable" do 
+  it "should have a link to the next section with class 'next-section' if there is one and it is linkable" do 
     should_receive(:section_url).with(@next).and_return("http://www.test-next.url")      
     section_nav_links(@section).should have_tag("a.next-section[href=http://www.test-next.url]", :text => "next section title")
   end

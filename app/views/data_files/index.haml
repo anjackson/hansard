@@ -1,37 +1,35 @@
-%h1.title= 'Data Files'
+- @title = "Data files"
 - total = @data_files.size
 - saved = @data_files.select(&:saved).size
 - not_saved = total - saved
 - no_warnings = @data_files.select{|f| f.log.blank?}.size
 - warnings = total - no_warnings
+
+<p>
 %table
   %thead
     %tr
-      %th
+      %th 
       %th Sitting days
       %th Percentage
   %tbody
-    %tr
+    %tr.total
       %td Total files
       %td.number= number_with_delimiter total
       %td.percentage= number_to_percentage( total / total.to_f * 100.0, :precision => 0)
-    %tr
-      %td .
-    %tr
+    %tr.saved
       %td Saved
       %td.number= number_with_delimiter saved
       %td.percentage= number_to_percentage( saved / total.to_f * 100.0, :precision => 0)
-    %tr
-      %td Not saved
-      %td.number= number_with_delimiter not_saved
-      %td.percentage= number_to_percentage( not_saved / total.to_f * 100.0, :precision => 0)
-    %tr
-      %td .
-    %tr
+    %tr.no_warnings
       %td No warnings
       %td.number= number_with_delimiter no_warnings
       %td.percentage= number_to_percentage( no_warnings / total.to_f * 100.0, :precision => 0)
-    %tr
+    %tr.not_saved
+      %td Not saved
+      %td.number= number_with_delimiter not_saved
+      %td.percentage= number_to_percentage( not_saved / total.to_f * 100.0, :precision => 0)
+    %tr.warnings
       %td= link_to 'With warnings', show_warnings_url
       %td.number= number_with_delimiter warnings
       %td.percentage= number_to_percentage( warnings / total.to_f * 100.0, :precision => 0)

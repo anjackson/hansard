@@ -1,3 +1,40 @@
+#custom-doc { width: 90%; min-width: 250px;
+	font-size:108%;}
+a {
+  text-decoration: none;
+}
+
+tr.total { 
+    color: green;
+font-weight:bold;
+}
+
+tr.not_saved { 
+    color: orange;
+	font-weight:bold;
+
+}
+
+tr.warnings { 
+    color: red;
+	font-weight:bold;
+
+}
+
+th {text-align:left;
+	font-style:italic;}
+	
+	#yui-b {
+		font-size:100%;
+	}
+	#ft {
+		padding:1em 0;
+	}
+	
+	#yui-main {	font-size:146.5%;}
+
+/*
+
 body {
   background-color: #fff;
   color: #333;
@@ -114,9 +151,7 @@ blockquote {
   display: inline;
 }
 
-a {
-  text-decoration: none;
-}
+
 
 #title {
   font-size: 1em;
@@ -127,7 +162,6 @@ a {
 
 #content {
   width: 36em;
-  /* text-align: justify; */
 	margin-top: 2em;
 	margin-bottom: 2em;
   margin-left: 10em;
@@ -278,3 +312,5 @@ ol.hide_numbering li {
 .bottom-pagination{
   padding-top: 1em;
 }
+
+*/

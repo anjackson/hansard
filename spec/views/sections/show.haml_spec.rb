@@ -4,7 +4,7 @@ describe "sections/show.haml", " in general" do
   before do
     @section = mock_model(Section)
     @section.stub!(:title).and_return("section name")
-    @controller.template.stub!(:marker_html).and_return("markers")
+    @controller.template.stub!(:marker_html).and_return("MARKERS_BEING_RETURNED")
     @controller.template.stub!(:render)
     @controller.template.stub!(:section_url)
     assigns[:section] = @section
@@ -33,7 +33,7 @@ describe 'sections/show.haml', 'when passed a section with nested sections' do
     parent.sections = [first, second, third]
     sitting.sections = [parent]
   
-    @controller.template.stub!(:marker_html).and_return("markers")
+    @controller.template.stub!(:marker_html).and_return("MARKERS_BEING_RETURNED")
     
     parent.sitting = sitting
     sitting.save!
@@ -42,14 +42,11 @@ describe 'sections/show.haml', 'when passed a section with nested sections' do
     assigns[:title] = @title
   end
 
-  it 'should render parent section title as h1 heading' do
-    render 'sections/show.haml', :layout => 'application'
-    response.body.include?("<h1 class='title'>TRANSPORT</h1>").should be_true
-  end
+  it 'should render parent section title'
   
-  it "should render the parent section's marker html above the title" do
+  it "should render the parent section's marker html" do
     render 'sections/show.haml', :layout => 'application'
-    response.body.should match(/markers\n\s*<h1 class='title'>TRANSPORT<\/h1>/)
+    response.body.include?("MARKERS_BEING_RETURNED").should be_true
   end
 
   after do

@@ -1,4 +1,4 @@
-%h1.title= 'Hansard: Indices'
+= @title = "Hansard Indices"
 - @indices_by_decade.each do |indices_in_decade|
-  %h2= indices_in_decade[0].decade.to_s + 's'
+  %h3= indices_in_decade[0].decade.to_s + 's'
   = render :partial => 'index', :collection => indices_in_decade
