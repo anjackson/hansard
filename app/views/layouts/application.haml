@@ -3,34 +3,16 @@
   %head
     %meta{ 'http-equiv'.to_sym=>"Content-Type", :content=>"text/html;charset=utf-8" }
     %title= "UK Parliament: Hansard: " << ( @title || "Please give me a title" )
-    = stylesheet_link_tag "reset-fonts-grids/reset-fonts-grids"
-    = stylesheet_link_tag "base/base-min"
     = stylesheet_link_tag "screen", :media => "screen"
-    = javascript_include_tag 'utilities/utilities'
-    = javascript_include_tag 'container/container-min'
-    = stylesheet_link_tag "assets/skins/sam/skin"
     - if @day
       %link{ :rel => 'alternate', :type => 'text/xml', :title => 'Source file for: ' << ( @title || "Please give me a title" ), :href => sitting_date_source_url(@sitting) }
       %link{ :rel => 'alternate', :type => 'text/xml', :title => 'XML file for: ' << ( @title || "Please give me a title" ), :href => sitting_date_xml_url(@sitting) }
-    - if @javascript
-      = javascript_include_tag @javascript
-    = javascript_include_tag 'se_hilite_src'
-  %body{ :class => "yui-skin-sam" }
-    #doc3{ :class => "yui-t2" }
-      #hd
-        = search_form
-        %h1
-          = @title
-        = day_nav_links
-      #bd
-        #yui-main
-          %div{ :class => "yui-b" }
-            %div{ :class => "yui-ge" }
-              %div{ :class => "yui-u first" }
-                =yield
-              %div{ :class => "yui-u" }
-                = @marker
-        #yui-b
-          = section_nav_links(@section) if @section
-      #ft
-        &copy; UK Parliament
+  %body
+    = search_form
+    =@marker
+    %h1
+      = @title
+    = day_nav_links
+    = section_nav_links(@section) if @section
+    = yield
+    &copy; UK Parliament
