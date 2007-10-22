@@ -10,9 +10,7 @@
       %link{ :rel => 'alternate', :type => 'text/xml', :title => 'XML file for: ' << ( @title || "Please give me a title" ), :href => sitting_date_xml_url(@sitting) }
   %body
     = search_form
-
-    #navigation-by-links
-      = day_nav_links
+    = day_nav_links
     #navigation-by-sections
       = section_nav_links(@section) if @section
     #content
