@@ -125,16 +125,18 @@ module ApplicationHelper
         
       end
       
-      open :li, { :class => 'yuimenubaritem' } do
-        open :form, { :action => '/search', :class => 'yuimenubaritemlabel' } do
-          open :input, { :name => 'query', :type => 'text', :size => '20', :accesskey => 's', :value => ''}
-          open :input, { :name => 'sa', :type => 'submit', :value => 'Search'}
-        end
-      end
+      
       
     end
   end
   end
+  end
+  
+  def search_form
+      open :form, { :action => '/search', :id => 'search' } do
+        open :input, { :name => 'query', :type => 'text', :size => '20', :accesskey => 's', :value => ''}
+        open :input, { :name => 'sa', :type => 'submit', :value => 'Search'}
+      end
   end
 
   def google_custom_search_form(default_query="")
@@ -151,9 +153,6 @@ module ApplicationHelper
 EOF
   end
 
-  def solr_search_form
-    "<form action='/search'><input name='query' type='text' size='40'  accesskey='s' value='#{@query || ""}' /><input type='submit' name='sa' value='Search' /></form>"
-  end
 
   def sitting_link(sitting)
     sitting_url = sitting_date_url(sitting)
