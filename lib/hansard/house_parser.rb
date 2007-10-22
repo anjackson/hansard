@@ -503,7 +503,7 @@ class Hansard::HouseParser
 
     def create_house_sitting house_type, house_model
       @column =  clean_html(@doc.at(house_type + '/col'))
-      @image =  @doc.at(house_type + '/image').attributes['src']
+      @image =  @doc.at('image').attributes['src']
 
       @sitting = house_model.new({
         :start_column => @column,
