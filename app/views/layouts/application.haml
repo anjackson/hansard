@@ -4,15 +4,20 @@
     %meta{ 'http-equiv'.to_sym=>"Content-Type", :content=>"text/html;charset=utf-8" }
     %title= "UK Parliament: Hansard: " << ( @title || "Please give me a title" )
     = stylesheet_link_tag "screen", :media => "screen"
+    = stylesheet_link_tag "print", :media => "print"
     - if @day
       %link{ :rel => 'alternate', :type => 'text/xml', :title => 'Source file for: ' << ( @title || "Please give me a title" ), :href => sitting_date_source_url(@sitting) }
       %link{ :rel => 'alternate', :type => 'text/xml', :title => 'XML file for: ' << ( @title || "Please give me a title" ), :href => sitting_date_xml_url(@sitting) }
   %body
     = search_form
-    =@marker
     %h1
       = @title
-    = day_nav_links
-    = section_nav_links(@section) if @section
-    = yield
-    &copy; UK Parliament
+    #navigation-by-links
+      = day_nav_links
+    #navigation-by-sections
+      = section_nav_links(@section) if @section
+    #content
+      =@marker
+      = yield
+    #footer
+      &copy; UK Parliament
