@@ -16,8 +16,9 @@
       = javascript_include_tag @javascript
     = javascript_include_tag 'se_hilite_src'
   %body{ :class => "yui-skin-sam" }
-    #custom-doc{ :class => "yui-t2" }
+    #doc3{ :class => "yui-t2" }
       #hd
+        = search_form
         %h1
           = @title
         = day_nav_links
