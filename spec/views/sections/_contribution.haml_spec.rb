@@ -19,12 +19,13 @@ describe '_contribution partial', 'when passed table contribution' do
     @table = mock_model(TableContribution)
     @table.should_receive(:text).and_return @text
     @table.should_receive(:markers)
+    @table.should_receive(:xml_id).and_return "xml id"
     @controller.template.stub!(:contribution).and_return @table
     render 'sections/_contribution.haml'
   end
 
-  it 'should show table text "as is" within a div with class table' do
-    response.should have_tag('div.table') do
+  it 'should show table text "as is" within a div with class table and id being the xml_id of the contribution' do
+    response.should have_tag('div.table[id=xml id]') do
       with_tag('table') do
         with_tag('tr') do
           with_tag('td') do
@@ -45,12 +46,13 @@ describe '_contribution partial', 'when passed quote contribution' do
     @quote.should_receive(:text).and_return @text
     @quote.should_receive(:markers)
     @quote.stub!(:word_count).and_return 0
+    @quote.should_receive(:xml_id).and_return "xml id"
     @controller.template.stub!(:contribution).and_return @quote
     render 'sections/_contribution.haml'
   end
 
-  it 'should show quote text in q with class quote' do
-    response.should have_tag('q.quote', @text.sub(': ','').sub('<i>','').sub('</i>','').gsub('"','').sub('<quote>','').sub('</quote>','').squeeze(' '))
+  it 'should show quote text in q with class quote and id being the xml_id of the contribution' do
+    response.should have_tag('q.quote[id=xml id]', @text.sub(': ','').sub('<i>','').sub('</i>','').gsub('"','').sub('<quote>','').sub('</quote>','').squeeze(' '))
   end
 
   it 'should show italic text in italics' do
@@ -99,13 +101,18 @@ describe '_contribution partial', 'when passed procedural contribution' do
     @procedural = mock_model(ProceduralContribution)
     @procedural.should_receive(:markers)
     @procedural.should_receive(:text).and_return @text
+    @procedural.should_receive(:xml_id).and_return "xml id"
     @controller.template.stub!(:contribution).and_return @procedural
 
     render 'sections/_contribution.haml'
   end
 
-  it 'should show speaker in chair as p with class procedural' do
+  it 'should show speaker in chair as div with class procedural' do
     response.should have_tag('div.procedural', '[MADAM SPEAKER in the Chair]')
+  end
+  
+  it 'should show the content of the contribution in a div whose id is the xml_id of the contribution' do
+    response.should have_tag('div[id=xml id]', :text => "[MADAM SPEAKER in the Chair]")
   end
 
 end
