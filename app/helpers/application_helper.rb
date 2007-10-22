@@ -44,12 +44,8 @@ module ApplicationHelper
   end
 
   def day_nav_links
-    
-    open :div, { :class => 'yuimenubar yuimenubarnav' } do
-    
-    open :div, { :class => 'bd' } do
 
-    open :ul, { :class => 'first-of-type' } do
+    open :ul, { :id => 'navigation-by-links' } do
 
       open :li, { :class => 'yuimenubaritem first-of-type' } do
         open :a, { :class => 'yuimenubaritemlabel', :href => home_url } do
@@ -124,10 +120,10 @@ module ApplicationHelper
         end
         
       end
+      
     end
   end
-  end
-  end
+
   
   def search_form
       open :form, { :action => "#{search_url}", :id => 'search' } do
