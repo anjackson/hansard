@@ -1,7 +1,7 @@
 class MembersController < ApplicationController
 
-  caches_page :index
-  
+  caches_page :index, :show_member
+
   def index
     @members = find_all_members
   end
