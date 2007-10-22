@@ -2,35 +2,47 @@ a {text-decoration:none;}
 
 #search{float:right;}
 
-#title {}
+#footer {font-size:0.8em;
+
+	padding:1em 0;
+}
 
 body {font-family:sans-serif;
-	margin:2em 4em;
+	margin:2em;
 	}
 	
-h1 {font-weight:normal;}
+h1 {font-weight:normal;
+	border-bottom: 1pt solid black;
+	padding-bottom: 1em;
+	}
 
 #navigation-by-links li
 {
 display: inline;
 list-style-type: none;
-padding-right: 20px;
+padding-right: 1em;
 }
 
-#navigation-by-section li
+#navigation-by-links ul
 {
-display: inline;
-list-style-type: none;
-padding-right: 20px;
+margin: 0;
+padding: 0;
+}
+
+#navigation-by-sections
+{
+width:18%;
+display:block;
 }
 
 #content {width:60%;
 	margin-left:20%;
 	margin-right:20%;
 	font-size:1.2em;
-	line-height:130%;}
+	line-height:130%;
+	}
 	
-	cite {font-style:normal;}
+cite {font-style:normal;}
 	
 blockquote {display:inline;}
 
@@ -41,7 +53,7 @@ blockquote {display:inline;}
 	float: right;
 	text-align: left;
 	margin-right: -14em;
-	width: 12em;
+	width:18%;
 	position: relative;
 }
 .second-sidenote {
