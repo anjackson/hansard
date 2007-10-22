@@ -51,7 +51,7 @@ ActionController::Routing::Routes.draw do |map|
       make_route "#{date}", :show, by_date
     end
   end
-  
+
   %w[lords commons written_answers lords_reports].each do |controller_name|
     with_controller controller_name.to_sym, map do |controller|
        make_index_route controller_name, controller
@@ -70,7 +70,7 @@ ActionController::Routing::Routes.draw do |map|
 
   with_controller :members, map do |member|
     make_index_route 'members', member
-    make_route "members/:name", :show, member
+    make_route "members/:name", :show_member, member
   end
 
   with_controller :data_files, map do |data_file|

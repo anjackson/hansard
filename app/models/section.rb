@@ -175,7 +175,10 @@ class Section < ActiveRecord::Base
   end
 
   def create_slug
-    self.slug = make_slug(plain_title) {|candidate_slug| sitting.sections.find_by_slug(candidate_slug)}
+    self.slug = make_slug(plain_title) do |candidate_slug|
+      duplicate_found = sitting.sections.find_by_slug(candidate_slug)
+      duplicate_found
+    end
   end
 
 end

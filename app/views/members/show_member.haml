@@ -1,0 +1,9 @@
+%table
+  %thead
+    %tr
+      %td Member Name
+      %td= 'Count of <br />contributions'
+  %tbody
+    %tr
+      %td.member= @member.name
+      %td.number= @member.contribution_count

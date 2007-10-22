@@ -6,5 +6,5 @@
   %tbody
     - @members.each do |member|
       %tr
-        %td.member= member.name
+        %td.member= link_to member.name, show_member_url(:name => member.slug)
         %td.number= member.contribution_count

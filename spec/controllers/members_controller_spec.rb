@@ -7,8 +7,23 @@ describe MembersController do
     route_for(params).should == '/members'
   end
 
-  it "should map { :controller => 'members', :name => 'mr_boyes'} to /members/mr_boyes" do
-    params = { :controller => 'members', :action => 'show', :name => 'mr_boyes' }
+  it "should map { :controller => 'members', :name => 'mr_boyes', :action => 'show_member'} to /members/mr_boyes" do
+    params = { :controller => 'members', :action => 'show_member', :name => 'mr_boyes' }
     route_for(params).should == '/members/mr_boyes'
+  end
+
+  it 'should handle index action' do
+    members = [mock(Member)]
+    @controller.should_receive(:find_all_members).and_return(members)
+    get :index
+    assigns[:members].should == members
+  end
+
+  it 'should handle show_member action' do
+    name = 'mr_boyes'
+    member = mock(Member)
+    @controller.should_receive(:find_member).with(name).and_return(member)
+    get :show_member, :name => name
+    assigns[:member].should == member
   end
 end

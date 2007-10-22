@@ -6,7 +6,13 @@ class MemberContribution < Contribution
     sql = %Q[select distinct member, count(member) AS count_by_member from contributions where type = 'MemberContribution' group by member;]
     contributions = self.find_by_sql(sql)
     contributions.collect do |c|
-      Member.new(c.member, c.attributes['count_by_member'])
+      Member.new(c.plain_member_name, c.attributes['count_by_member'])
+    end
+  end
+
+  def plain_member_name
+    if member
+      member.gsub(/<lb>|<\/lb>|<lb\/>/,'').squeeze(' ')
     end
   end
 

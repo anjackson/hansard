@@ -87,7 +87,7 @@ describe ApplicationHelper, " when formatting contribution" do
 
     format_contribution(text).should == expected
   end
-  
+
   it "should convert a middot into a decimal point when passed a contribution text containing a middot"
 
 end

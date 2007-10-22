@@ -31,8 +31,10 @@ module Acts
           ascii_text
         end
 
-        def make_slug text
-          base_slug = truncate_slug(normalize_text(text))
+        def make_slug text, options={}
+          options[:truncate] = true unless options.has_key?(:truncate)
+          base_slug = normalize_text(text)
+          base_slug = truncate_slug(base_slug) if options[:truncate]
           index = 1
           candidate_slug = base_slug
           while slug_exists = (yield candidate_slug)
@@ -43,21 +45,27 @@ module Acts
         end
 
         def truncate_slug(string)
-          cropped_string = truncate(string, MAX_SLUG_LENGTH+1, "")
+          cropped_string = truncate_text(string, MAX_SLUG_LENGTH+1, "")
           if string != cropped_string
             if cropped_string[0..-1] == "-"
-              cropped_string = truncate(cropped_string, MAX_SLUG_LENGTH, "")
+              cropped_string = truncate_text(cropped_string, MAX_SLUG_LENGTH, "")
             else
               #  back to the last complete word
               last_wordbreak = cropped_string.rindex('-')
               if !last_wordbreak.nil?
-                cropped_string = truncate(cropped_string, last_wordbreak, "")
+                cropped_string = truncate_text(cropped_string, last_wordbreak, "")
               else
-                cropped_string = truncate(cropped_string, MAX_SLUG_LENGTH, "")
+                cropped_string = truncate_text(cropped_string, MAX_SLUG_LENGTH, "")
               end
             end
           end
         cropped_string
+      end
+
+      def truncate_text(text, length = 30, truncate_string = "...")
+        if text.nil? then return end
+        l = length - truncate_string.chars.length
+        (text.chars.length > length ? text.chars[0...l] + truncate_string : text).to_s
       end
     end
 
