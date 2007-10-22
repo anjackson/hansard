@@ -5,9 +5,6 @@
     %title= "UK Parliament: Hansard: " << ( @title || "Please give me a title" )
     = stylesheet_link_tag "screen", :media => "screen"
     = stylesheet_link_tag "print", :media => "print"
-    - if @day
-      %link{ :rel => 'alternate', :type => 'text/xml', :title => 'Source file for: ' << ( @title || "Please give me a title" ), :href => sitting_date_source_url(@sitting) }
-      %link{ :rel => 'alternate', :type => 'text/xml', :title => 'XML file for: ' << ( @title || "Please give me a title" ), :href => sitting_date_xml_url(@sitting) }
   %body
     = search_form
     = day_nav_links
@@ -19,4 +16,8 @@
       =@marker
       = yield
       #footer
-        &copy; UK Parliament
+        &copy; UK Parliament.
+        - if @day
+          This page:
+          = link_to "XML source.", sitting_date_source_url(@sitting)
+          = link_to "XML output.", sitting_date_xml_url(@sitting)
