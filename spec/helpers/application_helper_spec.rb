@@ -195,6 +195,7 @@ describe ApplicationHelper, " when creating navigation links" do
         :written_answers_url,
         :indices_url,
         :source_files_url,
+        :search_url,
         :data_files_url]
 
     url_helper_methods.each do |url_helper_method|

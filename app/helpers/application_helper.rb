@@ -124,16 +124,13 @@ module ApplicationHelper
         end
         
       end
-      
-      
-      
     end
   end
   end
   end
   
   def search_form
-      open :form, { :action => '/search', :id => 'search' } do
+      open :form, { :action => "#{search_url}", :id => 'search' } do
         open :input, { :name => 'query', :type => 'text', :size => '20', :accesskey => 's', :value => ''}
         open :input, { :name => 'sa', :type => 'submit', :value => 'Search'}
       end
