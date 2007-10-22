@@ -3,12 +3,12 @@
   .time
     = format_time(contribution)
 - elsif contribution.is_a? ProceduralContribution
-  .procedural
+  .procedural{:id => contribution.xml_id}
     = format_contribution(contribution.text, ['div'])
 - elsif contribution.is_a? MemberContribution
   = render :partial => 'member_contribution', :object => contribution
 - elsif contribution.is_a? QuoteContribution
-  %q.quote= format_contribution(contribution.text, ['div'])
+  %q.quote{:id => contribution.xml_id}= format_contribution(contribution.text, ['div'])
 - elsif contribution.is_a? TableContribution
-  .table
+  .table{:id => contribution.xml_id}
     = format_contribution(contribution.text, ['div'])
