@@ -1,5 +1,9 @@
-%h1= @member.name
-- @contributions_in_groups_by_year.each do |group|
-  %h2= group.first.year
-  - group.each do |contribution|
-    %p= contribution.section.title
+- @title = @member.name
+- @contributions_in_groups_by_year.each do |contributions|
+  %h2= contributions.first.year
+  - section_groups = contributions.sort_by{|c| c.section_id}.in_groups_by {|c| c.section}
+  - section_groups.each do |section_contributions|
+    %p
+      = section_contributions.first.date
+      = link_to section_contributions.first.section.title, section_url(section_contributions.first.section)
+      = section_contributions.size

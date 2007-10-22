@@ -19,14 +19,14 @@ end
 
 describe Member, 'with contributions' do
   before do
-    @one = mock(Contribution)
-    @two = mock(Contribution)
-    @three = mock(Contribution)
-    @one.stub!(:year).and_return(1999)
-    @two.stub!(:year).and_return(1999)
-    @three.stub!(:year).and_return(2000)
+    @one = Contribution.new
+    @two = Contribution.new
+    @three = Contribution.new
+    @one.stub!(:date).and_return(Date.new(1999,1,1))
+    @two.stub!(:date).and_return(Date.new(1999,12,31))
+    @three.stub!(:date).and_return(Date.new(2000,1,1))
 
-    contributions = [@one, @three, @two]
+    contributions = [@two, @three, @one]
     @member = Member.new('Mr Boyes', contributions.size)
     @member.stub!(:contributions).and_return(contributions)
   end

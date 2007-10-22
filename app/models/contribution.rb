@@ -14,7 +14,7 @@ class Contribution < ActiveRecord::Base
   end
 
   def year
-    section.year
+    date.year
   end
 
   def date

@@ -19,7 +19,7 @@ class Member
   end
 
   def contributions_in_groups_by_year
-    contributions.sort_by{|c| c.year}.in_groups_by {|c| c.year}
+    contributions.sort_by{|c| c.date}.in_groups_by {|c| c.year}
   end
 
   def contributions

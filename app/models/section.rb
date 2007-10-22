@@ -13,7 +13,7 @@ class Section < ActiveRecord::Base
   acts_as_slugged
 
   def year
-    sitting.year
+    date.year
   end
 
   def date
