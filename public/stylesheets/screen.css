@@ -1,320 +1,48 @@
-#doc3 { 
-	font-size:108%;
-	}
-a {
-  text-decoration: none;
-}
-#hd {min-width: 900px;}
+a {text-decoration:none;}
 
-#search {float:right;}
+#search{float:right;}
 
+#title {}
 
-tr.total { 
-    color: green;
-font-weight:bold;
-}
-
-tr.not_saved { 
-    color: orange;
-	font-weight:bold;
-}
-
-tr.warnings { 
-    color: red;
-	font-weight:bold;
-
-}
-
-th {text-align:left;
-	font-style:italic;}
+body {font-family:sans-serif;
+	margin:2em 4em;}
 	
-	.yui-b {
-	}
-	#ft {
-		padding:1em 0;
-		min-width: 900px;
-		font-size:85%;
-		
-	}
-	#content {
-	  width: 28em;
+h1 {font-weight:normal;}
 
-	}
-	#yui-main {	font-size:146.5%;
-	}
+#navigation-by-links li
+{
+display: inline;
+list-style-type: none;
+padding-right: 20px;
+}
+
+#navigation-by-section li
+{
+display: inline;
+list-style-type: none;
+padding-right: 20px;
+}
+
+#content {width:60%;
+	margin-left:20%;
+	margin-right:20%;
+	font-size:1.2em;
+	line-height:130%;}
 	
-	.sidenote {
-		font-size: 0.8em;
-		color: #666;
-		font-weight: normal;
-		float: right;
-		text-align: left;
-		margin-right: -14em;
-		width: 12em;
-		position: relative;
-	}
+	cite {font-style:normal;}
 	
-	.second-sidenote {
-	  margin-top: 2em;
-	}
+blockquote {display:inline;}
 
-body {
-  background-color: #fff;
-  color: #333;
-  font-family: Lucida Grande, Georgia, Times, serif;
-  margin:0;
-  font-size: 1.2em;
-  line-height: 140%;
-}
-
-#navbar {
-  margin: 0;
-  font-size: 0.8em;
-  position: fixed;
-  top: 10em;
-  left: 0.5em;
-  width: 10em;
-  right: auto;
-  text-align:right;
-}
-
-.next-section {
-	float:right;
-	display:block;
-}
-
-#navbar li {
-  list-style-type: none;
-  line-height: 130%;
-}
-
-#by-member-facet {
-  margin: 0;
-padding: 0;}
-
-#by-member-facet li {
-  list-style-type: none;
-  line-height: 150%;
-}
-
-#arrow-navigation {
-  margin: 0;
-}
-
-#arrow-navigation li {
-  list-style-type: none;
-  line-height: 150%;
-margin-bottom:1em;
-}
-
-table {
-  margin-top: 1em;
-  margin-bottom: 1em;
-}
-
-table#data_file_warnings {
-	text-align:left;
-}
-
-h1 {
-  font-size: 1.8em;
-  font-weight: normal;
-	line-height: 120%;
-  text-align: center;
-}
-
-.date {
-}
-
-h2, h3 {
-  font-size: 1.4em;
-  font-weight: normal;
-	line-height: 120%;
-  border-bottom: 1pt solid #333;
-  padding-bottom:0.3em;
-  text-align: left;
-}
-
-#navigation {
-  text-align: left;
-	padding: 0%;
+.sidenote {
 	font-size: 0.8em;
 	color: #666;
 	font-weight: normal;
-}
-
-#navigation li {
-  display: inline;
-  list-style-type: none;
-  padding-right: 0.4em;
-}
-
-
-
-
-
-cite {
-	font-style:normal;
-	font-weight:bold;
+	float: right;
 	text-align: left;
+	margin-right: -14em;
+	width: 12em;
+	position: relative;
 }
-
-blockquote {
-  display: inline;
+.second-sidenote {
+  margin-top: 2em;
 }
-
-
-
-#title {
-  font-size: 1em;
-	font-weight: normal;
-	text-align: left;
-	color: #666;
-}
-
-
-
-#data_file_warnings {
-  margin-left: -9em;
-}
-
-#data_file_warnings th, #data_file_warnings td {
-  font-size: 0.8em;
-}
-
-#header {
-	width: 100%;
-	padding-top: 0.1em;
-	padding-bottom: 0.1em;
-  padding-left: 4em;
-  background-color:#eee;
-}
-
-.index-entry{
-}
-
-.index-child-entry{
-  margin-left:	2em;
-}
-
-td {
-  border-bottom:1px solid #EEEEEE;
-  padding:0.3em 1em 0.3em 0em;
-  vertical-align: top;
-}
-
-td.member {
-  width: 15em;
-}
-
-th.number, th.percentage {
-  text-align: center;
-  padding-right: 1.5em;
-}
-
-td.number, td.percentage {
-  text-align: right;
-  padding-right: 1.5em;
-}
-
-a.error_count {
-  color: blue;
-}
-
-th {
-  border-bottom: 0.5em solid white;
-}
-
-.warning {
-	color:red;
-}
-
-.procedural {
-	font-style: italic;
-}
-
-#footer {
-	color: #999;
-	padding: 1em;
-	font-size: 0.8em;
-}
-
-div.section-line div.section-line {
-  margin-left:	1em;
-}
-
-.button-to, .inplaceeditor-form {
-  display: inline;
-}
-
-.editor_ok_button {
-  margin-left: 1em;
-  margin-right: 1em;
-}
-
-div.sittings-in-interval{
-  float: right;
-  margin-right: -5em;
-}
-
-.calendar {
-  font-size: 0.8em;
-  margin-left: -1em;
-  margin-bottom: 1em;
-}
-
-.calendar a {
-  font-weight: bold;
-  font-size: 120%;
-}
-
-.calendar td {
-  width: 1.5em;
-  text-align: center;
-}
-
-th.monthName  {
-  text-align: center;
-  margin: auto;
-}
-
-.dayName th {
-}
-
-.otherMonth, .day {
-}
-
-.specialDay {
-  color: red;
-}
-
-.weekendDay {
-  color: #eee;
-}
-
-ol.hide_numbering li {
-  list-style-type: none;
-}
-
-.search-result {
-  padding: 3px;
-}
-
-.search-result-details {
-  font-size: 0.8em;
-	color: #666;
-}
-
-.facets{
-  float: right;
-  width: 25%;
-}
-
-.highlight, .hilite {
-  font-weight: bold;
-}
-
-.bottom-pagination{
-  padding-top: 1em;
-}
-
