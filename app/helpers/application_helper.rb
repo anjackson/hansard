@@ -129,12 +129,18 @@ module ApplicationHelper
     end
   end
 
+  def search_form id='search', submit_text='Search', &block
+    open :form, { :action => "#{search_url}", :id => id } do
+      open :input, { :name => 'query', :type => 'text', :size => '20', :accesskey => 's', :value => ''}
+      open :input, { :name => 'sa', :type => 'submit', :value => submit_text}
+      yield if block
+    end
+  end
 
-  def search_form
-      open :form, { :action => "#{search_url}", :id => 'search' } do
-        open :input, { :name => 'query', :type => 'text', :size => '20', :accesskey => 's', :value => ''}
-        open :input, { :name => 'sa', :type => 'submit', :value => 'Search'}
-      end
+  def member_search_form member_name
+    search_form('search_by_member', "Search member's contributions") do
+      open :input, { :name => 'member', :type => 'hidden', :value => member_name }
+    end
   end
 
   def google_custom_search_form(default_query="")
