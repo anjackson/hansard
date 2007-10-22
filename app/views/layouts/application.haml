@@ -8,8 +8,7 @@
   %body
     = search_form
     = day_nav_links
-    #navigation-by-sections
-      = section_nav_links(@section) if @section
+    = section_nav_links(@section) if @section
     #content
       %h1
         = @title
