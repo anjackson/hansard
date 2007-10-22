@@ -1,5 +1,6 @@
 #doc3 { 
-	font-size:108%;}
+	font-size:108%;
+	}
 a {
   text-decoration: none;
 }
@@ -16,7 +17,6 @@ font-weight:bold;
 tr.not_saved { 
     color: orange;
 	font-weight:bold;
-
 }
 
 tr.warnings { 
@@ -28,19 +28,35 @@ tr.warnings {
 th {text-align:left;
 	font-style:italic;}
 	
-	#yui-b {
-		font-size:100%;
+	.yui-b {
 	}
 	#ft {
 		padding:1em 0;
 		min-width: 900px;
+		font-size:85%;
+		
+	}
+	#content {
+	  width: 28em;
+
+	}
+	#yui-main {	font-size:146.5%;
 	}
 	
-	#yui-main {	font-size:146.5%;
-		text-align: justify;}
-	#yui-main .first {min-width: 600px;}
-
-/*
+	.sidenote {
+		font-size: 0.8em;
+		color: #666;
+		font-weight: normal;
+		float: right;
+		text-align: left;
+		margin-right: -14em;
+		width: 12em;
+		position: relative;
+	}
+	
+	.second-sidenote {
+	  margin-top: 2em;
+	}
 
 body {
   background-color: #fff;
@@ -133,20 +149,9 @@ h2, h3 {
   padding-right: 0.4em;
 }
 
-.sidenote {
-	font-size: 0.8em;
-	color: #666;
-	font-weight: normal;
-	float: right;
-	text-align: left;
-	margin-right: -14em;
-	width: 12em;
-	position: relative;
-}
 
-.second-sidenote {
-  margin-top: 2em;
-}
+
+
 
 cite {
 	font-style:normal;
@@ -167,14 +172,7 @@ blockquote {
 	color: #666;
 }
 
-#content {
-  width: 36em;
-	margin-top: 2em;
-	margin-bottom: 2em;
-  margin-left: 10em;
-  margin-right: 20em;
-min-height:36em;
-}
+
 
 #data_file_warnings {
   margin-left: -9em;
@@ -320,4 +318,3 @@ ol.hide_numbering li {
   padding-top: 1em;
 }
 
-*/
