@@ -1,4 +1,10 @@
-a {text-decoration:none;}
+a {text-decoration:none;
+	color:#0000CD;}
+	a:hover {text-decoration:none;
+		color:#CD3333;}
+		a:visited {text-decoration:none;
+			color:#8A2BE2;}
+.procedural {color:#666;}
 
 #search{ float: right; }
 #search_by_member{ float: right; }
@@ -9,6 +15,7 @@ a {text-decoration:none;}
 
 body {font-family:sans-serif;
 	margin:2em;
+	color:#444;
 	}
 
 h1 {font-weight:normal;
