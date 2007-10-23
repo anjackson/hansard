@@ -18,7 +18,7 @@ module SectionsHelper
       open :tr do
         open :td do
           puts "Parent section&mdash;<br/>"
-          open :a, { :href => sitting_date_url(section.sitting) } do
+          open :a, { :class => 'parent-section', :href => sitting_date_url(section.sitting) } do
             puts section.sitting.title << "<br/>" << section.sitting.date_text
           end
         end
@@ -30,7 +30,7 @@ module SectionsHelper
           puts "Previous section&mdash;<br/>"
           if section.previous_linkable_section
           
-          open :a, { :href => section_url(section.previous_linkable_section) } do
+          open :a, { :class => 'previous-section', :href => section_url(section.previous_linkable_section) } do
             puts section.previous_linkable_section.title
           end
           
@@ -47,7 +47,7 @@ module SectionsHelper
           puts "Next section&mdash;<br/>"
           
           if section.next_linkable_section
-          open :a, { :href => section_url(section.next_linkable_section) } do
+          open :a, { :class => 'next-section', :href => section_url(section.next_linkable_section) } do
             puts section.next_linkable_section.title
           end
           
