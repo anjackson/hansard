@@ -16,6 +16,15 @@ module SectionsHelper
     open :table, { :id => 'navigation-by-sections' } do
       # NAVIGATION HEADER
           # &copy; UK Parliament.
+          open :thead do
+            open :th do
+              puts "TK TK&mdash;<br/>"
+              open :a, { :class => 'parent-section', :href => sitting_date_url(section.sitting) } do
+                puts (section.sitting.title.to_s + " <br/>" + section.sitting.date_text.to_s)
+              end
+            end
+          end
+          
       open :tr do
         open :td do
           puts "Parent section&mdash;<br/>"
