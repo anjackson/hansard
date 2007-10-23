@@ -111,6 +111,12 @@ module ApplicationHelper
             puts "Indices"
           end
         end
+        
+        open :li do
+          open :a, { :href => members_url } do
+            puts "Members"
+          end
+        end
 
         open :li do
           open :a, { :href => source_files_url } do
