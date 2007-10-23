@@ -5,7 +5,8 @@ a {text-decoration:none;
 		a:visited {text-decoration:none;
 			color:#8A2BE2;}
 .procedural {color:#666;}
-
+.sittings-in-interval{float:right;
+	padding-left:2em;}
 q
 {
 quotes: none;
@@ -22,6 +23,8 @@ background-color:#fcf;
 	padding:1em 0;
 }
 
+th {text-align:left;}
+
 body {font-family:sans-serif;
 	margin:2em;
 	color:#444;
@@ -29,7 +32,7 @@ body {font-family:sans-serif;
 
 h1 {font-weight:normal;
 	border-bottom: 1pt solid black;
-	padding-bottom: 1em;
+	padding-bottom: 0.5em;
 	line-height:120%;
 	}
 	h2 {font-weight:normal;}
@@ -42,6 +45,8 @@ display: inline;
 list-style-type: none;
 padding-right: 1em;
 }
+
+.time {font-weight:bold;}
 
 ul#navigation-by-links
 {
@@ -61,7 +66,13 @@ top: 4em;
 #navigation-by-sections tr {
 	height:8em;
 	vertical-align: top;
-	background-color:#f0f0f0;
+}
+
+#navigation-by-sections td {
+	border-top: 1pt solid #f0f0f0;
+}
+#navigation-by-sections tfoot {
+	font-size:0.8em;
 }
 
 #navigation-by-sections td {
