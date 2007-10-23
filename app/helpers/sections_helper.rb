@@ -15,6 +15,7 @@ module SectionsHelper
   def section_nav_links(section)
     open :table, { :id => 'navigation-by-sections' } do
       # NAVIGATION HEADER
+          # &copy; UK Parliament.
       open :tr do
         open :td do
           puts "Parent section&mdash;<br/>"
