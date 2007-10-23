@@ -17,12 +17,12 @@ describe "_hansard_header partial" do
   end
 
   def do_render
-    render "/partials/_hansard_header.haml"
+    render "/partials/_hansard_header.haml", :layout => 'application'
   end
 
   it 'should show title as h1' do
     do_render
-    response.should have_tag('h1.title', @title)
+    response.should have_tag('h1', @title)
   end
 
   it 'should show date text in element with class "date"' do
