@@ -1,5 +1,5 @@
 - on_edit_page = false unless on_edit_page
-%h1.title= @sitting.title
+- @title = @sitting.title
 %p
   %span.date= @sitting.date_text
   - if on_edit_page
