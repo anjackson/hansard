@@ -103,3 +103,15 @@ blockquote {display:inline;}
 ul.no_style {
   list-style: none;
 }
+
+div.section-line div.section-line {
+  margin-left: 1em;
+}
+
+.button-to, .inplaceeditor-form {
+  display: inline;
+}
+
+.highlight, .hilite {
+  font-weight: bold;
+}
