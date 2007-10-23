@@ -2,8 +2,11 @@
 = member_search_form @member.name
 - @contributions_in_groups_by_year_and_section.each do |by_year|
   %h2= by_year.first.first.year
-  - by_year.each do |by_section|
-    %p
-      = by_section.first.date
-      = link_to by_section.first.section.title, section_url(by_section.first.section)
-      = by_section.size
+  %ul.no_style
+    - by_year.each do |by_section|
+      %li
+        = link_to by_section.first.section.title, section_url(by_section.first.section)
+        = link_to by_section.first.section.title, section_url(by_section.first.section)
+        - house = by_section.first.section.sitting.uri_component.humanize.titleize
+        - contribution_count = "#{by_section.size} #{by_section.size == 1 ? 'contribution' : 'contributions'}"
+        = "(#{house}, #{by_section.first.date.to_s(:short)})"

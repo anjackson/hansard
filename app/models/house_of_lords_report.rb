@@ -1,7 +1,7 @@
 class HouseOfLordsReport < Sitting
 
   def self.uri_component
-    'lordsreport'
+    'lords_reports'
   end
 
   def to_xml(options={})

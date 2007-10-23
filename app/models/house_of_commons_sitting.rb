@@ -1,6 +1,5 @@
 class HouseOfCommonsSitting < Sitting
 
-
   def self.uri_component
     'commons'
   end

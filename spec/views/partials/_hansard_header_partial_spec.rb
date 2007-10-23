@@ -5,8 +5,7 @@ describe "_hansard_header partial" do
   before do
     @title = 'House of Commons'
     @date_text = 'Monday 8 February 1999'
-
-    @sitting = mock_model(HouseOfCommonsSitting)
+    @sitting = HouseOfCommonsSitting.new
     @sitting.stub!(:title).and_return(@title)
     @sitting.stub!(:date_text).and_return(@date_text)
     @sitting.stub!(:date).and_return(Date.new(1999,2,8))

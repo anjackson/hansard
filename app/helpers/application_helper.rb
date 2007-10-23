@@ -138,7 +138,7 @@ module ApplicationHelper
   end
 
   def member_search_form member_name
-    search_form('search_by_member', "Search member's contributions") do
+    search_form('search_by_member', "Search contributions") do
       open :input, { :name => 'member', :type => 'hidden', :value => member_name }
     end
   end
@@ -262,23 +262,12 @@ EOF
   def sitting_date_url_params(sitting, options)
     params = sitting.id_hash
     params.delete(:type)
-    params.merge!(:controller => sitting_controller(sitting))
+    params.merge!(:controller => sitting.uri_component)
     params.merge!(options)
   end
 
   def sitting_controller(sitting)
-    case sitting
-      when HouseOfCommonsSitting
-        'commons'
-      when HouseOfLordsSitting
-        'lords'
-      when HouseOfLordsReport
-        'lords_reports'
-      when WrittenAnswersSitting
-        'written_answers'
-    else
-      raise "Can't generate a url for '#{sitting.class}'"
-    end
+
   end
 
   def month_abbr(month)

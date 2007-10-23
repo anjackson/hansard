@@ -86,3 +86,7 @@ blockquote {display:inline;}
 .second-sidenote {
   margin-top: 2em;
 }
+
+ul.no_style {
+  list-style: none;
+}
