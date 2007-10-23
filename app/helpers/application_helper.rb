@@ -40,7 +40,7 @@ module ApplicationHelper
   def day_link(sitting, direction)
     next_sitting = sitting.class.find_next(sitting.date, direction)
     if next_sitting
-      open :a, { :class => 'yuimenubaritemlabel', :href => sitting_date_url(next_sitting) } do
+      open :a, { :href => sitting_date_url(next_sitting) } do
         yield
       end
     else
@@ -53,7 +53,7 @@ module ApplicationHelper
     open :ul, { :id => 'navigation-by-links' } do
 
       open :li do
-        open :a, { :class => 'yuimenubaritemlabel', :href => home_url } do
+        open :a, { :href => home_url } do
           puts "<strong>HANSARD</strong> Calendar"
         end
       end
