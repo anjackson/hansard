@@ -14,6 +14,7 @@ module SectionsHelper
   
   def section_nav_links(section)
     open :table, { :id => 'navigation-by-sections' } do
+      
       open :tr do
         open :td do
           puts "Parent section&mdash;<br/>"
