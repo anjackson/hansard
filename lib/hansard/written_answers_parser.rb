@@ -3,7 +3,7 @@ require 'open-uri'
 require 'hpricot'
 
 class Hansard::WrittenAnswersParser
- 
+
   def initialize file, logger=nil
     @logger = logger
     @unexpected = false
@@ -25,25 +25,24 @@ class Hansard::WrittenAnswersParser
   end
 
   def create_written_answers
-    
     if @doc.at('writtenanswers/col')
-      @column =  clean_html(@doc.at('writtenanswers/col')) 
+      @column =  clean_html(@doc.at('writtenanswers/col'))
     elsif @doc.at('col')
       # try and infer the initial column
       next_column = clean_html(@doc.at('col')).to_i
       @column = (next_column - 1).to_s
     end
-    
+
     if @doc.at('writtenanswers/image')
-      @image =  @doc.at('writtenanswers/image').attributes['src'] 
+      @image =  @doc.at('writtenanswers/image').attributes['src']
     elsif @doc.at('image')
       # try and infer the initial image
-      next_image = @doc.at('image').attributes['src'] 
+      next_image = @doc.at('image').attributes['src']
       @image = next_image.gsub(/(.*?)(\d\d\d)$/) do
         $1 + ($2.to_i - 1).to_s
       end
     end
-    
+
     if @doc.at('writtenanswers/date')
       date_text = clean_html(@doc.at('writtenanswers/date'))
       date = @doc.at('writtenanswers/date').attributes['format']
@@ -56,7 +55,7 @@ class Hansard::WrittenAnswersParser
       date = Date.new(year, month, day)
       date_text = date.to_s
     end
-    
+
     @sitting = WrittenAnswersSitting.new({
       :start_column => @column,
       :start_image_src => @image,
@@ -79,11 +78,11 @@ class Hansard::WrittenAnswersParser
     end
     @sitting
   end
-  
-  def handle_group(group_element) 
+
+  def handle_group(group_element)
     group = WrittenAnswersGroup.new({
       :start_column => @column,
-      :start_image_src => @image, 
+      :start_image_src => @image,
       :sitting => @sitting
     })
 
@@ -106,9 +105,8 @@ class Hansard::WrittenAnswersParser
 
     group.sitting = @sitting
     @sitting.groups << group
-  
   end
-  
+
   def handle_section(section_element, group, type)
     section = type.new({
       :start_column => @column,
@@ -133,12 +131,11 @@ class Hansard::WrittenAnswersParser
         log "unexpected text in #{type}: " + node.to_s.strip if !node.to_s.strip.blank?
       end
     end
-    
+
     section.parent_section = group
     group.sections << section
-    
   end
-  
+
   def get_contribution_type_for_question element
     contribution_type = nil
 
@@ -149,7 +146,7 @@ class Hansard::WrittenAnswersParser
     end
     contribution_type
   end
-  
+
   def handle_written_question_contribution(element, section)
     contribution_type = get_contribution_type_for_question(element)
 
@@ -190,9 +187,8 @@ class Hansard::WrittenAnswersParser
 
     contribution.section = section
     section.contributions << contribution
-    
   end
-  
+
   def handle_member_name element, contribution
     element.children.each do |node|
       if node.text?
@@ -208,23 +204,23 @@ class Hansard::WrittenAnswersParser
       end
     end
   end
-  
+
   def handle_contribution_text element, contribution
     (element/'col').each { |col| handle_contribution_col(col, contribution) }
     (element/'image').each { |image| handle_contribution_image(image, contribution) }
     contribution.text += element.to_original_html
   end
-  
+
   def handle_contribution_col(col, contribution)
     handle_image_or_column "col", col
     contribution.column_range += ','+@column
   end
-  
+
   def handle_contribution_image(image, contribution)
     handle_image_or_column "image", image
     contribution.image_src_range += ','+@image
   end
-  
+
   def handle_image_or_column name, node
     if name == "image"
       @image = node.attributes['src']
@@ -232,7 +228,7 @@ class Hansard::WrittenAnswersParser
       @column = clean_html(node)
     end
   end
-  
+
   def handle_node_text element
     text = ''
     if element.elem?
@@ -244,9 +240,9 @@ class Hansard::WrittenAnswersParser
     end
     text = text.gsub("\r\n","\n").strip
   end
-  
+
   def clean_html node
     node.inner_html.chars.gsub("\r\n","\n").to_s
   end
-  
+
 end

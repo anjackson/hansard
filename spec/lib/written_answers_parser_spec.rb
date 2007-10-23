@@ -22,32 +22,39 @@ describe Hansard::WrittenAnswersParser, " when run against 'spec/data/writtenans
     @first_contribution  = @first_body.contributions[0]
     @second_contribution = @first_body.contributions[1]
     @third_contribution  = @first_body.contributions[2]
-
   end
 
   after(:all) do
     Sitting.find(:all).each {|s| s.destroy}
   end
 
-  it "should create groups for the sitting" do
-    @sitting.groups.size.should > 0
+  it "should create the correct number groups for a sitting" do
+    @sitting.groups.size.should == 5
   end
 
-  it "should correctly set the title for the first group of questions" do
+  it "should set the title correctly for a question group" do
     @first_group.title.should == 'AGRICULTURE, FISHERIES AND FOOD'
   end
 
-  it "should create the right number of sections for the first group of questions" do
+  it "should create the correct number of sections for a question group" do
     @first_group.sections.size.should == 5
   end
 
-  it "should correctly set the title for the first question" do
+  it "should set the title correctly for a question section" do
     @first_section.title.should == 'Food Storage'
   end
 
-  it "should create a body section belonging to the first question section" do
+  it "should set model type to Section for a question section" do
+    @first_section.should be_an_instance_of(Section)
+  end
+
+  it "should create a body section belonging to a question section" do
     @first_section.sections.size.should == 1
     @first_body.should be_an_instance_of(WrittenAnswersBody)
+  end
+
+  it "should have body section title equal to body's parent section title" do
+    @first_body.title.should == 'Food Storage'
   end
 
   it "should create three member contributions for the first body section" do
@@ -89,5 +96,5 @@ describe Hansard::WrittenAnswersParser, " when run against 'spec/data/writtenans
   end
 
   it_should_behave_like "All sittings or written answers"
-  
+
 end

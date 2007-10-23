@@ -1,6 +1,5 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-
 describe SectionsHelper, " when using section_nav_links to create links for a section" do
 
   before do
@@ -34,7 +33,6 @@ describe SectionsHelper, " when using section_nav_links to create links for a se
   end
 
   it "should have a link to the sitting showing the sitting's title and date text with class 'parent-section'" do
-    p call_section_nav_links
     call_section_nav_links.should have_tag("a.parent-section", :text => "sitting title #{@date_text}")
   end
 
