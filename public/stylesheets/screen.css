@@ -6,6 +6,12 @@ a {text-decoration:none;
 			color:#8A2BE2;}
 .procedural {color:#666;}
 
+q
+{
+quotes: none;
+font-weight:bold;
+}
+
 #search{ float: right; }
 #search_by_member{ float: right; }
 
