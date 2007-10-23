@@ -49,30 +49,18 @@ padding: 0;
 width:16%;
 display:block;
 float:left;
+position: fixed;
+top: 4em;
 }
 
-#parent-section {
-width:16%;
-	position: fixed;
-	top: 6em;
-	background-color:#eee;
-	padding:0.4em;
+#navigation-by-sections tr {
+	height:8em;
+	vertical-align: top;
+	background-color:#f0f0f0;
 }
 
-#previous-section {
-	width:16%;
-	position: fixed;
-	top: 12em;
-	background-color:#eee;
-	padding:0.4em;
-}
-
-#next-section {
-	width:16%;
-	position: fixed;
-	top: 18em;
-	background-color:#eee;
-	padding:0.4em;
+#navigation-by-sections td {
+padding:0.5em;
 }
 
 #content {width:60%;
