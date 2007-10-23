@@ -1,6 +1,5 @@
 class WrittenMemberContribution < MemberContribution
 
-  
   def to_xml(options={})
     xml = options[:builder] ||= Builder::XmlMarkup.new
     marker_xml(options)
@@ -13,5 +12,5 @@ class WrittenMemberContribution < MemberContribution
       xml << text.strip if text
     end
   end
-  
+
 end

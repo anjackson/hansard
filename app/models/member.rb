@@ -24,6 +24,6 @@ class Member
   end
 
   def contributions
-    MemberContribution.find_all_by_member(self.name)
+    MemberContribution.find_all_by_member(self.name) + WrittenMemberContribution.find_all_by_member(self.name)
   end
 end
