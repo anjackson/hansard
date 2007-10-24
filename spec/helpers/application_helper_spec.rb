@@ -88,8 +88,6 @@ describe ApplicationHelper, " when formatting contribution" do
     format_contribution(text).should == expected
   end
 
-  it "should convert a middot into a decimal point when passed a contribution text containing a middot"
-
 end
 
 describe ApplicationHelper, " when returning the date-based urls" do
@@ -205,34 +203,35 @@ describe ApplicationHelper, " when creating navigation links" do
   end
 
   it "should include an 'ul' tag containing an 'li' tag containing a link to the root if @day is not true" do
+    @day = false
     should_receive(:home_url).and_return("http://test.url")
     result = capture_haml{ day_nav_links }
     result.should have_tag("ul li a[href=http://test.url]")
   end
+  
+    it "should include an 'ul' tag containing an 'li' tag containing a link to the indices url if @day is not true" do
+      should_receive(:indices_url).and_return("http://test.url")
+      result = capture_haml{ day_nav_links }
+      result.should have_tag("ul li a[href=http://test.url]")
+    end
 
-  it "should include an 'ul' tag containing an 'li' tag containing a link to the indices url if @day is not true" do
-    should_receive(:indices_url).and_return("http://test.url")
-    result = capture_haml{ day_nav_links }
-    result.should have_tag("ul li a[href=http://test.url]")
-  end
+    it "should include an 'ul' tag containing an 'li' tag containing a link to the writtenanswers url if @day is not true" do
+      should_receive(:written_answers_url).and_return("http://test.url")
+      result = capture_haml{ day_nav_links }
+      result.should have_tag("ul li a[href=http://test.url]")
+    end
 
-  it "should include an 'ul' tag containing an 'li' tag containing a link to the writtenanswers url if @day is not true" do
-    should_receive(:written_answers_url).and_return("http://test.url")
-    result = capture_haml{ day_nav_links }
-    result.should have_tag("ul li a[href=http://test.url]")
-  end
+    it "should include an 'ul' tag containing an 'li' tag containing a link to the sourcefiles url if @day is not true" do
+      should_receive(:source_files_url).and_return("http://test.url")
+      result = capture_haml{ day_nav_links }
+      result.should have_tag("ul li a[href=http://test.url]")
+    end
 
-  it "should include an 'ul' tag containing an 'li' tag containing a link to the sourcefiles url if @day is not true" do
-    should_receive(:source_files_url).and_return("http://test.url")
-    result = capture_haml{ day_nav_links }
-    result.should have_tag("ul li a[href=http://test.url]")
-  end
-
-  it "should include an 'ul' tag containing an 'li' tag containing a link to the datafiles url if @day is not true" do
-    should_receive(:data_files_url).and_return("http://test.url")
-    result = capture_haml{ day_nav_links }
-    result.should have_tag("ul li a[href=http://test.url]")
-  end
+    it "should include an 'ul' tag containing an 'li' tag containing a link to the datafiles url if @day is not true" do
+      should_receive(:data_files_url).and_return("http://test.url")
+      result = capture_haml{ day_nav_links }
+      result.should have_tag("ul li a[href=http://test.url]")
+    end
 
   it "should write content to the page if @day is true" do
     @day = true
