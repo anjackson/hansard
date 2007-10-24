@@ -46,11 +46,11 @@ module SearchHelper
   end
 
   def member_facet_link(member, times, query)
-    link = ''
-
-      link = link_to format_member_name(member), member_facet_url(member, query)
-    
-    link
+    if times > 1
+    link_to "<strong>" << times.to_s << "</strong> " << format_member_name(member), member_facet_url(member, query)
+  else
+    link_to format_member_name(member), member_facet_url(member, query)
+  end
   end
 
   def member_facet_url(member, query)

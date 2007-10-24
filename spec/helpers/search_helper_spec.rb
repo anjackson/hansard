@@ -38,8 +38,8 @@ end
 
 describe SearchHelper, " when creating member facet links" do
   
-  it 'should return "<span style=\'font-size: 1.2em\'><a href=\"/search?member=Mickey+Mouse&amp;query=mice"\"><strong>4, Mickey Mouse</strong></a>" for member Mickey Mouse with 4 hits' do
-    member_facet_link("Mickey Mouse", 4, "mice").should == "<span style=\'font-size: 1.2em\'><a href=\"/search?member=Mickey+Mouse&amp;query=mice\"><strong>4, Mickey Mouse</strong></a></span>"
+  it 'should return "<a href=\"/search?member=Mickey+Mouse&amp;query=mice\"><strong>4</strong> Mickey Mouse</a>" for member Mickey Mouse with 4 hits' do
+    member_facet_link("Mickey Mouse", 4, "mice").should == "<a href=\"/search?member=Mickey+Mouse&amp;query=mice\"><strong>4</strong> Mickey Mouse</a>"
   end 
 
 end
