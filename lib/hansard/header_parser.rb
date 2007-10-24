@@ -33,12 +33,28 @@ class Hansard::HeaderParser
   end
 
   private
+
+    def handle_titlepage titlepage, session
+      session.titlepage_text = clean_html(titlepage).strip
+
+      titlepage.children.each do |node|
+        if is_element? 'p', node
+          text = clean_html(node).strip
+          p text
+          if (match = /^([^ ]+) SERIES&#x2014;VOLUME ([^ ]+)$/.match text)
+            session.series_number = match[1]
+            session.volume_in_series = match[2]
+          end
+        end
+      end
+    end
+
     def create_session hansard
       session = Session.new
 
       hansard.children.each do |node|
-        if node.elem? and node.name == 'titlepage'
-          session.titlepage_text = clean_html(node).strip
+        if is_element? 'titlepage', node
+          handle_titlepage node, session
         end
       end
 

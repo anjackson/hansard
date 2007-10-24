@@ -13,6 +13,14 @@ describe Hansard::HeaderParser do
     @session.should be_an_instance_of(Session)
   end
 
+  it "should populate series_number with text preceding 'SERIES' inside any paragraph element" do
+    @session.series_number.should == 'FIFTH'
+  end
+
+  it "should populate volume_in_series with text following 'VOLUME' inside any paragraph element that also contains the text 'SERIES'" do
+    @session.volume_in_series.should == 'CXXI'
+  end
+
   it "should populate titlepage_text with contents of titlepage element" do
     @session.titlepage_text.should eql(%Q[<image src="S5LV0121P0I0001"></image>\n] +
 %Q[<p id="S5LV0121P0-00001" align="center">THE<lb></lb> PARLIAMENTARY<lb></lb> DEBATES</p>\n] +
