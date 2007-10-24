@@ -46,12 +46,13 @@ list-style-type: none;
 padding-right: 1em;
 }
 
-.time {font-weight:bold;}
+.time {}
 
 ul#navigation-by-links
 {
 margin: 0;
 padding: 0;
+font-size:0.9em;
 }
 
 #navigation-by-sections
@@ -76,7 +77,7 @@ top: 4em;
 }
 
 #navigation-by-sections td {
-padding:0.5em;
+padding-top:0.8em;
 }
 
 #content {width:60%;
