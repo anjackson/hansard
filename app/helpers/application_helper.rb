@@ -144,7 +144,7 @@ module ApplicationHelper
   end
 
   def member_search_form member_name
-    search_form('search_by_member', "Search contributions") do
+    search_form('search_by_member', "Search in these results") do
       open :input, { :name => 'member', :type => 'hidden', :value => member_name }
     end
   end
