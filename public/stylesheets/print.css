@@ -1,1 +1,16 @@
-/* to be redone */
+body{font-style:normal;color:#fff;}
+
+a {text-decoration:underline;font-style:normal;color:#fff;}
+
+a:link:after,
+a:visited:after {
+  content: " [" attr(href) "] ";
+}
+
+.sidenote img{display:none;}
+
+#header {display:none;}
+
+blockquote {margin:0;}
+
+#navigation-by-sections {display:none;}
