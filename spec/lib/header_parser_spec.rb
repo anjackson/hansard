@@ -2,26 +2,73 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Hansard::HeaderParser do
 
+  def check_series_volume_part text, series_expected, volume_expected, part_expected=nil
+    series, volume, part = Hansard::HeaderParser.find_series_and_volume_and_part(text)
+    series.should == series_expected
+    volume.should == volume_expected
+    if part_expected
+      part.should == part_expected
+    else
+      part.should be_nil
+    end
+  end
+
   it 'should identify series and volume from "FIFTH SERIES&#x2014;VOLUME CXXI"' do
-    series, volume, part = Hansard::HeaderParser.find_series_and_volume_and_part('FIFTH SERIES&#x2014;VOLUME CXXI')
-    series.should == 'FIFTH'
-    volume.should == 'CXXI'
-    part.should be_nil
+    check_series_volume_part 'FIFTH SERIES&#x2014;VOLUME CXXI', 'FIFTH', 'CXXI'
   end
 
   it 'should identify series and volume and part from "SIXTH SERIES&#x2014;VOLUME 424 (Part 1)"' do
-    series, volume, part = Hansard::HeaderParser.find_series_and_volume_and_part('SIXTH SERIES&#x2014;VOLUME 424 (Part 1)')
-    series.should == 'SIXTH'
-    volume.should == '424'
-    part.should == '1'
+    check_series_volume_part 'SIXTH SERIES&#x2014;VOLUME 424 (Part 1)', 'SIXTH', '424', '1'
   end
 
   it 'should return nil series and volume from "RANDOM TEXT"' do
-    series, volume, part = Hansard::HeaderParser.find_series_and_volume_and_part('RANDOM TEXT')
-    series.should be_nil
-    volume.should be_nil
-    part.should be_nil
+    check_series_volume_part 'RANDOM TEXT', nil, nil
   end
+
+  it 'should identify series and volume from "FIFTH SERIES &#x2014; VOLUME X."' do
+    check_series_volume_part 'FIFTH SERIES &#x2014; VOLUME X.', 'FIFTH', 'X'
+  end
+
+  it 'should identify series and volume from "FIFTH SERIES—VOLUME LXXIII."' do
+    check_series_volume_part 'FIFTH SERIES—VOLUME LXXIII.', 'FIFTH', 'LXXIII'
+  end
+
+  it 'should identify series and volume from "FIFTH SERIES-VOLUME CCLXXI"' do
+    check_series_volume_part 'FIFTH SERIES-VOLUME CCLXXI', 'FIFTH', 'CCLXXI'
+  end
+
+  it 'should identify series and volume from "FIFTH SERIES&#2014;VOLUME CCLXXIII"' do
+    check_series_volume_part 'FIFTH SERIES&#2014;VOLUME CCLXXIII', 'FIFTH', 'CCLXXIII'
+  end
+
+  it 'should identify series and volume from "FOUTRTH SERIES"' do
+    check_series_volume_part 'FOUTRTH SERIES',  nil, nil
+  end
+
+  it 'should identify series and volume from "FIFTH SERIES &#x2014; VOLUME DXV"' do
+    check_series_volume_part 'FIFTH SERIES &#x2014; VOLUME DXV', 'FIFTH', 'DXV'
+  end
+
+  it 'should identify series and volume from "FIFTH SERIES&#x2014; VOLUME DXVII"' do
+    check_series_volume_part 'FIFTH SERIES&#x2014; VOLUME DXVII', 'FIFTH', 'DXVII'
+  end
+
+  it 'should identify series and volume from "FIFTH SERIES-VOLUME DLXXIII"' do
+    check_series_volume_part 'FIFTH SERIES-VOLUME DLXXIII', 'FIFTH', 'DLXXIII'
+  end
+
+  it 'should identify session and parliament from "SEVENTH SESSION OF THE THIRTY-SEVENTH PARLIAMENT OF THE UNITED KINGDOM OF GREAT BRITAIN AND NORTHERN IRELAND"' do
+    session_expected = ''
+    parliament_expected = ''
+    text = "SEVENTH SESSION OF THE THIRTY-SEVENTH PARLIAMENT OF THE UNITED KINGDOM OF GREAT BRITAIN AND NORTHERN IRELAND"
+    session, parliament = Hansard::HeaderParser.find_session_and_parliament(text)
+    session.should == session_expected
+    parliament.should == parliament_expected
+  end
+
+  # it 'should identify series and volume from ""' do
+    # check_series_volume_part '', 'FIFTH', ''
+  # end
 end
 
 describe Hansard::HeaderParser, 'when parsing' do
@@ -43,6 +90,10 @@ describe Hansard::HeaderParser, 'when parsing' do
 
   it "should populate volume_in_series with text following 'VOLUME' inside any paragraph element that also contains the text 'SERIES'" do
     @session.volume_in_series.should == 'CXXI'
+  end
+
+  it "should enable volume_in_series_to_i to return integer representation of 'VOLUME' number string" do
+    @session.volume_in_series_to_i.should == 121
   end
 
   it "should populate titlepage_text with contents of titlepage element" do

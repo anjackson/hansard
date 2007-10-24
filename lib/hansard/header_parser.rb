@@ -32,15 +32,22 @@ class Hansard::HeaderParser
     end
   end
 
+  SERIES_VOLUMN_PATTERN      = /^([^ ]+) SERIES ?(&#x2014;|—|-|&#2014;) ?VOLUME ([^ ]+)$/
+  SERIES_VOLUMN_PART_PATTERN = /^([^ ]+) SERIES ?(&#x2014;|—|-|&#2014;) ?VOLUME ([^ ]+) \(Part ([^ ]+)\)$/
+
+  def self.find_session_and_parliament text
+    return ['', '']
+  end
+
   def self.find_series_and_volume_and_part text
-    if (match = /^([^ ]+) SERIES&#x2014;VOLUME ([^ ]+)$/.match text)
+    if (match = SERIES_VOLUMN_PATTERN.match text)
       series_number = match[1]
-      volume_in_series = match[2]
+      volume_in_series = match[3].chomp('.')
       volume_part_number = nil
-    elsif (match = /^([^ ]+) SERIES&#x2014;VOLUME ([^ ]+) \(Part ([^ ]+)\)$/.match text)
+    elsif (match = SERIES_VOLUMN_PART_PATTERN.match text)
       series_number = match[1]
-      volume_in_series = match[2]
-      volume_part_number = match[3]
+      volume_in_series = match[3].chomp('.')
+      volume_part_number = match[4]
     else
       series_number = volume_in_series = volume_part_number = nil
     end
