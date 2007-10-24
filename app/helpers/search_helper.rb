@@ -1,10 +1,14 @@
 module SearchHelper
-  
+
   def hit_fragment(result_set, contribution)
-    fragment = result_set.highlights[contribution.id]["text"].join("...")
-    format_result_fragment(fragment) 
+    if result_set.highlights[contribution.id]["text"]
+      fragment = result_set.highlights[contribution.id]["text"].join("...")
+    else
+      fragment = ''
+    end
+    format_result_fragment(fragment)
   end
-  
+
   def format_result_fragment(fragment)
     # unescape any full html entities
     fragment = CGI::unescapeHTML(fragment)
@@ -29,50 +33,50 @@ module SearchHelper
   def select_positive_values(hash)
     hash.select{ |key,value| value > 0 }
   end
-  
+
   def sort_by_reverse_value_then_key(hash)
     # sorts by score from high to low and then by name from a to z
     hash.sort{ |a,b| [b[1], a[0].downcase] <=> [a[1], b[0].downcase] }.collect
   end
-  
+
   def hit_link(contribution)
     link_text = contribution.section.title || contribution.section.sitting.title
     url = section_url(contribution.section) + "##{contribution.xml_id}"
     link_to link_text, url
   end
-  
+
   def member_facet_link(member, times, query)
     link = ''
     if times > 1
       link = "<span style='font-size: #{1 + 0.05 * times.to_f }em'>"
       link += link_to "<strong>#{times}, #{format_member_name(member)}</strong>", member_facet_url(member, query)
       link += '</span>'
-    else 
+    else
       link = link_to format_member_name(member), member_facet_url(member, query)
     end
     link
   end
-  
+
   def member_facet_url(member, query)
-    {:controller => "search", 
-     :action     => "show", 
-     :member     => member, 
+    {:controller => "search",
+     :action     => "show",
+     :member     => member,
      :query      => query,
      :page       => nil}
   end
-  
+
   def search_results_title(member, query)
     title = "Search: <code>#{query}</code>"
     title += " spoken by #{format_member_name(member)}" if member
     title
   end
-  
+
   def search_results_summary(result_set, query)
     text = ''
     if result_set.results.empty?
       text += "<h3>No results found for <code>#{query}</code>.</h3>"
       text += "<p>Try your search on more recent Parliament information?</p>"
-      text += google_custom_search_form(query) 
+      text += google_custom_search_form(query)
     else
       start = ((@page - 1) * @num_per_page) + 1
       finish = start + (@num_per_page - 1)
@@ -81,9 +85,9 @@ module SearchHelper
     end
     text
   end
-  
+
   def format_member_name(name)
     CGI::unescapeHTML(name)
   end
-  
+
 end
