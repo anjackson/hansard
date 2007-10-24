@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../hansard/parser_helper'
+require File.dirname(__FILE__) + '/../hansard/parser_task_helper'
 require File.dirname(__FILE__) + '/../hansard/schema_helper'
 
 namespace :hansard do
