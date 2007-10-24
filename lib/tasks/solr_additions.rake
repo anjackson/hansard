@@ -49,7 +49,8 @@ namespace :solr do
       alias_method :solr_optimize, :blank
     end
 
-    models = includes.select { |m| m.respond_to?(:rebuild_solr_index) }
+    models = includes.select { |m| m.respond_to?(:rebuild_solr_index) and m.descends_from_active_record? }
+    
     models.each do |model|
 
       if clear_first
