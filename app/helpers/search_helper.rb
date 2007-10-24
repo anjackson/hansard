@@ -66,7 +66,7 @@ module SearchHelper
   end
 
   def search_results_title(member, query)
-    title = "Search: <code>#{query}</code>"
+    title = "Search: '#{query}'"
     title += " spoken by #{format_member_name(member)}" if member
     title
   end
@@ -74,7 +74,7 @@ module SearchHelper
   def search_results_summary(result_set, query)
     text = ''
     if result_set.results.empty?
-      text += "<h3>No results found for <code>#{query}</code>.</h3>"
+      text += "<h3>No results found for <em>#{query}</em>.</h3>"
       text += "<p>Try your search on more recent Parliament information?</p>"
       text += google_custom_search_form(query)
     else

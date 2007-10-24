@@ -38,8 +38,8 @@ class SearchController < ApplicationController
 
     def highlight_options
       { :highlight => {:fields =>"text",
-                      :prefix => "<span class='highlight'>",
-                      :suffix => "</span>" }  }
+                      :prefix => "<em>",
+                      :suffix => "</em>" }  }
     end
 
     def pagination_options

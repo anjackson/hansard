@@ -60,7 +60,13 @@ module SectionsHelper
       
       open :tfoot do
         open :td do
+          open :p do
+          puts "Top of page."
+        end
+        open :p do
           puts "&copy; UK Parliament."
+          
+        end
         end
       end
       
