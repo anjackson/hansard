@@ -18,9 +18,9 @@ describe SearchController do
     response.should be_success
   end
   
-  it "should set the offset for solr to 10 for the second page of results" do
+  it "should set the offset for solr to 30 for the second page of results" do
     do_get
-    @controller.send(:pagination_options).should == { :offset => 10 }
+    @controller.send(:pagination_options).should == { :offset => 30 }
   end
   
   
