@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/../hansard/schema_helper'
 
 namespace :hansard do
 
-  include Hansard::ParserHelper
+  include Hansard::ParserTaskHelper
   include Hansard::SchemaHelper
 
   desc 'attempts to validate XML source file against schema'
@@ -63,7 +63,7 @@ namespace :hansard do
       puts ''; puts 'usage: rake hansard:reload_commons_on_date date=yyyy-mm-dd'; puts ''
     end
   end
-  
+
   desc 'wipes and reloads lords data from /data (doesn\'t re-split)'
   task :reload_lords => [:environment] do
     HouseOfLordsSitting.destroy_all

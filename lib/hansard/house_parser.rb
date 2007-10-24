@@ -8,6 +8,8 @@ end
 
 class Hansard::HouseParser
 
+  include Hansard::ParserHelper
+
   def initialize file, logger=nil
     @logger = logger
     @unexpected = false
@@ -263,7 +265,7 @@ class Hansard::HouseParser
       quote = QuoteContribution.new({
         :column_range => @column,
         :image_src_range => @image,
-        :text => clean_html(node).strip, 
+        :text => clean_html(node).strip,
         :xml_id => node.attributes['id']
       })
       log 'quote contribution without id: ' + node.to_s unless node.attributes['id']
@@ -438,7 +440,7 @@ class Hansard::HouseParser
            :image_src_range => @image,
            :member => '',
            :text => ''})
-       
+
         log " #{contribution_type} without id: " + element.to_s unless element.attributes['id']
         in_member_contribution_text = false
         in_between_member_and_member_contribution = false
@@ -526,17 +528,5 @@ class Hansard::HouseParser
       end
 
       @sitting
-    end
-
-    def clean_html node
-      if node
-        clean_text node.inner_html
-      else
-        nil
-      end
-    end
-
-    def clean_text text
-      text.chars.gsub("\r\n","\n").to_s
     end
 end
