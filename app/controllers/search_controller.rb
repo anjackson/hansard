@@ -12,7 +12,7 @@ class SearchController < ApplicationController
 
     @member = params[:member]
     @page = (params[:page] or 1).to_i
-    @num_per_page = 10
+    @num_per_page = 30
 
     @search_options = pagination_options.merge(highlight_options)
     if @member
