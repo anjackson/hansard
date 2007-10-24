@@ -47,13 +47,9 @@ module SearchHelper
 
   def member_facet_link(member, times, query)
     link = ''
-    if times > 1
-      link = "<span style='font-size: #{1 + 0.05 * times.to_f }em'>"
-      link += link_to "<strong>#{times}, #{format_member_name(member)}</strong>", member_facet_url(member, query)
-      link += '</span>'
-    else
+
       link = link_to format_member_name(member), member_facet_url(member, query)
-    end
+    
     link
   end
 
