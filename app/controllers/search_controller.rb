@@ -2,8 +2,13 @@ require 'open-uri'
 
 class SearchController < ApplicationController
 
-  def index
+  def index 
+  end
+  
+  
+  def show
     @query = params[:query]
+
     @member = params[:member]
     @page = (params[:page] or 1).to_i
     @num_per_page = 10
@@ -17,6 +22,7 @@ class SearchController < ApplicationController
     end
     @result_set = Contribution.find_by_solr(query, @search_options)
     @paginator = WillPaginate::Collection.new(@page, @num_per_page, @result_set.total_hits)
+
   end
 
   private

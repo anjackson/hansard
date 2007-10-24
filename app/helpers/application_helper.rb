@@ -54,7 +54,7 @@ module ApplicationHelper
 
       open :li do
         open :a, { :href => home_url } do
-          puts "<strong>HANSARD</strong> Calendar"
+          puts "<strong>HANSARD</strong>"
         end
       end
 

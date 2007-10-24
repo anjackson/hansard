@@ -55,7 +55,7 @@ module SearchHelper
   
   def member_facet_url(member, query)
     {:controller => "search", 
-     :action     => "index", 
+     :action     => "show", 
      :member     => member, 
      :query      => query,
      :page       => nil}

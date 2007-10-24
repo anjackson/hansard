@@ -1,0 +1,11 @@
+- if @query
+  - @title = search_results_title(@member, @query)
+  = render :partial => "facets"
+  .top-pagination
+    = will_paginate @paginator 
+  .search-results
+    = search_results_summary(@result_set, @query)
+    = render :partial => "contribution", :collection => @result_set.results
+  .bottom-pagination
+    = will_paginate @paginator 
+- else
