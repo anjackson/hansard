@@ -10,10 +10,10 @@ describe SearchController do
   end
   
   def do_get
-    get 'index', :page => "2", :query => "test query"
+    get 'show', :page => "2", :query => "test query"
   end
   
-  it "should return index page" do
+  it "should be successful" do
     do_get
     response.should be_success
   end
