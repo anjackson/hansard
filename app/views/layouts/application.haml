@@ -6,8 +6,10 @@
     = stylesheet_link_tag "screen", :media => "screen"
     = stylesheet_link_tag "print", :media => "print"
   %body
-    = search_form
-    = day_nav_links
+    #header
+      = day_nav_links
+      = search_form
+      %br{:clear => "all"}
     = section_nav_links(@section) if @section
     #content
       %h1
