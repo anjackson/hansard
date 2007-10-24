@@ -14,8 +14,8 @@ end
 
 ActionController::Routing::Routes.draw do |map|
 
-  map.home '', :controller => "days", :action => "index"
-  map.search 'search', :controller => 'search', :action => "index"
+  map.home '', :controller => "search", :action => "index"
+  map.search 'search', :controller => 'search', :action => "show"
 
   year_patt = /(18|19|20)\d\d/
   month_patt = /(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec|[01]?\d)/
@@ -43,12 +43,6 @@ ActionController::Routing::Routes.draw do |map|
 
     indices.with_options(date_span_options) do |by_date_span|
       make_route "indices/#{date_span}", :show, by_date_span
-    end
-  end
-
-  with_controller :days, map do |days|
-    days.with_options(date_options) do |by_date|
-      make_route "#{date}", :show, by_date
     end
   end
 
