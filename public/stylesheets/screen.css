@@ -36,6 +36,14 @@ font-style: normal;
 padding:1em;
 }
 
+#frontpage {
+	margin-left: auto;
+	margin-right: auto;
+	padding-top: 20%;
+	height:4em;
+	text-align:center;
+}
+
 #search input[type=text]{
 font-size:2em;
 font-family:monospace;
