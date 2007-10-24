@@ -17,6 +17,12 @@ color: #666;
 float: right;
 padding-left: 2em;
 }
+
+.c800_1024 #navigation-by-sections {
+	display:none;
+	
+	
+}
 q
 {
 quotes: none;

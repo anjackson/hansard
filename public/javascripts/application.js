@@ -8,17 +8,17 @@ window.onresize = setScreenClass;
 //
 //	classname		  screenwidth
 //	------------------------------------------
-//	pda_v			  240px			
-//	pda_h			  320px			
-//	ultralow		  320px -  640px	
-//	screen_lo		  640px -  800px	
-//	screen_med		  800px - 1024px	
-//	screen_hi		 1024px - 1280px	
-//	screen_wide				> 1280px			
+//	.c240			  240px			
+//	.c320			  320px			
+//	.c320_640		  320px -  640px	
+//	.c640_800		  640px -  800px	
+//	.c800_1024		  800px - 1024px	
+//	.c1024_1280		 1024px - 1280px	
+//	.c1280				> 1280px			
 
 function setScreenClass(){
 	var fmt = document.documentElement.clientWidth;
-	var cls = (fmt<=240)?'pda_ver':(fmt>240&&fmt<=320)?'pda_hor':(fmt>320&&fmt<=640)?'screen_ultralow':(fmt>640&&fmt<=800)?'screen_low':(fmt>800&&fmt<=1024)?'screen_med':(fmt>1024&&fmt<=1280)?'screen_high':'screen_wide';
-	document.getElementById('count').innerHTML=fmt+'px -> '+cls;
+	var cls = (fmt<=240)?'c240':(fmt>240&&fmt<=320)?'c240_320':(fmt>320&&fmt<=640)?'c320_640':(fmt>640&&fmt<=800)?'c640_800':(fmt>800&&fmt<=1024)?'c800_1024':(fmt>1024&&fmt<=1280)?'c1024_1280':'c1280';
+	// document.getElementById('count').innerHTML=fmt+'px -> '+cls;
 	document.body.className=cls;
 };
