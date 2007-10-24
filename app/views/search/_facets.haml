@@ -1,8 +1,7 @@
 - member_facets(@result_set) do |member_facets|
   .sidenote
     %ol#by-member-facet
-      %li Top twenty speakers
+      %li Top speakers
       - member_facets[0..19].each do |member, times|
         %li.member-facet
-          / <span style='font-size: #{1 + 0.05 * times.to_f }em'>
           = member_facet_link(member, times, @query)
