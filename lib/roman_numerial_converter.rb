@@ -1,26 +1,3 @@
-module Hansard
-end
-=begin
-class Hansard::Roman
-
-  IS_ROMAN = /^#{ ROMAN_MAP.keys.sort { |a, b| b <=> a }.inject("") do |exp, n|
-    num = ROMAN_MAP[n]
-    exp << if num.length == 2 then "(?:#{num})?" else num + "{0,3}" end
-  end }$/i
-  IS_ARABIC = /^(?:[123]\d{3}|[1-9]\d{0,2})$/
-
-  if __FILE__ == $0
-    ARGF.each_line() do |line|
-      line.chomp!
-      case line
-      when IS_ROMAN  then puts ROMAN_NUMERALS.index(line) + 1
-      when IS_ARABIC then puts ROMAN_NUMERALS[line.to_i - 1]
-      else raise "Invalid input:  #{line}"
-      end
-    end
-  end
-end
-=end
 class String
 
   ROMAN_MAP = {               1 => "I",
@@ -54,6 +31,7 @@ class String
   def is_arabic_numerial?
     IS_ARABIC.match(self) ? true : false
   end
+#  when IS_ARABIC then puts ROMAN_NUMERALS[line.to_i - 1]
 
   def roman_to_i
     if is_roman_numerial?
