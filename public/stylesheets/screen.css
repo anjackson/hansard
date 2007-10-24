@@ -25,9 +25,26 @@ background-color: #fcf;
 .contribution_text i {
 font-style: normal;
 }
-#search{
-float: right;
+#header{
+	margin-left: auto;
+	margin-right: auto;
+	height:4em;
+	text-align:center;
 }
+
+#search {
+padding:1em;
+}
+
+#search input[type=text]{
+font-size:2em;
+font-family:monospace;
+}
+
+#search input[type=submit]{
+font-size:1.5em;
+}
+
 #search_by_member{
 float: right;
 }
@@ -97,10 +114,11 @@ font-size: 0.8em;
 #navigation-by-sections td {
 padding-top: 0.8em;
 }
+
 #content {
-width: 60%;
-margin-left: 20%;
-margin-right: 20%;
+width: 64%;
+margin-left: 18%;
+margin-right: 18%;
 font-size: 1.2em;
 line-height: 130%;
 }
@@ -116,7 +134,7 @@ color: #666;
 font-weight: normal;
 float: right;
 text-align: left;
-margin-right: -14em;
+margin-right: -12em;
 width: 18%;
 position: relative;
 }
