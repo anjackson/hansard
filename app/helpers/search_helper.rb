@@ -74,20 +74,22 @@ module SearchHelper
   def search_results_summary(result_set, query)
     text = ''
     
-    if result_set.results.length < 31
-      text += "<h3>Results</h3>"
-    else
+   
     if result_set.results.empty?
       text += "<h3>No results found for <em>#{query}</em>.</h3>"
       text += "<p>Try your search on more recent Parliament information?</p>"
       text += google_custom_search_form(query)
     else
+       if result_set.total_hits < 31
+          text += "<h3>#{result_set.total_hits} results</h3>"
+        else
       start = ((@page - 1) * @num_per_page) + 1
       finish = start + (@num_per_page - 1)
       finish = result_set.total_hits if finish > result_set.total_hits
       text += "<h3>Results #{start} to #{finish} of #{result_set.total_hits}</h3>"
     end
-  end
+    end
+
     text
   end
 
