@@ -2,6 +2,30 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Hansard::HeaderParser do
 
+  it 'should identify series and volume from "FIFTH SERIES&#x2014;VOLUME CXXI"' do
+    series, volume, part = Hansard::HeaderParser.find_series_and_volume_and_part('FIFTH SERIES&#x2014;VOLUME CXXI')
+    series.should == 'FIFTH'
+    volume.should == 'CXXI'
+    part.should be_nil
+  end
+
+  it 'should identify series and volume and part from "SIXTH SERIES&#x2014;VOLUME 424 (Part 1)"' do
+    series, volume, part = Hansard::HeaderParser.find_series_and_volume_and_part('SIXTH SERIES&#x2014;VOLUME 424 (Part 1)')
+    series.should == 'SIXTH'
+    volume.should == '424'
+    part.should == '1'
+  end
+
+  it 'should return nil series and volume from "RANDOM TEXT"' do
+    series, volume, part = Hansard::HeaderParser.find_series_and_volume_and_part('RANDOM TEXT')
+    series.should be_nil
+    volume.should be_nil
+    part.should be_nil
+  end
+end
+
+describe Hansard::HeaderParser, 'when parsing' do
+
   before(:all) do
     file = 'header_example.xml'
     @session = Hansard::HeaderParser.new(File.dirname(__FILE__) + "/../data/#{file}").parse
