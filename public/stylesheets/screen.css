@@ -44,6 +44,12 @@ padding:1em;
 	text-align:center;
 }
 
+.search-result-fragment em {
+font-weight:bold;
+	font-style:normal;
+	text-decoration:underline;
+}
+
 #search input[type=text]{
 font-size:2em;
 font-family:monospace;
