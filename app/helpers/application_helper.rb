@@ -105,12 +105,6 @@ module ApplicationHelper
             puts "Lords Reports"
           end
         end
-
-        open :li do
-          open :a, { :href => indices_url } do
-            puts "Indices"
-          end
-        end
         
         open :li do
           open :a, { :href => members_url } do
