@@ -193,6 +193,7 @@ describe ApplicationHelper, " when creating navigation links" do
         :written_answers_url,
         :indices_url,
         :source_files_url,
+        :members_url,
         :search_url,
         :data_files_url]
 
