@@ -9,12 +9,14 @@ class SearchController < ApplicationController
   
   def show
     @query = params[:query]
-
     @member = params[:member]
     @page = (params[:page] or 1).to_i
     @num_per_page = 30
+    @sort = params[:sort]
 
     @search_options = pagination_options.merge(highlight_options)
+    @search_options = @search_options.merge(sort_options) if @sort
+    
     if @member
       query = members_speech_search(@member, @query)
     else
@@ -36,6 +38,10 @@ class SearchController < ApplicationController
       "text:#{query} AND member:\"#{member}\""
     end
 
+    def sort_options
+      { :order => "#{@sort} asc" }
+    end
+    
     def highlight_options
       { :highlight => {:fields =>"text",
                       :prefix => "<em>",
@@ -47,7 +53,7 @@ class SearchController < ApplicationController
     end
 
     def facet_options
-      { :facets => { :fields =>[:member] } }
+      { :facets => { :fields =>[:member], :zeros => false, :sort => true } }
     end
 
 end

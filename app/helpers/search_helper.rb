@@ -1,5 +1,14 @@
 module SearchHelper
 
+  def sort_link(current_sort)
+    if current_sort == "date"
+      params.delete(:sort)
+      link_to "sort by relevancy", params
+    else
+      link_to "sort by date", params.merge(:sort => "date")
+    end
+  end
+  
   def hit_fragment(result_set, contribution)
     if result_set.highlights[contribution.id]["text"]
       fragment = result_set.highlights[contribution.id]["text"].join << " &hellip;"
@@ -24,14 +33,9 @@ module SearchHelper
   def member_facets(result_set)
     if result_set.facets and !result_set.facets["facet_fields"].empty?
       member_facets = result_set.facets["facet_fields"]["member_facet"]
-      member_facets = select_positive_values(member_facets)
       member_facets = sort_by_reverse_value_then_key(member_facets)
       yield member_facets
     end
-  end
-
-  def select_positive_values(hash)
-    hash.select{ |key,value| value > 0 }
   end
 
   def sort_by_reverse_value_then_key(hash)
