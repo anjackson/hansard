@@ -3,6 +3,7 @@ require 'open-uri'
 class SearchController < ApplicationController
 
   def index 
+        render :layout =>  "frontpage"
   end
   
   
