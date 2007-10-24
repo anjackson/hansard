@@ -2,7 +2,7 @@ module SearchHelper
 
   def hit_fragment(result_set, contribution)
     if result_set.highlights[contribution.id]["text"]
-      fragment = result_set.highlights[contribution.id]["text"].join("...")
+      fragment = result_set.highlights[contribution.id]["text"].join << " &hellip;"
     else
       fragment = ''
     end
