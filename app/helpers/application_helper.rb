@@ -6,7 +6,7 @@ module ApplicationHelper
     member = Member.new(member_name)
     link_to member.name, show_member_url(:name => member.slug)
   end
-
+  
   def intro section
     section.introduction.text
   end

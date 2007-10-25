@@ -61,7 +61,9 @@ module SectionsHelper
       open :tfoot do
         open :td do
           open :p do
-          puts "Top of page."
+            open :a, { :class => 'to-top-of-page', :href => request.path } do
+                puts "Top of page."
+            end
         end
         open :p do
           puts "&copy; UK Parliament."
