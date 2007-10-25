@@ -32,19 +32,26 @@ class Hansard::HeaderParser
     end
   end
 
-  SERIES_VOLUMN_PATTERN      = /^([^ ]+) SERIES ?(&#x2014;|—|-|&#2014;) ?VOLUME ([^ ]+)$/
-  SERIES_VOLUMN_PART_PATTERN = /^([^ ]+) SERIES ?(&#x2014;|—|-|&#2014;) ?VOLUME ([^ ]+) \(Part ([^ ]+)\)$/
+  SESSION_PARLIAMENT_PATTERN = /^([^ ]+) SESSION OF THE ([^ ]+) PARLIAMENT OF THE UNITED KINGDOM OF GREAT BRITAIN/
 
   def self.find_session_and_parliament text
-    return ['', '']
+    if (match = SESSION_PARLIAMENT_PATTERN.match(text) || (match = SESSION_PARLIAMENT_PATTERN.match(text.sub('<lb/>',''))))
+      session_of_parliament = match[1]
+      number_of_parliament = match[2]
+    end
+    return session_of_parliament, number_of_parliament
   end
 
+  BASE_SERIES_VOLUME_PATTERN = "([^ ]+) SERIES ?(&#x2014;|—|-|&#2014;) ?VOLUME ([^ ]+)"
+  SERIES_VOLUME_PATTERN      = /^#{BASE_SERIES_VOLUME_PATTERN}$/
+  SERIES_VOLUME_PART_PATTERN = /^#{BASE_SERIES_VOLUME_PATTERN} \(Part ([^ ]+)\)$/
+
   def self.find_series_and_volume_and_part text
-    if (match = SERIES_VOLUMN_PATTERN.match text)
+    if (match = SERIES_VOLUME_PATTERN.match text)
       series_number = match[1]
       volume_in_series = match[3].chomp('.')
       volume_part_number = nil
-    elsif (match = SERIES_VOLUMN_PART_PATTERN.match text)
+    elsif (match = SERIES_VOLUME_PART_PATTERN.match text)
       series_number = match[1]
       volume_in_series = match[3].chomp('.')
       volume_part_number = match[4]

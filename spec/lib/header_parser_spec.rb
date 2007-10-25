@@ -57,18 +57,47 @@ describe Hansard::HeaderParser do
     check_series_volume_part 'FIFTH SERIES-VOLUME DLXXIII', 'FIFTH', 'DLXXIII'
   end
 
-  it 'should identify session and parliament from "SEVENTH SESSION OF THE THIRTY-SEVENTH PARLIAMENT OF THE UNITED KINGDOM OF GREAT BRITAIN AND NORTHERN IRELAND"' do
-    session_expected = ''
-    parliament_expected = ''
-    text = "SEVENTH SESSION OF THE THIRTY-SEVENTH PARLIAMENT OF THE UNITED KINGDOM OF GREAT BRITAIN AND NORTHERN IRELAND"
+  def check_session_parliament text, session_expected, parliament_expected
     session, parliament = Hansard::HeaderParser.find_session_and_parliament(text)
     session.should == session_expected
     parliament.should == parliament_expected
   end
 
-  # it 'should identify series and volume from ""' do
-    # check_series_volume_part '', 'FIFTH', ''
+  it 'should identify session and parliament from "SEVENTH SESSION OF THE THIRTY-SEVENTH PARLIAMENT OF THE UNITED KINGDOM OF GREAT BRITAIN AND NORTHERN IRELAND"' do
+    text = "SEVENTH SESSION OF THE THIRTY-SEVENTH PARLIAMENT OF THE UNITED KINGDOM OF GREAT BRITAIN AND NORTHERN IRELAND"
+    check_session_parliament text, 'SEVENTH', 'THIRTY-SEVENTH'
+  end
+
+  it 'should identify session and parliament from "SECOND SESSION OF THE FORTY-NINTH PARLIAMENT OF THE UNITED KINGDOM OF GREAT BRITAIN AND NORTHERN IRELAND 29 and 30 ELIZABETH II"' do
+    text = "SECOND SESSION OF THE FORTY-NINTH PARLIAMENT OF THE UNITED KINGDOM OF GREAT BRITAIN AND NORTHERN IRELAND 29 and 30 ELIZABETH II"
+    check_session_parliament text, 'SECOND', 'FORTY-NINTH'
+  end
+
+  it 'should identify session and parliament from "FOURTH SESSION OF THE TWENTY-EIGHTH PARLIAMENT OF THE UNITED KINGDOM OF GREAT BRITAIN &amp; IRELAND"' do
+    text = "FOURTH SESSION OF THE TWENTY-EIGHTH PARLIAMENT OF THE UNITED KINGDOM OF GREAT BRITAIN &amp; IRELAND"
+    check_session_parliament text, 'FOURTH', 'TWENTY-EIGHTH'
+  end
+
+  it 'should identify session and parliament from "FOURTH SESSION OF THE FORTY-NINTH PARLIAMENT<lb/> OF THE UNITED KINGDOM OF GREAT BRITAIN<lb/> AND NORTHERN IRELAND"' do
+    text = "FOURTH SESSION OF THE FORTY-NINTH PARLIAMENT<lb/> OF THE UNITED KINGDOM OF GREAT BRITAIN<lb/> AND NORTHERN IRELAND"
+    check_session_parliament text, 'FOURTH', 'FORTY-NINTH'
+  end
+
+  it 'should identify session and parliament from "FIRST SESSION OF THE FIFTY&#x2014;SECOND PARLIAMENT OF THE UNITED KINGDOM OF GREAT BRITAIN AND NORTHERN IRELAND"' do
+    text = "FIRST SESSION OF THE FIFTY&#x2014;SECOND PARLIAMENT OF THE UNITED KINGDOM OF GREAT BRITAIN AND NORTHERN IRELAND"
+    check_session_parliament text, 'FIRST', 'FIFTY&#x2014;SECOND'
+  end
+
+  it 'should identify session and parliament from "FIRST SESSION OF THE FIFTY-SECOND PARLIAMENT"' do
+    text = "FIRST SESSION OF THE FIFTY-SECOND PARLIAMENT"
+    check_session_parliament text, nil, nil
+  end
+
+  # it 'should identify session and parliament from ""' do
+    # text = ""
+    # check_session_parliament text, '', ''
   # end
+
 end
 
 describe Hansard::HeaderParser, 'when parsing' do
