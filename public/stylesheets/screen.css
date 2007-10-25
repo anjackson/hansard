@@ -40,9 +40,20 @@ padding:1em;
 #frontpage {
 	margin-left: auto;
 	margin-right: auto;
-	padding-top: 20%;
-	height:4em;
+	padding-top: 10%;
+	height:460px;
 	text-align:center;
+	background-image: url('/images/westminster.jpg');
+	background-repeat: no-repeat;
+	background-position:center;
+}
+
+#frontpage a {
+
+	display:inline;
+	
+	color:#333;
+font-size:0.8em;
 }
 
 .search-result-fragment em {
