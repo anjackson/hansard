@@ -53,6 +53,11 @@ describe SectionsController, "handling GET /commons/1999/feb/08/test-slug" do
     do_get
     response.should be_success
   end
+  
+  it 'should not assign sitting in the view' do
+    do_get
+    assigns[:sitting].should be_nil
+  end
 
   it "should find the sitting requested" do
     HouseOfCommonsSitting.should_receive(:find_all_by_date).with("1999-02-08").and_return([@sitting])
@@ -105,6 +110,11 @@ describe SectionsController, "handling GET /written_answers/1999/feb/08/test-slu
   def do_get
     get :show, :year => '1999', :month => 'feb', :day => '08', :id => "test-slug", :type => "written_answers"
   end
+  
+  it 'should not assign sitting in the view' do
+    do_get
+    assigns[:sitting].should be_nil
+  end
 
   it "should find the sitting requested" do
     WrittenAnswersSitting.should_receive(:find_all_by_date).with("1999-02-08").and_return([@sitting])
@@ -130,6 +140,11 @@ describe SectionsController, 'handling POST /commons/1999/feb/08/trade-and-indus
     post action, :year => '1999', :month => 'feb', :day => '08', :id => "trade-and-industry", :type => "commons"
   end
 
+  it 'should not assign sitting in the view' do
+    do_post :nest
+    assigns[:sitting].should be_nil
+  end
+  
   it 'should on nest find sitting and section with appropriate parameters' do
     @controller.should_receive(:find_sitting_and_section).
         with('commons', Date.new(1999,2,8), "trade-and-industry").

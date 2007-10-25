@@ -36,6 +36,88 @@ module ApplicationHelper
     params = section.id_hash
     url_for(params.merge!(:controller => "sections", :action => "show"))
   end
+  
+  def next_resolution(resolution)
+    case resolution
+    when nil
+      nil
+    when :year
+      :month
+    when :month
+      :day
+    end
+  end
+  
+  def resolution_title(date, resolution)
+    title = "Information"
+    case resolution
+      when :year
+        title << " for #{date.year}"
+      when :month
+        title << " for #{Date::MONTHNAMES[date.month]} #{date.year}"
+      when :day
+        title << " for #{date.day} #{Date::MONTHNAMES[date.month]} #{date.year}"
+    end
+    title
+  end
+  
+  def on_date_url(date_params)
+    params = { :controller => 'sittings', 
+               :action => 'show',
+               :year => date_params[:year],
+               :month => date_params[:month], 
+               :day => date_params[:day] }
+    url_for params
+  end
+  
+  def sitting_nav_links(sitting)
+    open :table, { :id => 'navigation-by-sittings' } do
+
+      open :thead do
+        open :th do
+          puts "Hansard"
+        end
+      end
+
+      open :tr do
+        open :td do
+          puts "This year&mdash;<br/>"
+          open :a, { :class => 'sitting-year', :href => on_date_url(:year => sitting.year, :month => nil, :day => nil)} do
+            puts sitting.year
+          end
+        end
+      end
+
+      open :tr do
+        open :td do
+          puts "This month&mdash;<br/>"
+          open :a, { :class => 'sitting-month', :href => on_date_url(:year => sitting.year, :month => month_abbr(sitting.month), :day => nil)} do
+            puts "#{month_abbr(sitting.month).titleize} #{sitting.year}"
+          end
+        end
+      end
+
+      open :tr do
+        open :td do
+          puts "This day&mdash;<br/>"
+          open :a, { :class => 'sitting-day', :href => on_date_url(:year => sitting.year, :month => month_abbr(sitting.month), :day => zero_padded_day(sitting.day))} do
+            puts "#{sitting.day} #{month_abbr(sitting.month).titleize} #{sitting.year}"
+          end
+        end
+      end
+
+      open :tfoot do
+        open :td do
+          open :p do
+            puts "Top of page."
+          end
+          open :p do
+            puts "&copy; UK Parliament."
+          end
+        end
+      end
+    end
+  end
 
   def day_link(sitting, direction)
     next_sitting = sitting.class.find_next(sitting.date, direction)

@@ -125,7 +125,7 @@ margin: 0;
 padding: 0;
 font-size: 0.9em;
 }
-#navigation-by-sections
+#navigation-by-sections, #navigation-by-sittings
 {
 width: 16%;
 display: block;
@@ -133,17 +133,17 @@ float: left;
 position: fixed;
 top: 4em;
 }
-#navigation-by-sections tr {
+#navigation-by-sections tr, #navigation-by-sittings tr {
 height: 8em;
 vertical-align: top;
 }
-#navigation-by-sections td {
+#navigation-by-sections td, #navigation-by-sittings td {
 border-top: 1pt solid #f0f0f0;
 }
-#navigation-by-sections tfoot {
+#navigation-by-sections tfoot, #navigation-by-sittings tfoot {
 font-size: 0.8em;
 }
-#navigation-by-sections td {
+#navigation-by-sections td, #navigation-by-sittings td {
 padding-top: 0.8em;
 }
 
@@ -184,4 +184,42 @@ display: inline;
 }
 .highlight, .hilite {
 font-weight: bold;
+}
+
+
+#timeline {
+}
+
+
+.timeline_bar {
+  margin-left: 1px;
+}
+
+.timeline {
+  margin-top: 2em;
+  margin-bottom: 1em;
+}
+
+td.timeline_lead_block {
+  padding-right: 0.5em;
+  text-align: left;
+}
+
+td.timeline_block {
+  padding-right: 0.5em;
+}
+
+td.timeline_item_block {
+  padding-right: 0em;
+}
+
+td.timeline_date {
+  padding-right: 0.45em;
+  font-size: 0.75em;
+  text-align: center;
+}
+
+td.timeline_sub_date {
+  text-align: left;
+  font-size: 0.75em;
 }

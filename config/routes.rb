@@ -46,7 +46,7 @@ ActionController::Routing::Routes.draw do |map|
     end
   end
 
-  %w[lords commons written_answers lords_reports].each do |controller_name|
+  %w[sittings lords commons written_answers lords_reports].each do |controller_name|
     with_controller controller_name.to_sym, map do |controller|
        make_index_route controller_name, controller
 

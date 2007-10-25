@@ -5,7 +5,7 @@ class SectionsController < ApplicationController
   before_filter :check_valid_date, :only => [:show, :nest, :unnest]
 
   def show
-    @sitting, @section = find_sitting_and_section(params[:type], @date, params[:id])
+    sitting, @section = find_sitting_and_section(params[:type], @date, params[:id])
     @marker_options = {}
     @title = @section.plain_title
   end

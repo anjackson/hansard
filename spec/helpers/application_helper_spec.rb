@@ -430,3 +430,57 @@ describe ApplicationHelper, "when creating section nest, unnest link text" do
     buttons.should have_tag('input[value="-&gt;"]')
   end
 end
+
+describe ApplicationHelper, " when using sitting_nav_links to create links for a sitting" do
+
+  before do
+    @sitting = mock_model(Sitting)
+    @sitting.stub!(:title).and_return("sitting title")  
+    @sitting.stub!(:year).and_return(1928)
+    @sitting.stub!(:month).and_return(2)
+    @sitting.stub!(:day).and_return(11)
+    stub!(:on_date_url).and_return("http://www.test-date.url")
+    assigns[:sitting] = @sitting
+  end
+
+  def call_sitting_nav_links
+    capture_haml{ sitting_nav_links(@sitting) }
+  end
+  
+  it 'should return a table with id "navigation-by-sittings"' do
+    call_sitting_nav_links.should have_tag("table#navigation-by-sittings")
+  end
+  
+  it 'should have a table header "Hansard"' do
+    call_sitting_nav_links.should have_tag("th", :text => 'Hansard')
+  end
+  
+  it 'should have a link to the sitting\'s year' do 
+    call_sitting_nav_links.should have_tag("a.sitting-year[href=http://www.test-date.url]", :text => '1928')
+  end
+
+  it 'should have a link to the sitting\'s month' do 
+    call_sitting_nav_links.should have_tag("a.sitting-month[href=http://www.test-date.url]", :text => 'Feb 1928')
+  end
+
+  it 'should have a link to the sitting\'s day' do 
+    call_sitting_nav_links.should have_tag("a.sitting-day[href=http://www.test-date.url]", :text => '11 Feb 1928')
+  end
+end
+
+
+describe ApplicationHelper, " when using giving the title for a date at a resolution" do
+
+  it 'should return "Information for 1928" given the date June 1 1928 and the resolution :year' do
+    resolution_title(Date.new(1928, 6, 1), :year).should == "Information for 1928"
+  end
+  
+  it 'should return "Information for June 1928" given the date June 1 1928 and the resolution :month' do
+    resolution_title(Date.new(1928, 6, 1), :month).should == "Information for June 1928"
+  end
+  
+  it 'should return "Information for 1 June 1928" given the date June 1 1928 and the resolution :day' do
+    resolution_title(Date.new(1928, 6, 1), :day).should == "Information for 1 June 1928"
+  end
+
+end

@@ -44,6 +44,11 @@ describe " handling GET /<house_type>", :shared => true do
     do_get
     response.should be_success
   end
+  
+  it 'should not assign section in the view' do
+    do_get
+    assigns[:section].should be_nil
+  end
 
   it "should render with the 'index' template" do
     do_get
@@ -69,6 +74,11 @@ describe " handling GET /<house_type>/1999", :shared => true do
     get :show, :year => '1999'
   end
 
+  it 'should not assign section in the view' do
+    do_get
+    assigns[:section].should be_nil
+  end
+  
   it "should look for sittings in the year passed" do
     @sitting_model.should_receive(:find_in_resolution).with(Date.new(1999, 1, 1), :year).and_return([@sitting])
     do_get
@@ -85,6 +95,11 @@ describe " handling GET /<house_type>/1999/feb", :shared => true do
 
   def do_get
     get :show, :year => '1999', :month => 'feb'
+  end
+  
+  it 'should not assign section in the view' do
+    do_get
+    assigns[:section].should be_nil
   end
 
   it "should look for sittings in the year passed" do
@@ -103,6 +118,11 @@ describe " handling GET /<house_type>/1999/feb/08", :shared => true do
 
   def do_get
     get :show, :year => '1999', :month => 'feb', :day => '08'
+  end
+  
+  it 'should not assign section in the view' do
+    do_get
+    assigns[:section].should be_nil
   end
 
   it "should be successful" do
@@ -154,6 +174,11 @@ describe " handling GET /<house_type>/1999/feb/08/edit", :shared => true do
     get :edit, :year => '1999', :month => 'feb', :day => '08'
   end
 
+  it 'should not assign section in the view' do
+    do_get
+    assigns[:section].should be_nil
+  end
+  
   it "should be successful" do
     do_get
     response.should be_success
@@ -196,7 +221,7 @@ describe " handling GET /<house_type>/1999/feb/08.xml", :shared => true do
     do_get
     response.should be_success
   end
-
+  
   it "should find the sitting requested" do
     @sitting_model.should_receive(:find_in_resolution).with(Date.new(1999, 2, 8), :day).and_return([@sitting])
     do_get

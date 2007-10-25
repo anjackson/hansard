@@ -8,7 +8,6 @@ class Section < ActiveRecord::Base
 
   alias :to_activerecord_xml :to_xml
   before_create :create_slug
-
   acts_as_hansard_element
   acts_as_slugged
 

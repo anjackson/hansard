@@ -1,0 +1,6 @@
+- @title = resolution_title(@date, @resolution)
+- if @resolution == :day
+  = render :partial => "partials/sitting", :collection => @sittings
+- else
+  .timeline#timeline
+    = timeline((@date or Time.now.to_date), next_resolution(@resolution), {:total_resolution => 500, :first_of_month => false}) 
