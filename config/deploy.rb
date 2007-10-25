@@ -25,24 +25,15 @@ namespace :deploy do
     invoke_command "rm -rf /u/apps/#{application}/current/xml", :via => "sudo" 
     invoke_command "ln -s /u/apps/hansard_data/xml /u/apps/#{application}/current/xml", :via => "sudo"
   end
-  
-  desc "Stop the solr server"
-  task :stop_solr, :roles => ["app"] do
-    invoke_command "rake solr:stop", :via => "sudo"
-  end
-  
-  desc "Start the solr server" 
-  task :start_solr, :roles => ["app"] do
-     invoke_command "rake solr:start", :via => "sudo"
-  end
 
   desc "Softlink the 'vendor/plugins/acts_as_solr/solr/solr/data' directory to 'shared/system/solr_data'"
   task :create_solr_softlink, :roles => ["app"] do
     invoke_command "rm -rf /u/apps/#{application}/current/vendor/plugins/acts_as_solr/solr/solr/data", :via => "sudo" 
     invoke_command "ln -s /u/apps/#{application}/shared/solr_data /u/apps/#{application}/current/vendor/plugins/acts_as_solr/solr/solr/data", :via => "sudo"
+    invoke_command "rm -rf /u/apps/#{application}/current/vendor/plugins/acts_as_solr/solr/tmp", :via => "sudo" 
+    invoke_command "ln -s /u/apps/#{application}/shared/solr_tmp /u/apps/#{application}/current/vendor/plugins/acts_as_solr/solr/tmp", :via => "sudo"  
   end
   
 end
 
-before "deploy", "deploy:stop_solr"
-after "deploy:document", "deploy:create_data_softlinks", "deploy:create_solr_softlink", "deploy:start_solr"
+after "deploy:document", "deploy:create_data_softlinks", "deploy:create_solr_softlink"
