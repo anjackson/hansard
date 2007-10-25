@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-describe Hansard::HeaderParser do
+describe Hansard::HeaderParser, 'when identifying series and volume' do
 
   def check_series_volume_part text, series_expected, volume_expected, part_expected=nil
     series, volume, part = Hansard::HeaderParser.find_series_and_volume_and_part(text)
@@ -13,7 +13,7 @@ describe Hansard::HeaderParser do
     end
   end
 
-  it 'should identify series and volume from "FIFTH SERIES&#x2014;VOLUME CXXI"' do
+  it 'should handle "FIFTH SERIES&#x2014;VOLUME CXXI"' do
     check_series_volume_part 'FIFTH SERIES&#x2014;VOLUME CXXI', 'FIFTH', 'CXXI'
   end
 
@@ -25,37 +25,41 @@ describe Hansard::HeaderParser do
     check_series_volume_part 'RANDOM TEXT', nil, nil
   end
 
-  it 'should identify series and volume from "FIFTH SERIES &#x2014; VOLUME X."' do
+  it 'should handle "FIFTH SERIES &#x2014; VOLUME X."' do
     check_series_volume_part 'FIFTH SERIES &#x2014; VOLUME X.', 'FIFTH', 'X'
   end
 
-  it 'should identify series and volume from "FIFTH SERIES—VOLUME LXXIII."' do
+  it 'should handle "FIFTH SERIES—VOLUME LXXIII."' do
     check_series_volume_part 'FIFTH SERIES—VOLUME LXXIII.', 'FIFTH', 'LXXIII'
   end
 
-  it 'should identify series and volume from "FIFTH SERIES-VOLUME CCLXXI"' do
+  it 'should handle "FIFTH SERIES-VOLUME CCLXXI"' do
     check_series_volume_part 'FIFTH SERIES-VOLUME CCLXXI', 'FIFTH', 'CCLXXI'
   end
 
-  it 'should identify series and volume from "FIFTH SERIES&#2014;VOLUME CCLXXIII"' do
+  it 'should handle "FIFTH SERIES&#2014;VOLUME CCLXXIII"' do
     check_series_volume_part 'FIFTH SERIES&#2014;VOLUME CCLXXIII', 'FIFTH', 'CCLXXIII'
   end
 
-  it 'should identify series and volume from "FOUTRTH SERIES"' do
+  it 'should handle "FOUTRTH SERIES"' do
     check_series_volume_part 'FOUTRTH SERIES',  nil, nil
   end
 
-  it 'should identify series and volume from "FIFTH SERIES &#x2014; VOLUME DXV"' do
+  it 'should handle "FIFTH SERIES &#x2014; VOLUME DXV"' do
     check_series_volume_part 'FIFTH SERIES &#x2014; VOLUME DXV', 'FIFTH', 'DXV'
   end
 
-  it 'should identify series and volume from "FIFTH SERIES&#x2014; VOLUME DXVII"' do
+  it 'should handle "FIFTH SERIES&#x2014; VOLUME DXVII"' do
     check_series_volume_part 'FIFTH SERIES&#x2014; VOLUME DXVII', 'FIFTH', 'DXVII'
   end
 
-  it 'should identify series and volume from "FIFTH SERIES-VOLUME DLXXIII"' do
+  it 'should handle "FIFTH SERIES-VOLUME DLXXIII"' do
     check_series_volume_part 'FIFTH SERIES-VOLUME DLXXIII', 'FIFTH', 'DLXXIII'
   end
+
+end
+
+describe Hansard::HeaderParser, 'when identifying session and parliament' do
 
   def check_session_parliament text, session_expected, parliament_expected
     session, parliament = Hansard::HeaderParser.find_session_and_parliament(text)
@@ -63,32 +67,32 @@ describe Hansard::HeaderParser do
     parliament.should == parliament_expected
   end
 
-  it 'should identify session and parliament from "SEVENTH SESSION OF THE THIRTY-SEVENTH PARLIAMENT OF THE UNITED KINGDOM OF GREAT BRITAIN AND NORTHERN IRELAND"' do
+  it 'should handle "SEVENTH SESSION OF THE THIRTY-SEVENTH PARLIAMENT OF THE UNITED KINGDOM OF GREAT BRITAIN AND NORTHERN IRELAND"' do
     text = "SEVENTH SESSION OF THE THIRTY-SEVENTH PARLIAMENT OF THE UNITED KINGDOM OF GREAT BRITAIN AND NORTHERN IRELAND"
     check_session_parliament text, 'SEVENTH', 'THIRTY-SEVENTH'
   end
 
-  it 'should identify session and parliament from "SECOND SESSION OF THE FORTY-NINTH PARLIAMENT OF THE UNITED KINGDOM OF GREAT BRITAIN AND NORTHERN IRELAND 29 and 30 ELIZABETH II"' do
+  it 'should handle "SECOND SESSION OF THE FORTY-NINTH PARLIAMENT OF THE UNITED KINGDOM OF GREAT BRITAIN AND NORTHERN IRELAND 29 and 30 ELIZABETH II"' do
     text = "SECOND SESSION OF THE FORTY-NINTH PARLIAMENT OF THE UNITED KINGDOM OF GREAT BRITAIN AND NORTHERN IRELAND 29 and 30 ELIZABETH II"
     check_session_parliament text, 'SECOND', 'FORTY-NINTH'
   end
 
-  it 'should identify session and parliament from "FOURTH SESSION OF THE TWENTY-EIGHTH PARLIAMENT OF THE UNITED KINGDOM OF GREAT BRITAIN &amp; IRELAND"' do
+  it 'should handle "FOURTH SESSION OF THE TWENTY-EIGHTH PARLIAMENT OF THE UNITED KINGDOM OF GREAT BRITAIN &amp; IRELAND"' do
     text = "FOURTH SESSION OF THE TWENTY-EIGHTH PARLIAMENT OF THE UNITED KINGDOM OF GREAT BRITAIN &amp; IRELAND"
     check_session_parliament text, 'FOURTH', 'TWENTY-EIGHTH'
   end
 
-  it 'should identify session and parliament from "FOURTH SESSION OF THE FORTY-NINTH PARLIAMENT<lb/> OF THE UNITED KINGDOM OF GREAT BRITAIN<lb/> AND NORTHERN IRELAND"' do
+  it 'should handle "FOURTH SESSION OF THE FORTY-NINTH PARLIAMENT<lb/> OF THE UNITED KINGDOM OF GREAT BRITAIN<lb/> AND NORTHERN IRELAND"' do
     text = "FOURTH SESSION OF THE FORTY-NINTH PARLIAMENT<lb/> OF THE UNITED KINGDOM OF GREAT BRITAIN<lb/> AND NORTHERN IRELAND"
     check_session_parliament text, 'FOURTH', 'FORTY-NINTH'
   end
 
-  it 'should identify session and parliament from "FIRST SESSION OF THE FIFTY&#x2014;SECOND PARLIAMENT OF THE UNITED KINGDOM OF GREAT BRITAIN AND NORTHERN IRELAND"' do
+  it 'should handle "FIRST SESSION OF THE FIFTY&#x2014;SECOND PARLIAMENT OF THE UNITED KINGDOM OF GREAT BRITAIN AND NORTHERN IRELAND"' do
     text = "FIRST SESSION OF THE FIFTY&#x2014;SECOND PARLIAMENT OF THE UNITED KINGDOM OF GREAT BRITAIN AND NORTHERN IRELAND"
     check_session_parliament text, 'FIRST', 'FIFTY&#x2014;SECOND'
   end
 
-  it 'should identify session and parliament from "FIRST SESSION OF THE FIFTY-SECOND PARLIAMENT"' do
+  it 'should return nil session and parliament for "FIRST SESSION OF THE FIFTY-SECOND PARLIAMENT"' do
     text = "FIRST SESSION OF THE FIFTY-SECOND PARLIAMENT"
     check_session_parliament text, nil, nil
   end
@@ -98,6 +102,55 @@ describe Hansard::HeaderParser do
     # check_session_parliament text, '', ''
   # end
 
+end
+
+describe Hansard::HeaderParser, 'when identifying year(s) of reign and monarch' do
+
+  def check_reign_monarch text, year_of_reign_expected, monarch_expected
+    reign, monarch = Hansard::HeaderParser.find_reign_and_monarch(text)
+    reign.should == year_of_reign_expected
+    monarch.should == monarch_expected
+  end
+
+  it 'should handle "5 &amp; 6 GEORGE VI"' do
+    check_reign_monarch '5 &amp; 6 GEORGE VI', '5 &amp; 6', 'GEORGE VI'
+  end
+
+  it 'should handle "10 AND 11 GEORGE VI"' do
+    check_reign_monarch '10 AND 11 GEORGE VI', '10 AND 11', 'GEORGE VI'
+  end
+
+  it 'should handle "11 &amp; 12 GEORGE V."' do
+    check_reign_monarch '11 &amp; 12 GEORGE V.', '11 &amp; 12', 'GEORGE V'
+  end
+
+  it 'should handle "13 &#x0026; 14 GEORGE V."' do
+    check_reign_monarch '13 &#x0026; 14 GEORGE V.', '13 &#x0026; 14', 'GEORGE V'
+  end
+
+  it 'should handle "12 GEORGE V."' do
+    check_reign_monarch '12 GEORGE V.', '12', 'GEORGE V'
+  end
+
+  it 'should handle "12 GEORGE VI"' do
+    check_reign_monarch '12 GEORGE VI', '12', 'GEORGE VI'
+  end
+
+  it 'should handle "26 GEORGE V and 1 EDWARD VIII"' do
+    check_reign_monarch '26 GEORGE V and 1 EDWARD VIII', '26, 1', 'GEORGE V, EDWARD VIII'
+  end
+
+  it 'should handle "6&amp;7 GEORGE VI"' do
+    check_reign_monarch '6&amp;7 GEORGE VI', '6 &amp; 7', 'GEORGE VI'
+  end
+
+  it 'should handle "15 and 16 GEORGE VI &amp; 1 ELIZABETH II"' do
+    check_reign_monarch '15 and 16 GEORGE VI &amp; 1 ELIZABETH II', '15 and 16, 1',  'GEORGE VI, ELIZABETH II'
+  end
+
+  # it 'should handle ""' do
+    # check_reign_monarch '', '', ''
+  # end
 end
 
 describe Hansard::HeaderParser, 'when parsing' do
