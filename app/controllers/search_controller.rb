@@ -13,16 +13,19 @@ class SearchController < ApplicationController
     @page = (params[:page] or 1).to_i
     @num_per_page = 30
     @sort = params[:sort]
+    
+    redirect_to :back and return if @member.blank? and @query.blank?
 
     @search_options = pagination_options.merge(highlight_options)
     @search_options = @search_options.merge(sort_options) if @sort
-    
+
     if @member
       query = members_speech_search(@member, @query)
     else
       query = text_search(@query)
       @search_options = @search_options.merge(facet_options)
     end
+
     @result_set = Contribution.find_by_solr(query, @search_options)
     @paginator = WillPaginate::Collection.new(@page, @num_per_page, @result_set.total_hits)
 

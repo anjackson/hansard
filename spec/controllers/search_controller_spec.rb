@@ -23,5 +23,10 @@ describe SearchController do
     @controller.send(:pagination_options).should == { :offset => 30 }
   end
   
+  it 'should redirect back to the previous page if no search terms are passed' do
+    @controller.should_receive(:redirect_to).with(:back)
+    get 'show', :query => ''
+  end
+  
   
 end
