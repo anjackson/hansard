@@ -187,9 +187,9 @@ describe Hansard::HeaderParser, 'when parsing' do
     @session.save!
   end
 
-  it "should create a session model" do
+  it "should create a HouseOfLordsSession model if titlepage paragraph contains HOUSE OF LORDS" do
     @session.should_not be_nil
-    @session.should be_an_instance_of(Session)
+    @session.should be_an_instance_of(HouseOfLordsSession)
   end
 
   it "should populate series_number with text preceding 'SERIES' inside any paragraph element" do
@@ -216,7 +216,7 @@ describe Hansard::HeaderParser, 'when parsing' do
     @session.year_of_the_reign.should == '5 &amp; 6'
   end
 
-  it "should populate monarch_name with text of the monarch's name when it's in a paragraph element" do
+  it "should populate monarch_name with text of the monarch's name when it's in a paragraph element with the year of reign" do
     @session.monarch_name.should == 'GEORGE VI'
   end
 
@@ -246,6 +246,6 @@ describe Hansard::HeaderParser, 'when parsing' do
   end
 
   after(:all) do
-    Session.delete_all
+    ParliamentSession.delete_all
   end
 end

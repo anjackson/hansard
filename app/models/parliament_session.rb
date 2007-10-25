@@ -1,4 +1,4 @@
-class Session < ActiveRecord::Base
+class ParliamentSession < ActiveRecord::Base
 
   has_many :sittings, :foreign_key => 'session_id', :dependent => :destroy
   belongs_to :source_file

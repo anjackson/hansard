@@ -33,7 +33,6 @@ describe "All sittings or written answers", :shared => true do
   it 'should set sitting opening text, if any' do
     @sitting.text.should == @sitting_text
   end
-  
 end
 
 describe "All sittings", :shared => true do
@@ -44,6 +43,4 @@ describe "All sittings", :shared => true do
     @sitting.debates.should_not be_nil
     @sitting.debates.should be_an_instance_of(Debates)
   end
-
-  
 end

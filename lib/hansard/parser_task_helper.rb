@@ -3,6 +3,7 @@ end
 
 module Hansard::ParserTaskHelper
 
+  HEADER_PATTERN = 'header.xml'
   COMMONS_PATTERN = 'housecommons_*xml'
   LORDS_PATTERN = 'houselords_*xml'
   WRITTEN_PATTERN = 'writtenanswers_*xml'
@@ -118,6 +119,7 @@ module Hansard::ParserTaskHelper
   end
 
   def load_split_files(source_file)
+    load_source_files(source_file, HEADER_PATTERN,  Hansard::HeaderParser)
     load_source_files(source_file, COMMONS_PATTERN, Hansard::HouseCommonsParser)
     load_source_files(source_file, LORDS_PATTERN,   Hansard::HouseLordsParser)
     load_source_files(source_file, WRITTEN_PATTERN, Hansard::WrittenAnswersParser)

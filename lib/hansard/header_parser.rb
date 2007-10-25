@@ -181,7 +181,21 @@ class Hansard::HeaderParser
     end
 
     def create_session hansard
-      session = Session.new
+      model_class = nil
+      (hansard/'titlepage/p').each do |p|
+        text = clean_html(p).downcase
+        if text == 'house of commons'
+          model_class = HouseOfCommonsSession
+        elsif text == 'house of lords'
+          model_class = HouseOfLordsSession
+        end
+      end
+
+      unless model_class
+        raise 'cannot create session, cannot identify house from titlepage paragraphs'
+      end
+
+      session = model_class.new
 
       hansard.children.each do |node|
         if is_element? 'titlepage', node
