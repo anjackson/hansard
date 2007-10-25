@@ -3,9 +3,9 @@ module SearchHelper
   def sort_link(current_sort)
     if current_sort == "date"
       params.delete(:sort)
-      link_to "sort by relevancy", params
+      link_to "<p><button>Sort results by most relevant</button></p>", params
     else
-      link_to "sort by date", params.merge(:sort => "date")
+      link_to "<p><button>Sort results by date</button></p>", params.merge(:sort => "date")
     end
   end
   

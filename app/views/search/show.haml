@@ -2,7 +2,8 @@
 = render :partial => "facets"
 .top-pagination
   = will_paginate @paginator 
-= sort_link(@sort)
+- if @result_set.total_hits > 1
+  = sort_link(@sort)
 .search-results
   = search_results_summary(@result_set, @query)
   = render :partial => "contribution", :collection => @result_set.results

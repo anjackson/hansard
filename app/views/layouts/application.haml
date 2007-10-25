@@ -18,7 +18,12 @@
       =@marker
       = yield
       #footer
+        URL for this page:
+        = link_to "http://" << request.host_with_port << request.path, request.path
         - if @day
-          For this page:
-          = link_to "XML source.", sitting_date_source_url(@sitting)
-          = link_to "XML output.", sitting_date_xml_url(@sitting)
+          %br
+            XML source for this day:
+            = link_to "http://" << request.host_with_port << sitting_date_source_url(@sitting), sitting_date_source_url(@sitting)
+          %br
+            XML output for this day:
+            = link_to "http://" << request.host_with_port << sitting_date_xml_url(@sitting), sitting_date_xml_url(@sitting)
