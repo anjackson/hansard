@@ -125,6 +125,14 @@ describe Hansard::HeaderParser, 'when parsing' do
     @session.volume_in_series_to_i.should == 121
   end
 
+  it "should populate session_of_parliament with text preceding 'SESSION OF THE' inside any paragraph element that also contains the text 'PARLIAMENT OF THE UNITED KINGDOM'" do
+    @session.session_of_parliament.should == 'SEVENTH'
+  end
+
+  it "should populate number_of_parliament with text following 'SESSION OF THE' inside any paragraph element that also contains the text 'PARLIAMENT OF THE UNITED KINGDOM'" do
+    @session.number_of_parliament.should ==  'THIRTY-SEVENTH'
+  end
+
   it "should populate titlepage_text with contents of titlepage element" do
     @session.titlepage_text.should eql(%Q[<image src="S5LV0121P0I0001"></image>\n] +
 %Q[<p id="S5LV0121P0-00001" align="center">THE<lb></lb> PARLIAMENTARY<lb></lb> DEBATES</p>\n] +

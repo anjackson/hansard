@@ -74,6 +74,12 @@ class Hansard::HeaderParser
           if series
             session.series_number = series
             session.volume_in_series = volume
+          else
+            session_of_parliament, parliament = Hansard::HeaderParser.find_session_and_parliament text
+            if session_of_parliament
+              session.session_of_parliament = session_of_parliament
+              session.number_of_parliament = parliament
+            end
           end
         end
       end
