@@ -136,15 +136,21 @@ class Hansard::HeaderParser
       titlepage.children.each do |node|
         if is_element? 'p', node
           text = clean_html(node).strip
-          series, volume = Hansard::HeaderParser.find_series_and_volume_and_part text
+          series, volume = Hansard::HeaderParser.find_series_and_volume_and_part(text)
           if series
             session.series_number = series
             session.volume_in_series = volume
           else
-            session_of_parliament, parliament = Hansard::HeaderParser.find_session_and_parliament text
+            session_of_parliament, parliament = Hansard::HeaderParser.find_session_and_parliament(text)
             if session_of_parliament
               session.session_of_parliament = session_of_parliament
               session.number_of_parliament = parliament
+            else
+              year_of_the_reign, monarch_name = Hansard::HeaderParser.find_reign_and_monarch(text)
+              if year_of_the_reign
+                session.year_of_the_reign = year_of_the_reign
+                session.monarch_name = monarch_name
+              end
             end
           end
         end

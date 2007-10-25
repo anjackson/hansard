@@ -186,6 +186,14 @@ describe Hansard::HeaderParser, 'when parsing' do
     @session.number_of_parliament.should ==  'THIRTY-SEVENTH'
   end
 
+  it "should populate year_of_the_reign with text preceding the monarch's name in a paragraph element" do
+    @session.year_of_the_reign.should == '5 &amp; 6'
+  end
+
+  it "should populate monarch_name with text of the monarch's name when it's in a paragraph element" do
+    @session.monarch_name.should == 'GEORGE VI'
+  end
+
   it "should populate titlepage_text with contents of titlepage element" do
     @session.titlepage_text.should eql(%Q[<image src="S5LV0121P0I0001"></image>\n] +
 %Q[<p id="S5LV0121P0-00001" align="center">THE<lb></lb> PARLIAMENTARY<lb></lb> DEBATES</p>\n] +
