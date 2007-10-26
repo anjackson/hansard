@@ -14,8 +14,11 @@ end
 
 ActionController::Routing::Routes.draw do |map|
 
-  map.home '', :controller => "search", :action => "index"
-  map.search 'search', :controller => 'search', :action => "show"
+  with_controller :search, map do |search|
+    search.home '', :action => "index"
+    search.search 'search', :action => "show"
+    search.random 'random', :action => "random"
+  end
 
   year_patt = /(18|19|20)\d\d/
   month_patt = /(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec|[01]?\d)/
