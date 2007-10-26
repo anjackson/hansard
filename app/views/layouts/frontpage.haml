@@ -7,9 +7,6 @@
     = stylesheet_link_tag "print", :media => "print"
   %body
     #frontpage
+      = link_to "Pick something for me", random_url, {:id => "random-link"}
       = search_form
-      %a{:href=>"http://www.flickr.com/photos/bobcatrock/1726043431/"}
-        photo &copy; bobcat rock
-      %br
-      = link_to "Random date", random_url, {:id => "random-link"}
       
