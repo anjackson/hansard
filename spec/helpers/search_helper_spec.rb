@@ -6,10 +6,6 @@ describe SearchHelper, " when formatting search result text fragments" do
     format_result_fragment(':this starts with a colon').should == 'this starts with a colon'  
   end
   
-  it "should replace a leading broken tag" do 
-    format_result_fragment('/col>this starts with a col').should == 'this starts with a col'
-  end
-  
   it "should unescape entities" do
     format_result_fragment('&#34;entity').should == '"entity'
   end
