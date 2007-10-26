@@ -22,8 +22,7 @@ module SearchHelper
     # unescape any full html entities
     fragment = CGI::unescapeHTML(fragment)
     leading_punctuation = /^(\/|\\|;|\.|,|\(|\)|:)/
-    leading_tag_closure = /^[^<]*?>/
-    problems = [leading_punctuation, leading_tag_closure]
+    problems = [leading_punctuation]
     problems.each do |problem|
       fragment.gsub!(problem, '')
     end

@@ -51,9 +51,10 @@ class SearchController < ApplicationController
     end
     
     def highlight_options
-      { :highlight => {:fields =>"text",
-                      :prefix => "<em>",
-                      :suffix => "</em>" }  }
+      { :highlight => { :fields =>"text",
+                        :prefix => "<em>",
+                        :suffix => "</em>",
+                        :require_field_match => true } }
     end
 
     def pagination_options
