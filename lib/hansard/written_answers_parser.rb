@@ -4,7 +4,7 @@ require 'hpricot'
 
 class Hansard::WrittenAnswersParser
 
-  def initialize file, logger=nil
+  def initialize file, logger=nil, source_file=nil
     @logger = logger
     @unexpected = false
     @doc = Hpricot.XML open(file)

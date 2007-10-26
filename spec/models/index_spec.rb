@@ -91,3 +91,25 @@ describe Index, " destroy" do
   end
 
 end
+
+describe Index, 'on creation' do
+
+  before(:each) do
+    @session = ParliamentSession.new
+    @session.save!
+    @index = Index.new :parliament_session_id => @session.id
+  end
+
+  after do
+    ParliamentSession.delete_all
+  end
+
+  it "should be valid" do
+    @index.should be_valid
+  end
+
+  it 'should be associated with parliament session' do
+    @index.parliament_session.should == @session
+  end
+
+end

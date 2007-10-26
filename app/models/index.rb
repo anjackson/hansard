@@ -1,5 +1,6 @@
 class Index < ActiveRecord::Base
 
+  belongs_to :parliament_session
   has_many :index_entries, :dependent => :destroy
   belongs_to :data_file
 

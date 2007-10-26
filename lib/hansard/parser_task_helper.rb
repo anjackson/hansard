@@ -64,12 +64,12 @@ module Hansard::ParserTaskHelper
     data_file
   end
 
-  def parse_file(file, parser, source_file=nil)
+  def parse_file(file, parser, source_file)
     data_file = DataFile.from_file(file)
     parse_via_data_file(file, data_file, parser, source_file)
   end
 
-  def parse_via_data_file(file, data_file, parser_class, source_file=nil)
+  def parse_via_data_file(file, data_file, parser_class, source_file)
     unless data_file.saved?
       data_file.source_file = source_file
       data_file.log = ''
@@ -77,7 +77,7 @@ module Hansard::ParserTaskHelper
       data_file.add_log "directory:\t" + data_file.directory, false
       data_file.attempted_parse = true
       begin
-        parser = parser_class.new(file, data_file)
+        parser = parser_class.new(file, data_file, source_file)
         result = parser.parse
         data_file.parsed = true
 
@@ -119,7 +119,7 @@ module Hansard::ParserTaskHelper
   end
 
   def load_split_files(source_file)
-    # load_source_files(source_file, HEADER_PATTERN,  Hansard::HeaderParser)
+    load_source_files(source_file, HEADER_PATTERN,  Hansard::HeaderParser)
     load_source_files(source_file, COMMONS_PATTERN, Hansard::HouseCommonsParser)
     load_source_files(source_file, LORDS_PATTERN,   Hansard::HouseLordsParser)
     load_source_files(source_file, WRITTEN_PATTERN, Hansard::WrittenAnswersParser)

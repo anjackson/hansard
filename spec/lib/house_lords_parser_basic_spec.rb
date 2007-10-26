@@ -12,13 +12,22 @@ describe Hansard::HouseLordsParser do
     @sitting_start_image = 'S5LV0003P0I0007'
     @sitting_text = nil
 
+    @session = HouseOfLordsSession.new
+    @session.save!
+    source_file = SourceFile.new
+    source_file.should_receive(:parliament_session).and_return(@session)
     file = 'houselords_example.xml'
-    @sitting = Hansard::HouseLordsParser.new(File.dirname(__FILE__) + "/../data/#{file}", @logger).parse
+    @sitting = Hansard::HouseLordsParser.new(File.dirname(__FILE__) + "/../data/#{file}", @logger, source_file).parse
     @sitting.save!
   end
 
   after(:all) do
     Sitting.find(:all).each {|s| s.destroy}
+    ParliamentSession.delete_all
+  end
+
+  it 'should create sitting with association to parliament session' do
+    @sitting.parliament_session.should == @session
   end
 
   it 'should create section for section element in debates' do

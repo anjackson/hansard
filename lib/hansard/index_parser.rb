@@ -5,9 +5,10 @@ require 'hpricot'
 module Hansard
   class IndexParser
 
-    def initialize file, logger=nil
+    def initialize file, logger=nil, source_file=nil
       @logger = logger
       @doc = Hpricot.XML open(file)
+      @source_file = source_file
     end
 
     def log text
@@ -48,6 +49,8 @@ module Hansard
       (@doc/'indexdiv').each do |indexdiv|
         handle_index indexdiv
       end
+
+      @index.parliament_session_id = @source_file.parliament_session.id if @source_file
       @index
     end
 

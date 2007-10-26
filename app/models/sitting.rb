@@ -1,5 +1,6 @@
 class Sitting < ActiveRecord::Base
 
+  belongs_to :parliament_session
   has_one :debates, :class_name => "Debates", :foreign_key => "sitting_id", :dependent => :destroy
   has_many :sections, :foreign_key => 'sitting_id', :dependent => :destroy
   belongs_to :data_file

@@ -183,8 +183,16 @@ describe Hansard::HeaderParser, 'when parsing' do
 
   before(:all) do
     file = 'header_example.xml'
-    @session = Hansard::HeaderParser.new(File.dirname(__FILE__) + "/../data/#{file}").parse
+    source_file = SourceFile.new
+    @source_file_id = 123
+    source_file.stub!(:id).and_return(@source_file_id)
+    source_file.stub!(:house).and_return('lords')
+    @session = Hansard::HeaderParser.new(File.dirname(__FILE__) + "/../data/#{file}", nil, source_file).parse
     @session.save!
+  end
+
+  it 'should have session with source_file_id populated' do
+    @session.source_file_id.should == @source_file_id
   end
 
   it "should create a HouseOfLordsSession model if titlepage paragraph contains HOUSE OF LORDS" do

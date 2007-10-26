@@ -5,6 +5,7 @@ def parse_hansard file
 end
 
 describe "All sittings or written answers", :shared => true do
+
   it 'should create sitting with correct type' do
     @sitting.should_not be_nil
     @sitting.should be_an_instance_of(@sitting_type)

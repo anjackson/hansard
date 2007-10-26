@@ -3,11 +3,25 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe Hansard::IndexParser do
 
   before(:all) do
+    @session = HouseOfCommonsSession.new
+    @session.save!
+    source_file = SourceFile.new
+    source_file.stub!(:parliament_session).and_return(@session)
     file = 'index_example.xml'
-    @index = Hansard::IndexParser.new(File.dirname(__FILE__) + "/../data/#{file}").parse
+    @index = Hansard::IndexParser.new(File.dirname(__FILE__) + "/../data/#{file}", nil, source_file).parse
     @index.save!
     @first_index_entry =  @index.index_entries[0]
     @second_index_entry = @index.index_entries[1]
+  end
+
+  after(:all) do
+    Index.delete_all
+    IndexEntry.delete_all
+    ParliamentSession.delete_all
+  end
+
+  it 'should create sitting with association to parliament session' do
+    @index.parliament_session.should == @session
   end
 
   it "should create an index model" do
@@ -58,11 +72,6 @@ describe Hansard::IndexParser do
     new_top_level_entry_after_context = @index.index_entries[14]
     new_top_level_entry_after_context.text.should == "Administrative costs"
     new_top_level_entry_after_context.entry_context.should be_nil
-  end
-
-  after(:all) do
-    Index.delete_all
-    IndexEntry.delete_all
   end
 
 end

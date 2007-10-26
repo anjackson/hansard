@@ -9,9 +9,10 @@ class Hansard::HeaderParser
 
   include Hansard::ParserHelper
 
-  def initialize file, logger=nil
+  def initialize file, logger, source_file
     @logger = logger
     @doc = Hpricot.XML open(file)
+    @source_file = source_file
   end
 
   def log text
@@ -181,28 +182,21 @@ class Hansard::HeaderParser
     end
 
     def create_session hansard
-      model_class = nil
-      (hansard/'titlepage/p').each do |p|
-        text = clean_html(p).downcase
-        if text == 'house of commons'
-          model_class = HouseOfCommonsSession
-        elsif text == 'house of lords'
-          model_class = HouseOfLordsSession
-        end
-      end
-
-      unless model_class
+      if @source_file.house == 'commons'
+        model_class = HouseOfCommonsSession
+      elsif @source_file.house == 'lords'
+        model_class = HouseOfLordsSession
+      else
         raise 'cannot create session, cannot identify house from titlepage paragraphs'
       end
 
       session = model_class.new
-
       hansard.children.each do |node|
         if is_element? 'titlepage', node
           handle_titlepage node, session
         end
       end
-
+      session.source_file_id = @source_file.id
       session
     end
 

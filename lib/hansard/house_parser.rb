@@ -10,11 +10,12 @@ class Hansard::HouseParser
 
   include Hansard::ParserHelper
 
-  def initialize file, logger=nil
+  def initialize file, logger=nil, source_file=nil
     @logger = logger
     @unexpected = false
     @doc = Hpricot.XML open(file)
     @file = file
+    @source_file = source_file
   end
 
   def log text
@@ -527,6 +528,7 @@ class Hansard::HouseParser
         handle_debates @sitting, debates
       end
 
+      @sitting.parliament_session_id = @source_file.parliament_session.id if @source_file
       @sitting
     end
 end

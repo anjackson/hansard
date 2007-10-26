@@ -16,6 +16,18 @@ describe SourceFile do
     SourceFile.delete_all
   end
 
+  it 'should return associated parliament_session' do
+    source_file = SourceFile.new
+    source_file.save!
+    session = ParliamentSession.new :source_file_id => source_file.id
+    session.save!
+
+    source_file.parliament_session.should == session
+
+    SourceFile.delete_all
+    ParliamentSession.delete_all
+  end
+
   it "should validate the uniqueness of the source file name" do
     source_file = SourceFile.new(:name => "popular_name")
     source_file.save!
@@ -30,7 +42,6 @@ describe SourceFile do
   end
 
   it 'should create error summary hash correctly' do
-
     source_file_x = SourceFile.new :name => 'x'
     source_file_x.add_log 'Bad date format: date format="1980-07-28">Monday 22 July 1980'
     source_file_x.add_log 'Missing column? Got: 593, expected 591 (last column 590)'

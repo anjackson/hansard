@@ -2,6 +2,7 @@ class SourceFile < ActiveRecord::Base
 
   has_many :data_files
   validates_uniqueness_of :name
+  has_one :parliament_session
 
   def self.from_file file
     name = File.basename(file, '.xml')
@@ -60,6 +61,16 @@ class SourceFile < ActiveRecord::Base
 
   def to_param
     name
+  end
+
+  def house
+    if result_directory.include? 'commons'
+      'commons'
+    elsif result_directory.include? 'lords'
+      'lords'
+    else
+      nil
+    end
   end
 
   def add_log text, persist=true

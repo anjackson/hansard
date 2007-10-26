@@ -1,8 +1,8 @@
 require File.dirname(__FILE__) + '/hansard_parser_spec_helper'
 
 describe Hansard::HouseCommonsParser do
+
   before(:all) do
-    
     @sitting_type = HouseOfCommonsSitting
     @sitting_date = Date.new(1985,12,16)
     @sitting_date_text = 'Monday 16 December 1985'
@@ -11,9 +11,13 @@ describe Hansard::HouseCommonsParser do
     @sitting_start_image = 'S6CV0089P0I0010'
     @sitting_text = %Q[<p id="S6CV0089P0-00360" align="center"><i>The House met at half-past Two o'clock</i></p>]
 
+    @session = HouseOfCommonsSession.new
+    @session.save!
+    source_file = SourceFile.new
+    source_file.stub!(:parliament_session).and_return(@session)
     file = 'housecommons_example.xml'
-    @sitting = Hansard::HouseCommonsParser.new(File.dirname(__FILE__) + "/../data/#{file}", nil).parse
-    
+    @sitting = Hansard::HouseCommonsParser.new(File.dirname(__FILE__) + "/../data/#{file}", nil, source_file).parse
+
     @sitting.save!
 
     @first_section = @sitting.debates.sections.first
@@ -48,6 +52,11 @@ describe Hansard::HouseCommonsParser do
 
   after(:all) do
     Sitting.find(:all).each {|s| s.destroy}
+    ParliamentSession.delete_all
+  end
+
+  it 'should create sitting with association to parliament session' do
+    @sitting.parliament_session.should == @session
   end
 
   it "should create a sitting whose sections all have a start_column" do
@@ -610,5 +619,5 @@ describe Hansard::HouseCommonsParser do
   end
 
   it_should_behave_like "All sittings"
-  
+
 end

@@ -17,11 +17,21 @@ end
 describe Sitting do
 
   before(:each) do
-    @sitting = Sitting.new
+    @session = ParliamentSession.new
+    @session.save!
+    @sitting = Sitting.new :parliament_session_id => @session.id
+  end
+
+  after do
+    ParliamentSession.delete_all
   end
 
   it "should be valid" do
     @sitting.should be_valid
+  end
+
+  it 'should be associated with parliament session' do
+    @sitting.parliament_session.should == @session
   end
 
   it "should be able to tell if it is present on a date" do
@@ -45,19 +55,19 @@ describe Sitting, ".first_image_source" do
 end
 
 describe Sitting, ".find_in_resolution" do
-  
+
   before do
     @date = Date.new(2006, 12, 18)
     @first_sitting = Sitting.new(:date => @date)
     @second_sitting = Sitting.new(:date => @date)
     @third_sitting = Sitting.new(:date => @date)
   end
-  
+
   it "should return all sittings on a date if passed a date and the resolution :day" do
     Sitting.stub!(:find_all_present_on_date).and_return([@first_sitting, @second_sitting, @third_sitting])
     Sitting.find_in_resolution(@date, :day).should == [@first_sitting, @second_sitting, @third_sitting]
   end
-  
+
 end
 
 
