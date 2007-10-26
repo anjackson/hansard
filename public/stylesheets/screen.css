@@ -48,11 +48,8 @@ padding:1em;
 	background-position:center;
 }
 
-#frontpage a {
-
-	display:inline;
-	
-	color:#333;
+#frontpage #credit a {
+color:#333;
 font-size:0.8em;
 }
 
