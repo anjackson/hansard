@@ -5,6 +5,11 @@ class ApplicationController < ActionController::Base
   helper :all # include all helpers, all the time
   include ExceptionNotifiable
 
+  def section_url(section)
+    params = section.id_hash
+    url_for(params.merge!(:controller => "sections", :action => "show"))
+  end
+  
   def self.is_production?
     RAILS_ENV == 'production'
   end

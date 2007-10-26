@@ -6,6 +6,11 @@ class SearchController < ApplicationController
         render :layout =>  "frontpage"
   end
   
+  def random
+    size = Section.count
+    section = Section.find(rand(size-1))
+    redirect_to section_url(section) 
+  end
   
   def show
     @query = params[:query]
