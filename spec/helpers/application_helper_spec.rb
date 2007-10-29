@@ -419,7 +419,6 @@ describe ApplicationHelper, "when creating section nest, unnest link text" do
   it 'should display only right arrow for a section that can be nested' do
     @section.stub!(:can_be_nested?).and_return true
     @section.stub!(:can_be_unnested?).and_return false
-    p section_nesting_buttons(@section).to_s
     section_nesting_buttons(@section).should_not have_tag('input[value="&lt;-"]')
     section_nesting_buttons(@section).should have_tag('input[value="-&gt;"]')
   end
