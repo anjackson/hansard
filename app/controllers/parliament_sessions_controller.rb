@@ -13,5 +13,9 @@ class ParliamentSessionsController < ApplicationController
   end
 
   def monarch_index
+    @monarch_name = params[:monarch_name]
+
+    @sessions_in_groups_by_year_of_the_reign =
+        ParliamentSession.sessions_in_groups_by_year_of_the_reign(@monarch_name)
   end
 end

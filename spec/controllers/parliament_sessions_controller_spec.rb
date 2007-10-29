@@ -27,8 +27,8 @@ describe ParliamentSessionsController do
     assigns[:monarchs].should == @monarchs
   end
 
-  it 'should assign volumes in series_index action' do
-    @series_number = 'sixth-series'
+  it 'should assign sessions_in_groups_by_volume_in_series in series_index action' do
+    @series_number = 'sixth'
     @sessions_grouped_by_volume = [[]]
 
     ParliamentSession.should_receive(:sessions_in_groups_by_volume_in_series).
@@ -38,4 +38,14 @@ describe ParliamentSessionsController do
     assigns[:sessions_grouped_by_volume_in_series].should == @sessions_grouped_by_volume
   end
 
+  it 'should assign sessions_in_groups_by_year_of_the_reign in monarch_index action' do
+    @monarch_name = 'elizabeth_ii'
+    @sessions_grouped_by_year_of_reign = [[]]
+
+    ParliamentSession.should_receive(:sessions_in_groups_by_year_of_the_reign).
+        with(@monarch_name).and_return(@sessions_grouped_by_year_of_reign)
+
+    get 'monarch_index', :monarch_name => @monarch_name
+    assigns[:sessions_in_groups_by_year_of_the_reign].should == @sessions_grouped_by_year_of_reign
+  end
 end

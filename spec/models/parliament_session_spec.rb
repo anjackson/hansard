@@ -19,10 +19,16 @@ describe ParliamentSession, 'the class' do
     series.include?('FIFTH').should be_true
   end
 
-  it 'should return sessions grouped by volume in series numbers for a given series' do
+  it 'should return sessions in groups by volume in series numbers for a given series' do
     series_number = 'sixth'
-    volumes = ParliamentSession.sessions_in_groups_by_volume_in_series(series_number)
-    volumes[0][0].should == parliament_sessions(:commons_session)
+    groups = ParliamentSession.sessions_in_groups_by_volume_in_series(series_number)
+    groups[0][0].should == parliament_sessions(:commons_session)
+  end
+
+  it 'should return sessions in groups by year of the reign of a given monarch' do
+    monarch_name = 'elizabeth_ii'
+    groups = ParliamentSession.sessions_in_groups_by_year_of_the_reign(monarch_name)
+    groups[0][0].should == parliament_sessions(:commons_session)
   end
 end
 

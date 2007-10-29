@@ -1,7 +1,20 @@
 module ParliamentSessionsHelper
 
   def volume_in_series_title series_number
-    "Volumes in #{series_number.titleize}, by number"
+    "Volumes in #{series_number.titleize} Series, by number"
+  end
+
+  def reign_title monarch_name
+    parts = []
+    monarch_name.each('_') do |part|
+      if part.is_roman_numeral?
+        parts << part.upcase
+      else
+        parts << part.titleize
+      end
+    end
+    name = parts.join(' ').squeeze(' ')
+    "Sessions by Years of the Reign of #{name}"
   end
 
   def monarch_link monarch_name
@@ -40,4 +53,13 @@ module ParliamentSessionsHelper
     link_to link_text, ''
   end
 
+  def reign_link parliament_session
+    year_of_reign = parliament_session.year_of_the_reign
+    text = year_of_reign.capitalize
+    if year_of_reign.include?('-')
+      text.gsub!(' ','-')
+      text += ' year of the reign'
+    end
+    link_to text, ''
+  end
 end

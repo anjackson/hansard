@@ -23,6 +23,15 @@ class ParliamentSession < ActiveRecord::Base
     sessions_in_series.in_groups_by(&:volume_in_series)
   end
 
+  def self.sessions_in_groups_by_year_of_the_reign monarch_name
+    monarch_name = monarch_name.sub('_',' ')
+    sessions_in_series = find(:all).
+        select {|s| s.monarch_name && (s.monarch_name.downcase == monarch_name) }.
+        sort_by(&:monarch_name)
+
+    sessions_in_series.in_groups_by(&:monarch_name)
+  end
+
   def volume_in_series_to_i
     if volume_in_series
       if volume_in_series.is_roman_numeral?

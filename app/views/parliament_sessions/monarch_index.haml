@@ -1,0 +1,6 @@
+- @title = reign_title(@monarch_name)
+
+- @sessions_in_groups_by_year_of_the_reign.each do |parliament_sessions|
+  %ol.years_of_the_reign
+    - parliament_sessions.each do |parliament_session|
+      %li= reign_link parliament_session

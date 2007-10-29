@@ -4,7 +4,11 @@ describe ParliamentSessionsHelper do
   fixtures :parliament_sessions
 
   it 'should create volumes in series title correctly' do
-    volume_in_series_title('sixth-series').should == 'Volumes in Sixth Series, by number'
+    volume_in_series_title('sixth').should == 'Volumes in Sixth Series, by number'
+  end
+
+  it 'should create monarch index title correctly' do
+    reign_title('elizabeth_ii').should == 'Sessions by Years of the Reign of Elizabeth II'
   end
 
   it 'should create link text to series url correctly' do
@@ -35,4 +39,9 @@ describe ParliamentSessionsHelper do
     volume_link(session).should have_tag('a', :text => text)
   end
 
+  it 'should create link text to session for year of the reign' do
+    session = parliament_sessions(:commons_session)
+    text = 'Fifty-third year of the reign'
+    reign_link(session).should have_tag('a', :text => text)
+  end
 end
