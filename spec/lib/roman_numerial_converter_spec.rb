@@ -34,11 +34,11 @@ describe String do
     lambda {"R".roman_to_i}.should raise_error
   end
 
-  it 'should raise exception for roman numerial string that is greater than maximum number handled by roman_to_i (3999)' do
+  it 'should raise exception for roman numeral string that is greater than maximum number handled by roman_to_i (3999)' do
     lambda {"MMMM".roman_to_i}.should raise_error
   end
 
-  it 'should convert to integer a roman numerial string that is one less than the maximum number handled by roman_to_i (3999)' do
+  it 'should convert to integer a roman numeral string that is one less than the maximum number handled by roman_to_i (3999)' do
     "MMMCMXCIX".roman_to_i.should == 3999
   end
 end

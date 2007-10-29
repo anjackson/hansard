@@ -25,7 +25,7 @@ describe ParliamentSessionsHelper do
     volume_link(session).should  have_tag('a', :text => text)
   end
 
-  it 'should create link text to volume url correctly when session is for Lords with a Roman numerial volume number' do
+  it 'should create link text to volume url correctly when session is for Lords with a Roman numeral volume number' do
     session = parliament_sessions(:lords_session)
     text = 'Volume CXXI (121), Lords, Wednesday, 12th November, 1941, to Thursday, 19th February, 1942'
     volume_link(session).should have_tag('a', :text => text)

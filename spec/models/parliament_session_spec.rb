@@ -40,7 +40,7 @@ end
 
 describe ParliamentSession, 'volume_in_series_to_i' do
 
-  it 'should be able to convert a roman numerial volume_in_series string to an integer' do
+  it 'should be able to convert a roman numeral volume_in_series string to an integer' do
     session = ParliamentSession.new :volume_in_series => 'CXXI'
     session.volume_in_series_to_i.should == 121
   end
