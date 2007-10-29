@@ -3,6 +3,7 @@ require File.dirname(__FILE__) + '/hansard_parser_spec_helper'
 describe Hansard::HouseCommonsParser do
 
   before(:all) do
+    DataFile.stub!(:log_to_stdout)
     @sitting_type = HouseOfCommonsSitting
     @sitting_date = Date.new(1985,12,16)
     @sitting_date_text = 'Monday 16 December 1985'

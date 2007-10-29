@@ -9,6 +9,7 @@ end
 describe SourceFile do
 
   before(:each) do
+    SourceFile.stub!(:log_to_stdout)
     SourceFile.delete_all
   end
 

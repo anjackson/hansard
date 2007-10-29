@@ -3,6 +3,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe Hansard::Splitter do
 
   before do
+    SourceFile.stub!(:log_to_stdout)
     @splitter = Hansard::Splitter.new(false, overwrite=true, verbose=false)
     @splitter.stub!(:validate_schema).and_return('')
   end
@@ -30,6 +31,7 @@ end
 describe Hansard::Splitter, " when splitting file that does not validate against schema" do
 
   before(:all) do
+    SourceFile.stub!(:log_to_stdout)
     splitter = Hansard::Splitter.new(false, overwrite=true, verbose=false)
     path = File.join(File.dirname(__FILE__),'..','data','valid_complete_file')
 
@@ -57,6 +59,7 @@ end
 describe Hansard::Splitter, " when splitting file that has date text in 'From Minutes of' format" do
 
   before(:all) do
+    SourceFile.stub!(:log_to_stdout)
     splitter = Hansard::Splitter.new(false, overwrite=true, verbose=false)
     path = File.join(File.dirname(__FILE__),'..','data','from_minutes_of_date')
     @source_files = splitter.split(path)
@@ -76,9 +79,10 @@ end
 describe Hansard::Splitter, " when splitting file that has division table with no AYES heading" do
 
   before(:all) do
+    SourceFile.stub!(:log_to_stdout)
     splitter = Hansard::Splitter.new(false, overwrite=true, verbose=false)
     path = File.join(File.dirname(__FILE__),'..','data','division_without_ayes_heading')
-
+    
     # stub the schema check method
     splitter.should_receive(:validate_schema).with('hansard_v7.xsd','division_without_ayes_heading').and_return('')
     @source_files = splitter.split(path)
@@ -98,6 +102,7 @@ end
 describe Hansard::Splitter, " when splitting file that has division table in oralquestions section" do
 
   before(:all) do
+    SourceFile.stub!(:log_to_stdout)
     splitter = Hansard::Splitter.new(false, overwrite=true, verbose=false)
     path = File.join(File.dirname(__FILE__),'..','data','division_in_oralquestions')
 
@@ -153,6 +158,7 @@ end
 describe Hansard::Splitter, " when splitting file that has <title>BUSINESS OF THE HOUSE</title> in oralquestions section" do
 
   before(:all) do
+    SourceFile.stub!(:log_to_stdout)
     splitter = Hansard::Splitter.new(false, overwrite=true, verbose=false)
     path = File.join(File.dirname(__FILE__),'..','data','business_of_the_house_in_oralquestions')
 
@@ -176,6 +182,7 @@ end
 describe Hansard::Splitter, " when splitting file that has <title>ORDERS OF THE DAY</title> in oralquestions section" do
 
   before(:all) do
+    SourceFile.stub!(:log_to_stdout)
     splitter = Hansard::Splitter.new(false, overwrite=true, verbose=false)
     path = File.join(File.dirname(__FILE__),'..','data','orders_of_the_day_inside_oralquestions')
 
@@ -243,6 +250,7 @@ end
 describe Hansard::Splitter, " when splitting files from spec/data/S5LV0436P0" do
 
   before(:all) do
+    SourceFile.stub!(:log_to_stdout)
     splitter = Hansard::Splitter.new(false, overwrite=true, verbose=false)
     splitter.stub!(:validate_schema).and_return('')
     path = File.join(File.dirname(__FILE__),'..','data','S5LV0436P0')
