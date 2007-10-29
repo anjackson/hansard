@@ -1,8 +1,8 @@
 - @sessions_grouped_by_volume_in_series.each do |parliament_sessions|
   - if parliament_sessions.size == 1
-    %p= parliament_sessions.first.type.name + ' ' + parliament_sessions.first.volume_in_series
+    %p= volume_link parliament_sessions.first
   - elsif parliament_sessions.size > 1
     - parliament_sessions.each do |parliament_session|
-      %p= parliament_session.type.name + ' ' + parliament_sessions.first.volume_in_series
+      %p= volume_link parliament_session
 
 
