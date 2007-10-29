@@ -152,11 +152,38 @@ class Hansard::HeaderParser
     return [series_number, volume_in_series, volume_part_number]
   end
 
+  BASE_COMPRISING_PERIOD = '(.*\d\d\d\d)(.|\))?(,|.|\))?'
+  COMPRISING_PERIOD_FROM_ONE_LINE_PATTERN = /COMPRISING PERIOD FROM #{BASE_COMPRISING_PERIOD}$/
+  COMPRISING_PERIOD_ONE_LINE_PATTERN = /COMPRISING PERIOD #{BASE_COMPRISING_PERIOD}$/
+  COMPRISING_PERIOD_2ND_LINE_PATTERN = /#{BASE_COMPRISING_PERIOD}$/
+
   def self.find_comprising_period first_line, second_line
-    if first_line == 'COMPRISING PERIOD FROM'
-      second_line
+    if first_line == 'COMPRISING PERIOD FROM' || first_line == 'COMPRISING PERIOD'
+      if (match = COMPRISING_PERIOD_2ND_LINE_PATTERN.match clean_period_line(second_line))
+        match[1]
+      else
+        raise 'no comprising period identified from line: ' + second_line
+      end
     else
-      ''
+      line = clean_period_line(first_line)
+      if (match = COMPRISING_PERIOD_FROM_ONE_LINE_PATTERN.match line)
+        match[1].strip
+      elsif (match = COMPRISING_PERIOD_ONE_LINE_PATTERN.match line)
+        match[1]
+      else
+        raise 'no comprising period identified from line: ' + first_line
+      end
+    end
+  end
+
+  def self.clean_period_line line
+    line = line.gsub('<lb/>',' ').squeeze(' ').strip
+    if line.include?('and the')
+      line.split('and the')[0].strip
+    elsif line.include?('AND THE')
+      line.split('AND THE')[0].strip
+    else
+      line
     end
   end
 

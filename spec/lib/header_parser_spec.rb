@@ -2,15 +2,105 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Hansard::HeaderParser, 'when identifying comprising period text' do
 
-  def check_comprising_period first_line, second_line, expected_period
+  def check_comprising_period first_line, expected_period, second_line='LONDON:'
     comprising_period = Hansard::HeaderParser.find_comprising_period(first_line, second_line)
     comprising_period.should == expected_period
   end
 
-  it 'should handle comprising period defined across two paragraphgs' do
-    first_line = 'COMPRISING PERIOD FROM'
+  it 'should clean_period_line by removing the text "and the ..."' do
+    line = 'MONDAY, 31st JULY, 1961, to TUESDAY, 24th OCTOBER, 1961 and the General Index for the Session (Volumes CCXXVI&#x2014;CCXXXIV)'
+    Hansard::HeaderParser.clean_period_line(line).should == 'MONDAY, 31st JULY, 1961, to TUESDAY, 24th OCTOBER, 1961'
+  end
+
+  it 'should clean_period_line by removing the text "AND THE"' do
+    line = '(COMPRISING PERIOD FROM MONDAY, JULY 20TH, TO FRIDAY, OCTOBER 30TH, 1936)AND THE'
+    Hansard::HeaderParser.clean_period_line(line).should == '(COMPRISING PERIOD FROM MONDAY, JULY 20TH, TO FRIDAY, OCTOBER 30TH, 1936)'
+  end
+
+  it 'should handle comprising period defined across two paragraphs, when first paragraph is "COMPRISING PERIOD FROM"' do
     second_line = 'WEDNESDAY, 12th NOVEMBER, 1941, to THURSDAY, 19th FEBRUARY, 1942'
-    check_comprising_period first_line, second_line, second_line
+    expected = second_line
+    check_comprising_period 'COMPRISING PERIOD FROM', expected, second_line
+  end
+
+  it 'should handle comprising period defined across two paragraphs, when first paragraph is "COMPRISING PERIOD"' do
+    second_line = 'WEDNESDAY, 12th NOVEMBER, 1941, to THURSDAY, 19th FEBRUARY, 1942'
+    expected = second_line
+    check_comprising_period 'COMPRISING PERIOD', expected, second_line
+  end
+
+  it 'should handle comprising period defined across two paragraphs, ending with period' do
+    second_line = 'TUESDAY, 2nd JUNE, to WEDNESDAY, 22nd JULY, 1942.'
+    expected =    'TUESDAY, 2nd JUNE, to WEDNESDAY, 22nd JULY, 1942'
+    check_comprising_period 'COMPRISING PERIOD FROM', expected, second_line
+  end
+
+  it 'should handle comprising period defined across two paragraphs, that contain escaped dash' do
+    second_line = '6th&#x2014;17th FEBRUARY, 1961'
+    expected = second_line
+    check_comprising_period 'COMPRISING PERIOD FROM', expected, second_line
+  end
+
+  it 'should handle comprising period defined across two paragraphs, with lower case conjunctions' do
+    second_line = 'MONDAY, 31st JULY, 1961, to TUESDAY, 24th OCTOBER, 1961'
+    expected = second_line
+    check_comprising_period 'COMPRISING PERIOD FROM', expected, second_line
+  end
+
+  it 'should handle comprising period defined in second paragraph that contains "and the General Index"' do
+    second_line = 'MONDAY, 31st JULY, 1961, to TUESDAY, 24th OCTOBER, 1961 and the General Index for the Session (Volumes CCXXVI&#x2014;CCXXXIV)'
+    expected =    'MONDAY, 31st JULY, 1961, to TUESDAY, 24th OCTOBER, 1961'
+    check_comprising_period 'COMPRISING PERIOD FROM', expected, second_line
+  end
+
+  it 'should handle comprising period defined in one paragraph, ending in period' do
+    line = 'COMPRISING PERIOD FROM TUESDAY, 8TH MAY, TO THURSDAY, 2ND AUGUST, 1923.'
+    check_comprising_period line, 'TUESDAY, 8TH MAY, TO THURSDAY, 2ND AUGUST, 1923'
+  end
+
+  it 'should handle comprising period defined in one paragraph, ending in comma' do
+    line = 'COMPRISING PERIOD FROM TUESDAY, 13TH NOVEMBER, TO FRIDAY, 16TH NOVEMBER, 1923,'
+    check_comprising_period line, 'TUESDAY, 13TH NOVEMBER, TO FRIDAY, 16TH NOVEMBER, 1923'
+  end
+
+  it 'should handle comprising period defined in one paragraph, ending in close parenthesis' do
+    line = '(COMPRISING PERIOD FROM MONDAY, 19TH JULY, TO WEDNESDAY, 15TH DECEMBER, 1926)'
+    check_comprising_period line,  'MONDAY, 19TH JULY, TO WEDNESDAY, 15TH DECEMBER, 1926'
+  end
+
+  it 'should handle comprising period defined in one paragraph, ending in close parenthesis followed by period' do
+    line = '(COMPRISING PERIOD FROM THURSDAY, 30TH JUNE, TO FRIDAY, 29TH JULY, 1927).'
+    check_comprising_period line,  'THURSDAY, 30TH JUNE, TO FRIDAY, 29TH JULY, 1927'
+  end
+
+  it 'should handle comprising period defined in one paragraph, ending in period followed by close parenthesis' do
+    line = '(COMPRISING PERIOD FROM TUESDAY, 5TH MARCH, TO WEDNESDAY, 27TH MARCH, 1929.)'
+    check_comprising_period line,  'TUESDAY, 5TH MARCH, TO WEDNESDAY, 27TH MARCH, 1929'
+  end
+
+  it 'should handle comprising period defined in one paragraph that contains lb element' do
+    line = '(COMPRISING PERIOD FROM TUESDAY, 19TH JUNE, 1934, TO TUESDAY,<lb/> 31ST JULY, 1934)'
+    check_comprising_period line,  'TUESDAY, 19TH JUNE, 1934, TO TUESDAY, 31ST JULY, 1934'
+  end
+
+  it 'should handle comprising period defined in one paragraph that ends with ")AND THE"' do
+    line = '(COMPRISING PERIOD FROM MONDAY, JULY 20TH, TO FRIDAY, OCTOBER 30TH, 1936)AND THE'
+    check_comprising_period line,  'MONDAY, JULY 20TH, TO FRIDAY, OCTOBER 30TH, 1936'
+  end
+
+  it 'should handle comprising period defined in one paragraph that has lb element before period text' do
+    line = 'COMPRISING PERIOD FROM<lb/> MONDAY, 25th OCTOBER&#x2014;FRIDAY, 5th NOVEMBER, 1976'
+    check_comprising_period line,      'MONDAY, 25th OCTOBER&#x2014;FRIDAY, 5th NOVEMBER, 1976'
+  end
+
+  it 'should handle comprising period defined in one paragraph that starts with "COMPRISING PERIOD" followed by lb element' do
+    line = 'COMPRISING PERIOD<lb/>17 APRIL&#x2014;28 APRIL 1989'
+    check_comprising_period line,'17 APRIL&#x2014;28 APRIL 1989'
+  end
+
+  it 'should handle comprising period defined in one paragraph that starts with "COMPRISING PERIOD"' do
+    line =     'COMPRISING PERIOD 18 March&#x2013;28 March 1991'
+    check_comprising_period line,'18 March&#x2013;28 March 1991'
   end
 end
 
