@@ -15,6 +15,7 @@ class SearchController < ApplicationController
   def show
     @query = params[:query]
     @member = params[:member]
+    @decade = params[:decade]
     @page = (params[:page] or 1).to_i
     @num_per_page = 30
     @sort = params[:sort]
@@ -26,6 +27,8 @@ class SearchController < ApplicationController
 
     if @member
       query = members_speech_search(@member, @query)
+    elsif @decade
+      query = decade_search(@decade, @query)
     else
       query = text_search(@query)
       @search_options = @search_options.merge(facet_options)
@@ -42,6 +45,11 @@ class SearchController < ApplicationController
       "text:#{query}"
     end
 
+    def decade_search(decade, query)
+      start_year = decade.to_i
+      "text:#{query} AND date:[#{start_year}-01-01 TO #{start_year + 9}-12-31]"
+    end
+    
     def members_speech_search(member, query)
       "text:#{query} AND member:\"#{member}\""
     end
@@ -58,11 +66,13 @@ class SearchController < ApplicationController
     end
 
     def pagination_options
-      { :offset => (@page - 1) * @num_per_page }
+      { :offset => (@page - 1) * @num_per_page,
+        :limit  => @num_per_page }
     end
 
     def facet_options
-      { :facets => { :fields =>[:member], :zeros => false, :sort => true } }
+      { :facets => { :fields => [:member, :date],   
+                     :zeros => false, :sort => true } }
     end
 
 end

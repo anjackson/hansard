@@ -10,7 +10,44 @@ class Section < ActiveRecord::Base
   before_create :create_slug
   acts_as_hansard_element
   acts_as_slugged
+  
+  def self.frequent_titles_in_interval(start_date, end_date, options={})
+    options[:limit] ||= 10
+    options[:exclude] ||= ['BILL PRESENTED',
+                           'Business',
+                           'BUSINESS OF THE HOUSE.',
+                           'Business of the House',
+                           'DELEGATED LEGISLATION',
+                           'ORDERS OF THE DAY', 
+                           'ORAL ANSWERS TO QUESTIONS', 
+                           'ORAL ANSWERS TO<lb></lb> QUESTIONS',
+                           'PETITION',
+                           'PETITIONS',
+                           'Points of Order',
+                           'PRAYERS', 
+                           'PRIVATE BUSINESS']
+                                    
+    self.connection.select_values("SELECT   sections.title, count(sections.title) as title_count 
+                                   FROM     sections, sittings 
+                                   WHERE    sittings.date >= '#{start_date.to_s(:db)}'
+                                   AND      sittings.date <= '#{end_date.to_s(:db)}'
+                                   AND      sittings.id = sections.sitting_id
+                                   AND      sections.title not in ('#{options[:exclude].join('\',\'')}')
+                                   GROUP BY sections.title 
+                                   ORDER BY title_count desc 
+                                   LIMIT #{options[:limit]}")
+                                   
+  end
 
+  def self.find_by_title_in_interval(title, start_date, end_date)
+    find(:all, 
+         :include => :sitting, 
+         :conditions => ["sections.title = ? 
+                          and sittings.date >= ? 
+                          and sittings.date <= ? ", title, start_date, end_date], 
+         :order => "sittings.date asc")
+  end
+  
   def year
     date.year
   end

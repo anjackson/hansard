@@ -4,6 +4,7 @@ class SittingsController < ApplicationController
   before_filter :check_valid_date, :only => [:show, :show_source, :edit]
   
   def index
+    @date = Time.now
     @sittings_by_year = model.all_grouped_by_year
   end
 

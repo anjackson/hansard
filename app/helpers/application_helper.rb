@@ -37,10 +37,10 @@ module ApplicationHelper
     url_for(params.merge!(:controller => "sections", :action => "show"))
   end
   
-  def next_resolution(resolution)
+  def lower_resolution(resolution)
     case resolution
-    when nil
-      nil
+    when :century
+      :year
     when :year
       :month
     when :month
@@ -49,14 +49,14 @@ module ApplicationHelper
   end
   
   def resolution_title(date, resolution)
-    title = "Information"
+    title = "Information by year"
     case resolution
       when :year
-        title << " for #{date.year}"
+        title = "Information for #{date.year}"
       when :month
-        title << " for #{Date::MONTHNAMES[date.month]} #{date.year}"
+        title = "Information for #{Date::MONTHNAMES[date.month]} #{date.year}"
       when :day
-        title << " for #{date.day} #{Date::MONTHNAMES[date.month]} #{date.year}"
+        title = "Information for #{date.day} #{Date::MONTHNAMES[date.month]} #{date.year}"
     end
     title
   end
@@ -165,6 +165,12 @@ module ApplicationHelper
       else
 
         open :li do
+          open :a, { :href => sittings_url } do
+            puts "By Year"
+          end
+        end
+        
+        open :li do
           open :a, { :href => commons_url } do
             puts "Commons"
           end
@@ -189,10 +195,10 @@ module ApplicationHelper
         end
         
         open :li do
-                  open :a, { :href => parliament_sessions_url } do
-                    puts "Sessions"
-                  end
-                end
+          open :a, { :href => parliament_sessions_url } do
+            puts "Sessions"
+          end
+        end
 
         open :li do
           open :a, { :href => source_files_url } do

@@ -1,5 +1,17 @@
 module SearchHelper
 
+  
+  def link_for interval, resolution, counts, options
+    if counts.sum > 0
+      link_to interval.to_s, {:controller => "search", 
+                              :action     => "show", 
+                              :query      => @query, 
+                              :decade     => interval}
+    else
+      interval
+    end
+  end
+    
   def sort_link(current_sort)
     if current_sort == "date"
       params.delete(:sort)
@@ -36,6 +48,32 @@ module SearchHelper
       yield member_facets
     end
   end
+  
+  def date_facets(result_set)
+    return false if !result_set.facets 
+    return false if result_set.facets["facet_fields"].nil? 
+    return false if result_set.facets["facet_fields"].empty?
+    return false if result_set.facets["facet_fields"]["date_facet"].nil?
+    return false if result_set.facets["facet_fields"]["date_facet"].empty?
+    return result_set.facets["facet_fields"]["date_facet"]
+  end
+  
+  def date_timeline(result_set)
+    return nil if !date_facets(result_set)
+    options = { :num_years => 100, 
+                :first_of_month => false }
+    timeline(Time.now, :century, options) do |start_date, end_date| 
+      date_facet_hash(result_set, start_date, end_date) 
+    end  
+  end
+  
+  def date_facet_hash(result_set, start_date, end_date)
+    date_facets = date_facets(result_set)
+    date_facets = date_facets.collect{|date_string, count| [ Date.parse(date_string), count] }
+    facet_hash = {}
+    date_facets.each{ |k,v| facet_hash[k] = v }
+    facet_hash
+  end
 
   def sort_by_reverse_value_then_key(hash)
     # sorts by score from high to low and then by name from a to z
@@ -50,10 +88,10 @@ module SearchHelper
 
   def member_facet_link(member, times, query)
     if times > 1
-    link_to "<strong>" << times.to_s << "</strong> " << format_member_name(member), member_facet_url(member, query)
-  else
-    link_to format_member_name(member), member_facet_url(member, query)
-  end
+      link_to "<strong>" << times.to_s << "</strong> " << format_member_name(member), member_facet_url(member, query)
+    else
+      link_to format_member_name(member), member_facet_url(member, query)
+    end
   end
 
   def member_facet_url(member, query)
@@ -64,9 +102,10 @@ module SearchHelper
      :page       => nil}
   end
 
-  def search_results_title(member, query)
+  def search_results_title(member, decade, query)
     title = "Search: '#{query}'"
     title += " spoken by #{link_to_member(format_member_name(member))}" if member
+    title += " in the #{decade}" if decade
     title
   end
 
@@ -79,7 +118,7 @@ module SearchHelper
       text += "<p>Try your search on more recent Parliament information?</p>"
       text += google_custom_search_form(query)
     else
-       if result_set.total_hits < 31
+       if result_set.total_hits <= @num_per_page
           text += "<h3>#{result_set.total_hits} results</h3>"
         else
       start = ((@page - 1) * @num_per_page) + 1

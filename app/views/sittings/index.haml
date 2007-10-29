@@ -3,4 +3,9 @@
   = render :partial => "partials/sitting", :collection => @sittings
 - else
   .timeline#timeline
-    = timeline((@date or Time.now.to_date), next_resolution(@resolution), {:total_resolution => 500, :first_of_month => false}) 
+    = timeline(@date, lower_resolution(@resolution), {:num_years => 100, :first_of_month => false}) 
+  %h3 Frequent titles
+  - frequent_section_titles(@date, lower_resolution(@resolution)) do |title, start_date, end_date|
+    .frequent-title= title 
+    - Section.find_by_title_in_interval(title, start_date, end_date).each do |section|
+      = link_to section.date.to_formatted_s(:long), section_url(section)
