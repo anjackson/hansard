@@ -195,7 +195,8 @@ describe ApplicationHelper, " when creating navigation links" do
         :source_files_url,
         :members_url,
         :search_url,
-        :data_files_url]
+        :data_files_url,
+        :parliament_sessions_url]
 
     url_helper_methods.each do |url_helper_method|
       stub!(url_helper_method)
