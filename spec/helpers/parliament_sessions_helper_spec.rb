@@ -13,11 +13,22 @@ describe ParliamentSessionsHelper do
 
   it 'should create link text to volume url correctly when session has a volume part number' do
     session = parliament_sessions(:commons_session)
-    volume_link(session).should have_tag('a', :text => 'Volume 424 (Part 1)')
+    volume_link(session).should have_tag('a', :text => 'Volume 424 (Part 1), Commons')
   end
 
-  it 'should create link text to volume url correctly when session has no volume part number' do
+  it 'should create link text to volume url correctly when session has Roman numerial volume number' do
     session = parliament_sessions(:lords_session)
-    volume_link(session).should have_tag('a', :text => 'Volume 121')
+    volume_link(session).should have_tag('a', :text => 'Volume CXXI (121), Lords')
   end
+
+  it 'should create link text to volume url correctly when session is for House of Commons' do
+    session = parliament_sessions(:commons_session)
+    volume_link(session).ends_with?(', Commons</a>').should be_true
+  end
+
+  it 'should create link text to volume url correctly when session if for House of Lords' do
+    session = parliament_sessions(:lords_session)
+    volume_link(session).ends_with?(', Lords</a>').should be_true
+  end
+
 end

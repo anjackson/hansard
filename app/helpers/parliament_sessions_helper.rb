@@ -6,8 +6,14 @@ module ParliamentSessionsHelper
   end
 
   def volume_link parliament_session
-    link_text = 'Volume ' + parliament_session.volume_in_series_to_i.to_s
-    link_text += ' (Part ' + parliament_session.volume_in_series_part_number.to_s + ')' if parliament_session.volume_in_series_part_number
+    session = parliament_session
+    if session.volume_in_series.is_roman_numerial?
+      link_text = "Volume #{session.volume_in_series} (#{session.volume_in_series_to_i.to_s})"
+    else
+      link_text = "Volume #{session.volume_in_series_to_i.to_s}"
+    end
+    link_text += " (Part #{session.volume_in_series_part_number.to_s})" if session.volume_in_series_part_number
+    link_text += ", #{session.house}"
     link_to link_text, ''
   end
 end

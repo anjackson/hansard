@@ -54,3 +54,18 @@ describe ParliamentSession, 'volume_in_series_to_i' do
     lambda { session.volume_in_series_to_i }.should raise_error
   end
 end
+
+
+describe HouseOfCommonsSession do
+  it 'should return house as "Commons"' do
+    session = HouseOfCommonsSession.new
+    session.house.should == "Commons"
+  end
+end
+
+describe HouseOfLordsSession do
+  it 'should return house as "Lords"' do
+    session = HouseOfLordsSession.new
+    session.house.should == "Lords"
+  end
+end
