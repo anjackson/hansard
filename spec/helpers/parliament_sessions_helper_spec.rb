@@ -4,31 +4,23 @@ describe ParliamentSessionsHelper do
   fixtures :parliament_sessions
 
   it 'should create link text to series url correctly' do
-    series_link('SIXTH').should have_tag('a', :text => "SIXTH")
+    series_link('SIXTH').should have_tag('a', :text => "Sixth Series")
   end
 
   it 'should create link url to series url correctly' do
     series_link('SIXTH').should have_tag('a[href="/parliament_sessions/sixth-series"]')
   end
 
-  it 'should create link text to volume url correctly when session has a volume part number' do
+  it 'should create link text to volume url correctly when session is for Commons with a volume part number' do
     session = parliament_sessions(:commons_session)
-    volume_link(session).should have_tag('a', :text => 'Volume 424 (Part 1), Commons')
+    text = 'Volume 424 (Part 1), Commons, 19 July&#x2014;4 October 2004'
+    volume_link(session).should  have_tag('a', :text => text)
   end
 
-  it 'should create link text to volume url correctly when session has Roman numerial volume number' do
+  it 'should create link text to volume url correctly when session is for Lords with a Roman numerial volume number' do
     session = parliament_sessions(:lords_session)
-    volume_link(session).should have_tag('a', :text => 'Volume CXXI (121), Lords')
-  end
-
-  it 'should create link text to volume url correctly when session is for House of Commons' do
-    session = parliament_sessions(:commons_session)
-    volume_link(session).ends_with?(', Commons</a>').should be_true
-  end
-
-  it 'should create link text to volume url correctly when session if for House of Lords' do
-    session = parliament_sessions(:lords_session)
-    volume_link(session).ends_with?(', Lords</a>').should be_true
+    text = 'Volume CXXI (121), Lords, Wednesday, 12th November, 1941, to Thursday, 19th February, 1942'
+    volume_link(session).should have_tag('a', :text => text)
   end
 
 end
