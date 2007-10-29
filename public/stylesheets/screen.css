@@ -225,8 +225,7 @@ font-weight: bold;
 }
 
 .timeline {
-  margin-top: 2em;
-  margin-bottom: 1em;
+  margin-bottom: 0.5em;
 }
 
 td.timeline_lead_block {
