@@ -1,5 +1,9 @@
 module ParliamentSessionsHelper
 
+  def volume_in_series_title series_number
+    "Volumes in #{series_number.titleize}, by number"
+  end
+
   def series_link series_number
     url_component = series_number.downcase+'-series'
     series = "#{series_number.titleize} Series"
@@ -21,4 +25,5 @@ module ParliamentSessionsHelper
     end
     link_to link_text, ''
   end
+
 end

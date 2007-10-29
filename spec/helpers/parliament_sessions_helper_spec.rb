@@ -3,6 +3,10 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe ParliamentSessionsHelper do
   fixtures :parliament_sessions
 
+  it 'should create volumes in series title correctly' do
+    volume_in_series_title('sixth-series').should == 'Volumes in Sixth Series, by number'
+  end
+
   it 'should create link text to series url correctly' do
     series_link('SIXTH').should have_tag('a', :text => "Sixth Series")
   end
