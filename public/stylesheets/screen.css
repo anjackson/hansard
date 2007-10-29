@@ -12,6 +12,8 @@ color: #8A2BE2;
 }
 .procedural {
 color: #666;
+padding: 0 1em;
+
 }
 .sittings-in-interval{
 float: right;
@@ -48,9 +50,22 @@ padding:1em;
 	background-position:center;
 }
 
-#frontpage #credit a {
+#frontpage a {
 color:#333;
-font-size:0.8em;
+background-color:yellow;
+padding:0.2em;
+margin:0.2em;
+}
+
+.search-result-fragment {
+}
+
+.search-result {
+	padding-bottom:1em;
+}
+
+.search-result-details {
+	font-size:0.8em;
 }
 
 .search-result-fragment em {
