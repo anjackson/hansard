@@ -331,7 +331,7 @@ class Hansard::Splitter
       @source_file.result_directory = result_directory
       @source_file
     else
-      puts "No dates found in #{input_file} so deleting results of split!"
+      puts "No dates found in #{input_file} so deleting results of split!" if @verbose
       FileUtils.remove_dir result_directory, true
       FileUtils.remove_dir @result_path, true
       @source_file
