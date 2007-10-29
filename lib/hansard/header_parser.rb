@@ -98,12 +98,12 @@ class Hansard::HeaderParser
     text = text.gsub('<lb/>','')
 
     if (match = TWO_YEAR_REIGN_PATTERN.match(text))
-      if ((monarch_suffix = match[5].chomp('.')) && monarch_suffix.is_roman_numerial?)
+      if ((monarch_suffix = match[5].chomp('.')) && monarch_suffix.is_roman_numeral?)
         year_of_the_reign, monarch_name = match_two_year_reign_and_monarch(match)
         other_year_of_the_reign, other_monarch_name = find_second_reign_and_monarch(text, TWO_YR_ONE_YR_TWO_MONARCHS, TWO_YR_TWO_YR_TWO_MONARCHS, 6)
       end
     elsif (match = ONE_YEAR_REIGN_PATTERN.match(text))
-      if ((monarch_suffix = match[3].chomp('.')) && monarch_suffix.is_roman_numerial?)
+      if ((monarch_suffix = match[3].chomp('.')) && monarch_suffix.is_roman_numeral?)
         year_of_the_reign, monarch_name = match_one_year_reign_and_monarch(match)
         other_year_of_the_reign, other_monarch_name = find_second_reign_and_monarch(text, ONE_YR_ONE_YR_TWO_MONARCHS, ONE_YR_TWO_YR_TWO_MONARCHS, 4)
       end

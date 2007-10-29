@@ -7,7 +7,7 @@ module ParliamentSessionsHelper
   def monarch_link monarch_name
     parts = []
     monarch_name.each(' ') do |part|
-      if part.is_roman_numerial?
+      if part.is_roman_numeral?
         parts << part
       else
         parts << part.titleize
@@ -24,7 +24,7 @@ module ParliamentSessionsHelper
   end
 
   def volume_link parliament_session
-    if parliament_session.volume_in_series.is_roman_numerial?
+    if parliament_session.volume_in_series.is_roman_numeral?
       link_text = "Volume #{parliament_session.volume_in_series} (#{parliament_session.volume_in_series_to_i.to_s})"
     else
       link_text = "Volume #{parliament_session.volume_in_series_to_i.to_s}"

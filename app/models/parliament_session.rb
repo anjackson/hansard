@@ -27,9 +27,9 @@ class ParliamentSession < ActiveRecord::Base
 
   def volume_in_series_to_i
     if volume_in_series
-      if volume_in_series.is_roman_numerial?
+      if volume_in_series.is_roman_numeral?
         volume_in_series.roman_to_i
-      elsif volume_in_series.is_arabic_numerial?
+      elsif volume_in_series.is_arabic_numeral?
         volume_in_series.to_i
       else
         raise "cannot convert volume_in_series to integer: '#{volume_in_series}'"

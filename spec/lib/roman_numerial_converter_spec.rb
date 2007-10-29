@@ -2,12 +2,12 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe String do
 
-  it 'should return is_arabic_numerial? true for "12"' do
-    "12".is_arabic_numerial?.should be_true
+  it 'should return is_arabic_numeral? true for "12"' do
+    "12".is_arabic_numeral?.should be_true
   end
 
-  it 'should return is_arabic_numerial? false for "I"' do
-    "I".is_arabic_numerial?.should be_false
+  it 'should return is_arabic_numeral? false for "I"' do
+    "I".is_arabic_numeral?.should be_false
   end
 
   it 'should return 1 "1".to_i' do
@@ -18,12 +18,12 @@ describe String do
     "I".to_i.should == 0
   end
 
-  it 'should return is_roman_numerial? true for "I"' do
-    "I".is_roman_numerial?.should be_true
+  it 'should return is_roman_numeral? true for "I"' do
+    "I".is_roman_numeral?.should be_true
   end
 
-  it 'should return is_roman_numerial? false for "R"' do
-    "R".is_roman_numerial?.should be_false
+  it 'should return is_roman_numeral? false for "R"' do
+    "R".is_roman_numeral?.should be_false
   end
 
   it 'should return 1 for "I".roman_to_i' do
