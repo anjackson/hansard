@@ -41,8 +41,6 @@ describe 'sections/show.haml', 'when passed a section with nested sections' do
     assigns[:section] = parent
     assigns[:title] = @title
   end
-
-  it 'should render parent section title'
   
   it "should render the parent section's marker html" do
     render 'sections/show.haml', :layout => 'application'

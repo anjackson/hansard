@@ -8,5 +8,41 @@
     #frontpage
       = link_to "Pick something for me", random_url, {:id => "random-link"}
       = search_form
+      %a{:href=> "/search?query=xenotransplantation&sa=Search"}
+        xenotransplantation
+      %a{:href=> "/search?query=nonsense&sa=Search"}
+        nonsense
+      %a{:href=> "/search?query=resign&sa=Search"}
+        resign
+      %p
+      %a{:href=> "/search?query=romania+OR+roumania&sa=Search"}
+        Romania (or Roumania, or Rumania)
+      %p
+      %a{:href=> "/lords/1928/aug/03/his-majestys-speech"}
+        George VI prorogues Parliament, 1928
+      %a{:href=> "/lords/1934/nov/16/his-majestys-speech"}
+        and 1934
+      %p
+      %a{:href=> "/lords/1928/jun/20/slums"}
+        Slums, 1928
+      %a{:href=> "/lords/1928/jun/21/the-speaker-of-the-house-of-commons"}
+        Edward FitzRoy elected Speaker
+      %p
+      %a{:href=> '/commons/1970/feb/24/channel-tunnel'}
+        The Channel Tunnel, 1970
+      %a{:href=> '/lords/1967/jan/18/vietnam-british-peace-efforts'}
+        Peace efforts in Vietnam, 1967
+      %p
+      %a{:href=> '/commons/1978/may/04/mr-joseph-bearder-inheritance'}
+        The inheritance of Mr. Joseph Bearder
+      %a{:href=> '/members/mr-eric-heffer'}
+        Mr. Eric Heffer
+      %p
+      %a{:href=> '/members/the-countess-of-mar'}
+        The Countess of Mar
+      %a{:href=> '/lords/1931/may/06/the-twenty-four-hour-system'}
+        Use of the 24 hour clock
+      %p
+      %a{:href=> '/members/viscount-stansgate'}
+        Viscount Stansgate
       
-/ http://rua.parliament.uk/hansard/lords/1914/aug/04/the-european-crisis

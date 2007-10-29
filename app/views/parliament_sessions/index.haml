@@ -1,8 +1,8 @@
-- @title = "Sessions by Series number"
+- @title = "Series by number"
 
-%h3
+%p
   = @series.length
-  Series available
-%ol
-- @series.each do |series_number|
-  %li= series_link(series_number)
+  Series in total
+%ol.series
+  - @series.each do |series_number|
+    %li= series_link(series_number)

@@ -25,10 +25,6 @@ describe SearchHelper, " when creating a search result title" do
   it "should return 'Search: <code>mice</code>' for a query of 'mice' and no member" do
     search_results_title(nil, 'mice').should == 'Search: \'mice\''
   end
-
-  it "should return '' for a query of 'mice' and member 'Mickey Mouse' " do
-    search_results_title('Mickey Mouse', 'mice').should == 'Search: \'mice\' spoken by Mickey Mouse'
-  end
   
 end
 

@@ -3,7 +3,7 @@ module SearchHelper
   def sort_link(current_sort)
     if current_sort == "date"
       params.delete(:sort)
-      link_to "<p><button>Sort results by most relevant</button></p>", params
+      link_to "<p><button>Sort results by frequency</button></p>", params
     else
       link_to "<p><button>Sort results by date</button></p>", params.merge(:sort => "date")
     end
@@ -66,7 +66,7 @@ module SearchHelper
 
   def search_results_title(member, query)
     title = "Search: '#{query}'"
-    title += " spoken by #{format_member_name(member)}" if member
+    title += " spoken by #{link_to_member(format_member_name(member))}" if member
     title
   end
 
