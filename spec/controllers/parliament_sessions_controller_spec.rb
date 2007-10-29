@@ -12,11 +12,14 @@ describe ParliamentSessionsController do
     route_for(params).should == "/parliament_sessions/sixth-series"
   end
 
-  it 'should assign series in index action' do
+  it 'should assign series and monarchs in index action' do
     @series = []
+    @monarchs = []
     ParliamentSession.stub!(:series).and_return(@series)
+    ParliamentSession.stub!(:monarchs).and_return(@monarchs)
     get 'index'
     assigns[:series].should == @series
+    assigns[:monarchs].should == @monarchs
   end
 
   it 'should assign volumes in series_index action' do

@@ -7,6 +7,12 @@ describe ParliamentSession, 'the class' do
     ParliamentSession.delete_all
   end
 
+  it 'should return monarchs for sessions in database' do
+    monarchs = ParliamentSession.monarchs
+    monarchs.include?('ELIZABETH II').should be_true
+    monarchs.include?('GEORGE VI').should be_true
+  end
+
   it 'should return series numbers for sessions in database' do
     series = ParliamentSession.series
     series.include?('SIXTH').should be_true

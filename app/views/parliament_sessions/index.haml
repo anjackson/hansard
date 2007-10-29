@@ -1,8 +1,11 @@
-- @title = "Series by number"
+- @title = "Parliamentary Debates"
 
-%p
-  = @series.length
-  Series in total
+%h2 By Series
 %ol.series
   - @series.each do |series_number|
     %li= series_link(series_number)
+
+%h2 By Monarch
+%ol.monarchs
+  - @monarchs.each do |monarch|
+    %li= monarch

@@ -7,6 +7,10 @@ class ParliamentSession < ActiveRecord::Base
   alias :to_activerecord_xml :to_xml
   acts_as_hansard_element
 
+  def self.monarchs
+    find(:all).collect(&:monarch_name).compact.uniq
+  end
+
   def self.series
     find(:all).collect(&:series_number).compact.uniq
   end

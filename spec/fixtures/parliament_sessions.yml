@@ -2,7 +2,7 @@ commons_session:
   isbn:
   volume_of_session:
   years_of_session:
-  year_of_the_reign:
+  year_of_the_reign: FIFTY-THIRD
   session_of_parliament: THIRD
   type: HouseOfCommonsSession
   volume_in_series: "424"
@@ -13,7 +13,7 @@ commons_session:
   period_end_date_text:
   series_number: SIXTH
   period_start_date_text:
-  monarch_name:
+  monarch_name: ELIZABETH II
   number_of_parliament: FIFTY&#x2014;THIRD
   source_file_id: "2"
   data_file_id: "14"
