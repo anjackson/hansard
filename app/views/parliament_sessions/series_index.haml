@@ -1,10 +1,6 @@
-- @title = "Volumes in series XXX, by number"
+- @title = "Volumes in series #{@series_number}, by number"
 
 - @sessions_grouped_by_volume_in_series.each do |parliament_sessions|
-  - if parliament_sessions.size == 1
-    %p= volume_link parliament_sessions.first
-  - elsif parliament_sessions.size > 1
+  %ol.volumes
     - parliament_sessions.each do |parliament_session|
-      %p= volume_link parliament_session
-
-
+      %li= volume_link parliament_session
