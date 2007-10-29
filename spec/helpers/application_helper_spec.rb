@@ -187,8 +187,10 @@ describe ApplicationHelper, " when creating navigation links" do
     url_helper_methods = [:sitting_date_source_url,
         :sitting_date_xml_url,
         :home_url,
+        :sittings_url,
         :commons_url,
         :lords_url,
+        :parliament_sessions_url,
         :lords_reports_url,
         :written_answers_url,
         :indices_url,
@@ -211,6 +213,12 @@ describe ApplicationHelper, " when creating navigation links" do
     result.should have_tag("ul li a[href=http://test.url]")
   end
   
+  it "should include an 'ul' tag containing an 'li' tag containing a link to the sittings url if @day is not true" do
+    should_receive(:sittings_url).and_return("http://test.url")
+    result = capture_haml{ day_nav_links }
+    result.should have_tag("ul li a[href=http://test.url]")
+  end
+
 
   it "should include an 'ul' tag containing an 'li' tag containing a link to the writtenanswers url if @day is not true" do
     should_receive(:written_answers_url).and_return("http://test.url")

@@ -18,9 +18,14 @@ describe SearchController do
     response.should be_success
   end
   
+  it "should set the limit for solr to 30" do
+    do_get
+    @controller.send(:pagination_options)[:limit].should == 30
+  end
+  
   it "should set the offset for solr to 30 for the second page of results" do
     do_get
-    @controller.send(:pagination_options).should == { :offset => 30 }
+    @controller.send(:pagination_options)[:offset].should == 30 
   end
   
   it 'should redirect back to the previous page if no search terms are passed' do

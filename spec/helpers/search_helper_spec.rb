@@ -23,9 +23,18 @@ end
 describe SearchHelper, " when creating a search result title" do
  
   it "should return 'Search: <code>mice</code>' for a query of 'mice' and no member" do
-    search_results_title(nil, 'mice').should == 'Search: \'mice\''
+    search_results_title(nil, nil, 'mice').should == 'Search: \'mice\''
+  end
+
+  it "should return 'Search: \'mice\' spoken by Mickey Mouse' for a query of 'mice' and member 'Mickey Mouse' " do
+    stub!(:link_to_member).and_return('<a href="">Mickey Mouse</a>')
+    search_results_title('Mickey Mouse', nil, 'mice').should == 'Search: \'mice\' spoken by <a href="">Mickey Mouse</a>'
   end
   
+  it "should return 'Search: \'mice\' spoken in the 1920s' for a query of 'mice' and decade '1920s'" do
+    search_results_title(nil, '1920s', 'mice').should == 'Search: \'mice\' in the 1920s'
+  end
+
 end
 
 describe SearchHelper, " when creating member facet links" do
@@ -35,3 +44,41 @@ describe SearchHelper, " when creating member facet links" do
   end 
 
 end
+
+describe SearchHelper, ".link_for" do
+
+  it 'should return the text "1950s" when passed the interval "1950s", century resolution and a list of zero counts' do
+    link_for('1950s', :century, [0,0,0,0,0], {}).should == '1950s'
+  end
+  
+  it 'should return a link to the search url with query and decade params set when passed the interval "1950s", century resolution and some non-zero counts' do
+    @query = "test"
+    link_for('1950s', :century, [0,1,0,0,1], {}).should == '<a href="/search?decade=1950s&amp;query=test">1950s</a>'
+  end
+  
+end
+
+describe SearchHelper, " when creating a date timeline for a result set" do
+  
+  before do 
+    @result_set = mock("result set")
+  end
+
+  it 'should not return anything if the result set has no facets' do
+    @result_set.stub!(:facets).and_return(nil)
+    date_timeline(@result_set).should be_nil
+  end
+  
+  it 'should not return anything if the results set has no facet fields' do
+    @result_set.stub!(:facets).and_return({})
+    date_timeline(@result_set).should be_nil
+  end
+ 
+  it 'should not return anything if the results set facet fields do not include a date facet'  do
+    @result_set.stub!(:facets).and_return({:facet_fields => {}})
+    date_timeline(@result_set).should be_nil
+  end
+  
+end
+
+
