@@ -24,24 +24,24 @@ class String
     end
   end
 
-  def is_roman_numerial?
+  def is_roman_numeral?
     IS_ROMAN.match(self) ? true : false
   end
 
-  def is_arabic_numerial?
+  def is_arabic_numeral?
     IS_ARABIC.match(self) ? true : false
   end
 #  when IS_ARABIC then puts ROMAN_NUMERALS[line.to_i - 1]
 
   def roman_to_i
-    if is_roman_numerial?
+    if is_roman_numeral?
       if ROMAN_NUMERALS.include? self
         ROMAN_NUMERALS.index(self) + 1
       else
         raise "cannot convert to integer, '#{self}' larger than maximum number handled #{MAXIMUM_ROMAN_HANDLED}"
       end
     else
-      raise "cannot convert to integer, '#{self}' is not a recognized roman numerial less than the maximum handled #{MAXIMUM_ROMAN_HANDLED + 1}"
+      raise "cannot convert to integer, '#{self}' is not a recognized roman numeral less than the maximum handled #{MAXIMUM_ROMAN_HANDLED + 1}"
     end
   end
 end
