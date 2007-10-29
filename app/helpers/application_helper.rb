@@ -219,8 +219,8 @@ module ApplicationHelper
 
   def search_form id='search', submit_text='Search', &block
     open :form, { :action => "#{search_url}", :id => id } do
-      open :input, { :name => 'query', :type => 'text', :size => '20', :accesskey => 's', :value => @query}
-      open :input, { :name => 'sa', :type => 'submit', :value => submit_text}
+      puts "<input accesskey='s' name='query' size='20' type='text' value='test'>"
+      puts "<input name='sa' type='submit' value='#{submit_text}'>"
       yield if block
     end
   end
