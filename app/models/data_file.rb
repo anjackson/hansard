@@ -16,6 +16,10 @@ class DataFile < ActiveRecord::Base
     (DataFile.reload_possible? and !date.nil?)
   end
 
+  def self.log_to_stdout(message)
+    puts message
+  end
+  
   def self.from_file file
     name = File.basename(file)
     directory = 'data' + File.dirname(file).split('data')[1]
@@ -55,7 +59,7 @@ class DataFile < ActiveRecord::Base
 
   def add_log text, persist=true
     self.log = '' if log.nil?
-    puts text
+    DataFile.log_to_stdout(text)
     $stdout.flush
     if persist
      text = self.log + (text + "\n")

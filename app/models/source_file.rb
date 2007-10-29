@@ -3,10 +3,14 @@ class SourceFile < ActiveRecord::Base
   has_many :data_files
   validates_uniqueness_of :name
   has_one :parliament_session
-
+  
   def self.from_file file
     name = File.basename(file, '.xml')
     SourceFile.find_or_create_by_name(name)
+  end
+  
+  def self.log_to_stdout(message)
+    puts message
   end
 
   def self.get_error_summary
@@ -75,7 +79,7 @@ class SourceFile < ActiveRecord::Base
 
   def add_log text, persist=true
     self.log = '' if log.nil?
-    puts text
+    SourceFile.log_to_stdout(text)
     $stdout.flush
     if text.size > 255
       text = text[0..255]
