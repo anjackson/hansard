@@ -152,6 +152,14 @@ class Hansard::HeaderParser
     return [series_number, volume_in_series, volume_part_number]
   end
 
+  def self.find_comprising_period first_line, second_line
+    if first_line == 'COMPRISING PERIOD FROM'
+      second_line
+    else
+      ''
+    end
+  end
+
   private
 
     def handle_titlepage titlepage, session

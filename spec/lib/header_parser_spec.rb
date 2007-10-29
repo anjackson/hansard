@@ -1,5 +1,19 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
+describe Hansard::HeaderParser, 'when identifying comprising period text' do
+
+  def check_comprising_period first_line, second_line, expected_period
+    comprising_period = Hansard::HeaderParser.find_comprising_period(first_line, second_line)
+    comprising_period.should == expected_period
+  end
+
+  it 'should handle comprising period defined across two paragraphgs' do
+    first_line = 'COMPRISING PERIOD FROM'
+    second_line = 'WEDNESDAY, 12th NOVEMBER, 1941, to THURSDAY, 19th FEBRUARY, 1942'
+    check_comprising_period first_line, second_line, second_line
+  end
+end
+
 describe Hansard::HeaderParser, 'when identifying series and volume' do
 
   def check_series_volume_part text, series_expected, volume_expected, part_expected=nil
