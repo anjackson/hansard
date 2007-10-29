@@ -188,11 +188,11 @@ module ApplicationHelper
           end
         end
         
-        # open :li do
-        #   open :a, { :href => members_url } do
-        #     puts "Members"
-        #   end
-        # end
+        open :li do
+                  open :a, { :href => parliament_sessions_url } do
+                    puts "Sessions"
+                  end
+                end
 
         open :li do
           open :a, { :href => source_files_url } do
