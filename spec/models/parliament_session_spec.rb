@@ -1,5 +1,25 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
+describe ParliamentSession, 'the class' do
+  fixtures :parliament_sessions
+
+  after do
+    ParliamentSession.delete_all
+  end
+
+  it 'should return series numbers for sessions in database' do
+    series = ParliamentSession.series
+    series.include?('SIXTH').should be_true
+    series.include?('FIFTH').should be_true
+  end
+
+  it 'should return sessions grouped by volume in series numbers for a given series' do
+    series_number_series = 'sixth-series'
+    volumes = ParliamentSession.sessions_in_groups_by_volume_in_series(series_number_series)
+    volumes[0][0].should == parliament_sessions(:commons_session)
+  end
+end
+
 describe ParliamentSession, 'when source_file_id is set' do
   it 'should be associated with source file' do
     session = ParliamentSession.new :source_file_id => 123

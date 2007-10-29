@@ -160,10 +160,11 @@ class Hansard::HeaderParser
       titlepage.children.each do |node|
         if is_element? 'p', node
           text = clean_html(node).strip
-          series, volume = Hansard::HeaderParser.find_series_and_volume_and_part(text)
+          series, volume, part = Hansard::HeaderParser.find_series_and_volume_and_part(text)
           if series
             session.series_number = series
             session.volume_in_series = volume
+            session.volume_in_series_part_number = part
           else
             session_of_parliament, parliament = Hansard::HeaderParser.find_session_and_parliament(text)
             if session_of_parliament

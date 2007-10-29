@@ -7,6 +7,16 @@ class ParliamentSession < ActiveRecord::Base
   alias :to_activerecord_xml :to_xml
   acts_as_hansard_element
 
+  def self.series
+    find(:all).collect(&:series_number).compact.uniq
+  end
+
+  def self.sessions_in_groups_by_volume_in_series series_number
+    series = series_number.sub('-series','')
+    sessions_in_series = find(:all).select {|s| s.series_number && (s.series_number.downcase == series) }.sort_by(&:volume_in_series)
+    sessions_in_series.in_groups_by(&:volume_in_series)
+  end
+
   def volume_in_series_to_i
     if volume_in_series
       if volume_in_series.is_roman_numerial?

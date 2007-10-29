@@ -177,6 +177,11 @@ describe Hansard::HeaderParser, 'when identifying year(s) of reign and monarch' 
     text = 'FIRST SESSION OF THE FORTY&#x2014;SIXTH PARLIAMENT OF THE UNITED KINGDOM OF GREAT BRITAIN AND NORTHERN IRELAND 23 ELIZABETH II'
     check_reign_monarch text, '23', 'ELIZABETH II'
   end
+
+  it 'should handle "THIRD SESSION OF THE FIFTY&#x2014;THIRD PARLIAMENT OF THE UNITED KINGDOM OF GREAT BRITAIN AND NORTHERN IRELAND FIFTY-THIRD YEAR OF THE REIGN OF HER MAJESTY QUEEN ELIZABETH II"' do
+    text = 'THIRD SESSION OF THE FIFTY&#x2014;THIRD PARLIAMENT OF THE UNITED KINGDOM OF GREAT BRITAIN AND NORTHERN IRELAND FIFTY-THIRD YEAR OF THE REIGN OF HER MAJESTY QUEEN ELIZABETH II'
+    check_reign_monarch text, 'FIFTY-THIRD', 'ELIZABETH II'
+  end
 end
 
 describe Hansard::HeaderParser, 'when parsing' do
@@ -212,6 +217,10 @@ describe Hansard::HeaderParser, 'when parsing' do
     @session.volume_in_series_to_i.should == 121
   end
 
+  it 'should populate volume_in_series_number with the integer following the text "(Part " inside a paragraph that also contains the text "SERIES" and "VOLUME"' do
+    @session.volume_in_series_part_number.should == 1
+  end
+
   it "should populate session_of_parliament with text preceding 'SESSION OF THE' inside any paragraph element that also contains the text 'PARLIAMENT OF THE UNITED KINGDOM'" do
     @session.session_of_parliament.should == 'SEVENTH'
   end
@@ -231,7 +240,7 @@ describe Hansard::HeaderParser, 'when parsing' do
   it "should populate titlepage_text with contents of titlepage element" do
     @session.titlepage_text.should eql(%Q[<image src="S5LV0121P0I0001"></image>\n] +
 %Q[<p id="S5LV0121P0-00001" align="center">THE<lb></lb> PARLIAMENTARY<lb></lb> DEBATES</p>\n] +
-%Q[<p id="S5LV0121P0-00002" align="center">FIFTH SERIES&#x2014;VOLUME CXXI</p>\n] +
+%Q[<p id="S5LV0121P0-00002" align="center">FIFTH SERIES&#x2014;VOLUME CXXI (Part 1)</p>\n] +
 %Q[<p id="S5LV0121P0-00003" align="center">HOUSE OF LORDS</p>\n] +
 %Q[<p id="S5LV0121P0-00004" align="center">OFFICIAL REPORT</p>\n] +
 %Q[<p id="S5LV0121P0-00005" align="center">SEVENTH SESSION OF THE THIRTY-SEVENTH PARLIAMENT OF THE UNITED KINGDOM OF GREAT BRITAIN AND NORTHERN IRELAND</p>\n] +

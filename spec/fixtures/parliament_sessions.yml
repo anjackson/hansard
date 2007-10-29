@@ -1,0 +1,83 @@
+commons_session:
+  isbn:
+  volume_of_session:
+  years_of_session:
+  year_of_the_reign:
+  session_of_parliament: THIRD
+  type: HouseOfCommonsSession
+  volume_in_series: "424"
+  volume_in_series_part_number: 1
+  id: "2"
+  may_be_cited_as:
+  period_end_date_text:
+  series_number: SIXTH
+  period_start_date_text:
+  monarch_name:
+  number_of_parliament: FIFTY&#x2014;THIRD
+  source_file_id: "2"
+  data_file_id: "14"
+  titlepage_text: |-
+    <image src="S6CV0424P1I0001"></image>
+    <p align="center">PARLIAMENTARY</p>
+    <p align="center">DEBATES</p>
+    <p align="center">(HANSARD)</p>
+    <p align="center">SIXTH SERIES&#x2014;VOLUME 424 (Part 1)</p>
+    <p align="center">HOUSE OF COMMONS</p>
+    <p align="center">OFFICIAL REPORT</p>
+    <p align="center">THIRD SESSION OF THE FIFTY&#x2014;THIRD PARLIAMENT OF THE UNITED KINGDOM OF GREAT BRITAIN AND NORTHERN IRELAND FIFTY-THIRD YEAR OF THE REIGN OF HER MAJESTY QUEEN ELIZABETH II</p>
+    <p align="center">SESSION 2003&#x2013;04</p>
+    <p align="center">COMPRISING PERIOD</p>
+    <p align="center">19 July&#x2014;4 October 2004</p>
+    <p align="center">PUBLISHED BY AUTHORITY OF THE HOUSE OF COMMONS LONDON&#x2014;THE STATIONERY OFFICE LIMITED</p>
+    <p align="center">&#x00A3;105</p>
+    <p align="center">(Two parts not sold separately)</p>
+    <image src="S6CV0424P1I0002"></image>
+    <p align="center">&#x00A9;Parliamentary Copyright House of Commons 2004</p>
+    <p align="center">Applications for reproduction should be made in writing to the Copyright Unit, Her Majesty's Stationery Office, St Clements House, 2&#x2013;16 Colegate, Norwich, NR3 1 BQ Fax 01603 723000 e-mail: licensing@cabinet-office.x.gsi.gov.uk</p>
+    <p align="center">Her Majesty's Stationery Office is independent of and separate from the company now trading as The Stationery Office Ltd., which is responsible for printing and publishing House publications.</p>
+    <p align="center">ISBN 0 215 65052 2</p>
+    <p align="center">Printed in the UK by The Stationery Office</p>
+  period_end_date:
+  period_start_date:
+lords_session:
+  isbn:
+  volume_of_session:
+  years_of_session:
+  year_of_the_reign: 5 &amp; 6
+  session_of_parliament: SEVENTH
+  type: HouseOfLordsSession
+  volume_in_series: "CXXI"
+  id: "3"
+  may_be_cited_as:
+  period_end_date_text:
+  series_number: FIFTH
+  period_start_date_text:
+  monarch_name: GEORGE VI
+  number_of_parliament: THIRTY-SEVENTH
+  source_file_id: "3"
+  data_file_id: "27"
+  titlepage_text: |-
+    <image src="S5LV0121P0I0001"/>
+    <p id="S5LV0121P0-00001" align="center">THE<lb/> PARLIAMENTARY<lb/> DEBATES</p>
+    <p id="S5LV0121P0-00002" align="center">FIFTH SERIES&#x2014;VOLUME CXXI</p>
+    <p id="S5LV0121P0-00003" align="center">HOUSE OF LORDS</p>
+    <p id="S5LV0121P0-00004" align="center">OFFICIAL REPORT</p>
+    <p id="S5LV0121P0-00005" align="center">SEVENTH SESSION OF THE THIRTY-SEVENTH PARLIAMENT OF THE UNITED KINGDOM OF GREAT BRITAIN AND NORTHERN IRELAND</p>
+    <p id="S5LV0121P0-00006" align="center">5 &amp; 6 GEORGE VI</p>
+    <p id="S5LV0121P0-00007" align="center">FIRST VOLUME OF SESSION 1941&#x2013;42</p>
+    <p id="S5LV0121P0-00008" align="center">COMPRISING PERIOD FROM</p>
+    <p id="S5LV0121P0-00009" align="center">WEDNESDAY, 12th NOVEMBER, 1941, to THURSDAY, 19th FEBRUARY, 1942</p>
+    <p id="S5LV0121P0-00010" align="center">LONDON</p>
+    <p id="S5LV0121P0-00011" align="center">PRINTED AND PUBLISHED BY HIS MAJESTY'S STATIONERY OFFICE</p>
+    <p id="S5LV0121P0-00012" align="center">To be purchased directly from H.M. STATIONERY OFFICE at the following addresses:</p>
+    <p id="S5LV0121P0-00013" align="center">York House, Kingsway, London, W.C.2: 120 George Street, Edinburgh 2;</p>
+    <p id="S5LV0121P0-00014" align="center">39&#x2013;41 King Street, Manchester 2; 1 St. Andrew's Crescent, Cardiff;</p>
+    <p id="S5LV0121P0-00015" align="center">80 Chichester Street, Belfast;</p>
+    <p id="S5LV0121P0-00016" align="center">or through any bookseller</p>
+    <p id="S5LV0121P0-00017" align="center">1942</p>
+    <p id="S5LV0121P0-00018" align="center">Price 9s. od. net</p>
+    <image src="S5LV0121P0I0002"/>
+    <p id="S5LV0121P0-00019" align="center">This volume may be cited as&#x2014;</p>
+    <p id="S5LV0121P0-00020" align="center">"121 H.L. Deb., 5s."</p>
+  period_end_date:
+  period_start_date:

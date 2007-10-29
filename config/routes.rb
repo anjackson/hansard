@@ -41,6 +41,11 @@ ActionController::Routing::Routes.draw do |map|
   date = ':year/:month/:day'
   date_span = ':start_year/:start_month/:start_day/:end_year/:end_month/:end_day'
 
+  with_controller :parliament_sessions, map do |parliament_session|
+    make_index_route 'parliament_sessions', parliament_session
+    make_route 'parliament_sessions/:series_number_series', :series_index, parliament_session
+  end
+
   with_controller :indices, map do |indices|
     make_index_route 'indices', indices
 
