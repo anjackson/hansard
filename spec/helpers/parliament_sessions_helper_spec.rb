@@ -11,6 +11,10 @@ describe ParliamentSessionsHelper do
     series_link('SIXTH').should have_tag('a', :text => "Sixth Series")
   end
 
+  it 'should create link text to monarch url correctly' do
+    monarch_link('ELIZABETH II').should have_tag('a', :text => "Elizabeth II")
+  end
+
   it 'should create link url to series url correctly' do
     series_link('SIXTH').should have_tag('a[href="/parliament_sessions/sixth-series"]')
   end

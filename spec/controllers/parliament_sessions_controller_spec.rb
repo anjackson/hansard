@@ -12,6 +12,11 @@ describe ParliamentSessionsController do
     route_for(params).should == "/parliament_sessions/sixth-series"
   end
 
+  it "should map { :controller => 'parliament_sessions', :action => 'series_index', :series_number_series => 'elizabeth_ii' } to /parliament_sessions " do
+    params = { :controller => 'parliament_sessions', :action => 'series_index', :series_number_series => 'elizabeth_ii' }
+    route_for(params).should == "/parliament_sessions/elizabeth_ii"
+  end
+
   it 'should assign series and monarchs in index action' do
     @series = []
     @monarchs = []

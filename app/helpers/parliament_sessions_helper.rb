@@ -4,6 +4,19 @@ module ParliamentSessionsHelper
     "Volumes in #{series_number.titleize}, by number"
   end
 
+  def monarch_link monarch_name
+    parts = []
+    monarch_name.each(' ') do |part|
+      if part.is_roman_numerial?
+        parts << part
+      else
+        parts << part.titleize
+      end
+    end
+    name = parts.join(' ').squeeze(' ')
+    link_to name, ''
+  end
+
   def series_link series_number
     url_component = series_number.downcase+'-series'
     series = "#{series_number.titleize} Series"
