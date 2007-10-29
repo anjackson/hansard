@@ -166,9 +166,8 @@ class Hansard::HeaderParser
       end
     else
       line = clean_period_line(first_line)
-      if (match = COMPRISING_PERIOD_FROM_ONE_LINE_PATTERN.match line)
-        match[1].strip
-      elsif (match = COMPRISING_PERIOD_ONE_LINE_PATTERN.match line)
+      if (match = COMPRISING_PERIOD_FROM_ONE_LINE_PATTERN.match(line) ||
+          match = COMPRISING_PERIOD_ONE_LINE_PATTERN.match(line))
         match[1]
       else
         raise 'no comprising period identified from line: ' + first_line
@@ -195,21 +194,31 @@ class Hansard::HeaderParser
       titlepage.children.each do |node|
         if is_element? 'p', node
           text = clean_html(node).strip
-          series, volume, part = Hansard::HeaderParser.find_series_and_volume_and_part(text)
-          if series
-            session.series_number = series
-            session.volume_in_series = volume
-            session.volume_in_series_part_number = part
+          if text.include?('COMPRISING PERIOD')
+            next_node = node.next_node
+            while (next_node and not(next_node.elem?)) do
+              next_node = next_node.next_node
+            end
+            if next_node
+              session.comprising_period = Hansard::HeaderParser.find_comprising_period text, clean_html(next_node).strip
+            end
           else
-            session_of_parliament, parliament = Hansard::HeaderParser.find_session_and_parliament(text)
-            if session_of_parliament
-              session.session_of_parliament = session_of_parliament
-              session.number_of_parliament = parliament
+            series, volume, part = Hansard::HeaderParser.find_series_and_volume_and_part(text)
+            if series
+              session.series_number = series
+              session.volume_in_series = volume
+              session.volume_in_series_part_number = part
             else
-              year_of_the_reign, monarch_name = Hansard::HeaderParser.find_reign_and_monarch(text)
-              if year_of_the_reign
-                session.year_of_the_reign = year_of_the_reign
-                session.monarch_name = monarch_name
+              session_of_parliament, parliament = Hansard::HeaderParser.find_session_and_parliament(text)
+              if session_of_parliament
+                session.session_of_parliament = session_of_parliament
+                session.number_of_parliament = parliament
+              else
+                year_of_the_reign, monarch_name = Hansard::HeaderParser.find_reign_and_monarch(text)
+                if year_of_the_reign
+                  session.year_of_the_reign = year_of_the_reign
+                  session.monarch_name = monarch_name
+                end
               end
             end
           end

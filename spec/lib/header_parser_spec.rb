@@ -341,6 +341,10 @@ describe Hansard::HeaderParser, 'when parsing' do
     @session.monarch_name.should == 'GEORGE VI'
   end
 
+  it "should populate comprising_period with the dates following 'COMPRISING PERIOD'" do
+    @session.comprising_period.should == 'WEDNESDAY, 12th NOVEMBER, 1941, to THURSDAY, 19th FEBRUARY, 1942'
+  end
+
   it "should populate titlepage_text with contents of titlepage element" do
     @session.titlepage_text.should eql(%Q[<image src="S5LV0121P0I0001"></image>\n] +
 %Q[<p id="S5LV0121P0-00001" align="center">THE<lb></lb> PARLIAMENTARY<lb></lb> DEBATES</p>\n] +
