@@ -16,7 +16,11 @@ describe ParliamentSessionsHelper do
   end
 
   it 'should create link url to series url correctly' do
-    series_link('SIXTH').should have_tag('a[href="/parliament_sessions/sixth-series"]')
+    series_link('SIXTH').should have_tag('a[href="/parliament_sessions/series/sixth"]')
+  end
+
+  it 'should create link url to monarch url correctly' do
+    monarch_link('ELIZABETH II').should have_tag('a[href="/parliament_sessions/monarch/elizabeth_ii"]')
   end
 
   it 'should create link text to volume url correctly when session is for Commons with a volume part number' do

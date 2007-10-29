@@ -20,8 +20,8 @@ describe ParliamentSession, 'the class' do
   end
 
   it 'should return sessions grouped by volume in series numbers for a given series' do
-    series_number_series = 'sixth-series'
-    volumes = ParliamentSession.sessions_in_groups_by_volume_in_series(series_number_series)
+    series_number = 'sixth'
+    volumes = ParliamentSession.sessions_in_groups_by_volume_in_series(series_number)
     volumes[0][0].should == parliament_sessions(:commons_session)
   end
 end

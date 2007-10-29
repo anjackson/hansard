@@ -7,14 +7,14 @@ describe ParliamentSessionsController do
     route_for(params).should == '/parliament_sessions'
   end
 
-  it "should map { :controller => 'parliament_sessions', :action => 'series_index', :series_number_series => 'sixth-series' } to /parliament_sessions " do
-    params = { :controller => 'parliament_sessions', :action => 'series_index', :series_number_series => 'sixth-series' }
-    route_for(params).should == "/parliament_sessions/sixth-series"
+  it "should map { :controller => 'parliament_sessions', :action => 'series_index', :series_number => 'sixth' } to /parliament_sessions " do
+    params = { :controller => 'parliament_sessions', :action => 'series_index', :series_number => 'sixth' }
+    route_for(params).should == "/parliament_sessions/series/sixth"
   end
 
-  it "should map { :controller => 'parliament_sessions', :action => 'series_index', :series_number_series => 'elizabeth_ii' } to /parliament_sessions " do
-    params = { :controller => 'parliament_sessions', :action => 'series_index', :series_number_series => 'elizabeth_ii' }
-    route_for(params).should == "/parliament_sessions/elizabeth_ii"
+  it "should map { :controller => 'parliament_sessions', :action => 'monarch_index', :monarch_name => 'elizabeth_ii' } to /parliament_sessions " do
+    params = { :controller => 'parliament_sessions', :action => 'monarch_index', :monarch_name => 'elizabeth_ii' }
+    route_for(params).should == "/parliament_sessions/monarch/elizabeth_ii"
   end
 
   it 'should assign series and monarchs in index action' do
@@ -28,13 +28,13 @@ describe ParliamentSessionsController do
   end
 
   it 'should assign volumes in series_index action' do
-    @series_number_series = 'sixth-series'
+    @series_number = 'sixth-series'
     @sessions_grouped_by_volume = [[]]
 
     ParliamentSession.should_receive(:sessions_in_groups_by_volume_in_series).
-        with(@series_number_series).and_return(@sessions_grouped_by_volume)
+        with(@series_number).and_return(@sessions_grouped_by_volume)
 
-    get 'series_index', :series_number_series => @series_number_series
+    get 'series_index', :series_number => @series_number
     assigns[:sessions_grouped_by_volume_in_series].should == @sessions_grouped_by_volume
   end
 

@@ -14,13 +14,14 @@ module ParliamentSessionsHelper
       end
     end
     name = parts.join(' ').squeeze(' ')
-    link_to name, ''
+    url_component = monarch_name.downcase.gsub(' ','_')
+    link_to name, url_for(:monarch_name => url_component, :controller => 'parliament_sessions', :action => 'monarch_index')
   end
 
   def series_link series_number
-    url_component = series_number.downcase+'-series'
     series = "#{series_number.titleize} Series"
-    link_to series, url_for(:series_number_series => url_component, :controller => 'parliament_sessions', :action => 'series_index')
+    url_component = series_number.downcase
+    link_to series, url_for(:series_number => url_component, :controller => 'parliament_sessions', :action => 'series_index')
   end
 
   def volume_link parliament_session
