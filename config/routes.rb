@@ -44,6 +44,7 @@ ActionController::Routing::Routes.draw do |map|
   with_controller :parliament_sessions, map do |parliament_session|
     make_index_route 'parliament_sessions', parliament_session
     make_route 'parliament_sessions/series/:series_number', :series_index, parliament_session
+    make_route 'parliament_sessions/series/:series_number/volume/:volume_number', :volume_index, parliament_session
     make_route 'parliament_sessions/monarch/:monarch_name', :monarch_index, parliament_session
   end
 

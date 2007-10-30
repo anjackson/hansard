@@ -6,6 +6,7 @@ commons_session:
   session_of_parliament: THIRD
   type: HouseOfCommonsSession
   volume_in_series: "424"
+  volume_in_series_number: 424
   volume_in_series_part_number: 1
   comprising_period: 19 July&#x2014;4 October 2004
   id: "2"
@@ -48,6 +49,7 @@ lords_session:
   session_of_parliament: SEVENTH
   type: HouseOfLordsSession
   volume_in_series: "CXXI"
+  volume_in_series_number: 121
   comprising_period: WEDNESDAY, 12th NOVEMBER, 1941, to THURSDAY, 19th FEBRUARY, 1942
   id: "3"
   may_be_cited_as:

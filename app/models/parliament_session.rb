@@ -4,6 +4,8 @@ class ParliamentSession < ActiveRecord::Base
   belongs_to :source_file
   belongs_to :data_file
 
+  before_validation_on_create :populate_volume_in_series_number
+
   alias :to_activerecord_xml :to_xml
   acts_as_hansard_element
 
@@ -32,6 +34,21 @@ class ParliamentSession < ActiveRecord::Base
     sessions_in_series.in_groups_by(&:monarch_name)
   end
 
+  def self.find_volume series_number, volume_number_and_part # important don't change self to ParliamentSession
+    if volume_number_and_part.include? '_'
+      volume_number = volume_number_and_part.split('_')[0].to_i
+      part_number = volume_number_and_part.split('_')[1].to_i
+
+      sessions = self.find_all_by_volume_in_series_number_and_volume_in_series_part_number(volume_number, part_number)
+    else
+      volume_number = volume_number_and_part.to_i
+      sessions = self.find_all_by_volume_in_series_number(volume_number)
+    end
+
+    selected = sessions.select{|s| s.series_number.downcase == series_number}
+    selected.first
+  end
+
   def volume_in_series_to_i
     if volume_in_series
       if volume_in_series.is_roman_numeral?
@@ -45,4 +62,12 @@ class ParliamentSession < ActiveRecord::Base
       raise "cannot convert nil volume_in_series to integer"
     end
   end
+
+  protected
+
+    def populate_volume_in_series_number
+      if volume_in_series
+        self.volume_in_series_number = volume_in_series_to_i
+      end
+    end
 end

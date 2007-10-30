@@ -30,13 +30,23 @@ describe ParliamentSessionsHelper do
   it 'should create link text to volume url correctly when session is for Commons with a volume part number' do
     session = parliament_sessions(:commons_session)
     text = 'Volume 424 (Part 1), Commons, 19 July&#x2014;4 October 2004'
-    volume_link(session).should  have_tag('a', :text => text)
+    volume_link(session).should have_tag('a', :text => text)
+  end
+
+  it 'should create link url to volume index correctly when session is for Commons with a volume part number' do
+    session = parliament_sessions(:commons_session)
+    volume_link(session).should have_tag('a[href="/parliament_sessions/series/sixth/volume/424_1"]')
   end
 
   it 'should create link text to volume url correctly when session is for Lords with a Roman numeral volume number' do
     session = parliament_sessions(:lords_session)
     text = 'Volume CXXI (121), Lords, Wednesday, 12th November, 1941, to Thursday, 19th February, 1942'
     volume_link(session).should have_tag('a', :text => text)
+  end
+
+  it 'should create link url to volume index correctly when session is for Lords with a Roman numeral volume number' do
+    session = parliament_sessions(:lords_session)
+    volume_link(session).should have_tag('a[href="/parliament_sessions/series/fifth/volume/121"]')
   end
 
   it 'should create link text to session for year of the reign' do

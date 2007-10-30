@@ -18,4 +18,8 @@ class ParliamentSessionsController < ApplicationController
     @sessions_in_groups_by_year_of_the_reign =
         ParliamentSession.sessions_in_groups_by_year_of_the_reign(@monarch_name)
   end
+
+  def volume_index
+
+  end
 end

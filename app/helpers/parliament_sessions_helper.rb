@@ -32,12 +32,24 @@ module ParliamentSessionsHelper
   end
 
   def series_link series_number
-    series = "#{series_number.titleize} Series"
+    link_text = "#{series_number.titleize} Series"
     url_component = series_number.downcase
-    link_to series, url_for(:series_number => url_component, :controller => 'parliament_sessions', :action => 'series_index')
+    link_to link_text, url_for(:series_number => url_component, :controller => 'parliament_sessions', :action => 'series_index')
   end
 
   def volume_link parliament_session
+    link_text = volume_link_text parliament_session
+    series = parliament_session.series_number.downcase
+    volume = parliament_session.volume_in_series_to_i.to_s
+
+    url = url_for(:series_number => series, :volume_number => volume, :action => 'volume_index', :controller => 'parliament_sessions')
+    if parliament_session.volume_in_series_part_number
+      url += "_#{parliament_session.volume_in_series_part_number.to_s}"
+    end
+    link_to link_text, url
+  end
+
+  def volume_link_text parliament_session
     if parliament_session.volume_in_series.is_roman_numeral?
       link_text = "Volume #{parliament_session.volume_in_series} (#{parliament_session.volume_in_series_to_i.to_s})"
     else
@@ -50,7 +62,7 @@ module ParliamentSessionsHelper
       period = parliament_session.comprising_period.titleize.gsub(' To',' to').gsub('&#X2014;','&#x2014;')
       link_text += ", #{period}"
     end
-    link_to link_text, ''
+    link_text
   end
 
   def reign_link parliament_session

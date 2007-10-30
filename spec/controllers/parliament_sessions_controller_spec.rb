@@ -12,6 +12,11 @@ describe ParliamentSessionsController do
     route_for(params).should == "/parliament_sessions/series/sixth"
   end
 
+  it "should map { :controller => 'parliament_sessions', :action => 'volume_index', :series_number => 'sixth', :volume_number => '424_1' } to /parliament_sessions " do
+    params = { :controller => 'parliament_sessions', :action => 'volume_index', :series_number => 'sixth', :volume_number => '424_1' }
+    route_for(params).should == "/parliament_sessions/series/sixth/volume/424_1"
+  end
+
   it "should map { :controller => 'parliament_sessions', :action => 'monarch_index', :monarch_name => 'elizabeth_ii' } to /parliament_sessions " do
     params = { :controller => 'parliament_sessions', :action => 'monarch_index', :monarch_name => 'elizabeth_ii' }
     route_for(params).should == "/parliament_sessions/monarch/elizabeth_ii"
@@ -37,7 +42,19 @@ describe ParliamentSessionsController do
     get 'series_index', :series_number => @series_number
     assigns[:sessions_grouped_by_volume_in_series].should == @sessions_grouped_by_volume
   end
+=begin
+  it 'should assign columns in volume_index action' do
+    @series_number = 'sixth'
+    @volume_number = '424_1'
+    @columns_in_volume = []
 
+    ParliamentSession.should_receive(:columns_in_volume).
+        with(@series_number,@volume_number).and_return(@columns_in_volume)
+
+    get 'volume_index', :series_number => @series_number, :volume_number => @volume_number
+    assigns[:columns_in_volume].should == @columns_in_volume
+  end
+=end
   it 'should assign sessions_in_groups_by_year_of_the_reign in monarch_index action' do
     @monarch_name = 'elizabeth_ii'
     @sessions_grouped_by_year_of_reign = [[]]

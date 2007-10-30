@@ -30,6 +30,20 @@ describe ParliamentSession, 'the class' do
     groups = ParliamentSession.sessions_in_groups_by_year_of_the_reign(monarch_name)
     groups[0][0].should == parliament_sessions(:commons_session)
   end
+
+  it 'should return sittings for a HouseOfCommonsSession based on a series, volume and part number' do
+    series_number = 'sixth'
+    volume_number = '424_1'
+    session = HouseOfCommonsSession.find_volume(series_number, volume_number)
+    session.should == parliament_sessions(:commons_session)
+  end
+
+  it 'should return sittings for a HouseOfLordsSession based on a series, volume number' do
+    series_number = 'fifth'
+    volume_number = '121'
+    session = HouseOfLordsSession.find_volume(series_number, volume_number)
+    session.should == parliament_sessions(:lords_session)
+  end
 end
 
 describe ParliamentSession, 'when source_file_id is set' do
@@ -41,6 +55,20 @@ describe ParliamentSession, 'when source_file_id is set' do
     SourceFile.stub!(:find).and_return(source_file)
     session.source_file.should == source_file
     ParliamentSession.delete_all
+  end
+end
+
+describe ParliamentSession, 'on creation' do
+  it 'should populate volume_in_series_number when volume number is a roman numeral' do
+    session = HouseOfCommonsSession.new :volume_in_series => '424'
+    session.valid?.should be_true
+    session.volume_in_series_number.should == 424
+  end
+
+  it 'should populate volume_in_series_number when volume number is an arabic numeral' do
+    session = HouseOfLordsSession.new :volume_in_series => 'CXXI'
+    session.valid?.should be_true
+    session.volume_in_series_number.should == 121
   end
 end
 
