@@ -44,4 +44,24 @@ describe ParliamentSessionsHelper do
     text = 'Fifty-third year of the reign'
     reign_link(session).should have_tag('a', :text => text)
   end
+
+  it 'should make reign link text correct for "5 &amp; 6"' do
+    reign_link_text('5 &amp; 6').should == '5 &amp; 6 years of the reign'
+  end
+
+  it 'should make reign link text correct for "10 AND 11"' do
+    reign_link_text('10 AND 11').should == '10 and 11 years of the reign'
+  end
+
+  it 'should make reign link text correct for "34 and 35"' do
+    reign_link_text('34 and 35').should == '34 and 35 years of the reign'
+  end
+
+  it 'should make reign link text correct for "13 &#x0026; 14"' do
+    reign_link_text('13 &#x0026; 14').should == '13 &#x0026; 14 years of the reign'
+  end
+
+  it 'should make reign link text correct for "12"' do
+    reign_link_text('12').should == '12 year of the reign'
+  end
 end

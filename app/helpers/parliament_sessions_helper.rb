@@ -54,12 +54,22 @@ module ParliamentSessionsHelper
   end
 
   def reign_link parliament_session
-    year_of_reign = parliament_session.year_of_the_reign
-    text = year_of_reign.capitalize
-    if year_of_reign.include?('-')
+    text = reign_link_text(parliament_session.year_of_the_reign)
+    link_to text, ''
+  end
+
+  def reign_link_text year_of_the_reign
+    text = year_of_the_reign.capitalize
+    if year_of_the_reign.include?('-')
       text.gsub!(' ','-')
       text += ' year of the reign'
+    elsif (year_of_the_reign.include?('&amp;') ||
+          year_of_the_reign.include?('&#x0026;') ||
+          year_of_the_reign.upcase.include?('AND'))
+      text += ' years of the reign'
+    else
+      text += ' year of the reign'
     end
-    link_to text, ''
+    text
   end
 end
