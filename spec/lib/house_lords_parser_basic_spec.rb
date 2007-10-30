@@ -9,6 +9,7 @@ describe Hansard::HouseLordsParser do
     @sitting_date_text = 'Monday, 20th September, 1909.'
     @sitting_title = 'HOUSE OF LORDS.'
     @sitting_start_column = '1'
+    @sitting_end_column = '1'
     @sitting_start_image = 'S5LV0003P0I0007'
     @sitting_text = nil
 

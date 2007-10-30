@@ -20,6 +20,9 @@ class ParliamentSessionsController < ApplicationController
   end
 
   def volume_index
-
+    @series_number = params[:series_number]
+    @volume_number = params[:volume_number]
+    @commons_session = HouseOfCommonsSession.find_volume(@series_number, @volume_number)
+    @lords_session = HouseOfLordsSession.find_volume(@series_number, @volume_number)
   end
 end

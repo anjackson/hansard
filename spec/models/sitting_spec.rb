@@ -70,6 +70,21 @@ describe Sitting, ".find_in_resolution" do
 
 end
 
+describe HouseOfCommonsSitting, '.find_section_by_column_and_date' do
+  it 'should return correct section' do
+    date = Date.new(2006,1,1)
+    sitting = HouseOfCommonsSitting.create(:date => date, :start_column => '44', :end_column => '50')
+    section = Section.new(:start_column => '44', :end_column => '47')
+    sitting.sections << section
+    sitting.save!
+    HouseOfCommonsSitting.find_section_by_column_and_date('44', date).should == section
+  end
+
+  after do
+    Sitting.delete_all
+    Section.delete_all
+  end
+end
 
 describe Sitting, ".find_section_by_column_and_date_range" do
 
@@ -84,12 +99,17 @@ describe Sitting, ".find_section_by_column_and_date_range" do
     @second_sitting.sections << @second_section
   end
 
-  it "should return the correct sitting for a column that is the start column of a sitting" do
+  after do
+    Sitting.delete_all
+    Section.delete_all
+  end
+
+  it "should return the correct section for a column that is the start column of a sitting" do
     Sitting.find_section_by_column_and_date_range(44, @start_date, @end_date).should == @first_section
     Sitting.find_section_by_column_and_date_range(55, @start_date, @end_date).should == @second_section
   end
 
-  it "should return the correct sitting for a column that is within a sitting" do
+  it "should return the correct section for a column that is within a sitting" do
     Sitting.find_section_by_column_and_date_range(45, @start_date, @end_date).should == @first_section
     Sitting.find_section_by_column_and_date_range(56, @start_date, @end_date).should == @second_section
   end

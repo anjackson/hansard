@@ -34,6 +34,27 @@ class Sitting < ActiveRecord::Base
     end
   end
 
+  def self.find_section_by_column_and_date(column, date) # important don't change self to Sitting
+    column_number = column.to_i
+    sittings = self.find_all_by_date(date)
+    if sittings.size == 1
+      sitting = sittings.first
+      the_section = nil
+      sitting.sections.each do |section|
+        start_column = section.start_column.to_i
+        end_column = section.end_column.to_i
+        if (column_number >= start_column && column_number <= end_column)
+          the_section = section
+        end
+      end
+      the_section
+    elsif sittings.size > 1
+      raise "unexpectedly found more than one #{self.name} sitting for date #{date.to_s}"
+    else
+      nil
+    end
+  end
+
   def Sitting.most_recent
     find_next(Date.today, "<")
   end
@@ -69,6 +90,21 @@ class Sitting < ActiveRecord::Base
       when WrittenAnswersSitting.uri_component
         WrittenAnswersSitting
     end
+  end
+
+  def find_section_by_column(column)
+    column_number = column.to_i
+    the_section = nil
+    self.sections.each do |section|
+      unless the_section
+        start_column = section.start_column.to_i
+        end_column = section.end_column.to_i
+        if (column_number >= start_column && column_number <= end_column)
+          the_section = section
+        end
+      end
+    end
+    the_section
   end
 
   def uri_component

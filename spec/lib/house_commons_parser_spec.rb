@@ -9,6 +9,7 @@ describe Hansard::HouseCommonsParser do
     @sitting_date_text = 'Monday 16 December 1985'
     @sitting_title = 'House of Commons'
     @sitting_start_column = '1'
+    @sitting_end_column = '745'
     @sitting_start_image = 'S6CV0089P0I0010'
     @sitting_text = %Q[<p id="S6CV0089P0-00360" align="center"><i>The House met at half-past Two o'clock</i></p>]
 
@@ -171,6 +172,10 @@ describe Hansard::HouseCommonsParser do
 
   it 'should set start image on first section in debates' do
     @first_section.start_image_src.should == 'S6CV0089P0I0010'
+  end
+
+  it 'should set end column correctly on a section' do
+    @first_section.end_column.should == '1'
   end
 
   it 'should set xml id on first section in debates' do

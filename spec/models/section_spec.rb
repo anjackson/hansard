@@ -423,29 +423,28 @@ describe Section, ' when returning frequent titles in an interval' do
     @first_common = Section.new(:title => "common title")
     @second_common = Section.new(:title => "common title")
     @less_common = Section.new(:title => "less common title")
-    @sitting.sections = [@first_common, @second_common, @less_common] 
+    @sitting.sections = [@first_common, @second_common, @less_common]
     @sitting.save!
   end
-  
+
   it 'should return a list of titles starting with the most common' do
     Section.frequent_titles_in_interval(@start_date, @end_date).should == ['common title', 'less common title']
   end
-  
+
   it 'should exclude any titles passed in the exclude parameter' do
     Section.frequent_titles_in_interval(@start_date, @end_date, :exclude => ['less common title']).should == ['common title']
   end
-  
+
   it 'should return only the number of results requested' do
     Section.frequent_titles_in_interval(@start_date, @end_date, :limit => 1).should == ['common title']
   end
-  
-  it 'should be able to return sections in an interval with a given title' do 
+
+  it 'should be able to return sections in an interval with a given title' do
     Section.find_by_title_in_interval("common title", @start_date, @end_date).should == [@first_common, @second_common]
   end
-  
+
   after(:all) do
     @sitting.destroy
   end
-  
-end
 
+end

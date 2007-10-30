@@ -27,6 +27,10 @@ describe "All sittings or written answers", :shared => true do
     @sitting.start_column.should == @sitting_start_column
   end
 
+  it 'should set end column of sitting' do
+    @sitting.end_column.should == @sitting_end_column
+  end
+
   it 'should set start image of sitting' do
     @sitting.start_image_src.should == @sitting_start_image
   end

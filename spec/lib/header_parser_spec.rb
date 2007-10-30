@@ -317,8 +317,8 @@ describe Hansard::HeaderParser, 'when parsing' do
     @session.volume_in_series.should == 'CXXI'
   end
 
-  it "should enable volume_in_series_to_i to return integer representation of 'VOLUME' number string" do
-    @session.volume_in_series_to_i.should == 121
+  it "should enable volume_in_series_number to return integer representation of 'VOLUME' number string" do
+    @session.volume_in_series_number.should == 121
   end
 
   it 'should populate volume_in_series_number with the integer following the text "(Part " inside a paragraph that also contains the text "SERIES" and "VOLUME"' do

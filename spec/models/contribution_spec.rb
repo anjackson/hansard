@@ -120,4 +120,3 @@ describe Contribution, ".last_image_source" do
   end
 
 end
-

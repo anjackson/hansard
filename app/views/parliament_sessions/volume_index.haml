@@ -1,0 +1,8 @@
+- @title = "#{@series_number.titleize} Series, Volume #{@volume_number}"
+
+- if @commons_session
+  %h2 House of Commons
+  = column_links @commons_session
+- if @lords_session
+  %h2 House of Lords
+  = column_links @lords_session

@@ -1,6 +1,6 @@
 class ParliamentSession < ActiveRecord::Base
 
-  has_many :sittings, :foreign_key => 'session_id', :dependent => :destroy
+  has_many :sittings, :dependent => :destroy, :order => 'date'
   belongs_to :source_file
   belongs_to :data_file
 
@@ -20,7 +20,7 @@ class ParliamentSession < ActiveRecord::Base
   def self.sessions_in_groups_by_volume_in_series series_number
     sessions_in_series = find(:all).
         select {|s| s.series_number && (s.series_number.downcase == series_number) }.
-        sort_by(&:volume_in_series_to_i)
+        sort_by(&:volume_in_series_number)
 
     sessions_in_series.in_groups_by(&:volume_in_series)
   end
@@ -49,21 +49,37 @@ class ParliamentSession < ActiveRecord::Base
     selected.first
   end
 
-  def volume_in_series_to_i
-    if volume_in_series
-      if volume_in_series.is_roman_numeral?
-        volume_in_series.roman_to_i
-      elsif volume_in_series.is_arabic_numeral?
-        volume_in_series.to_i
-      else
-        raise "cannot convert volume_in_series to integer: '#{volume_in_series}'"
-      end
+  def start_column
+    if sittings.size > 0
+      sittings.first.start_column
     else
-      raise "cannot convert nil volume_in_series to integer"
+      nil
+    end
+  end
+
+  def end_column
+    if sittings.size > 0
+      sittings.last.end_column
+    else
+      nil
     end
   end
 
   protected
+
+    def volume_in_series_to_i
+      if volume_in_series
+        if volume_in_series.is_roman_numeral?
+          volume_in_series.roman_to_i
+        elsif volume_in_series.is_arabic_numeral?
+          volume_in_series.to_i
+        else
+          raise "cannot convert volume_in_series to integer: '#{volume_in_series}'"
+        end
+      else
+        raise "cannot convert nil volume_in_series to integer"
+      end
+    end
 
     def populate_volume_in_series_number
       if volume_in_series

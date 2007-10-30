@@ -74,4 +74,8 @@ describe ParliamentSessionsHelper do
   it 'should make reign link text correct for "12"' do
     reign_link_text('12').should == '12 year of the reign'
   end
+
+  it 'should make column link correctly' do
+    column_link(1).should == '1'
+  end
 end

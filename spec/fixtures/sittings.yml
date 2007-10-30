@@ -1,0 +1,22 @@
+commons_sitting:
+  id: 1
+  type: HouseOfCommonsSitting
+  parliament_session_id: 2
+  start_column: '1'
+last_commons_sitting:
+  id: 2
+  type: HouseOfCommonsSitting
+  parliament_session_id: 2
+  start_column: '139'
+  end_column: '339'
+lords_sitting:
+  id: 3
+  type: HouseOfLordsSitting
+  parliament_session_id: 3
+  start_column: '1'
+last_lords_sitting:
+  id: 4
+  type: HouseOfLordsSitting
+  parliament_session_id: 3
+  start_column: '239'
+  end_column: '439'

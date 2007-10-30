@@ -334,6 +334,7 @@ class Hansard::HouseParser
         end
       end
 
+      section.end_column = @column
       section.parent_section = debates
       debates.sections << section
     end
@@ -502,6 +503,7 @@ class Hansard::HouseParser
       debates.children.each do |node|
         handle_debates_child node, sitting
       end
+      sitting.end_column = @column
     end
 
     def create_house_sitting house_type, house_model

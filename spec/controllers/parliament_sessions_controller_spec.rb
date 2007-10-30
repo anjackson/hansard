@@ -42,19 +42,23 @@ describe ParliamentSessionsController do
     get 'series_index', :series_number => @series_number
     assigns[:sessions_grouped_by_volume_in_series].should == @sessions_grouped_by_volume
   end
-=begin
+
   it 'should assign columns in volume_index action' do
     @series_number = 'sixth'
     @volume_number = '424_1'
-    @columns_in_volume = []
+    @commons_session = HouseOfCommonsSession.new
+    @lords_session = HouseOfLordsSession.new
 
-    ParliamentSession.should_receive(:columns_in_volume).
-        with(@series_number,@volume_number).and_return(@columns_in_volume)
+    HouseOfCommonsSession.should_receive(:find_volume).
+        with(@series_number,@volume_number).and_return(@commons_session)
+    HouseOfLordsSession.should_receive(:find_volume).
+        with(@series_number,@volume_number).and_return(@lords_session)
 
     get 'volume_index', :series_number => @series_number, :volume_number => @volume_number
-    assigns[:columns_in_volume].should == @columns_in_volume
+    assigns[:commons_session].should == @commons_session
+    assigns[:lords_session].should == @lords_session
   end
-=end
+
   it 'should assign sessions_in_groups_by_year_of_the_reign in monarch_index action' do
     @monarch_name = 'elizabeth_ii'
     @sessions_grouped_by_year_of_reign = [[]]

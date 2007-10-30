@@ -46,6 +46,26 @@ describe ParliamentSession, 'the class' do
   end
 end
 
+describe ParliamentSession, 'when there are sittings' do
+  fixtures :parliament_sessions, :sittings
+
+  it 'should return first column in Commons sittings volumes' do
+    parliament_sessions(:commons_session).start_column.should == '1'
+  end
+
+  it 'should return first column in Lords sittings volumes' do
+    parliament_sessions(:lords_session).start_column.should == '1'
+  end
+
+  it 'should return end column in Commons sittings volumes' do
+    parliament_sessions(:commons_session).end_column.should == '339'
+  end
+
+  it 'should return end column in Lords sittings volumes' do
+    parliament_sessions(:lords_session).end_column.should == '439'
+  end
+end
+
 describe ParliamentSession, 'when source_file_id is set' do
   it 'should be associated with source file' do
     session = ParliamentSession.new :source_file_id => 123
@@ -70,28 +90,10 @@ describe ParliamentSession, 'on creation' do
     session.valid?.should be_true
     session.volume_in_series_number.should == 121
   end
-end
-
-describe ParliamentSession, 'volume_in_series_to_i' do
-
-  it 'should be able to convert a roman numeral volume_in_series string to an integer' do
-    session = ParliamentSession.new :volume_in_series => 'CXXI'
-    session.volume_in_series_to_i.should == 121
-  end
-
-  it 'should be able to convert an integer volume_in_series string to an integer' do
-    session = ParliamentSession.new :volume_in_series => '121'
-    session.volume_in_series_to_i.should == 121
-  end
 
   it "should raise exception for a volume_in_series string that doesn't represent a number" do
     session = ParliamentSession.new :volume_in_series => 'ABC'
-    lambda { session.volume_in_series_to_i }.should raise_error
-  end
-
-  it "should raise exception for a volume_in_series string that is nil" do
-    session = ParliamentSession.new :volume_in_series => nil
-    lambda { session.volume_in_series_to_i }.should raise_error
+    lambda { session.valid?.should be_true }.should raise_error
   end
 end
 

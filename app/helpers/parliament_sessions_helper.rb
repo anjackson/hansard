@@ -40,7 +40,7 @@ module ParliamentSessionsHelper
   def volume_link parliament_session
     link_text = volume_link_text parliament_session
     series = parliament_session.series_number.downcase
-    volume = parliament_session.volume_in_series_to_i.to_s
+    volume = parliament_session.volume_in_series_number.to_s
 
     url = url_for(:series_number => series, :volume_number => volume, :action => 'volume_index', :controller => 'parliament_sessions')
     if parliament_session.volume_in_series_part_number
@@ -51,9 +51,9 @@ module ParliamentSessionsHelper
 
   def volume_link_text parliament_session
     if parliament_session.volume_in_series.is_roman_numeral?
-      link_text = "Volume #{parliament_session.volume_in_series} (#{parliament_session.volume_in_series_to_i.to_s})"
+      link_text = "Volume #{parliament_session.volume_in_series} (#{parliament_session.volume_in_series_number.to_s})"
     else
-      link_text = "Volume #{parliament_session.volume_in_series_to_i.to_s}"
+      link_text = "Volume #{parliament_session.volume_in_series_number.to_s}"
     end
     link_text += " (Part #{parliament_session.volume_in_series_part_number.to_s})" if parliament_session.volume_in_series_part_number
     link_text += ", #{parliament_session.house}"
@@ -83,5 +83,33 @@ module ParliamentSessionsHelper
       text += ' year of the reign'
     end
     text
+  end
+
+  def column_links parliament_session
+    first = parliament_session.start_column.to_i
+    last = parliament_session.end_column.to_i
+    columns = []
+
+    sittings = parliament_session.sittings
+
+    first.upto(last) do |column|
+      the_section = nil
+      sittings.each do |sitting|
+        unless the_section
+          the_section = sitting.find_section_by_column(column)
+        end
+      end
+      columns << column_link(column, the_section)
+    end
+
+    columns.join(', ')
+  end
+
+  def column_link column, section=nil
+    if section
+      link_to column, "#{section_url(section)}#column_#{column}"
+    else
+      column.to_s
+    end
   end
 end
