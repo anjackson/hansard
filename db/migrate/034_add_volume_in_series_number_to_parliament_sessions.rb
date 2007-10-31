@@ -6,10 +6,8 @@ class AddVolumeInSeriesNumberToParliamentSessions < ActiveRecord::Migration
     add_index :parliament_sessions, :volume_in_series_number
 
     ParliamentSession.find(:all).each do |session|
-      unless session.volume_in_series.blank?
-        session.volume_in_series_number = session.volume_in_series_to_i
-        session.save!
-      end
+      session.populate_volume_in_series_number
+      session.save!
     end
   end
 

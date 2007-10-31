@@ -65,6 +65,14 @@ class ParliamentSession < ActiveRecord::Base
     end
   end
 
+  def populate_volume_in_series_number
+    unless volume_in_series_number
+      if volume_in_series
+        self.volume_in_series_number = volume_in_series_to_i
+      end
+    end
+  end
+
   protected
 
     def volume_in_series_to_i
@@ -81,9 +89,4 @@ class ParliamentSession < ActiveRecord::Base
       end
     end
 
-    def populate_volume_in_series_number
-      if volume_in_series
-        self.volume_in_series_number = volume_in_series_to_i
-      end
-    end
 end
