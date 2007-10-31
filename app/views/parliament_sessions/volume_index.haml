@@ -2,7 +2,13 @@
 
 - if @commons_session
   %h2 House of Commons
-  = column_links @commons_session
+  - @commons_session.sittings.each do |sitting|
+    .sitting_columns
+      %p= sitting.date_text
+      %p= sitting_column_links(sitting)
 - if @lords_session
   %h2 House of Lords
-  = column_links @lords_session
+  - @lords_session.sittings.each do |sitting|
+    .sitting_columns
+      %p= sitting.date_text
+      %p= sitting_column_links(sitting)

@@ -85,19 +85,15 @@ module ParliamentSessionsHelper
     text
   end
 
-  def column_links parliament_session
-    first = parliament_session.start_column.to_i
-    last = parliament_session.end_column.to_i
+  def sitting_column_links sitting
+    first = sitting.start_column.to_i
+    last = sitting.end_column.to_i
     columns = []
-
-    sittings = parliament_session.sittings
 
     first.upto(last) do |column|
       the_section = nil
-      sittings.each do |sitting|
-        unless the_section
-          the_section = sitting.find_section_by_column(column)
-        end
+      unless the_section
+        the_section = sitting.find_section_by_column(column)
       end
       columns << column_link(column, the_section)
     end

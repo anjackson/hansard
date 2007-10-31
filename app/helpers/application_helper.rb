@@ -6,7 +6,7 @@ module ApplicationHelper
     member = Member.new(member_name)
     link_to member.name, show_member_url(:name => member.slug)
   end
-  
+
   def intro section
     section.introduction.text
   end
@@ -36,7 +36,7 @@ module ApplicationHelper
     params = section.id_hash
     url_for(params.merge!(:controller => "sections", :action => "show"))
   end
-  
+
   def lower_resolution(resolution)
     case resolution
     when :century
@@ -47,7 +47,7 @@ module ApplicationHelper
       :day
     end
   end
-  
+
   def resolution_title(date, resolution)
     title = "Information by year"
     case resolution
@@ -60,16 +60,16 @@ module ApplicationHelper
     end
     title
   end
-  
+
   def on_date_url(date_params)
-    params = { :controller => 'sittings', 
+    params = { :controller => 'sittings',
                :action => 'show',
                :year => date_params[:year],
-               :month => date_params[:month], 
+               :month => date_params[:month],
                :day => date_params[:day] }
     url_for params
   end
-  
+
   def sitting_nav_links(sitting)
     open :table, { :id => 'navigation-by-sittings' } do
 
@@ -131,89 +131,79 @@ module ApplicationHelper
   end
 
   def day_nav_links
-
     open :ul, { :id => 'navigation-by-links' } do
-
       open :li do
-        open :a, { :href => home_url } do
+        open :a, :href => home_url do
           puts "<strong>HANSARD</strong>"
         end
       end
-
       if @day
-
-        open :li do
-          day_link(@sitting,"<"){ puts "Previous day" }
-        end
-
-        open :li do
-          day_link(@sitting, ">"){ puts "Next day" }
-        end
-
-        open :li do
-          open :a, { :href => sitting_date_source_url(@sitting) } do
-            puts "XML source"
-          end
-        end
-
-        open :li do
-          open :a, { :href => sitting_date_xml_url(@sitting) } do
-            puts "XML output"
-          end
-        end
-
+        day_nav_links_with_day
       else
-
-        open :li do
-          open :a, { :href => sittings_url } do
-            puts "By Year"
-          end
-        end
-        
-        open :li do
-          open :a, { :href => commons_url } do
-            puts "Commons"
-          end
-        end
-
-        open :li do
-          open :a, { :href => written_answers_url } do
-            puts "Written Answers"
-          end
-        end
-
-        open :li do
-          open :a, { :href => lords_url } do
-            puts "Lords"
-          end
-        end
-
-        open :li do
-          open :a, { :href => lords_reports_url } do
-            puts "Lords Reports"
-          end
-        end
-        
-        open :li do
-          open :a, { :href => parliament_sessions_url } do
-            puts "Sessions"
-          end
-        end
-
-        open :li do
-          open :a, { :href => source_files_url } do
-            puts "Source Files"
-          end
-        end
-
-        open :li do
-          open :a, { :href => data_files_url } do
-            puts "Data Files"
-          end
-        end
-
+        day_nav_links_without_day
       end
+    end
+  end
 
+  def day_nav_links_with_day
+    open :li do
+      day_link(@sitting,"<") { puts "Previous day" }
+    end
+    open :li do
+      day_link(@sitting, ">") { puts "Next day" }
+    end
+    open :li do
+      open :a, :href => sitting_date_source_url(@sitting) do
+        puts "XML source"
+      end
+    end
+    open :li do
+      open :a, { :href => sitting_date_xml_url(@sitting) } do
+        puts "XML output"
+      end
+    end
+  end
+
+  def day_nav_links_without_day
+    open :li do
+      open :a, :href => sittings_url do
+        puts "By Year"
+      end
+    end
+    open :li do
+      open :a, :href => commons_url do
+        puts "Commons"
+      end
+    end
+    open :li do
+      open :a, :href => written_answers_url do
+        puts "Written Answers"
+      end
+    end
+    open :li do
+      open :a, :href => lords_url do
+        puts "Lords"
+      end
+    end
+    open :li do
+      open :a, :href => lords_reports_url do
+        puts "Lords Reports"
+      end
+    end
+    open :li do
+      open :a, :href => parliament_sessions_url do
+        puts "Sessions"
+      end
+    end
+    open :li do
+      open :a, :href => source_files_url do
+        puts "Source Files"
+      end
+    end
+    open :li do
+      open :a, :href => data_files_url do
+        puts "Data Files"
+      end
     end
   end
 
