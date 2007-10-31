@@ -63,9 +63,11 @@ namespace :solr do
       end
 
       puts "Rebuilding index for #{model}..."
-      model.rebuild_solr_index(batch_size, {:offset => offset, :verbose => verbose}){ |ar, options| ar.find(:all, options.merge(:include => {:section => :sitting}, :order => "contributions.id "))}
+      model.rebuild_solr_index(batch_size, {:offset => offset, :verbose => verbose}){ |ar, options| ar.find(:all, :include => {:section => :sitting}, :conditions => ["contributions.id > ? and contributions.id <= ?", options[:offset], options[:limit] + options[:offset]])}
 
     end
+    
+
 
     if models.empty?
       puts "There were no models to reindex."
