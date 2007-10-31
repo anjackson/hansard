@@ -319,20 +319,18 @@ class Hansard::Splitter
   end
 
   def move_final_result directory_name, input_file
-    size_in_mb = (File.size(input_file)/ 1048576.0)
-    mb = size_in_mb.to_s[0..2]
-    result_path = File.join(@base_path, 'data', @first_date.to_s.gsub('-','_')+'_'+@house)+'_'+mb+'mb'
-    Dir.mkdir result_path unless File.exists?(result_path)
-    result_directory = File.join(result_path, directory_name)
-
     if @first_date
+      size_in_mb = (File.size(input_file)/ 1048576.0)
+      mb = size_in_mb.to_s[0..2]
+      result_path = File.join(@base_path, 'data', @first_date.to_s.gsub('-','_')+'_'+@house)+'_'+mb+'mb'
+      Dir.mkdir result_path unless File.exists?(result_path)
+      result_directory = File.join(result_path, directory_name)
       FileUtils.remove_dir result_directory, true
       FileUtils.mv @result_path, result_directory
       @source_file.result_directory = result_directory
       @source_file
     else
       puts "No dates found in #{input_file} so deleting results of split!" if @verbose
-      FileUtils.remove_dir result_directory, true
       FileUtils.remove_dir @result_path, true
       @source_file
     end
