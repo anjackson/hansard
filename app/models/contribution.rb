@@ -26,7 +26,7 @@ class Contribution < ActiveRecord::Base
   end
 
   def cols
-     column_range ? column_range.split(",").map{ |col| col.to_i } : []
+     column_range ? column_range.split(",").map{ |col| col.to_i.nonzero? ? col.to_i : col } : []
   end
 
   def image_sources

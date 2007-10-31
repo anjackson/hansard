@@ -3,7 +3,7 @@
   .search-result-fragment
     = hit_fragment(@result_set, contribution)
   .search-result-details 
-    = contribution.section.sitting.date_text << ", " << contribution.section.sitting.title
+    = contribution.section.sitting.date_text + ", " + contribution.section.sitting.title
 
 
 

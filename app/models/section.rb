@@ -131,16 +131,11 @@ class Section < ActiveRecord::Base
   end
 
   def first_col
-    if start_column
-      if start_column.to_i > 0
-        return start_column.to_i
-      end
-    end
-    return nil
+    start_column.to_i.nonzero? ? start_column.to_i : start_column
   end
 
   def last_col
-    start_column ? start_column.to_i : nil
+    start_column.to_i.nonzero? ? start_column.to_i : start_column
   end
 
   def first_image_source

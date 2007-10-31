@@ -20,11 +20,11 @@ module ApplicationHelper
         markers += column_marker(marker_value)
       end
     end
-    markers.sub("</span><span class='sidenote'>", "<br />")
+    markers
   end
 
   def image_marker(image_src)
-    dummy_image = image_tag "dummypage.jpg", :border => 0
+    dummy_image = image_tag "dummypage.jpg", :border => 0, :height => 100
     "<span class='sidenote'><a href='/images/#{image_src}.jpg' alt='#{image_src}' title='#{image_src}' class='image-thumbnail'><figure>#{dummy_image}<br/><legend>Img. #{image_src}</legend></figure></a></span>"
   end
 
@@ -408,7 +408,6 @@ EOF
     inner_elements = []
     parts = handle_contribution_part doc.children.first, [], inner_elements, outer_elements
     parts = '<p>' + parts.join('').squeeze(' ') + '</p>'
-    parts.gsub!(/<\/span>\s*<span class='sidenote'>/,"<br />")
     parts.sub!("&#x00B7;", ".")
     parts
   end
