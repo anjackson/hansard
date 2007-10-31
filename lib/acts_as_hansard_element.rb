@@ -66,8 +66,8 @@ module Acts
 
       def find_columns_in_text
         text_cols = []
-        text_cols = text.scan(/<col>(\d+)/) if respond_to? "text" and text
-        text_cols.map{ |c| c[0].to_i }
+        text_cols = text.scan(/<col>(.*?)<\/col>/) if respond_to? "text" and text
+        text_cols.map{ |c| c[0].to_i.nonzero? ? c[0].to_i : c[0] }
       end
 
     end

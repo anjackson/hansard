@@ -33,8 +33,10 @@ namespace :solr do
     includes -= excludes
 
     optimize     = env_to_bool('OPTIMIZE',     true)
+    offset       = ENV['OFFSET'].to_i.nonzero? || 0
     start_server = env_to_bool('START_SERVER', false)
-    clear_first   = env_to_bool('CLEAR',       true)
+    clear_first  = env_to_bool('CLEAR',       true)
+    verbose      = env_to_bool('VERBOSE',     false)
     batch_size   = ENV['BATCH'].to_i.nonzero? || 300
 
     if start_server
@@ -49,17 +51,19 @@ namespace :solr do
       alias_method :solr_optimize, :blank
     end
 
-    models = includes.select { |m| m.respond_to?(:rebuild_solr_index) and m.descends_from_active_record? }
+    models = [Contribution]
     
+    start_time = Time.now
     models.each do |model|
 
+     
       if clear_first
         puts "Clearing index for #{model}..."
         ActsAsSolr::Post.execute(Solr::Request::Delete.new(:query => "type_t:#{model}"))
       end
 
       puts "Rebuilding index for #{model}..."
-      model.rebuild_solr_index(batch_size)
+      model.rebuild_solr_index(batch_size, {:offset => offset, :verbose => verbose}){ |ar, options| ar.find(:all, options.merge(:include => {:section => :sitting}, :order => "contributions.id "))}
 
     end
 
@@ -69,6 +73,8 @@ namespace :solr do
       puts "Optimizing..."
       models.last.deferred_solr_optimize
     end
+    
+    puts "Time taken #{Time.now - start_time}"
 
     if start_server
       puts "Shutting down Solr server..."
