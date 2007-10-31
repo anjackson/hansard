@@ -70,8 +70,21 @@ module ParliamentSessionsHelper
     link_to text, ''
   end
 
+  def number_to_ordinal(number)
+    number = number.to_i
+    if (10...20) === number
+      "#{number}th"
+    else
+      suffixes = %w{ th st nd rd th th th th th th }
+      value = number.to_s
+      last = value[-1..-1].to_i
+      value + suffixes[last]
+    end
+  end
+
   def reign_link_text year_of_the_reign
     text = year_of_the_reign.capitalize
+
     if year_of_the_reign.include?('-')
       text.gsub!(' ','-')
       text += ' year of the reign'
@@ -82,6 +95,12 @@ module ParliamentSessionsHelper
     else
       text += ' year of the reign'
     end
+
+    while (match = /(\d+ )/.match text)
+      number = match[1]
+      text = text.sub(number, number_to_ordinal(number)+' ')
+    end
+
     text
   end
 
