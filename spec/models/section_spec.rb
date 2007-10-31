@@ -240,11 +240,7 @@ describe Section, ".first_col" do
     section = Section.new(:start_column => nil)
     section.first_col.should be_nil
   end
-
-  it "should not return a number less than 1" do
-    section = Section.new(:start_column => 0)
-    section.first_col.should be_nil
-  end
+  
 end
 
 describe Section, 'when it has a parent section' do

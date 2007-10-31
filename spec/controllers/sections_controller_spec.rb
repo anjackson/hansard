@@ -33,6 +33,32 @@ describe SectionsController, "#route_for" do
   end
 end
 
+describe SectionsController, " when combining sidenote markers" do
+  
+  before do
+    @sitting = mock_model(HouseOfCommonsSitting)
+    HouseOfCommonsSitting.stub!(:find_all_by_date).and_return([@sitting])
+    @sitting.stub!(:sections).and_return(@sections)
+    @section = mock_model(Section)
+    @section.stub!(:title).and_return('Titl<lb/>e')
+    @section.stub!(:plain_title).and_return('Title')
+    @sitting.sections.stub!(:find_by_slug).and_return(@section)
+  end
+  
+  def do_get
+    get :show, :year => '1999', :month => 'feb', :day => '08', :id => "test-slug", :type => "commons"
+  end
+  
+  it 'should return one sidenote with a linebreak if two sidenotes appear together ' do
+    original = "<p><span class='sidenote'><a name='column_911' href='#column_911'>Col. 911</a></span>   <span class='sidenote'><a href='/images/S6CV0089P0I0466.jpg' alt='S6CV0089P0I0466' title='S6CV0089P0I0466' class='image-thumbnail'><figure><br/><legend>Img. S6CV0089P0I0466</legend></figure></a></span></p>"
+    expected = "<p><span class='sidenote'><a name='column_911' href='#column_911'>Col. 911</a><br /><a href='/images/S6CV0089P0I0466.jpg' alt='S6CV0089P0I0466' title='S6CV0089P0I0466' class='image-thumbnail'><figure><br/><legend>Img. S6CV0089P0I0466</legend></figure></a></span></p>"  
+    do_get
+    @controller.response.body = original
+    @controller.send(:combine_markers).should match(/#{expected}/)
+  end
+  
+end
+
 describe SectionsController, "handling GET /commons/1999/feb/08/test-slug" do
 
   before do

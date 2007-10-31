@@ -24,11 +24,11 @@ describe ApplicationHelper, " when formatting contribution" do
   end
 
   it 'should replace image element with an image wrapped in a span with class "sidenote"' do
-    img_tag = '<img alt="Dummypage" border="0" src="/images/dummypage.jpg" />'
-    should_receive(:image_tag).with("dummypage.jpg", :border => 0).and_return(img_tag)
+    img_tag = '<img alt="Dummypage" border="0" height="100" src="/images/dummypage.jpg" />'
+    should_receive(:image_tag).with("dummypage.jpg", :border => 0, :height => 100).and_return(img_tag)
 
     format_contribution('a <image src="S6CV0089P0I0021"/> text').should ==
-        "<p>a <span class='sidenote'><a href='/images/S6CV0089P0I0021.jpg' alt='S6CV0089P0I0021' title='S6CV0089P0I0021' class='image-thumbnail'><figure><img alt=\"Dummypage\" border=\"0\" src=\"/images/dummypage.jpg\" /><br/><legend>Img. S6CV0089P0I0021</legend></figure></a></span> text</p>"
+        "<p>a <span class='sidenote'><a href='/images/S6CV0089P0I0021.jpg' alt='S6CV0089P0I0021' title='S6CV0089P0I0021' class='image-thumbnail'><figure><img alt=\"Dummypage\" border=\"0\" height=\"100\" src=\"/images/dummypage.jpg\" /><br/><legend>Img. S6CV0089P0I0021</legend></figure></a></span> text</p>"
   end
 
   it 'should replace lb element with close and open paragraph' do
@@ -61,26 +61,18 @@ describe ApplicationHelper, " when formatting contribution" do
   end
 
   it 'should return the image name linked to the source wrapped with a span with class "sidenote"' do
-    img_tag = '<img alt="Dummypage" border="0" src="/images/dummypage.jpg" />'
-    should_receive(:image_tag).with("dummypage.jpg", :border => 0).and_return(img_tag)
+    img_tag = '<img alt="Dummypage" border="0" height="100" src="/images/dummypage.jpg" />'
+    should_receive(:image_tag).with("dummypage.jpg", :border => 0, :height => 100).and_return(img_tag)
 
     format_contribution('a <i>really <image src="S6CV0089P0I0021"/> powerful</i> change').should ==
-        "<p>a <i>really <span class='sidenote'><a href='/images/S6CV0089P0I0021.jpg' alt='S6CV0089P0I0021' title='S6CV0089P0I0021' class='image-thumbnail'><figure><img alt=\"Dummypage\" border=\"0\" src=\"/images/dummypage.jpg\" /><br/><legend>Img. S6CV0089P0I0021</legend></figure></a></span> powerful</i> change</p>"
+        "<p>a <i>really <span class='sidenote'><a href='/images/S6CV0089P0I0021.jpg' alt='S6CV0089P0I0021' title='S6CV0089P0I0021' class='image-thumbnail'><figure><img alt=\"Dummypage\" border=\"0\" height=\"100\" src=\"/images/dummypage.jpg\" /><br/><legend>Img. S6CV0089P0I0021</legend></figure></a></span> powerful</i> change</p>"
   end
 
   it 'should return the column number with an anchor wrapped with a span with class "sidenote"' do
     format_contribution('a <sub>really <col>123</col> powerful</sub> change').should ==
         "<p>a <sub>really <span class='sidenote'><a name='column_123' href='#column_123'>Col. 123</a></span> powerful</sub> change</p>"
   end
-
-  it "should split a consecutive image and column tag with a linebreak" do
-    img_tag = '<img alt="Dummypage" border="0" src="/images/dummypage.jpg" />'
-    should_receive(:image_tag).with("dummypage.jpg", :border => 0).and_return(img_tag)
-
-    format_contribution("<image src=\"S6CV0089P0I0021\"/>   \n\n <col>123</col>").should  ==
-    "<p><span class='sidenote'><a href='/images/S6CV0089P0I0021.jpg' alt='S6CV0089P0I0021' title='S6CV0089P0I0021' class='image-thumbnail'><figure><img alt=\"Dummypage\" border=\"0\" src=\"/images/dummypage.jpg\" /><br/><legend>Img. S6CV0089P0I0021</legend></figure></a><br /><a name='column_123' href='#column_123'>Col. 123</a></span></p>"
-  end
-
+  
   it "should convert a member element in to a span element with class 'member'" do
     text = "1. <member>Mr. Michael Latham</member> asked the Secretary of State for Northern Ireland whether he will make a further statement on the security situation."
     expected = '<p>1. <span class="member">Mr. Michael Latham</span> asked the Secretary of State for Northern Ireland whether he will make a further statement on the security situation.</p>'
@@ -335,33 +327,6 @@ describe ApplicationHelper, " when returning marker html for a model" do
 
   it "should return an anchor for the column_number for a column marker" do
     column_marker("5").should have_tag("a[name=column_5]", :count => 1)
-  end
-
-  it 'should return one sidenote with a linebreak if two sidenotes appear together within a contribution' do
-    img_tag = '<img alt="Dummypage" border="0" src="/images/dummypage.jpg" />'
-    should_receive(:image_tag).with("dummypage.jpg", :border => 0).and_return(img_tag)
-
-    expected = %Q[<p><span class='sidenote'><a name='column_911' href='#column_911'>Col. 911</a><br /><a href='/images/S6CV0089P0I0466.jpg' alt='S6CV0089P0I0466' title='S6CV0089P0I0466' class='image-thumbnail'><figure>#{img_tag}<br/><legend>Img. S6CV0089P0I0466</legend></figure></a></span></p>]
-    format_contribution("<col>911</col>   <image src=\"S6CV0089P0I0466\"/>").should == expected
-  end
-
-  it 'should not produce a col element thus: "Col. 0"' do
-    section = Section.new(:start_column => 0)
-
-    marker_html(section, {}).should == ''
-  end
-
-  it 'should return one sidenote with a linebreak if two sidenotes appear together outside a contribution' do
-    section = Section.new
-    img = "S6CV0089P0I0472"
-    section.stub!(:first_image_source).and_return(img)
-    col = '925'
-    section.stub!(:first_col).and_return(col.to_i)
-    img_tag = '<img alt="Dummypage" border="0" src="/images/dummypage.jpg" />'
-    should_receive(:image_tag).with("dummypage.jpg", :border => 0).and_return(img_tag)
-
-    marker_html(section, {}).should ==
-        %Q[<span class='sidenote'><a href='/images/#{img}.jpg' alt='#{img}' title='#{img}' class='image-thumbnail'><figure>#{img_tag}<br/><legend>Img. #{img}</legend></figure></a><br /><a name='column_#{col}' href='#column_#{col}'>Col. #{col}</a></span>]
   end
 
 end
