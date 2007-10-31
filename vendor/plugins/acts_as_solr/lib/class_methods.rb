@@ -125,24 +125,35 @@ module ActsAsSolr #:nodoc:
     # If a finder block is given, it will be called to retrieve the items to index.
     # This can be very useful for things such as updating based on conditions or
     # using eager loading for indexed associations.
-    def rebuild_solr_index(batch_size=0, &finder)
+    def rebuild_solr_index(batch_size=0, options={}, &finder)
       finder ||= lambda { |ar, options| ar.find(:all, options.merge({:order => self.primary_key})) }
-    
+      verbose = options[:verbose] || false 
+      @last_timepoint = Time.now
       if batch_size > 0
         items_processed = 0
         limit = batch_size
-        offset = 0
+        offset = options[:offset] || 0
         begin
+
           items = finder.call(self, {:limit => limit, :offset => offset})
+          
+          log_time("finder finished", verbose)
+        
           add_batch = items.collect { |content| content.to_solr_doc }
-    
+        
+          log_time("docs converted to solr docs", verbose)
+          
           if items.size > 0
             solr_add add_batch
             solr_commit
           end
+ 
+          if items.last 
+            log_time("batch added - last id : #{items.last.id}", verbose)
+          end
     
           items_processed += items.size
-          logger.debug "#{items_processed} items for #{self.name} have been batch added to index."
+          logger.debug "#{items_processed.to_i} items for #{self.name} have been batch added to index."
           offset += items.size
         end while items.nil? || items.size > 0
       else
@@ -153,6 +164,12 @@ module ActsAsSolr #:nodoc:
       solr_optimize
       logger.debug items_processed > 0 ? "Index for #{self.name} has been rebuilt" : "Nothing to index for #{self.name}"
     end
-  end
   
+    def log_time(message, verbose)
+      elapsed_time = Time.now - @last_timepoint
+      puts (elapsed_time.to_s + ": " + message) if verbose
+      @last_timepoint = Time.now
+    end
+  
+  end
 end
