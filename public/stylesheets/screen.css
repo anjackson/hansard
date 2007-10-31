@@ -255,3 +255,7 @@ td.timeline_sub_date {
 a#random-link {
   font-size: 1.2em;
 }
+
+.sitting_date {
+  font-weight: bold;
+}
