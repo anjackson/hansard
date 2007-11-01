@@ -1,8 +1,0 @@
-- @javascript = 'prototype'
-- if @sitting
-  = render :partial => 'partials/hansard_header', :locals => {:on_edit_page => true}
-  .debates
-    =render :partial => "partials/section_link", :collection => @sitting.debates.sections, :locals => {:on_edit_page => true}
-- else
-  .no-sittings
-    No information from the Lords was found for this period.

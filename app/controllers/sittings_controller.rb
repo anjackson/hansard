@@ -1,7 +1,7 @@
 class SittingsController < ApplicationController
 
   caches_page :index
-  before_filter :check_valid_date, :only => [:show, :show_source, :edit]
+  before_filter :check_valid_date, :only => [:show, :show_source]
   
   def index
     @date = Time.now
@@ -22,14 +22,6 @@ class SittingsController < ApplicationController
     respond_to do |format|
      format.html
      format.xml { render :xml => @sitting.to_xml }
-    end
-  end
-
-  def edit
-    @sittings = model.find_in_resolution(@date, @resolution)
-    if !@sittings.empty?
-     @sitting = @sittings.first
-     @day = true
     end
   end
 

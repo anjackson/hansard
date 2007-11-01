@@ -62,7 +62,6 @@ ActionController::Routing::Routes.draw do |map|
 
        controller.with_options(formatted_date_options) do |by_date|
          make_route "#{controller_name}/#{date}.:format", :show, by_date
-         make_route "#{controller_name}/#{date}/edit", :edit, by_date
          make_route "#{controller_name}/source/#{date}.:format", :show_source, by_date
        end
 
@@ -90,12 +89,9 @@ ActionController::Routing::Routes.draw do |map|
   end
 
   with_controller :sections, map do |section|
-    make_route 'set_section_title/:id', :set_section_title, section
 
     section.with_options(formatted_date_options) do |by_date|
       make_route ":type/#{date}/:id", :show, by_date
-      make_route ":type/#{date}/:id/nest", :nest, by_date
-      make_route ":type/#{date}/:id/unnest", :unnest, by_date
     end
   end
 

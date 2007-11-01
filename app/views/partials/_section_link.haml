@@ -1,18 +1,9 @@
-- on_edit_page = false unless on_edit_page
 - section = section_link
 - if section.linkable?
   .section-line
     - section_id = 'section_'+section.id.to_s
-    - if on_edit_page
-      - move_section_id = 'move_'+section_id
-      %span
-        %span{ :id => section_id }
-          = section_in_place_edit(section)
-        %span{ :id => move_section_id }
-          = section_nesting_buttons section
-    - else
-      %span.section-link{ :id => section_id }
-        = link_to section.title, section_url(section)
-    = render :partial => "partials/section_link", :collection => section.sections, :locals => {:on_edit_page => on_edit_page}
+    %span.section-link{ :id => section_id }
+      = link_to section.title, section_url(section)
+    = render :partial => "partials/section_link", :collection => section.sections
 - else
   = render :partial => "partials/section_link", :collection => section.sections

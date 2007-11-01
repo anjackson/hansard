@@ -321,14 +321,6 @@ EOF
     end
   end
 
-  def edit_sitting_link(sitting)
-    link_to('edit this page', edit_sitting_url(sitting))
-  end
-
-  def edit_sitting_url(sitting)
-    url_for(sitting_date_url_params(sitting, :action => "edit"))
-  end
-
   def sitting_date_source_url(sitting)
     url_for(sitting_date_url_params(sitting, :action => "show_source", :format => "xml"))
   end
@@ -342,10 +334,6 @@ EOF
     params.delete(:type)
     params.merge!(:controller => sitting.uri_component)
     params.merge!(options)
-  end
-
-  def sitting_controller(sitting)
-
   end
 
   def month_abbr(month)
@@ -446,16 +434,6 @@ EOF
   end
 
   private
-
-    def section_nest_button section
-      params = section.id_hash.merge(:action => 'nest', :controller => 'sections')
-      button_to('->', params).gsub('div','span')
-    end
-
-    def section_unnest_button section
-      params = section.id_hash.merge(:action => 'unnest', :controller => 'sections')
-      button_to('<-', params).gsub('div','span')
-    end
 
     def close_add_open parts, inner_elements, outer_elements, addition
       inner_elements.each { |e| parts << "</#{e}>" }

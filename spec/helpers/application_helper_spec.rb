@@ -369,40 +369,6 @@ describe ApplicationHelper, " when creating a section url" do
   end
 end
 
-describe ApplicationHelper, "when creating section nest, unnest link text" do
-
-  before do
-    @section = Section.new
-    @section.stub!(:id_hash).and_return({
-      :id    => 'slug',
-      :year  => '1999',
-      :month => 'dec',
-      :day   => '31',
-      :type  => 'commons'})
-  end
-
-  it 'should display only right arrow for a section that can be nested' do
-    @section.stub!(:can_be_nested?).and_return true
-    @section.stub!(:can_be_unnested?).and_return false
-    section_nesting_buttons(@section).should_not have_tag('input[value="&lt;-"]')
-    section_nesting_buttons(@section).should have_tag('input[value="-&gt;"]')
-  end
-
-  it 'should display only left arrow for a section that can be unnested' do
-    @section.stub!(:can_be_nested?).and_return false
-    @section.stub!(:can_be_unnested?).and_return true
-    section_nesting_buttons(@section).should have_tag('input[value="&lt;-"]')
-    section_nesting_buttons(@section).should_not have_tag('input[value="-&gt;"]')
-  end
-
-  it 'should display both a left and a right arrow for a section that can be both nested and unnested' do
-    @section.stub!(:can_be_nested?).and_return true
-    @section.stub!(:can_be_unnested?).and_return true
-    buttons = section_nesting_buttons(@section)
-    buttons.should have_tag('input[value="&lt;-"]')
-    buttons.should have_tag('input[value="-&gt;"]')
-  end
-end
 
 describe ApplicationHelper, " when using sitting_nav_links to create links for a sitting" do
 

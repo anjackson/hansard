@@ -22,10 +22,6 @@ describe "controller that has routes correctly configured", :shared => true do
     route_for(params).should == "/#{@house_type}/source/1999/feb/08.xml"
   end
 
-  it "should map { :controller => @house_type, :action => 'edit', :year => '1999', :month => 'feb', :day => '08' } to /@house_type/source/1999/feb/08/edit" do
-    params = { :controller => @house_type, :action => 'edit', :year => '1999', :month => 'feb', :day => '08'}
-    route_for(params).should == "/#{@house_type}/1999/feb/08/edit"
-  end
 end
 
 describe " handling GET /<house_type>", :shared => true do
@@ -33,7 +29,7 @@ describe " handling GET /<house_type>", :shared => true do
   before do
     @sitting = mock_model(@sitting_model)
     sittings_by_year = [[@sitting]]
-    @controller.stub!(:all_grouped_by_year).and_return(sittings_by_year)
+    @sitting_model.stub!(:all_grouped_by_year).and_return(sittings_by_year)
   end
 
   def do_get
@@ -55,7 +51,7 @@ describe " handling GET /<house_type>", :shared => true do
     response.should render_template('index')
   end
 
-  it "should ask for all the sittings in cronological order" do
+  it "should ask for all the sittings in chronological order" do
     sittings_by_year = [[@sitting]]
     @sitting_model.stub!(:all_grouped_by_year).and_return(sittings_by_year)
     do_get
@@ -161,48 +157,6 @@ describe " handling GET /<house_type>/1999/feb/08", :shared => true do
     assigns[:marker_options].should == {}
   end
 
-end
-
-describe " handling GET /<house_type>/1999/feb/08/edit", :shared => true do
-
-  before do
-    @sitting = mock_model(@sitting_model)
-    @sitting_model.stub!(:find_in_resolution).and_return([@sitting])
-  end
-
-  def do_get
-    get :edit, :year => '1999', :month => 'feb', :day => '08'
-  end
-
-  it 'should not assign section in the view' do
-    do_get
-    assigns[:section].should be_nil
-  end
-  
-  it "should be successful" do
-    do_get
-    response.should be_success
-  end
-
-  it "should look for a sitting on the date being edited" do
-    @sitting_model.should_receive(:find_in_resolution).with(Date.new(1999, 2, 8), :day).and_return([@sitting])
-    do_get
-  end
-
-  it "should render with the 'edit' template if there is one sitting" do
-    do_get
-    response.should render_template('edit')
-  end
-
-  it "should assign day to true if there is one sitting" do
-    do_get
-    assigns[:day].should be_true
-  end
-
-  it "should assign the sitting for the view" do
-    do_get
-    assigns[:sitting].should equal(@sitting)
-  end
 end
 
 describe " handling GET /<house_type>/1999/feb/08.xml", :shared => true do

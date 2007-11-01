@@ -13,7 +13,6 @@ describe "_section_link.haml" do
     @second_section = mock_model(Section)
     @super_section.stub!(:sections).and_return([@first_section, @second_section])
     @controller.template.stub!(:section_url).and_return("http://test.host")
-    @controller.template.stub!(:section_nesting_buttons).and_return('')
     @controller.template.stub!(:section_link).and_return(@super_section)
     @controller.template.stub!(:render)
   end
@@ -33,13 +32,13 @@ describe "_section_link.haml" do
   end
 
   it "should render the template 'partials/section_link' with each of the section's subsections" do
-    @controller.template.should_receive(:render).with(:partial => "partials/section_link", :collection => @super_section.sections, :locals => {:on_edit_page => false})
+    @controller.template.should_receive(:render).with(:partial => "partials/section_link", :collection => @super_section.sections)
     do_render
   end
 
   it "should render the template 'partials/section_link' with each of the section's subsections if the section does not have a title" do
     @super_section.stub!(:title?).and_return(false)
-    @controller.template.should_receive(:render).with(:partial => "partials/section_link", :collection => @super_section.sections, :locals => {:on_edit_page => false})
+    @controller.template.should_receive(:render).with(:partial => "partials/section_link", :collection => @super_section.sections)
     do_render
   end
 

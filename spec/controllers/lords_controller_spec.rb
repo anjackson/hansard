@@ -56,16 +56,6 @@ describe LordsController, " handling GET /lords/1999/feb/08" do
 
 end
 
-describe LordsController, " handling GET /lords/1999/feb/08/edit" do
-
-  before(:all) do
-    @sitting_model = HouseOfLordsSitting
-  end
-
-  it_should_behave_like " handling GET /<house_type>/1999/feb/08/edit"
-
-end
-
 describe LordsController, " handling GET /lords/1999/feb/08.xml" do
 
   before(:all) do

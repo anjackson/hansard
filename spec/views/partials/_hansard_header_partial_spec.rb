@@ -30,10 +30,4 @@ describe "_hansard_header partial" do
     response.should have_tag('.date', @date_text)
   end
 
-  it "should show a link to 'edit this page'" do
-    do_render
-    response.should have_tag("a")
-    response.should have_tag("a", 'edit this page')
-  end
-
 end

@@ -17,20 +17,6 @@ describe SectionsController, "#route_for" do
     route_for(params).should == "/written_answers/1999/feb/08/test-slug"
   end
 
-  it "should map { :controller => 'sections', :action => 'nest', :year => '1999', :month => 'feb', :day => '08', :id => 'test-slug', :type => 'commons' } to /commons/1999/feb/08/test-slug/nest" do
-    params =  { :controller => 'sections', :action => 'nest', :year => '1999', :month => 'feb', :day => '08', :id => 'test-slug', :type => 'commons' }
-    route_for(params).should == "/commons/1999/feb/08/test-slug/nest"
-  end
-
-  it "should map { :controller => 'sections', :action => 'unnest', :year => '1999', :month => 'feb', :day => '08', :id => 'test-slug', :type => 'commons' } to /commons/1999/feb/08/test-slug/unnest" do
-    params =  { :controller => 'sections', :action => 'unnest', :year => '1999', :month => 'feb', :day => '08', :id => 'test-slug', :type => 'commons' }
-    route_for(params).should == "/commons/1999/feb/08/test-slug/unnest"
-  end
-
-  it "should map { ::controller => 'sections', action => 'set_section_title', :id=>90466' } to /set_section_title/90466" do
-    params =  { :controller => 'sections', :action => 'set_section_title', :id => '90466' }
-    route_for(params).should == "/set_section_title/90466"
-  end
 end
 
 describe SectionsController, " when combining sidenote markers" do
@@ -149,76 +135,4 @@ describe SectionsController, "handling GET /written_answers/1999/feb/08/test-slu
 
 end
 
-describe SectionsController, 'handling POST /commons/1999/feb/08/trade-and-industry/nest or unnest' do
 
-  before do
-    @sitting = mock_model(HouseOfCommonsSitting)
-    @section = mock_model(Section)
-    @section.stub!(:nest!)
-    @section.stub!(:unnest!)
-    @section.stub!(:slug).and_return('trade-and-industry')
-    @section.stub!(:id).and_return(123)
-    @section.stub!(:parent_section_id).and_return(nil)
-    @controller.stub!(:find_sitting_and_section).and_return([@sitting, @section])
-  end
-
-  def do_post action
-    post action, :year => '1999', :month => 'feb', :day => '08', :id => "trade-and-industry", :type => "commons"
-  end
-
-  it 'should not assign sitting in the view' do
-    do_post :nest
-    assigns[:sitting].should be_nil
-  end
-  
-  it 'should on nest find sitting and section with appropriate parameters' do
-    @controller.should_receive(:find_sitting_and_section).
-        with('commons', Date.new(1999,2,8), "trade-and-industry").
-        and_return([@sitting, @section])
-    do_post :nest
-  end
-
-  it 'should nest section' do
-    @section.should_receive(:nest!)
-    do_post :nest
-  end
-
-  it "should on nest redirect to anchor id of section on edit view if section doesn't have a parent section" do
-    do_post :nest
-    response.should be_redirect
-    response.should redirect_to('http://test.host/commons/1999/feb/08/edit#section_123')
-  end
-
-  it "should on nest redirect to anchor id of parent section on edit view" do
-    @section.stub!(:parent_section_id).and_return(122)
-    do_post :nest
-    response.should be_redirect
-    response.should redirect_to('http://test.host/commons/1999/feb/08/edit#section_122')
-  end
-
-  it 'should on unnest find sitting and section with appropriate parameters' do
-    @controller.should_receive(:find_sitting_and_section).
-        with('commons', Date.new(1999,2,8), "trade-and-industry").
-        and_return([@sitting, @section])
-    do_post :unnest
-  end
-
-  it 'should unnest section' do
-    @section.should_receive(:unnest!)
-    do_post :unnest
-  end
-
-  it "should on unnest redirect to anchor id of section on edit view if section doesn't have a parent section" do
-    do_post :unnest
-    response.should be_redirect
-    response.should redirect_to('http://test.host/commons/1999/feb/08/edit#section_123')
-  end
-
-  it "should on unnest redirect to anchor id of parent section on edit view" do
-    @section.stub!(:parent_section_id).and_return(122)
-    do_post :unnest
-    response.should be_redirect
-    response.should redirect_to('http://test.host/commons/1999/feb/08/edit#section_122')
-  end
-
-end
