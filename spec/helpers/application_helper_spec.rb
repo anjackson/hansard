@@ -382,16 +382,16 @@ end
 
 describe ApplicationHelper, " when using giving the title for a date at a resolution" do
 
-  it 'should return "Information for 1928" given the date June 1 1928 and the resolution :year' do
-    resolution_title(Date.new(1928, 6, 1), :year).should == "Information for 1928"
+  it 'should return "Sittings in 1928" given the date June 1 1928 and the resolution :year' do
+    resolution_title(Date.new(1928, 6, 1), :year).should == "Sittings in 1928"
   end
   
-  it 'should return "Information for June 1928" given the date June 1 1928 and the resolution :month' do
-    resolution_title(Date.new(1928, 6, 1), :month).should == "Information for June 1928"
+  it 'should return "Sittings in June 1928" given the date June 1 1928 and the resolution :month' do
+    resolution_title(Date.new(1928, 6, 1), :month).should == "Sittings in June 1928"
   end
   
-  it 'should return "Information for 1 June 1928" given the date June 1 1928 and the resolution :day' do
-    resolution_title(Date.new(1928, 6, 1), :day).should == "Information for 1 June 1928"
+  it 'should return "Sitting of 1 June 1928" given the date June 1 1928 and the resolution :day' do
+    resolution_title(Date.new(1928, 6, 1), :day).should == "Sitting of 1 June 1928"
   end
 
 end

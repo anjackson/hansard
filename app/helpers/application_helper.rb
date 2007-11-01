@@ -49,14 +49,14 @@ module ApplicationHelper
   end
 
   def resolution_title(date, resolution)
-    title = "Information by year"
+    title = "Sittings by year"
     case resolution
       when :year
-        title = "Information for #{date.year}"
+        title = "Sittings in #{date.year}"
       when :month
-        title = "Information for #{Date::MONTHNAMES[date.month]} #{date.year}"
+        title = "Sittings in #{Date::MONTHNAMES[date.month]} #{date.year}"
       when :day
-        title = "Information for #{date.day} #{Date::MONTHNAMES[date.month]} #{date.year}"
+        title = "Sitting of #{date.day} #{Date::MONTHNAMES[date.month]} #{date.year}"
     end
     title
   end
