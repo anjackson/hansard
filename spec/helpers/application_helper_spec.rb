@@ -186,10 +186,8 @@ describe ApplicationHelper, " when creating navigation links" do
         :lords_reports_url,
         :written_answers_url,
         :indices_url,
-        :source_files_url,
         :members_url,
         :search_url,
-        :data_files_url,
         :parliament_sessions_url]
 
     url_helper_methods.each do |url_helper_method|
@@ -214,18 +212,6 @@ describe ApplicationHelper, " when creating navigation links" do
 
   it "should include an 'ul' tag containing an 'li' tag containing a link to the writtenanswers url if @day is not true" do
     should_receive(:written_answers_url).and_return("http://test.url")
-    result = capture_haml{ day_nav_links }
-    result.should have_tag("ul li a[href=http://test.url]")
-  end
-
-  it "should include an 'ul' tag containing an 'li' tag containing a link to the sourcefiles url if @day is not true" do
-    should_receive(:source_files_url).and_return("http://test.url")
-    result = capture_haml{ day_nav_links }
-    result.should have_tag("ul li a[href=http://test.url]")
-  end
-
-  it "should include an 'ul' tag containing an 'li' tag containing a link to the datafiles url if @day is not true" do
-    should_receive(:data_files_url).and_return("http://test.url")
     result = capture_haml{ day_nav_links }
     result.should have_tag("ul li a[href=http://test.url]")
   end

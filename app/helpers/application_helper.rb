@@ -195,16 +195,6 @@ module ApplicationHelper
         puts "Sessions"
       end
     end
-    open :li do
-      open :a, :href => source_files_url do
-        puts "Source Files"
-      end
-    end
-    open :li do
-      open :a, :href => data_files_url do
-        puts "Data Files"
-      end
-    end
   end
 
   def search_form id='search', submit_text='Search', &block
