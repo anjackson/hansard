@@ -20,15 +20,13 @@ describe ApplicationHelper, " when formatting contribution" do
 
   it 'should replace col element with span with class "sidenote" and anchor' do
     format_contribution('a <col>123</col> text').should ==
-        "<p>a <span class='sidenote'><a name='column_123' href='#column_123'>Col. 123</a></span> text</p>"
+        "<p>a <span class='sidenote'><a name='column_123' href='#column_123'>Col 123</a></span> text</p>"
   end
 
   it 'should replace image element with an image wrapped in a span with class "sidenote"' do
-    img_tag = '<img alt="Dummypage" border="0" height="100" src="/images/dummypage.jpg" />'
-    should_receive(:image_tag).with("dummypage.jpg", :border => 0, :height => 100).and_return(img_tag)
 
     format_contribution('a <image src="S6CV0089P0I0021"/> text').should ==
-        "<p>a <span class='sidenote'><a href='/images/S6CV0089P0I0021.jpg' alt='S6CV0089P0I0021' title='S6CV0089P0I0021' class='image-thumbnail'><figure><img alt=\"Dummypage\" border=\"0\" height=\"100\" src=\"/images/dummypage.jpg\" /><br/><legend>Img. S6CV0089P0I0021</legend></figure></a></span> text</p>"
+        "<p>a <span class='sidenote'>Img S6CV0089P0I0021</span> text</p>"
   end
 
   it 'should replace lb element with close and open paragraph' do
@@ -61,16 +59,13 @@ describe ApplicationHelper, " when formatting contribution" do
   end
 
   it 'should return the image name linked to the source wrapped with a span with class "sidenote"' do
-    img_tag = '<img alt="Dummypage" border="0" height="100" src="/images/dummypage.jpg" />'
-    should_receive(:image_tag).with("dummypage.jpg", :border => 0, :height => 100).and_return(img_tag)
-
     format_contribution('a <i>really <image src="S6CV0089P0I0021"/> powerful</i> change').should ==
-        "<p>a <i>really <span class='sidenote'><a href='/images/S6CV0089P0I0021.jpg' alt='S6CV0089P0I0021' title='S6CV0089P0I0021' class='image-thumbnail'><figure><img alt=\"Dummypage\" border=\"0\" height=\"100\" src=\"/images/dummypage.jpg\" /><br/><legend>Img. S6CV0089P0I0021</legend></figure></a></span> powerful</i> change</p>"
+        "<p>a <i>really <span class='sidenote'>Img S6CV0089P0I0021</span> powerful</i> change</p>"
   end
 
   it 'should return the column number with an anchor wrapped with a span with class "sidenote"' do
     format_contribution('a <sub>really <col>123</col> powerful</sub> change').should ==
-        "<p>a <sub>really <span class='sidenote'><a name='column_123' href='#column_123'>Col. 123</a></span> powerful</sub> change</p>"
+        "<p>a <sub>really <span class='sidenote'><a name='column_123' href='#column_123'>Col 123</a></span> powerful</sub> change</p>"
   end
   
   it "should convert a member element in to a span element with class 'member'" do
@@ -288,13 +283,13 @@ describe ApplicationHelper, " when returning marker html for a model" do
     marker_html(@mock_sitting, {})
   end
 
-  it "should return a 'span' tag with class 'sidenote' containing a link to the image source with the text 'Img. ' and the name of the image" do
-    expected_tag_selector = "span.sidenote a[href=\"/images/S5CV0750P0I0497.jpg\"]"
-    image_marker("S5CV0750P0I0497").should have_tag(expected_tag_selector, :count => 1, :text => "Img. S5CV0750P0I0497")
+  it "should return a 'span' tag with class 'sidenote' with the text 'Img ' and the name of the image" do
+    expected_tag_selector = "span.sidenote"
+    image_marker("S5CV0750P0I0497").should have_tag(expected_tag_selector, :count => 1, :text => "Img S5CV0750P0I0497")
   end
 
-  it "should return a 'span' tag with class 'sidenote' containing the text 'Col' and the column number for a column marker" do
-    column_marker("5").should have_tag("span.sidenote", :text => "Col. 5", :count => 1)
+  it "should return a 'span' tag with class 'sidenote' containing the text 'Col ' and the column number for a column marker" do
+    column_marker("5").should have_tag("span.sidenote", :text => "Col 5", :count => 1)
   end
 
   it "should return an anchor for the column_number for a column marker" do

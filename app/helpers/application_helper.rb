@@ -24,12 +24,11 @@ module ApplicationHelper
   end
 
   def image_marker(image_src)
-    dummy_image = image_tag "dummypage.jpg", :border => 0, :height => 100
-    "<span class='sidenote'><a href='/images/#{image_src}.jpg' alt='#{image_src}' title='#{image_src}' class='image-thumbnail'><figure>#{dummy_image}<br/><legend>Img. #{image_src}</legend></figure></a></span>"
+    "<span class='sidenote'>Img #{image_src}</span>"
   end
 
   def column_marker(column)
-    "<span class='sidenote'><a name='column_#{column}' href='#column_#{column}'>Col. #{column}</a></span>"
+    "<span class='sidenote'><a name='column_#{column}' href='#column_#{column}'>Col #{column}</a></span>"
   end
 
   def section_url(section)
