@@ -105,12 +105,17 @@ module ParliamentSessionsHelper
     last = sitting.end_column.to_i
     columns = []
 
+    place_holder_blank = ''
+    (first % 10).times {|i| columns << place_holder_blank}
     first.upto(last) do |column|
       the_section = sitting.find_section_by_column(column)
       columns << column_link(column, the_section)
     end
 
-    columns.join(', ')
+    rows = []
+    columns.in_groups_of(10) {|g| rows << '<tr><td class="column_number">' + g.join('</td><td class="column_number">') + '<tr><td>' }
+
+    '<table><tbody>' + rows.join('') + '</tbody></table>'
   end
 
   def column_link column, section

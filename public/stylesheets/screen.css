@@ -259,3 +259,8 @@ a#random-link {
 .sitting_date {
   font-weight: bold;
 }
+
+td.column_number {
+  text-align: right;
+  width: 2.7em;
+}
