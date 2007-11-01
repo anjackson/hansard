@@ -71,22 +71,22 @@ module ParliamentSessionsHelper
   end
 
   def reign_link parliament_session
-    text = reign_link_text(parliament_session.year_of_the_reign)
+    text = reign_link_text(parliament_session.regnal_years)
     url_component = monarch_url_component(parliament_session.monarch_name)
-    years = parliament_session.year_of_the_reign.downcase.gsub(' ','').sub('and', '_and_').sub('&amp;', '_and_').sub('&#x0026;','_and_')
-    url = url_for(:monarch_name => url_component, :years_of_reign => years, :controller => 'parliament_sessions', :action => 'years_of_reign_index')
+    years = parliament_session.regnal_years.downcase.gsub(' ','').sub('and', '_and_').sub('&amp;', '_and_').sub('&#x0026;','_and_')
+    url = url_for(:monarch_name => url_component, :regnal_years => years, :controller => 'parliament_sessions', :action => 'regnal_years_index')
     link_to text, url
   end
 
-  def reign_link_text year_of_the_reign
-    text = year_of_the_reign.capitalize
+  def reign_link_text regnal_years
+    text = regnal_years.capitalize
 
-    if year_of_the_reign.include?('-')
+    if regnal_years.include?('-')
       text.gsub!(' ','-')
       text += ' year of the reign'
-    elsif (year_of_the_reign.include?('&amp;') ||
-          year_of_the_reign.include?('&#x0026;') ||
-          year_of_the_reign.upcase.include?('AND'))
+    elsif (regnal_years.include?('&amp;') ||
+          regnal_years.include?('&#x0026;') ||
+          regnal_years.upcase.include?('AND'))
       text += ' years of the reign'
     else
       text += ' year of the reign'

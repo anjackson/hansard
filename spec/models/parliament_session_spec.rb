@@ -27,7 +27,7 @@ describe ParliamentSession, 'the class' do
 
   it 'should return sessions in groups by year of the reign of a given monarch' do
     monarch_name = 'elizabeth_ii'
-    groups = ParliamentSession.sessions_in_groups_by_year_of_the_reign(monarch_name)
+    groups = ParliamentSession.sessions_in_groups_by_regnal_years(monarch_name)
     groups[0][0].should == parliament_sessions(:commons_session)
   end
 

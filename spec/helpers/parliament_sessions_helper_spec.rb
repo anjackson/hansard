@@ -57,12 +57,12 @@ describe ParliamentSessionsHelper do
 
   it 'should create link url to session for year of the reign "FIFTY-THIRD"' do
     session = parliament_sessions(:commons_session)
-    reign_link(session).should have_tag('a[href="/parliament_sessions/monarch/elizabeth_ii/years_of_reign/fifty-third"]')
+    reign_link(session).should have_tag('a[href="/parliament_sessions/monarch/elizabeth_ii/regnal_years/fifty-third"]')
   end
 
   it 'should create link url to session for year of the reign "5 &amp; 6"' do
     session = parliament_sessions(:lords_session)
-    reign_link(session).should have_tag('a[href="/parliament_sessions/monarch/george_vi/years_of_reign/5_and_6"]')
+    reign_link(session).should have_tag('a[href="/parliament_sessions/monarch/george_vi/regnal_years/5_and_6"]')
   end
 
   it 'should make reign link text correct for "1 &amp; 2"' do

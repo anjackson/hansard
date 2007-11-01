@@ -210,9 +210,9 @@ end
 
 describe Hansard::HeaderParser, 'when identifying year(s) of reign and monarch' do
 
-  def check_reign_monarch text, year_of_reign_expected, monarch_expected
+  def check_reign_monarch text, regnal_years_expected, monarch_expected
     reign, monarch = Hansard::HeaderParser.find_reign_and_monarch(text)
-    reign.should == year_of_reign_expected
+    reign.should == regnal_years_expected
     monarch.should == monarch_expected
   end
 
@@ -333,8 +333,8 @@ describe Hansard::HeaderParser, 'when parsing' do
     @session.number_of_parliament.should ==  'THIRTY-SEVENTH'
   end
 
-  it "should populate year_of_the_reign with text preceding the monarch's name in a paragraph element" do
-    @session.year_of_the_reign.should == '5 &amp; 6'
+  it "should populate regnal_years with text preceding the monarch's name in a paragraph element" do
+    @session.regnal_years.should == '5 &amp; 6'
   end
 
   it "should populate monarch_name with text of the monarch's name when it's in a paragraph element with the year of reign" do

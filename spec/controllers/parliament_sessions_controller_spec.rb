@@ -22,9 +22,9 @@ describe ParliamentSessionsController do
     route_for(params).should == "/parliament_sessions/monarch/elizabeth_ii"
   end
 
-  it "should map { :controller => 'parliament_sessions', :action => 'years_of_reign_index', :monarch_name => 'elizabeth_ii', :years_of_reign => '1_and_2' } to /parliament_sessions " do
-    params = { :controller => 'parliament_sessions', :action => 'years_of_reign_index', :monarch_name => 'elizabeth_ii', :years_of_reign => '1_and_2' }
-    route_for(params).should == "/parliament_sessions/monarch/elizabeth_ii/years_of_reign/1_and_2"
+  it "should map { :controller => 'parliament_sessions', :action => 'regnal_years_index', :monarch_name => 'elizabeth_ii', :regnal_years => '1_and_2' } to /parliament_sessions " do
+    params = { :controller => 'parliament_sessions', :action => 'regnal_years_index', :monarch_name => 'elizabeth_ii', :regnal_years => '1_and_2' }
+    route_for(params).should == "/parliament_sessions/monarch/elizabeth_ii/regnal_years/1_and_2"
   end
 
   it 'should assign series and monarchs in index action' do
@@ -64,30 +64,30 @@ describe ParliamentSessionsController do
     assigns[:lords_session].should == @lords_session
   end
 
-  it 'should assign sessions in years_of_reign_index action' do
+  it 'should assign sessions in regnal_years_index action' do
     @monarch_name = 'elizabeth_ii'
-    @years_of_reign = '1_and_2'
+    @regnal_years = '1_and_2'
     @commons_session = HouseOfCommonsSession.new
     @lords_session = HouseOfLordsSession.new
 
     HouseOfCommonsSession.should_receive(:find_by_monarch_and_reign).
-        with(@monarch_name, @years_of_reign).and_return(@commons_session)
+        with(@monarch_name, @regnal_years).and_return(@commons_session)
     HouseOfLordsSession.should_receive(:find_by_monarch_and_reign).
-        with(@monarch_name, @years_of_reign).and_return(@lords_session)
+        with(@monarch_name, @regnal_years).and_return(@lords_session)
 
-    get 'years_of_reign_index', :monarch_name => @monarch_name, :years_of_reign => @years_of_reign
+    get 'regnal_years_index', :monarch_name => @monarch_name, :regnal_years => @regnal_years
     assigns[:commons_session].should == @commons_session
     assigns[:lords_session].should == @lords_session
   end
 
-  it 'should assign sessions_in_groups_by_year_of_the_reign in monarch_index action' do
+  it 'should assign sessions_in_groups_by_regnal_years in monarch_index action' do
     @monarch_name = 'elizabeth_ii'
-    @sessions_grouped_by_year_of_reign = [[]]
+    @sessions_grouped_by_regnal_years = [[]]
 
-    ParliamentSession.should_receive(:sessions_in_groups_by_year_of_the_reign).
-        with(@monarch_name).and_return(@sessions_grouped_by_year_of_reign)
+    ParliamentSession.should_receive(:sessions_in_groups_by_regnal_years).
+        with(@monarch_name).and_return(@sessions_grouped_by_regnal_years)
 
     get 'monarch_index', :monarch_name => @monarch_name
-    assigns[:sessions_in_groups_by_year_of_the_reign].should == @sessions_grouped_by_year_of_reign
+    assigns[:sessions_in_groups_by_regnal_years].should == @sessions_grouped_by_regnal_years
   end
 end

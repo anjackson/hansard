@@ -15,8 +15,8 @@ class ParliamentSessionsController < ApplicationController
   def monarch_index
     @monarch_name = params[:monarch_name]
 
-    @sessions_in_groups_by_year_of_the_reign =
-        ParliamentSession.sessions_in_groups_by_year_of_the_reign(@monarch_name)
+    @sessions_in_groups_by_regnal_years =
+        ParliamentSession.sessions_in_groups_by_regnal_years(@monarch_name)
   end
 
   def volume_index
@@ -26,16 +26,16 @@ class ParliamentSessionsController < ApplicationController
     @lords_session = HouseOfLordsSession.find_volume(@series_number, @volume_number)
   end
 
-  def years_of_reign_index
+  def regnal_years_index
     @monarch_name = params[:monarch_name]
-    @years_of_reign = params[:years_of_reign]
-    @commons_session = HouseOfCommonsSession.find_by_monarch_and_reign(@monarch_name, @years_of_reign)
-    @lords_session = HouseOfLordsSession.find_by_monarch_and_reign(@monarch_name, @years_of_reign)
+    @regnal_years = params[:regnal_years]
+    @commons_session = HouseOfCommonsSession.find_by_monarch_and_reign(@monarch_name, @regnal_years)
+    @lords_session = HouseOfLordsSession.find_by_monarch_and_reign(@monarch_name, @regnal_years)
 
     if @commons_session
-      @years_of_reign = @commons_session.year_of_the_reign
+      @regnal_years = @commons_session.regnal_years
     elsif @lords_session
-      @years_of_reign = @lords_session.year_of_the_reign
+      @regnal_years = @lords_session.regnal_years
     end
   end
 end
