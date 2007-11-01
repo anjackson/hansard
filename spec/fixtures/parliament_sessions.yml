@@ -2,7 +2,7 @@ commons_session:
   isbn:
   volume_of_session:
   years_of_session:
-  year_of_the_reign: FIFTY-THIRD
+  regnal_years: FIFTY-THIRD
   session_of_parliament: THIRD
   type: HouseOfCommonsSession
   volume_in_series: "424"
@@ -45,7 +45,7 @@ lords_session:
   isbn:
   volume_of_session:
   years_of_session:
-  year_of_the_reign: 5 &amp; 6
+  regnal_years: 5 &amp; 6
   session_of_parliament: SEVENTH
   type: HouseOfLordsSession
   volume_in_series: "CXXI"

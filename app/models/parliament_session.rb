@@ -68,10 +68,6 @@ class ParliamentSession < ActiveRecord::Base
     sessions.select {|s| s.regnal_years && (s.regnal_years.downcase == regnal_years)}.first
   end
 
-  def regnal_years
-    self.year_of_the_reign
-  end
-
   def start_column
     if sittings.size > 0
       sittings.first.start_column

@@ -55,9 +55,9 @@ class Hansard::HeaderParser
     name = match[4]
     monarch_suffix = match[5]
 
-    year_of_the_reign = "#{year}"
+    regnal_years = "#{year}"
     monarch_name = "#{name} #{monarch_suffix}"
-    return year_of_the_reign, monarch_name
+    return regnal_years, monarch_name
   end
 
   def self.match_two_year_reign_and_monarch match, index_increment=0
@@ -67,9 +67,9 @@ class Hansard::HeaderParser
     name = match[4 + index_increment]
     monarch_suffix = match[5 + index_increment].chomp('.')
 
-    year_of_the_reign = "#{first_year} #{and_separator} #{second_year}"
+    regnal_years = "#{first_year} #{and_separator} #{second_year}"
     monarch_name = "#{name} #{monarch_suffix}"
-    return year_of_the_reign, monarch_name
+    return regnal_years, monarch_name
   end
 
   def self.match_one_year_reign_and_monarch match, index_increment=0
@@ -77,9 +77,9 @@ class Hansard::HeaderParser
     name = match[2 + index_increment]
     monarch_suffix = match[3 + index_increment].chomp('.')
 
-    year_of_the_reign = "#{year}"
+    regnal_years = "#{year}"
     monarch_name = "#{name} #{monarch_suffix}"
-    return year_of_the_reign, monarch_name
+    return regnal_years, monarch_name
   end
 
   def self.find_second_reign_and_monarch text, first_pattern, second_pattern, index_increment
@@ -94,32 +94,32 @@ class Hansard::HeaderParser
   end
 
   def self.find_reign_and_monarch text
-    year_of_the_reign = monarch_name = other_year_of_the_reign = nil
+    regnal_years = monarch_name = other_regnal_years = nil
     text = text.gsub('<lb/>','')
 
     if (match = TWO_YEAR_REIGN_PATTERN.match(text))
       if ((monarch_suffix = match[5].chomp('.')) && monarch_suffix.is_roman_numeral?)
-        year_of_the_reign, monarch_name = match_two_year_reign_and_monarch(match)
-        other_year_of_the_reign, other_monarch_name = find_second_reign_and_monarch(text, TWO_YR_ONE_YR_TWO_MONARCHS, TWO_YR_TWO_YR_TWO_MONARCHS, 6)
+        regnal_years, monarch_name = match_two_year_reign_and_monarch(match)
+        other_regnal_years, other_monarch_name = find_second_reign_and_monarch(text, TWO_YR_ONE_YR_TWO_MONARCHS, TWO_YR_TWO_YR_TWO_MONARCHS, 6)
       end
     elsif (match = ONE_YEAR_REIGN_PATTERN.match(text))
       if ((monarch_suffix = match[3].chomp('.')) && monarch_suffix.is_roman_numeral?)
-        year_of_the_reign, monarch_name = match_one_year_reign_and_monarch(match)
-        other_year_of_the_reign, other_monarch_name = find_second_reign_and_monarch(text, ONE_YR_ONE_YR_TWO_MONARCHS, ONE_YR_TWO_YR_TWO_MONARCHS, 4)
+        regnal_years, monarch_name = match_one_year_reign_and_monarch(match)
+        other_regnal_years, other_monarch_name = find_second_reign_and_monarch(text, ONE_YR_ONE_YR_TWO_MONARCHS, ONE_YR_TWO_YR_TWO_MONARCHS, 4)
       end
     elsif ((match = PARLIAMENT_AND_MAJESTY_PATTERN.match(text)) || (match = MAJESTY_PATTERN.match(text)))
-      year_of_the_reign, monarch_name = match_majesty_reign_and_name(match)
+      regnal_years, monarch_name = match_majesty_reign_and_name(match)
     elsif (match = PARLIAMENT_AND_TWO_YEAR_REIGN_PATTERN.match(text))
-      year_of_the_reign, monarch_name = match_two_year_reign_and_monarch(match)
+      regnal_years, monarch_name = match_two_year_reign_and_monarch(match)
     elsif (match = PARLIAMENT_AND_ONE_YEAR_REIGN_PATTERN.match(text))
-      year_of_the_reign, monarch_name = match_one_year_reign_and_monarch(match)
+      regnal_years, monarch_name = match_one_year_reign_and_monarch(match)
     end
 
-    if other_year_of_the_reign
-      year_of_the_reign += ", #{other_year_of_the_reign}"
+    if other_regnal_years
+      regnal_years += ", #{other_regnal_years}"
       monarch_name += ", #{other_monarch_name}"
     end
-    return year_of_the_reign, monarch_name
+    return regnal_years, monarch_name
   end
 
   SESSION_PARLIAMENT_PATTERN = /^([^ ]+) SESSION OF THE ([^ ]+) PARLIAMENT OF THE UNITED KINGDOM OF GREAT BRITAIN/
@@ -214,9 +214,9 @@ class Hansard::HeaderParser
                 session.session_of_parliament = session_of_parliament
                 session.number_of_parliament = parliament
               else
-                year_of_the_reign, monarch_name = Hansard::HeaderParser.find_reign_and_monarch(text)
-                if year_of_the_reign
-                  session.year_of_the_reign = year_of_the_reign
+                regnal_years, monarch_name = Hansard::HeaderParser.find_reign_and_monarch(text)
+                if regnal_years
+                  session.regnal_years = regnal_years
                   session.monarch_name = monarch_name
                 end
               end
