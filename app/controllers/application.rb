@@ -4,6 +4,7 @@
 class ApplicationController < ActionController::Base
   # helper :all # include all helpers, all the time
   include ExceptionNotifiable
+  session :off
 
   def section_url(section)
     params = section.id_hash
