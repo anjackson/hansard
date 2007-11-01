@@ -147,21 +147,12 @@ module ApplicationHelper
 
   def day_nav_links_with_day
     open :li do
-      day_link(@sitting,"<") { puts "Previous day" }
+      day_link(@sitting,"<") { puts "Previous sitting day" }
     end
     open :li do
-      day_link(@sitting, ">") { puts "Next day" }
+      day_link(@sitting, ">") { puts "Next sitting day" }
     end
-    open :li do
-      open :a, :href => sitting_date_source_url(@sitting) do
-        puts "XML source"
-      end
-    end
-    open :li do
-      open :a, { :href => sitting_date_xml_url(@sitting) } do
-        puts "XML output"
-      end
-    end
+   
   end
 
   def day_nav_links_without_day

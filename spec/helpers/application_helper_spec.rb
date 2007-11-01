@@ -222,32 +222,18 @@ describe ApplicationHelper, " when creating navigation links" do
     result.should_not == ''
   end
 
-  it "should include an 'ul' tag containing an 'li' tag containing a link to the source xml with the text 'XML source'" do
-    @day = true
-    should_receive(:sitting_date_source_url).and_return("http://test.url")
-    result = capture_haml{ day_nav_links }
-    result.should have_tag("ul li a[href=http://test.url]", :text => "XML source")
-  end
-
-  it "should include an 'ul' tag containing an 'li' tag containing a link to the generated xml with the text 'XML output'" do
-    @day = true
-    should_receive(:sitting_date_xml_url).and_return("http://test.url")
-    result = capture_haml{ day_nav_links }
-    result.should have_tag("ul li a[href=http://test.url]", :text => "XML output")
-  end
-
-  it "should include an 'ul' tag containing an 'li' tag containing the text 'Previous day'" do
+  it "should include an 'ul' tag containing an 'li' tag containing the text 'Previous sitting day'" do
     @day = true
     should_receive(:commons_day_link).any_number_of_times.and_yield
     result = capture_haml{ day_nav_links }
-    result.should have_tag("ul li", :text => "Previous day")
+    result.should have_tag("ul li", :text => "Previous sitting day")
   end
 
-  it "should include an 'ul' tag containing an 'li' tag containing the text 'Next day'" do
+  it "should include an 'ul' tag containing an 'li' tag containing the text 'Next sitting day'" do
     @day = true
     should_receive(:commons_day_link).any_number_of_times.and_yield
     result = capture_haml{ day_nav_links }
-    result.should have_tag("ul li", :text => "Next day")
+    result.should have_tag("ul li", :text => "Next sitting day")
   end
 
 end
