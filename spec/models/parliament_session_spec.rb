@@ -31,14 +31,34 @@ describe ParliamentSession, 'the class' do
     groups[0][0].should == parliament_sessions(:commons_session)
   end
 
-  it 'should return sittings for a HouseOfCommonsSession based on a series, volume and part number' do
+  it 'should return a HouseOfCommonsSession based on a monarch name and "fifty-third" year of reign' do
+    session = HouseOfCommonsSession.find_by_monarch_and_reign 'elizabeth_ii', 'fifty-third'
+    session.should == parliament_sessions(:commons_session)
+  end
+
+  it 'should return a HouseOfLordsSession based on a monarch name and "5_and_6" year of reign' do
+    session = HouseOfLordsSession.find_by_monarch_and_reign 'george_vi', '5_and_6'
+    session.should == parliament_sessions(:lords_session)
+  end
+
+  it 'should return HouseOfLordsSessions based on monarch name' do
+    sessions = HouseOfLordsSession.find_all_by_monarch 'george_vi'
+    sessions.should == [parliament_sessions(:lords_session)]
+  end
+
+  it 'should return HouseOfCommonsSessions based on a monarch name' do
+    sessions = HouseOfCommonsSession.find_all_by_monarch 'elizabeth_ii'
+    sessions.should == [parliament_sessions(:commons_session)]
+  end
+
+  it 'should return a HouseOfCommonsSession based on a series, volume and part number' do
     series_number = 'sixth'
     volume_number = '424_1'
     session = HouseOfCommonsSession.find_volume(series_number, volume_number)
     session.should == parliament_sessions(:commons_session)
   end
 
-  it 'should return sittings for a HouseOfLordsSession based on a series, volume number' do
+  it 'should return a HouseOfLordsSession based on a series, volume number' do
     series_number = 'fifth'
     volume_number = '121'
     session = HouseOfLordsSession.find_volume(series_number, volume_number)

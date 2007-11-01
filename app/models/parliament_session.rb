@@ -26,12 +26,8 @@ class ParliamentSession < ActiveRecord::Base
   end
 
   def self.sessions_in_groups_by_year_of_the_reign monarch_name
-    monarch_name = monarch_name.sub('_',' ')
-    sessions_in_series = find(:all).
-        select {|s| s.monarch_name && (s.monarch_name.downcase == monarch_name) }.
-        sort_by(&:monarch_name)
-
-    sessions_in_series.in_groups_by(&:monarch_name)
+    sessions = find_all_by_monarch(monarch_name).sort_by(&:monarch_name)
+    sessions.in_groups_by(&:monarch_name)
   end
 
   def self.find_volume series_number, volume_number_and_part # important don't change self to ParliamentSession
@@ -47,6 +43,29 @@ class ParliamentSession < ActiveRecord::Base
 
     selected = sessions.select{|s| s.series_number.downcase == series_number}
     selected.first
+  end
+
+  def self.find_all_by_monarch monarch_name
+    monarch_name = monarch_name.sub('_',' ')
+    find(:all).select { |s| s.monarch_name && (s.monarch_name.downcase == monarch_name) }
+  end
+
+  def self.find_by_monarch_and_reign monarch_name, years_of_reign
+    sessions = find_all_by_monarch monarch_name
+
+    if years_of_reign.include?('_and_')
+      session = find_by_years_of_reign sessions, years_of_reign.sub('_and_', ' and ')
+      unless session
+        session = find_by_years_of_reign sessions, years_of_reign.sub('_and_', ' &amp; ')
+      end
+    else
+      session = find_by_years_of_reign sessions, years_of_reign
+    end
+    session
+  end
+
+  def self.find_by_years_of_reign sessions, years_of_reign
+    sessions.select {|s| s.year_of_the_reign && (s.year_of_the_reign.downcase == years_of_reign)}.first
   end
 
   def start_column

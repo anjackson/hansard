@@ -1,0 +1,8 @@
+- parliament_session = session_columns_by_date
+- if parliament_session
+  %h2= "House of " + parliament_session.house
+  - parliament_session.sittings.each do |sitting|
+    .sitting_columns
+      %p
+        %span.sitting_date= sitting.date_text
+        %span= sitting_column_links(sitting)

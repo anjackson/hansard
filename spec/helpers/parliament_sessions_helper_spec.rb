@@ -7,8 +7,8 @@ describe ParliamentSessionsHelper do
     volume_in_series_title('sixth').should == 'Volumes in Sixth Series, by number'
   end
 
-  it 'should create monarch index title correctly' do
-    reign_title('elizabeth_ii').should == 'Sessions by Years of the Reign of Elizabeth II'
+  it 'should format monarch name correctly' do
+    format_monarch_name('elizabeth_ii').should == 'Elizabeth II'
   end
 
   it 'should create link text to series url correctly' do
@@ -53,6 +53,16 @@ describe ParliamentSessionsHelper do
     session = parliament_sessions(:commons_session)
     text = 'Fifty-third year of the reign'
     reign_link(session).should have_tag('a', :text => text)
+  end
+
+  it 'should create link url to session for year of the reign "FIFTY-THIRD"' do
+    session = parliament_sessions(:commons_session)
+    reign_link(session).should have_tag('a[href="/parliament_sessions/monarch/elizabeth_ii/years_of_reign/fifty-third"]')
+  end
+
+  it 'should create link url to session for year of the reign "5 &amp; 6"' do
+    session = parliament_sessions(:lords_session)
+    reign_link(session).should have_tag('a[href="/parliament_sessions/monarch/george_vi/years_of_reign/5_and_6"]')
   end
 
   it 'should make reign link text correct for "1 &amp; 2"' do

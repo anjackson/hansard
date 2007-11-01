@@ -4,7 +4,7 @@ module ParliamentSessionsHelper
     "Volumes in #{series_number.titleize} Series, by number"
   end
 
-  def reign_title monarch_name
+  def format_monarch_name monarch_name
     parts = []
     monarch_name.each('_') do |part|
       if part.is_roman_numeral?
@@ -14,7 +14,7 @@ module ParliamentSessionsHelper
       end
     end
     name = parts.join(' ').squeeze(' ')
-    "Sessions by Years of the Reign of #{name}"
+    name
   end
 
   def monarch_link monarch_name
@@ -27,8 +27,13 @@ module ParliamentSessionsHelper
       end
     end
     name = parts.join(' ').squeeze(' ')
-    url_component = monarch_name.downcase.gsub(' ','_')
-    link_to name, url_for(:monarch_name => url_component, :controller => 'parliament_sessions', :action => 'monarch_index')
+    url_component = monarch_url_component(monarch_name)
+    url = url_for(:monarch_name => url_component, :controller => 'parliament_sessions', :action => 'monarch_index')
+    link_to name, url
+  end
+
+  def monarch_url_component monarch_name
+    monarch_name.downcase.gsub(' ','_')
   end
 
   def series_link series_number
@@ -67,19 +72,10 @@ module ParliamentSessionsHelper
 
   def reign_link parliament_session
     text = reign_link_text(parliament_session.year_of_the_reign)
-    link_to text, ''
-  end
-
-  def number_to_ordinal(number)
-    number = number.to_i
-    if (10...20) === number
-      "#{number}th"
-    else
-      suffixes = %w{ th st nd rd th th th th th th }
-      value = number.to_s
-      last = value[-1..-1].to_i
-      value + suffixes[last]
-    end
+    url_component = monarch_url_component(parliament_session.monarch_name)
+    years = parliament_session.year_of_the_reign.downcase.gsub(' ','').sub('and', '_and_').sub('&amp;', '_and_').sub('&#x0026;','_and_')
+    url = url_for(:monarch_name => url_component, :years_of_reign => years, :controller => 'parliament_sessions', :action => 'years_of_reign_index')
+    link_to text, url
   end
 
   def reign_link_text year_of_the_reign
@@ -125,6 +121,18 @@ module ParliamentSessionsHelper
       link_to column, "#{section_url(section)}#column_#{column}"
     else
       column.to_s
+    end
+  end
+
+  def number_to_ordinal(number)
+    number = number.to_i
+    if (10...20) === number
+      "#{number}th"
+    else
+      suffixes = %w{ th st nd rd th th th th th th }
+      value = number.to_s
+      last = value[-1..-1].to_i
+      value + suffixes[last]
     end
   end
 end

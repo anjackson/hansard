@@ -25,4 +25,17 @@ class ParliamentSessionsController < ApplicationController
     @commons_session = HouseOfCommonsSession.find_volume(@series_number, @volume_number)
     @lords_session = HouseOfLordsSession.find_volume(@series_number, @volume_number)
   end
+
+  def years_of_reign_index
+    @monarch_name = params[:monarch_name]
+    @years_of_reign = params[:years_of_reign]
+    @commons_session = HouseOfCommonsSession.find_by_monarch_and_reign(@monarch_name, @years_of_reign)
+    @lords_session = HouseOfLordsSession.find_by_monarch_and_reign(@monarch_name, @years_of_reign)
+
+    if @commons_session
+      @years_of_reign = @commons_session.year_of_the_reign
+    elsif @lords_session
+      @years_of_reign = @lords_session.year_of_the_reign
+    end
+  end
 end
