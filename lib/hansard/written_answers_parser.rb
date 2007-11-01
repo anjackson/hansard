@@ -71,7 +71,7 @@ class Hansard::WrittenAnswersParser
       end
     end
 
-    if (groups = (@doc/'writtenanswers/group'))
+    if (groups = (@doc/'writtenanswers/group') + (@doc/'writtenanswers/section'))
       groups.each do |group|
         handle_group(group)
       end
