@@ -86,6 +86,6 @@ describe ParliamentSessionsHelper do
   end
 
   it 'should make column link correctly' do
-    column_link(1).should == '1'
+    column_link(1, nil).should == '1'
   end
 end

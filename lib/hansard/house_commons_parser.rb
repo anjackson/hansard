@@ -73,6 +73,7 @@ class Hansard::HouseCommonsParser < Hansard::HouseParser
       end
 
       if still_in_oral_questions
+        oral_questions.end_column = @column
         oral_questions.parent_section = debates
         debates.sections << oral_questions
       end
@@ -121,6 +122,7 @@ class Hansard::HouseCommonsParser < Hansard::HouseParser
       end
 
       if still_in_oral_questions
+        questions_section.end_column = @column
         questions_section.parent_section = oral_questions
         oral_questions.sections << questions_section
       end
@@ -167,6 +169,7 @@ class Hansard::HouseCommonsParser < Hansard::HouseParser
       end
 
       if still_in_oral_questions
+        question_section.end_column = @column
         question_section.parent_section = questions
         questions.questions << question_section
       end

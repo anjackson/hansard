@@ -106,17 +106,14 @@ module ParliamentSessionsHelper
     columns = []
 
     first.upto(last) do |column|
-      the_section = nil
-      unless the_section
-        the_section = sitting.find_section_by_column(column)
-      end
+      the_section = sitting.find_section_by_column(column)
       columns << column_link(column, the_section)
     end
 
     columns.join(', ')
   end
 
-  def column_link column, section=nil
+  def column_link column, section
     if section
       link_to column, "#{section_url(section)}#column_#{column}"
     else
