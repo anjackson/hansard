@@ -19,7 +19,14 @@ padding: 0 1em;
 float: right;
 padding-left: 2em;
 }
-
+.section-preview {
+	color:#ccc;
+	font-size:0.8em;
+	text-indent:1em;
+}
+.section-preview:hover {
+	color:#333;
+}
 q
 {
 quotes: none;
