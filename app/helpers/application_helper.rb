@@ -157,35 +157,38 @@ module ApplicationHelper
 
   def day_nav_links_without_day
     open :li do
+      open :a, :href => parliament_sessions_url do
+        puts "By session"
+      end
+    end
+    
+    open :li do
       open :a, :href => sittings_url do
-        puts "By Year"
-      end
-    end
-    open :li do
-      open :a, :href => commons_url do
-        puts "Commons"
-      end
-    end
-    open :li do
-      open :a, :href => written_answers_url do
-        puts "Written Answers"
+        puts "By year"
       end
     end
     open :li do
       open :a, :href => lords_url do
-        puts "Lords"
+        puts "House of Lords"
       end
     end
+    open :li do
+      open :a, :href => commons_url do
+        puts "House of Commons"
+      end
+    end
+    open :li do
+      open :a, :href => written_answers_url do
+        puts "Written answers"
+      end
+    end
+
     open :li do
       open :a, :href => lords_reports_url do
         puts "Lords Reports"
       end
     end
-    open :li do
-      open :a, :href => parliament_sessions_url do
-        puts "Sessions"
-      end
-    end
+
   end
 
   def search_form id='search', submit_text='Search', &block
