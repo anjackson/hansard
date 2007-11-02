@@ -131,9 +131,14 @@ module ApplicationHelper
 
   def day_nav_links
     open :ul, { :id => 'navigation-by-links' } do
+      
+      open :li do
+          puts "HANSARD 1804-2004"
+      end
+      
       open :li do
         open :a, :href => home_url do
-          puts "Hansard <strong>TIMELINE</strong>"
+          puts "Timeline"
         end
       end
       if @day
@@ -157,7 +162,7 @@ module ApplicationHelper
   def day_nav_links_without_day
     open :li do
       open :a, :href => parliament_sessions_url do
-        puts "Hansard <strong>SESSIONS</strong>"
+        puts "Sessions"
       end
     end
 
