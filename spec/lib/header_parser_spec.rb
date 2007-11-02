@@ -216,6 +216,14 @@ describe Hansard::HeaderParser, 'when identifying year(s) of reign and monarch' 
     monarch.should == monarch_expected
   end
 
+  it 'should return nil for "1 H. C" ' do
+    check_reign_monarch '1 H. C', nil, nil
+  end
+
+  it 'should handle "6 Edward, VII" ' do
+    check_reign_monarch '6 Edward, VII', '6', 'Edward VII'
+  end
+
   it 'should handle "5 &amp; 6 GEORGE VI"' do
     check_reign_monarch '5 &amp; 6 GEORGE VI', '5 &amp; 6', 'GEORGE VI'
   end

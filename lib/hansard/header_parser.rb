@@ -33,9 +33,9 @@ class Hansard::HeaderParser
     end
   end
 
-  BASE_MAJESTY_PATTERN = '(.+) YEAR OF THE REIGN OF ([^ ]+) MAJESTY ([^ ]+) ([^ ]+) ([^ ]+)'
-  BASE_ONE_YEAR_REIGN_PATTERN = '(\d+) ([^ ]+) ([^ ]+)'
-  BASE_TWO_YEAR_REIGN_PATTERN = '(\d+) ?(&amp;|and|AND|&#x0026;) ?(\d+) ([^ ]+) ([^ ]+)'
+  BASE_MAJESTY_PATTERN = '(.+) YEAR OF THE REIGN OF ([^ ]+) MAJESTY ([^ ]+) ([^ ][^ ][^ ]+) ([^ ]+)'
+  BASE_ONE_YEAR_REIGN_PATTERN = '(\d+) ([^ ][^ ][^ ]+) ([^ ]+)'
+  BASE_TWO_YEAR_REIGN_PATTERN = '(\d+) ?(&amp;|and|AND|&#x0026;) ?(\d+) ([^ ][^ ][^ ]+) ([^ ]+)'
   AND_SEPARATOR_PATTERN = ' ?(&amp;|and|AND|&#x0026;) ?'
 
   MAJESTY_PATTERN = /^#{BASE_MAJESTY_PATTERN}$/
@@ -115,7 +115,9 @@ class Hansard::HeaderParser
       regnal_years, monarch_name = match_one_year_reign_and_monarch(match)
     end
 
-    if other_regnal_years
+    monarch_name = monarch_name.gsub(',','') if monarch_name
+
+    if other_regnal_years && !other_monarch_name.blank?
       regnal_years += ", #{other_regnal_years}"
       monarch_name += ", #{other_monarch_name}"
     end
