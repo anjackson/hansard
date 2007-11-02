@@ -88,7 +88,7 @@ min-width:900px;
 }
 h1 {
 font-size: 1.6em;
-line-height:160%;
+font-weight: normal;
 }
 h2 {
 font-weight: normal;

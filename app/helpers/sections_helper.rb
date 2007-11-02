@@ -13,7 +13,7 @@ module SectionsHelper
         open :td do
           puts "Parent section&mdash;<br/>"
           open :a, { :class => 'parent-section', :href => sitting_date_url(section.sitting) } do
-            puts section.sitting.title.to_s
+            puts [section.sitting.title.to_s, section.sitting.date_text.to_s].join(' ')
           end
         end
       end
