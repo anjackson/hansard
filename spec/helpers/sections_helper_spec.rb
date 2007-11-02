@@ -33,7 +33,7 @@ describe SectionsHelper, " when using section_nav_links to create links for a se
   end
 
   it "should have a link to the sitting showing the sitting's title and date text with class 'parent-section'" do
-    call_section_nav_links.should have_tag("a.parent-section", :text => "sitting title")
+    call_section_nav_links.should have_tag("a.parent-section", :text => "sitting title #{@date_text}")
   end
 
   it "should not have any text about the previous linkable section if there isn't one" do
