@@ -1,5 +1,8 @@
 class MemberContribution < Contribution
 
+  belongs_to :member
+  before_validation_on_create :populate_member
+
   alias :to_activerecord_xml :to_xml
 
   def self.find_all_members
@@ -11,8 +14,8 @@ class MemberContribution < Contribution
   end
 
   def plain_member_name
-    if member
-      member.gsub(/<lb>|<\/lb>|<lb\/>/,'').squeeze(' ')
+    if member_name
+       member_name.gsub(/<lb>|<\/lb>|<lb\/>/,'').squeeze(' ')
     end
   end
 
@@ -26,7 +29,7 @@ class MemberContribution < Contribution
     xml_para(options) do
       xml.text! question_no || ""
       xml.member do
-        xml << member.strip
+        xml << member_name.strip
         xml.memberconstituency(member_constituency) if member_constituency
       end
       xml.membercontribution do
@@ -36,6 +39,13 @@ class MemberContribution < Contribution
   end
 
   private
+
+    def populate_member
+      unless member
+        member = Member.find_or_create_from_name(member_name)
+        self.member = member
+      end
+    end
 
     def count_by_member= count
       @count_by_member = count

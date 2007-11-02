@@ -1,11 +1,24 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
+describe MemberContribution, " on creation" do
+  it 'should create a member model if one does not exist' do
+    Member.delete_all
+    member_name = 'Mr Tickle'
+    contribution = MemberContribution.new :member_name => member_name
+    member = mock_model(Member)
+    Member.should_receive(:find_or_create_from_name).and_return(member)
+    contribution.save!
+    contribution.member.should == member
+    MemberContribution.delete_all
+    Member.delete_all
+  end
+end
 
 describe MemberContribution, " in general" do
 
   before(:each) do
     @model = MemberContribution.new
-    @model.stub!(:member).and_return("test member")
+    @model.stub!(:member_name).and_return("test member")
     @mock_builder = mock("xml builder")
     @mock_builder.stub!(:p)
   end
@@ -18,7 +31,7 @@ describe MemberContribution, ".to_xml" do
 
   before do
     @contribution = MemberContribution.new
-    @contribution.member = "test member"
+    @contribution.member_name = "test member"
   end
 
   it "should return one 'p' tag with no content if the text of the member contribution is nil" do
@@ -38,7 +51,7 @@ describe MemberContribution, ".to_xml" do
   end
 
   it "should return one 'member' tag containing the member attribute of member contribution" do
-    @contribution.member = "John Q. Member"
+    @contribution.member_name = "John Q. Member"
     @contribution.to_xml.should have_tag('member', :text => "John Q. Member", :count => 1)
   end
 
@@ -62,4 +75,3 @@ describe MemberContribution, ".to_xml" do
   it_should_behave_like "a contribution"
 
 end
-

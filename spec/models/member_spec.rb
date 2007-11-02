@@ -1,18 +1,57 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
+describe Member, 'on creation' do
+  it 'should populate slug from name' do
+    Member.delete_all
+    name = 'Mr Tickled'
+    member = Member.new
+    member.name = name
+    member.save!
+    member.slug.should == 'mr-tickled'
+    Member.delete_all
+  end
+end
+
+describe Member, 'find_or_create_from_name' do
+  it 'should return existing member matching the supplied name if there is one' do
+    Member.delete_all
+    existing_member = mock_model(Member)
+    Member.should_receive(:find_by_name).and_return(existing_member)
+    name = 'Mr Tickle'
+    member = Member.find_or_create_from_name(name)
+    member.should == existing_member
+    Member.delete_all
+  end
+
+  it 'should create new member if no member matching the supplied name' do
+    Member.delete_all
+    Member.should_receive(:find_by_name).and_return(nil)
+
+    name = 'Mr Tickle'
+    member = Member.find_or_create_from_name(name)
+    member.should_not be_nil
+    member.should be_an_instance_of(Member)
+    member.name.should == name
+    member.slug.should == 'mr-tickle'
+    Member.delete_all
+  end
+end
+
 describe Member, 'find_member' do
   before do
-    @name = 'mr_boyes'
+    @slug = 'mr_boyes'
     @member = mock(Member)
-    @member.stub!(:slug).and_return(@name)
-    MemberContribution.stub!(:find_all_members).and_return([@member])
+    @member.stub!(:name).and_return('Mr Boyes')
+    @member.stub!(:slug).and_return(@slug)
   end
 
   it 'should find member based on slug "mr_boyes"' do
-    Member.find_member(@name).should == @member
+    Member.stub!(:find_by_slug).and_return(@member)
+    Member.find_member(@slug).should == @member
   end
 
   it 'should find all members' do
+    Member.stub!(:find).and_return([@member])
     Member.find_all_members.should == [@member]
   end
 end
@@ -36,7 +75,7 @@ describe Member, 'with contributions' do
     @two_b.stub!(:section_id).and_return(5)
     @three.stub!(:section_id).and_return(4)
     contributions = [@two, @three, @one, @two_a, @two_b]
-    @member = Member.new('Mr Boyes', contributions.size)
+    @member = Member.new(:name => 'Mr Boyes', :contribution_count => contributions.size)
     @member.stub!(:contributions).and_return(contributions)
   end
 

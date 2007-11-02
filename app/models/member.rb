@@ -1,21 +1,30 @@
-class Member
+class Member < ActiveRecord::Base
 
-  attr_accessor :name, :contribution_count, :slug
+  before_validation_on_create :populate_slug
+  validates_uniqueness_of :slug, :name
 
-  include Acts::Slugged::InstanceMethods
+  acts_as_slugged
 
-  def initialize(name, contribution_count=0)
-    @name, @contribution_count = name, contribution_count
-    @slug = make_slug(name, :truncate => false) {|candidate_slug| duplicate_found = false}
+  has_many :contributions
+
+  def self.find_or_create_from_name name
+    member = Member.find_by_name(name)
+    unless member
+      member = Member.create!(:name => name)
+    end
+    member
   end
 
   def self.find_all_members
-    MemberContribution.find_all_members
+    Member.find(:all).sort_by(&:name)
   end
 
   def self.find_member slug
-    members = MemberContribution.find_all_members
-    members.select{|m| m.slug == slug}.first
+    Member.find_by_slug(slug)
+  end
+
+  def contribution_count
+    contributions.size
   end
 
   def contributions_in_groups_by_year_and_section
@@ -23,7 +32,12 @@ class Member
     by_section.sort_by{|s| s.first.date}.in_groups_by {|s| s.first.year}
   end
 
-  def contributions
-    MemberContribution.find_all_by_member(self.name) + WrittenMemberContribution.find_all_by_member(self.name)
-  end
+  protected
+
+    def populate_slug
+      unless slug
+        self.slug = make_slug(name, :truncate => false) {|candidate_slug| duplicate_found = false}
+      end
+    end
+
 end

@@ -78,7 +78,7 @@ describe Hansard::HouseCommonsParser do
     # section = @oral_questions.sections[1].sections.first
     # section.title.should == 'Security'
 #
-    # section.contributions.first.member.should == 'Mr. Michael Latham'
+    # section.contributions.first.member_name.should == 'Mr. Michael Latham'
   # end
 #
   # it "should add question no for contribution that has a question no" do
@@ -109,11 +109,10 @@ describe Hansard::HouseCommonsParser do
     contribution.text.should == %Q[<ol>\n<li>1. Paragraphs 4 and 5 of the order shall be omitted.</li>\n<li>2. Proceedings on consideration and Third Reading shall (so far as not previously concluded) be brought to a conclusion:</li>\n</ol>]
   end
 
-  it 'should add text preceding member element to question contribution memeber text' do
+  it 'should add text preceding member element to question contribution member text' do
     question = @oral_questions.sections.last.sections.last.contributions.last
-    question.member.should == "The Parliamentary Under-Secretary of State for Health (Dr. Stephen Ladyman)"
+    question.member_name.should == "The Parliamentary Under-Secretary of State for Health (Dr. Stephen Ladyman)"
   end
-
 
   it 'should set the image src property on the first element following an image tag within the orders of the day' do
     count = @sitting.debates.sections.size
@@ -257,7 +256,14 @@ describe Hansard::HouseCommonsParser do
 
   it 'should set member name correctly when member element contains member constituency for a oral question' do
     question = @oral_questions.sections.last.sections.first.contributions.first
-    question.member.should == 'Mr. Frank Field'
+    question.member_name.should == 'Mr. Frank Field'
+  end
+
+  it 'should create member model correctly when member element contains member constituency for a oral question' do
+    question = @oral_questions.sections.last.sections.first.contributions.first
+    question.member.should be_an_instance_of(Member)
+    question.member.name.should == 'Mr. Frank Field'
+    question.member.slug.should == 'mr-frank-field'
   end
 
   it 'should set member constituency when member element contains member constituency for a oral question' do
@@ -275,7 +281,7 @@ describe Hansard::HouseCommonsParser do
   end
 
   it 'should set member on first oral question contribution' do
-    @first_question_contribution.member.should == 'Mr. Douglas'
+    @first_question_contribution.member_name.should == 'Mr. Douglas'
   end
 
   it 'should set member contribution on first oral question contribution' do
@@ -306,7 +312,7 @@ describe Hansard::HouseCommonsParser do
   end
 
   it 'should set member on second oral question contribution' do
-    @second_question_contribution.member.should == 'The Parliamentary Under-Secretary of State for Energy (Mr. David Hunt)'
+    @second_question_contribution.member_name.should == 'The Parliamentary Under-Secretary of State for Energy (Mr. David Hunt)'
   end
 
   it 'should set member contribution on second oral question contribution' do
@@ -320,7 +326,7 @@ describe Hansard::HouseCommonsParser do
 
   it 'should set member on a oral question contribution containing <lb>' do
     question = @oral_questions.sections.first.questions.last
-    question.contributions.first.member.should == 'Mr. Hilton'
+    question.contributions.first.member_name.should == 'Mr. Hilton'
   end
 
   it 'should set member on a oral question with two question numbers' do
@@ -398,7 +404,7 @@ describe Hansard::HouseCommonsParser do
   end
 
   it 'should set second (member) contribution member on third section' do
-    @third_section_second_contribution.member.should == 'The Secretary of State for Social Services (Mr. Norman Fowler)'
+    @third_section_second_contribution.member_name.should == 'The Secretary of State for Social Services (Mr. Norman Fowler)'
   end
 
   it 'should set second (member) contribution text on third section' do

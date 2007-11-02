@@ -148,7 +148,7 @@ class Hansard::HouseParser
       element.children.each do |node|
         if node.text?
           text = node.to_s.strip
-          contribution.member += text if text.size > 0
+          contribution.member_name += text if text.size > 0
 
         elsif node.elem?
           if node.name == 'memberconstituency'
@@ -166,7 +166,7 @@ class Hansard::HouseParser
          :column_range => @column,
          :image_src_range => @image
       })
-      contribution.member = ''
+      contribution.member_name = ''
       log 'member contribution without id: ' + element.to_s unless element.attributes['id']
       still_in_member_contribution = true
 
@@ -242,7 +242,7 @@ class Hansard::HouseParser
 
       node.children.each do |part|
         if (part.elem? and part.name == 'member')
-          procedural.member = '' unless procedural.member
+          procedural.member_name = '' unless procedural.member_name
           handle_member_name part, procedural
         end
       end
@@ -395,8 +395,8 @@ class Hansard::HouseParser
       elsif (match = /^(Q?\d+\.?)/.match text)
         contribution.question_no = match[1]
       elsif text.size > 0
-        if contribution.member.size == 0
-          contribution.member = text.gsub("\r\n","\n").strip + ' '
+        if contribution.member_name.size == 0
+          contribution.member_name = text.gsub("\r\n","\n").strip + ' '
         elsif !@unexpected
           if element.at('membercontribution')
             if text == ':'
@@ -440,7 +440,7 @@ class Hansard::HouseParser
            :xml_id => element.attributes['id'],
            :column_range => @column,
            :image_src_range => @image,
-           :member => '',
+           :member_name => '',
            :text => ''})
 
         log " #{contribution_type} without id: " + element.to_s unless element.attributes['id']

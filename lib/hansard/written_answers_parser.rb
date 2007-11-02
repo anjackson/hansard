@@ -156,7 +156,7 @@ class Hansard::WrittenAnswersParser
       :image_src_range => @image
     })
 
-    contribution.member = ''
+    contribution.member_name = ''
     contribution.text = ''
     element.children.each do |node|
       if node.elem?
@@ -193,7 +193,7 @@ class Hansard::WrittenAnswersParser
     element.children.each do |node|
       if node.text?
         text = node.to_s.strip
-        contribution.member += text if text.size > 0
+        contribution.member_name += text if text.size > 0
 
       elsif node.elem?
         if node.name == 'memberconstituency'

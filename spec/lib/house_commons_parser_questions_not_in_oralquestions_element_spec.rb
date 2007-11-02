@@ -25,7 +25,7 @@ describe Hansard::HouseCommonsParser do
     questions_section = @sitting.sections[2]
     section = questions_section.sections.first
 
-    section.contributions.first.member.should == 'Mr. Michael Latham'
+    section.contributions.first.member_name.should == 'Mr. Michael Latham'
   end
 
   it "should add question no for contribution that has a question no" do

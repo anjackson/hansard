@@ -76,7 +76,7 @@ describe Hansard::WrittenAnswersParser, " when run against 'spec/data/writtenans
   end
 
   it "should set the member correctly on the member contribution" do
-    @second_contribution.member.should == 'Mr. Gummer'
+    @second_contribution.member_name.should == 'Mr. Gummer'
   end
 
   it "should create the third contribution as a procedural contribution" do

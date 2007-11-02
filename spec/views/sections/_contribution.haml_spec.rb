@@ -110,7 +110,7 @@ describe '_contribution partial', 'when passed procedural contribution' do
   it 'should show speaker in chair as div with class procedural' do
     response.should have_tag('div.procedural', '[MADAM SPEAKER in the Chair]')
   end
-  
+
   it 'should show the content of the contribution in a div whose id is the xml_id of the contribution' do
     response.should have_tag('div[id=xml id]', :text => "[MADAM SPEAKER in the Chair]")
   end
@@ -123,13 +123,17 @@ describe '_section partial', 'when passed members contribution with question_no,
   before do
     @contribution = mock_model(MemberContribution)
 
-    @member = 'Mr. David Borrow'
+    @member_name = 'Mr. David Borrow'
     @member_constituency = '(South Ribble)'
+    member = mock_model(Member)
+    member.stub!(:name).and_return(@member_name)
+    member.stub!(:slug).and_return('mr_david_borrow')
+    Member.stub!(:find_by_name).and_return(member)
     @question_no = '1.'
     @contribution_text = ': What assessment he has made of the responses to the pensions Green Paper received to date. [68005]'
     @contribution.stub!(:markers)
     @contribution.stub!(:text).and_return @contribution_text
-    @contribution.stub!(:member).and_return @member
+    @contribution.stub!(:member).and_return member
     @contribution.stub!(:member_constituency).and_return @member_constituency
     @contribution.stub!(:question_no).and_return @question_no
     @contribution.stub!(:procedural_note).and_return '<i>(seated and covered)</i>'
@@ -142,7 +146,7 @@ describe '_section partial', 'when passed members contribution with question_no,
   it 'should show member contribution in p with class "member_contribution"' do
     response.should have_tag('div.member_contribution') do
       with_tag('span.question_no', @question_no)
-      with_tag('cite.member', @member)
+      with_tag('cite.member', @member_name)
       with_tag('span.member_constituency', @member_constituency)
       with_tag('span.procedural_note', '(seated and covered):')
       with_tag('blockquote.contribution_text', @contribution_text.sub(':','').strip)
@@ -150,7 +154,7 @@ describe '_section partial', 'when passed members contribution with question_no,
   end
 
   it 'should show member name in cite with class "member"' do
-    response.should have_tag('cite.member', @member)
+    response.should have_tag('cite.member', @member_name)
   end
 
   it 'should show a procedural note and colon in a span with class "procedural_note"' do
@@ -176,11 +180,13 @@ describe '_contribution partial', 'when passed member contribution with ordered 
   before do
     @contribution = mock_model(MemberContribution)
 
-    @member = 'Mr. David Borrow'
-    # @member_constituency = '(South Ribble)'
-    # @question_no = '1.'
+    @member_name = 'Mr. David Borrow'
+    member = mock_model(Member)
+    member.stub!(:name).and_return(@member_name)
+    member.stub!(:slug).and_return('mr_david_borrow')
+    Member.stub!(:find_by_name).and_return(member)
     @contribution.stub!(:markers)
-    @contribution.stub!(:member).and_return @member
+    @contribution.stub!(:member).and_return member
     @contribution.stub!(:member_constituency).and_return @member_constituency
     @contribution.stub!(:question_no).and_return nil
     @contribution.stub!(:procedural_note).and_return nil
@@ -208,13 +214,17 @@ describe '_section partial', 'when passed members contribution with constituency
 
   before do
     @contribution = mock_model(MemberContribution)
-    @member = 'Mr. David Borrow'
+    @member_name = 'Mr. David Borrow'
     @member_constituency = '(South Ribble)'
+    member = mock_model(Member)
+    member.stub!(:name).and_return(@member_name)
+    member.stub!(:slug).and_return('mr_david_borrow')
+    Member.stub!(:find_by_name).and_return(member)
     @contribution_text = ': What assessment he has made of the responses to the pensions Green Paper received to date. [68005]'
 
     @contribution.stub!(:markers)
     @contribution.stub!(:text).and_return @contribution_text
-    @contribution.stub!(:member).and_return @member
+    @contribution.stub!(:member).and_return member
     @contribution.stub!(:member_constituency).and_return @member_constituency
     @contribution.stub!(:question_no).and_return nil
     @contribution.stub!(:procedural_note).and_return nil
@@ -234,13 +244,17 @@ describe '_section partial', 'when passed members contribution without constitue
 
   before do
     @contribution = mock_model(MemberContribution)
-    @member = 'Mr. David Borrow'
+    @member_name = 'Mr. David Borrow'
     @member_constituency = '(South Ribble)'
+    member = mock_model(Member)
+    member.stub!(:name).and_return(@member_name)
+    member.stub!(:slug).and_return('mr_david_borrow')
+    Member.stub!(:find_by_name).and_return(member)
     @contribution_text = ': What assessment he has made of the responses to the pensions Green Paper received to date. [68005]'
 
     @contribution.stub!(:markers)
     @contribution.stub!(:text).and_return @contribution_text
-    @contribution.stub!(:member).and_return @member
+    @contribution.stub!(:member).and_return member
     @contribution.stub!(:member_constituency).and_return nil
     @contribution.stub!(:question_no).and_return nil
     @contribution.stub!(:procedural_note).and_return nil
@@ -251,7 +265,7 @@ describe '_section partial', 'when passed members contribution without constitue
   end
 
   it 'should show member name and colon in cite with class "member"' do
-    response.should have_tag('cite.member', @member+':')
+    response.should have_tag('cite.member', @member_name+':')
   end
 
   it 'should not show span with class "member_constituency"' do

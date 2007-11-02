@@ -2,9 +2,13 @@ require 'hpricot'
 
 module ApplicationHelper
 
-  def link_to_member(member_name)
-    member = Member.new(member_name)
+  def link_to_member(member)
     link_to member.name, show_member_url(:name => member.slug)
+  end
+
+  def link_to_member_from_name(member_name)
+    member = Member.find_by_name(member_name)
+    link_to_member(member)
   end
 
   def intro section
@@ -131,11 +135,11 @@ module ApplicationHelper
 
   def day_nav_links
     open :ul, { :id => 'navigation-by-links' } do
-      
+
       open :li do
           puts "<strong>HANSARD</strong> 1804-2004"
       end
-      
+
       open :li do
         open :a, :href => home_url do
           puts "Timeline"
@@ -156,7 +160,7 @@ module ApplicationHelper
     open :li do
       day_link(@sitting, ">") { puts "Next sitting day" }
     end
-   
+
   end
 
   def day_nav_links_without_day
@@ -165,7 +169,6 @@ module ApplicationHelper
         puts "Sessions"
       end
     end
-
   end
 
   def search_form id='search', submit_text='Search', &block

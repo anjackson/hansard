@@ -123,16 +123,16 @@ describe HouseOfCommonsSitting, " destroy" do
     sitting.debates.sections << OralQuestions.new(:title => 'ORAL ANSWERS TO QUESTIONS', :sitting => sitting)
     sitting.debates.sections[1].sections << OralQuestionsSection.new(:title => 'GOVERNMENT INFORMATION SERVICES', :sitting => sitting)
     sitting.debates.sections[1].sections[0].questions << OralQuestionSection.new(:title => 'Television Films', :sitting => sitting)
-    sitting.debates.sections[1].sections[0].questions[0].contributions << MemberContribution.new(:question_no=>1, :xml_id=>"S5CV0602P0-00252", :member=>"Mr. John Hall", :text=>"<p>asked the Chancellor of the Duchy of Lancaster what steps he has taken to ensure that an adequate supply of suitable British filmed material is available to countries starting television services.</p>")
+    sitting.debates.sections[1].sections[0].questions[0].contributions << MemberContribution.new(:question_no=>1, :xml_id=>"S5CV0602P0-00252", :member_name=>"Mr. John Hall", :text=>"<p>asked the Chancellor of the Duchy of Lancaster what steps he has taken to ensure that an adequate supply of suitable British filmed material is available to countries starting television services.</p>")
 
     sitting.debates.sections << Section.new(:title => 'ANGLO-EGYPTIAN FINANCIAL AGREEMENT', :sitting => sitting)
-    sitting.debates.sections[2].contributions << MemberContribution.new(:xml_id=>"S5CV0602P0-00641", :member=>"Mr. George Chetwynd", :member_constituency=>"(Stockton-on-Tees)", :text => 'For the right hon. Gentleman, yes.')
+    sitting.debates.sections[2].contributions << MemberContribution.new(:xml_id=>"S5CV0602P0-00641", :member_name=>"Mr. George Chetwynd", :member_constituency=>"(Stockton-on-Tees)", :text => 'For the right hon. Gentleman, yes.')
     sitting.debates.sections[2].contributions << DivisionPlaceholder.new
     sitting.debates.sections[2].contributions[1].division = Division.new(:name=>'Division No. 65.]',:time_text=>'10.00 p.m.')
     sitting.debates.sections[2].contributions[1].division.votes << AyeVote.new(:name=>'Agnew, Sir Peter')
     sitting.debates.sections[2].contributions[1].division.votes << NoeVote.new(:name=>'Abse, Leo')
 
-
+    Member.stub!(:find_or_create_from_name).and_return(mock_model(Member))
     sitting.save!
 
     Sitting.find(:all).size.should == 1
