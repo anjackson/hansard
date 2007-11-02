@@ -41,7 +41,7 @@
     <fieldType name="slong" class="solr.SortableLongField" sortMissingLast="true" omitNorms="false"/>
     <fieldType name="sfloat" class="solr.SortableFloatField" sortMissingLast="true" omitNorms="false"/>
     <fieldType name="sdouble" class="solr.SortableDoubleField" sortMissingLast="true" omitNorms="false"/>
-    <fieldType name="date" class="solr.DateField" sortMissingLast="true" omitNorms="false"/>
+    <fieldType name="date" class="solr.DateField" sortMissingLast="true" omitNorms="true"/>
     <fieldType name="text_ws" class="solr.TextField" positionIncrementGap="100">
       <analyzer>
         <tokenizer class="solr.WhitespaceTokenizerFactory"/>
