@@ -35,6 +35,7 @@ font-style: normal;
 #header{
 height:4em;
 padding: 0.8em;
+border-bottom:1pt solid #555;
 }
 
 #search {
@@ -86,6 +87,7 @@ min-width:900px;
 }
 h1 {
 font-size: 1.6em;
+line-height:160%;
 }
 h2 {
 font-weight: normal;
