@@ -1,8 +1,8 @@
 = date_timeline(@result_set)
-- member_facets(@result_set) do |member_facets|
+- member_name_facets(@result_set) do |member_name_facets|
   .sidenote
     %ol#by-member-facet
       %li Top speakers
-      - member_facets[0..19].each do |member, times|
+      - member_name_facets[0..19].each do |member, times|
         %li.member-facet
-          = member_facet_link(member, times, @query)
+          = member_name_facet_link(member, times, @query)

@@ -40,7 +40,7 @@ end
 describe SearchHelper, " when creating member facet links" do
 
   it 'should return "<a href=\"/search?member=Mickey+Mouse&amp;query=mice\"><strong>4</strong> Mickey Mouse</a>" for member Mickey Mouse with 4 hits' do
-    member_facet_link("Mickey Mouse", 4, "mice").should == "<a href=\"/search?member=Mickey+Mouse&amp;query=mice\"><strong>4</strong> Mickey Mouse</a>"
+    member_name_facet_link("Mickey Mouse", 4, "mice").should == "<a href=\"/search?member=Mickey+Mouse&amp;query=mice\"><strong>4</strong> Mickey Mouse</a>"
   end
 
 end

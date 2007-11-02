@@ -41,11 +41,11 @@ module SearchHelper
     fragment
   end
 
-  def member_facets(result_set)
+  def member_name_facets(result_set)
     if result_set.facets and !result_set.facets["facet_fields"].empty?
-      member_facets = result_set.facets["facet_fields"]["member_facet"]
-      member_facets = sort_by_reverse_value_then_key(member_facets)
-      yield member_facets
+      member_name_facets = result_set.facets["facet_fields"]["member_name_facet"]
+      member_name_facets = sort_by_reverse_value_then_key(member_name_facets)
+      yield member_name_facets
     end
   end
 
@@ -86,15 +86,15 @@ module SearchHelper
     link_to link_text, url
   end
 
-  def member_facet_link(member, times, query)
+  def member_name_facet_link(member, times, query)
     if times > 1
-      link_to "<strong>" << times.to_s << "</strong> " << format_member_name(member), member_facet_url(member, query)
+      link_to "<strong>" << times.to_s << "</strong> " << format_member_name(member), member_name_facet_url(member, query)
     else
-      link_to format_member_name(member), member_facet_url(member, query)
+      link_to format_member_name(member), member_name_facet_url(member, query)
     end
   end
 
-  def member_facet_url(member, query)
+  def member_name_facet_url(member, query)
     {:controller => "search",
      :action     => "show",
      :member     => member,
