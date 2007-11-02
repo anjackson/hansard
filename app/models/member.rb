@@ -36,7 +36,10 @@ class Member < ActiveRecord::Base
 
     def populate_slug
       unless slug
-        self.slug = make_slug(name, :truncate => false) {|candidate_slug| duplicate_found = false}
+        self.slug = make_slug(name, :truncate => false) do |candidate_slug|
+          duplicate_found = Member.find_by_slug(candidate_slug) ? true : false
+          duplicate_found
+        end
       end
     end
 

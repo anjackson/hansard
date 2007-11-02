@@ -3,11 +3,27 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe Member, 'on creation' do
   it 'should populate slug from name' do
     Member.delete_all
-    name = 'Mr Tickled'
+
     member = Member.new
-    member.name = name
+    member.name = 'Mr Tickle'
     member.save!
-    member.slug.should == 'mr-tickled'
+    member.slug.should == 'mr-tickle'
+    Member.delete_all
+  end
+
+  it 'should add index to slug if it collides with another slug' do
+    Member.delete_all
+
+    member = Member.new
+    member.name = 'Mr Tickle'
+    member.save!
+    member.slug.should == 'mr-tickle'
+
+    another_member = Member.new
+    another_member.name = 'Mr. Tickle'
+    another_member.save!
+    another_member.slug.should == 'mr-tickle-1'
+
     Member.delete_all
   end
 end
