@@ -219,10 +219,8 @@ display: inline;
 font-weight: bold;
 }
 
-
-#timeline {
+.timeline {
 }
-
 
 .timeline_bar {
   margin-left: 1px;
@@ -238,7 +236,7 @@ td.timeline_lead_block {
 }
 
 td.timeline_block {
-  padding-right: 0.5em;
+  padding-right: 0.35em;
 }
 
 td.timeline_item_block {
@@ -246,8 +244,8 @@ td.timeline_item_block {
 }
 
 td.timeline_date {
-  padding-right: 0.45em;
-  font-size: 0.75em;
+  padding-right: 0.35em;
+  font-size: 0.70em;
   text-align: center;
 }
 
