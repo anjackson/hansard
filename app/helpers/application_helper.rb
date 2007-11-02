@@ -138,7 +138,7 @@ module ApplicationHelper
 
       open :li do
         open :a, :href => home_url do
-          puts "HANSARD <strong>1804-2004</strong>"
+          puts "Hansard <strong>1804-2004</strong>"
         end
       end
       if @day
