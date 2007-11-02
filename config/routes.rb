@@ -13,9 +13,13 @@ def with_controller name, map
 end
 
 ActionController::Routing::Routes.draw do |map|
+  
+  with_controller :sittings, map do |sittings|
+    sittings.home '', :action => "index"
+  end
 
   with_controller :search, map do |search|
-    search.home '', :action => "index"
+    # search.home '', :action => "index"
     search.search 'search', :action => "show"
     search.random 'random', :action => "random"
   end

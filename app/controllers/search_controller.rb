@@ -3,8 +3,6 @@ require 'open-uri'
 class SearchController < ApplicationController
 
   def index 
-    @date = Time.now
-    @sittings_by_year = Sitting.all_grouped_by_year
   end
   
   def random
