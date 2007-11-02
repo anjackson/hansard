@@ -171,7 +171,7 @@ module ApplicationHelper
     end
   end
 
-  def search_form id='search', submit_text='SEARCH', &block
+  def search_form id='search', submit_text='Search', &block
     open :form, { :action => "#{search_url}", :id => id } do
       puts "<input accesskey='s' name='query' size='20' type='text' value='#{@query}'>"
       puts "<input name='sa' type='submit' value='#{submit_text}'>"
