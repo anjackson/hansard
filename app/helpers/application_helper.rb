@@ -133,7 +133,7 @@ module ApplicationHelper
     open :ul, { :id => 'navigation-by-links' } do
       open :li do
         open :a, :href => home_url do
-          puts "<strong>HANSARD</strong>"
+          puts "<strong>HANSARD</strong> Sittings"
         end
       end
       if @day

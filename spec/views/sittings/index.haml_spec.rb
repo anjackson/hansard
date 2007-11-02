@@ -30,7 +30,7 @@ describe "sittings index.haml", " in general" do
     resolution = nil
     assigns[:resolution] = resolution
     @controller.template.stub!(:lower_resolution).and_return "resolution"
-    @controller.template.should_receive(:timeline).with(@date, "resolution", {:num_years => 100, :first_of_month => false})
+    @controller.template.should_receive(:timeline).with(@date, "resolution", {:num_years => 200, :first_of_month => false})
     do_render
   end
 
