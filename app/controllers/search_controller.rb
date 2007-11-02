@@ -3,7 +3,7 @@ require 'open-uri'
 class SearchController < ApplicationController
 
   def index 
-        render :layout =>  "frontpage"
+    render :layout =>  "frontpage"
   end
   
   def random
@@ -20,6 +20,9 @@ class SearchController < ApplicationController
     @num_per_page = 30
     @sort = params[:sort]
     
+    @decade = nil unless /\d\d\d\ds/.match @decade
+    @sort = nil unless 'date' == @sort
+    
     redirect_to :back and return if @member.blank? and @query.blank?
 
     @search_options = pagination_options.merge(highlight_options)
@@ -33,10 +36,14 @@ class SearchController < ApplicationController
       query = text_search(@query)
       @search_options = @search_options.merge(facet_options)
     end
-
-    @result_set = Contribution.find_by_solr(query, @search_options)
-    @paginator = WillPaginate::Collection.new(@page, @num_per_page, @result_set.total_hits)
-
+    
+    begin
+      @result_set = Contribution.find_by_solr(query, @search_options)
+      @paginator = WillPaginate::Collection.new(@page, @num_per_page, @result_set.total_hits)
+    rescue
+      render :template => "search/query_error"
+    end
+    
   end
 
   private

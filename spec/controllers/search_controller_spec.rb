@@ -33,5 +33,24 @@ describe SearchController do
     get 'show', :query => ''
   end
   
+  it 'should ignore any sort param that isn\'t "date"' do
+    get 'show', :query => 'test', :sort => 'mooo'
+    assigns[:sort].should be_nil
+    get 'show', :query => 'test', :sort => 'date'
+    assigns[:sort].should == 'date'
+  end
+  
+  it 'should ignore any decade param that isn\'t four digits followed by an \'s\'' do
+    get 'show', :query => 'test', :decade => 'mooo'
+    assigns[:decade].should be_nil
+    get 'show', :query => 'test', :decade => '1950s' 
+    assigns[:decade].should == '1950s'
+  end
+  
+  it 'should redirect to the query error page if a solr exception occurs when finding results' do
+    Contribution.stub!(:find_by_solr).and_raise(RuntimeError)
+    do_get
+    response.should render_template('search/query_error')
+  end
   
 end
