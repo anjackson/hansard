@@ -5,7 +5,7 @@ module SectionsHelper
           
           open :thead do
             open :th do
-              puts "Hansard"
+              puts "Sections of Hansard"
             end
           end
           
@@ -13,7 +13,7 @@ module SectionsHelper
         open :td do
           puts "Parent section&mdash;<br/>"
           open :a, { :class => 'parent-section', :href => sitting_date_url(section.sitting) } do
-            puts section.sitting.title.to_s << " <br/>" << section.sitting.date_text.to_s
+            puts section.sitting.title.to_s
           end
         end
       end

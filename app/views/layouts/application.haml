@@ -11,7 +11,7 @@
       = search_form
       = day_nav_links
       %p.description
-        One-line description goes here.
+        = @section.sitting.title.to_s << ": " << @section.sitting.date_text.to_s if @section
     = sitting_nav_links(@sitting) if @sitting
     = section_nav_links(@section) if @section
     #content
