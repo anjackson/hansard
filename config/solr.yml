@@ -5,6 +5,7 @@
 
 development:
   url: http://localhost:8982/solr
-  
 production:
   url: http://localhost:8983/solr
+hotswap: 
+  url: http://localhost:8984/solr
