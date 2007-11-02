@@ -1,1 +1,3 @@
 - @title = 'Search'
+.timeline#timeline
+  = timeline(@date, lower_resolution(@resolution), {:num_years => 100, :first_of_month => false})
