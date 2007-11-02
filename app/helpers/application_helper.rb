@@ -133,7 +133,7 @@ module ApplicationHelper
     open :ul, { :id => 'navigation-by-links' } do
       
       open :li do
-          puts "HANSARD 1804-2004"
+          puts "<strong>HANSARD</strong> 1804-2004"
       end
       
       open :li do
