@@ -4,11 +4,10 @@
     - section_id = 'section_'+section.id.to_s
     %span.section-link{ :id => section_id }
       = link_to section.title, section_url(section)
-      - if section.contributions.size > 0
-        - if section.contribution_character_length < 90
-          .section-preview
-            = section.contributions.first.member_name
-            = truncate(section.contributions.first.text, 90, "...")
+      - length = section.contribution_character_length
+      - if length > 0 && length < 90
+        .section-preview
+          = section.contributions.collect { |contribution| contribution.member_name.to_s + contribution.text.to_s }.join('<br />')
     = render :partial => "partials/section_link", :collection => section.sections
 - else
   = render :partial => "partials/section_link", :collection => section.sections

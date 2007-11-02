@@ -9,6 +9,7 @@ describe "_section_link.haml" do
     @super_section.stub!(:title).and_return("Super Title")
     @super_section.stub!(:parent_section).and_return(false)
     @super_section.stub!(:contributions).and_return([])
+    @super_section.stub!(:contribution_character_length).and_return(0)
     @first_section = mock_model(Section)
     @second_section = mock_model(Section)
     @super_section.stub!(:sections).and_return([@first_section, @second_section])
