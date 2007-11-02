@@ -35,7 +35,8 @@ font-style: normal;
 #header{
 height:4em;
 padding: 0.8em;
-border-bottom:1pt solid #555;
+border-bottom: 1pt solid #f0f0f0;
+
 }
 
 #search {
@@ -140,14 +141,15 @@ width: 16%;
 display: block;
 float: left;
 position: fixed;
-top: 4em;
+top: 6em;
+padding-left: 0.8em;
 }
+
 #navigation-by-sections tr, #navigation-by-sittings tr {
 height: 8em;
 vertical-align: top;
 }
 #navigation-by-sections td, #navigation-by-sittings td {
-border-top: 1pt solid #f0f0f0;
 }
 #navigation-by-sections tfoot, #navigation-by-sittings tfoot {
 font-size: 0.8em;
