@@ -15,9 +15,9 @@ module SearchHelper
   def sort_link(current_sort)
     if current_sort == "date"
       params.delete(:sort)
-      link_to "<p><button>Sort results by frequency</button></p>", params
+      link_to "<p><button id='sort_by_frequency'>Sort results by frequency</button></p>", params
     else
-      link_to "<p><button>Sort results by date</button></p>", params.merge(:sort => "date")
+      link_to "<p><button id='sort_by_date'>Sort results by date</button></p>", params.merge(:sort => "date")
     end
   end
   
