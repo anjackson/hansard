@@ -8,8 +8,10 @@
     = javascript_include_tag :defaults
   %body
     #header
-      = day_nav_links
       = search_form
+      = day_nav_links
+      %p.description
+        One-line description goes here.
     = sitting_nav_links(@sitting) if @sitting
     = section_nav_links(@section) if @section
     #content

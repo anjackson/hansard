@@ -33,32 +33,11 @@ background-color: #fcf;
 font-style: normal;
 }
 #header{
-	margin-left: auto;
-	margin-right: auto;
-	height:4em;
-	text-align:center;
+height:4em;
 }
 
 #search {
-padding:1em;
-}
-
-#frontpage {
-	margin-left: auto;
-	margin-right: auto;
-	padding-top: 10%;
-	height:460px;
-	text-align:center;
-	background-image: url('/images/westminster.jpg');
-	background-repeat: no-repeat;
-	background-position:center;
-}
-
-#frontpage a {
-color:#333;
-background-color:yellow;
-padding:0.2em;
-margin:0.2em;
+	float:right;
 }
 
 .search-result-fragment {
@@ -156,7 +135,6 @@ ul#navigation-by-links
 {
 margin: 0;
 padding: 0;
-font-size: 0.9em;
 }
 #navigation-by-sections, #navigation-by-sittings
 {
