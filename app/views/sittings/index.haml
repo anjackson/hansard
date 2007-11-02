@@ -3,7 +3,7 @@
   = render :partial => "partials/sitting", :collection => @sittings
 - else
   .timeline#timeline
-    = timeline(@date, lower_resolution(@resolution), {:num_years => 100, :first_of_month => false}) 
+    = timeline(@date, lower_resolution(@resolution), {:num_years => 200, :first_of_month => false}) 
   %h3 Frequent titles
   - frequent_section_titles(@date, lower_resolution(@resolution)) do |title, start_date, end_date|
     .frequent-title= title 
