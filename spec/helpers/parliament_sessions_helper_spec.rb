@@ -49,9 +49,15 @@ describe ParliamentSessionsHelper do
     volume_link(session).should have_tag('a[href="/parliament_sessions/series/fifth/volume/121"]')
   end
 
-  it 'should create link text to session for year of the reign' do
+  it 'should create link text to commons session for year of the reign' do
     session = parliament_sessions(:commons_session)
-    text = 'Fifty-third year of the reign'
+    text = 'Fifty-third year of the reign, Commons'
+    reign_link(session).should have_tag('a', :text => text)
+  end
+
+  it 'should create link text to lords session for year of the reign' do
+    session = parliament_sessions(:lords_session)
+    text = '5th &amp; 6th years of the reign, Lords'
     reign_link(session).should have_tag('a', :text => text)
   end
 

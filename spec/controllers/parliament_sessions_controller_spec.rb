@@ -80,14 +80,14 @@ describe ParliamentSessionsController do
     assigns[:lords_session].should == @lords_session
   end
 
-  it 'should assign sessions_in_groups_by_regnal_years in monarch_index action' do
+  it 'should assign sessions_ordered_by_regnal_year in monarch_index action' do
     @monarch_name = 'elizabeth_ii'
-    @sessions_grouped_by_regnal_years = [[]]
+    @sessions_ordered_by_regnal_year = []
 
-    ParliamentSession.should_receive(:sessions_in_groups_by_regnal_years).
-        with(@monarch_name).and_return(@sessions_grouped_by_regnal_years)
+    ParliamentSession.should_receive(:sessions_ordered_by_regnal_years).
+        with(@monarch_name).and_return(@sessions_ordered_by_regnal_year)
 
     get 'monarch_index', :monarch_name => @monarch_name
-    assigns[:sessions_in_groups_by_regnal_years].should == @sessions_grouped_by_regnal_years
+    assigns[:sessions_ordered_by_regnal_year].should == @sessions_ordered_by_regnal_year
   end
 end

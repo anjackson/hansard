@@ -27,8 +27,8 @@ describe ParliamentSession, 'the class' do
 
   it 'should return sessions in groups by year of the reign of a given monarch' do
     monarch_name = 'elizabeth_ii'
-    groups = ParliamentSession.sessions_in_groups_by_regnal_years(monarch_name)
-    groups[0][0].should == parliament_sessions(:commons_session)
+    sessions = ParliamentSession.sessions_ordered_by_regnal_years(monarch_name)
+    sessions[0].should == parliament_sessions(:commons_session)
   end
 
   it 'should return a HouseOfCommonsSession based on a monarch name and "fifty-third" year of reign' do
@@ -98,6 +98,16 @@ describe ParliamentSession, 'when source_file_id is set' do
   end
 end
 
+describe ParliamentSession, 'when there are regnal years' do
+  it 'should return first_regnal_year as 53 if regnal_years field is "FIFTY-THIRD"' do
+    session = ParliamentSession.new :regnal_years => 'FIFTY-THIRD'
+    session.first_regnal_year.should == 53
+  end
+  it 'should return first_regnal_year as 5 if regnal_years field is "5 &amp; 6"' do
+    session = ParliamentSession.new :regnal_years => '5 &amp; 6'
+    session.first_regnal_year.should == 5
+  end
+end
 describe ParliamentSession, 'on creation' do
   it 'should populate volume_in_series_number when volume number is a roman numeral' do
     session = HouseOfCommonsSession.new :volume_in_series => '424'
