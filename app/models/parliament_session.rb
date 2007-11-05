@@ -25,9 +25,9 @@ class ParliamentSession < ActiveRecord::Base
     sessions_in_series.in_groups_by(&:volume_in_series)
   end
 
-  def self.sessions_in_groups_by_regnal_years monarch_name
-    sessions = find_all_by_monarch(monarch_name).sort_by(&:monarch_name)
-    sessions.in_groups_by(&:monarch_name)
+  def self.sessions_ordered_by_regnal_years monarch_name
+    sessions = find_all_by_monarch(monarch_name).sort_by(&:first_regnal_year)
+    sessions
   end
 
   def self.find_volume series_number, volume_number_and_part # important don't change self to ParliamentSession
@@ -66,6 +66,18 @@ class ParliamentSession < ActiveRecord::Base
 
   def self.find_by_regnal_years sessions, regnal_years
     sessions.select {|s| s.regnal_years && (s.regnal_years.downcase == regnal_years)}.first
+  end
+
+  def first_regnal_year
+    if (number = regnal_years.ordinal_to_number)
+      number
+    else
+      begin
+        regnal_years.split(' ')[0].to_i
+      rescue
+        0
+      end
+    end
   end
 
   def start_column

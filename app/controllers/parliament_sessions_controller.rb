@@ -15,8 +15,8 @@ class ParliamentSessionsController < ApplicationController
   def monarch_index
     @monarch_name = params[:monarch_name]
 
-    @sessions_in_groups_by_regnal_years =
-        ParliamentSession.sessions_in_groups_by_regnal_years(@monarch_name)
+    @sessions_ordered_by_regnal_year =
+        ParliamentSession.sessions_ordered_by_regnal_years(@monarch_name)
   end
 
   def volume_index

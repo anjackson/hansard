@@ -1,6 +1,5 @@
 - @title = "Sessions by Years of the Reign of #{format_monarch_name(@monarch_name)}"
 
-- @sessions_in_groups_by_regnal_years.each do |parliament_sessions|
-  %ol.regnal_years
-    - parliament_sessions.each do |parliament_session|
-      %li= reign_link parliament_session
+%ol.regnal_years
+  - @sessions_ordered_by_regnal_year.each do |parliament_session|
+    %li= reign_link parliament_session

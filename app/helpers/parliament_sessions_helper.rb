@@ -71,7 +71,7 @@ module ParliamentSessionsHelper
   end
 
   def reign_link parliament_session
-    text = reign_link_text(parliament_session.regnal_years)
+    text = "#{reign_link_text(parliament_session.regnal_years)}, #{parliament_session.house}"
     url_component = monarch_url_component(parliament_session.monarch_name)
     years = parliament_session.regnal_years.downcase.gsub(' ','').sub('and', '_and_').sub('&amp;', '_and_').sub('&#x0026;','_and_')
     url = url_for(:monarch_name => url_component, :regnal_years => years, :controller => 'parliament_sessions', :action => 'regnal_years_index')
