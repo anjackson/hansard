@@ -59,6 +59,7 @@ require 'lib/acts_as_hansard_element'
 require 'lib/acts_as_slugged'
 require 'lib/in_groups_by'
 require 'lib/roman_numeral_converter'
+require 'lib/ordinal_number'
 
 ActiveRecord::Base.send(:include, Acts::HansardElement)
 ActiveRecord::Base.send(:include, Acts::Slugged)
