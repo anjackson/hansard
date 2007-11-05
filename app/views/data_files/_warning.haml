@@ -1,7 +1,7 @@
 - data_file = warning
 %tr{ :id => 'data_file_with_id_'+data_file.id.to_s }
   %td= data_file.stripped_name
-  %td= data_file.type_of_data
+  %td= data_file.type_of_data.sub('writtenanswers','written answers')
   %td= data_file.date_text
   %td= truncate(h(data_file.log), 250)
   %td= data_file.saved ? 'Y' : 'N'
