@@ -63,11 +63,26 @@ describe Sitting, ".find_in_resolution" do
     @third_sitting = Sitting.new(:date => @date)
   end
 
-  it "should return all sittings on a date if passed a date and the resolution :day" do
-    Sitting.stub!(:find_all_present_on_date).and_return([@first_sitting, @second_sitting, @third_sitting])
-    Sitting.find_in_resolution(@date, :day).should == [@first_sitting, @second_sitting, @third_sitting]
+  it "should ask for sittings on a date if passed a date and the resolution :day" do
+    Sitting.should_receive(:find_all_present_on_date).and_return([@first_sitting, @second_sitting, @third_sitting])
+    Sitting.find_in_resolution(@date, :day)
   end
 
+  it 'should ask for sittings in the month if passed a date and the resolution :month' do
+    Sitting.should_receive(:find_all_present_in_interval).with(Date.new(2006, 12, 1), Date.new(2006, 12, 31)).and_return([@first_sitting, @second_sitting, @third_sitting])
+    Sitting.find_in_resolution(@date, :month)
+  end
+    
+  it 'should ask for all sittings in the year if passed a date and the resolution :year' do
+    Sitting.should_receive(:find_all_present_in_interval).with(Date.new(2006, 1, 1), Date.new(2006, 12, 31)).and_return([@first_sitting, @second_sitting, @third_sitting])
+    Sitting.find_in_resolution(@date, :year)
+  end
+  
+  it 'should return all sittings in the decade if passed a date and the resolution :decade' do
+    Sitting.should_receive(:find_all_present_in_interval).with(Date.new(2000, 1, 1), Date.new(2009, 12, 31)).and_return([@first_sitting, @second_sitting, @third_sitting])
+    Sitting.find_in_resolution(@date, :decade)
+  end
+  
 end
 
 describe HouseOfCommonsSitting, '.find_section_by_column_and_date' do

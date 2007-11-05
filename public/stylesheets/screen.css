@@ -236,6 +236,15 @@ td.column_number {
   width: 2.7em;
 }
 
+.frequent-title{
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+}
+
+.frequent-section-links{
+  font-size: 0.75em;
+}
+
 #data_file_warnings td {
   vertical-align: top;
   padding-right: 0.2em;

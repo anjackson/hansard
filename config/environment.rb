@@ -84,3 +84,4 @@ ExceptionNotifier.email_prefix = "[Historical Hansard] "
 
 # Setting for Google Custom Search
 GOOGLE_CUSTOM_SEARCH_URL_STEM = "http://www.google.com/search?cx=009235156257972297288%3Ac3zploqlzek&client=google-csbe&output=xml_no_dtd&q="
+LAST_DATE = Date.new(2004, 12, 31)

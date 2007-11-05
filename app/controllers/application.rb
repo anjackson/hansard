@@ -20,14 +20,17 @@ class ApplicationController < ActionController::Base
       @resolution = :day
     elsif params[:month]
       @resolution = :month
+    elsif params[:decade]
+      @resolution = :decade
     else
       @resolution = :year
     end
 
     case @resolution
-      when :day;   @url_date = UrlDate.new(params)
-      when :month; @url_date = UrlDate.new(params.merge(:day=>'01'))
-      else         @url_date = UrlDate.new(params.merge(:month=>'jan',:day=>'01'))
+      when :day;    @url_date = UrlDate.new(params)
+      when :month;  @url_date = UrlDate.new(params.merge(:day=>'01'))
+      when :decade; @url_date = UrlDate.new(params.merge(:year => (params[:decade].to_i + 9).to_s, :month=>'dec',:day=>'31'))
+      else          @url_date = UrlDate.new(params.merge(:month=>'jan',:day=>'01'))
     end
 
     redirect_date @url_date if not @url_date.is_valid_date?

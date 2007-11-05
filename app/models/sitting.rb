@@ -69,6 +69,11 @@ class Sitting < ActiveRecord::Base
       when :year
         year_first, year_last = date.first_and_last_of_year
         sittings = find_all_present_in_interval(year_first, year_last)
+      when :decade
+        first_year = date.decade_string.to_i
+        decade_first = Date.new(first_year, 1, 1)
+        decade_last = Date.new(first_year + 9, 12, 31)
+        sittings = find_all_present_in_interval(decade_first, decade_last)
     end
     sittings
   end

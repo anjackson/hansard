@@ -2,6 +2,23 @@ require 'hpricot'
 
 module ApplicationHelper
 
+  def num_timeline_years(resolution)
+    resolution == :century ? {:num_years => 200} : {}
+  end
+   
+  def timeline_options(resolution)
+    {:first_of_month => false}.merge(num_timeline_years(resolution))
+  end
+  
+  def frequent_section_titles(date, resolution)
+    options = num_timeline_years(resolution)
+    start_date = get_start_date(date, resolution, options)
+    end_date = get_end_date(date, resolution, options)
+    Section.frequent_titles_in_interval(start_date, end_date).each do |title|
+      yield title, start_date, end_date
+    end
+  end
+  
   def link_to_member(member)
     link_to member.name, show_member_url(:name => member.slug)
   end
@@ -40,20 +57,11 @@ module ApplicationHelper
     url_for(params.merge!(:controller => "sections", :action => "show"))
   end
 
-  def lower_resolution(resolution)
-    case resolution
-    when :century
-      :year
-    when :year
-      :month
-    when :month
-      :day
-    end
-  end
-
   def resolution_title(date, resolution)
-    title = "Sittings by year"
+    title = "Sittings by decade"
     case resolution
+      when :decade
+        title = "Sittings in the #{date.decade_string}"
       when :year
         title = "Sittings in #{date.year}"
       when :month

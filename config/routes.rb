@@ -16,6 +16,7 @@ ActionController::Routing::Routes.draw do |map|
   
   with_controller :sittings, map do |sittings|
     sittings.home '', :action => "index"
+    sittings.by_decade 'sittings/:decade', :action => "show", :requirements => {:decade => /\d\d\d\ds/}
   end
 
   with_controller :search, map do |search|

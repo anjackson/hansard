@@ -75,8 +75,15 @@ describe SearchHelper, " when creating a date timeline for a result set" do
   end
 
   it 'should not return anything if the results set facet fields do not include a date facet'  do
-    @result_set.stub!(:facets).and_return({:facet_fields => {}})
+    @result_set.stub!(:facets).and_return({"facet_fields" => {}})
     date_timeline(@result_set).should be_nil
+  end
+  
+  it 'should get a timeline for a century resolution back from the date defined in LAST DATE' do
+    stub!(:timeline_options).and_return({})
+    @result_set.stub!(:facets).and_return({"facet_fields" => {"date_facet" => ['test']}})
+    should_receive(:timeline).with(LAST_DATE, :century, {})
+    date_timeline(@result_set)
   end
 
 end

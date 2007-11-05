@@ -2,11 +2,6 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe "controller that has routes correctly configured", :shared => true do
 
-  it "should map { :controller => @house_type, :action => 'index' } to /@house_type" do
-    params = { :controller => @house_type, :action => 'index'}
-    route_for(params).should == "/#{@house_type}"
-  end
-
   it "should map { :controller => @house_type, :action => 'show', :year => '1999', :month => 'feb', :day => '08' } to /@house_type/1999/feb/02" do
     params = { :controller => @house_type, :action => 'show', :year => '1999', :month => 'feb', :day => '08' }
     route_for(params).should == "/#{@house_type}/1999/feb/08"
@@ -22,6 +17,15 @@ describe "controller that has routes correctly configured", :shared => true do
     route_for(params).should == "/#{@house_type}/source/1999/feb/08.xml"
   end
 
+end
+
+describe "controller that isn't mapping the root url", :shared => true do
+
+  it "should map { :controller => @house_type, :action => 'index' } to /@house_type" do
+    params = { :controller => @house_type, :action => 'index'}
+    route_for(params).should == "/#{@house_type}"
+  end
+  
 end
 
 describe " handling GET /<house_type>", :shared => true do

@@ -12,7 +12,8 @@ describe Section, " in a sitting on a date" do
   before(:each) do
     sitting = mock(Sitting)
     @year = 1999
-    @date = Date.new(@year,12,31)
+    @month = 12
+    @date = Date.new(@year, @month, 31)
     sitting.stub!(:year).and_return(@year)
     sitting.stub!(:date).and_return(@date)
 
@@ -23,6 +24,10 @@ describe Section, " in a sitting on a date" do
 
   it "should return year based on parent sitting's year" do
     @model.year.should == @year
+  end
+  
+  it "should return month based on its parent sitting's year" do
+    @model.month.should == @month
   end
 
   it "should return date based on parent sitting's year" do
@@ -231,6 +236,7 @@ describe Section, ".first_image_source" do
 end
 
 describe Section, ".first_col" do
+  
   it "should return the first column number " do
     section = Section.new(:start_column => 42)
     section.first_col.should == 42
@@ -239,6 +245,24 @@ describe Section, ".first_col" do
   it "should return nil if the contribution has no column numbers " do
     section = Section.new(:start_column => nil)
     section.first_col.should be_nil
+  end
+  
+end
+
+describe Section, " when getting its first member" do
+
+  it "should return the name of the member who spoke it's first contribution if it has contributions" do
+    @section = Section.new
+    @section.contributions << Contribution.new(:member_name => 'test member')
+    @section.first_member.should == 'test member'
+  end 
+  
+  it "should ask its first sub-section for its first member if it has no contributions, and has sections" do
+    @section = Section.new
+    @sub_section = Section.new
+    @sub_section.contributions << Contribution.new(:member_name => 'test member')
+    @section.sections << @sub_section
+    @section.first_member.should == 'test member' 
   end
   
 end

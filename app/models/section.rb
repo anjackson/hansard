@@ -57,6 +57,10 @@ class Section < ActiveRecord::Base
   def year
     date.year
   end
+  
+  def month
+    date.month
+  end
 
   def date
     sitting.date
@@ -70,6 +74,14 @@ class Section < ActiveRecord::Base
     sitting.id_hash.merge(:id => slug)
   end
 
+  def first_member
+    if !contributions.empty?
+      return contributions.first.member_name
+    elsif !sections.empty?
+      return sections.first.first_member
+    end
+  end
+  
   def find_linkable_section(direction)
     if direction == :previous
       increment = -1

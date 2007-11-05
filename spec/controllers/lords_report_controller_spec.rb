@@ -7,6 +7,7 @@ describe LordsReportsController, "#route_for" do
   end
 
   it_should_behave_like "controller that has routes correctly configured"
+  it_should_behave_like "controller that isn't mapping the root url"
 
 end
 

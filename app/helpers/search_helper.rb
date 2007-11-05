@@ -60,11 +60,10 @@ module SearchHelper
 
   def date_timeline(result_set)
     return nil if !date_facets(result_set)
-    options = { :num_years => 200,
-                :first_of_month => false }
-    timeline(Date.new(2004, 12, 31), :century, options) do |start_date, end_date|
-      date_facet_hash(result_set, start_date, end_date)
-    end
+    options = timeline_options(:century)
+    timeline(LAST_DATE, :century, options) do |start_date, end_date| 
+      date_facet_hash(result_set, start_date, end_date) 
+    end  
   end
 
   def date_facet_hash(result_set, start_date, end_date)

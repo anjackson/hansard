@@ -4,15 +4,17 @@ class SittingsController < ApplicationController
   before_filter :check_valid_date, :only => [:show, :show_source]
   
   def index
-    @date = Time.now
+    @date = LAST_DATE
     @sittings_by_year = model.all_grouped_by_year
+    @timeline_resolution = lower_resolution(@resolution)
   end
 
   def show
     @sittings = model.find_in_resolution(@date, @resolution)
     if @sittings.size > 1
-     @sittings_by_year = [@sittings]
-     render :action => "index" and return false
+      @sittings_by_year = [@sittings]
+      @timeline_resolution = lower_resolution(@resolution)
+      render :action => "index" and return false
     end
     @marker_options = {}
     if !@sittings.empty?
@@ -36,7 +38,22 @@ class SittingsController < ApplicationController
   private
 
     def model
-     Sitting
+      Sitting
+    end
+    
+    def lower_resolution(resolution)
+      case resolution
+      when nil
+        :century
+      when :century
+        :decade
+      when :decade
+        nil
+      when :year
+        :month
+      when :month
+        :day
+      end
     end
 
 end

@@ -363,7 +363,15 @@ end
 
 
 describe ApplicationHelper, " when using giving the title for a date at a resolution" do
+  
+  it 'should return "Sittings by decade" given the date June 1 1928 and the resolution :century' do
+    resolution_title(Date.new(1928, 6, 1), :century).should == "Sittings by decade"
+  end
 
+  it 'should return "Sittings in the 1920s" given the date June 1 1928 and the resolution :decade' do
+    resolution_title(Date.new(1928, 6, 1), :decade).should == "Sittings in the 1920s"
+  end
+  
   it 'should return "Sittings in 1928" given the date June 1 1928 and the resolution :year' do
     resolution_title(Date.new(1928, 6, 1), :year).should == "Sittings in 1928"
   end
@@ -376,4 +384,59 @@ describe ApplicationHelper, " when using giving the title for a date at a resolu
     resolution_title(Date.new(1928, 6, 1), :day).should == "Sitting of 1 June 1928"
   end
 
+end
+
+describe ApplicationHelper, ' when getting an options hash for the timeline' do
+  
+  it 'should return a hash specifying that :first_of_month is false' do
+    timeline_options(nil)[:first_of_month].should == false
+    timeline_options(:century)[:first_of_month].should == false
+    timeline_options(:decade)[:first_of_month].should == false
+    timeline_options(:year)[:first_of_month].should == false
+  end
+  
+  it 'should return a hash including the number of years to show on the timeline' do
+    should_receive(:num_timeline_years).with(:decade).and_return(:test_key => 'test val')
+    timeline_options(:decade)[:test_key].should == 'test val'
+  end
+
+end
+
+describe ApplicationHelper, ' when getting the number of years to show on a timeline' do
+
+  it 'should return a hash specifying 200 years if a resolution of century is given' do
+    num_timeline_years(:century).should == {:num_years => 200}
+  end
+
+  it 'should return an empty hash if no resolution is given' do
+    num_timeline_years(nil).should == {}
+  end
+
+end
+
+describe ApplicationHelper, " when getting frequent section titles" do
+  
+  before do
+    @current_date = Date.new(1966, 1, 1)
+    @start_date = Date.new(1965, 1, 7)
+    @end_date = Date.new(1967, 2, 14)
+    stub!(:get_start_date).and_return(@start_date)
+    stub!(:get_end_date).and_return(@end_date)
+  end
+  
+  it "should get the start date for the timeline" do
+    should_receive(:get_start_date).and_return(@start_date)
+    frequent_section_titles(@current_date, nil)  
+  end
+  
+  it "should get the end date for the timeline" do
+    should_receive(:get_end_date).and_return(@end_date)
+    frequent_section_titles(@current_date, nil)
+  end
+  
+  it "should ask the Section model for the frequent titles in the interval between the start and end date" do
+    Section.should_receive(:frequent_titles_in_interval).with(@start_date, @end_date).and_return([])
+    frequent_section_titles(@current_date, nil)
+  end
+  
 end
