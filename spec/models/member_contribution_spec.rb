@@ -1,19 +1,5 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-describe MemberContribution, " on creation" do
-  it 'should create a member model if one does not exist' do
-    Member.delete_all
-    member_name = 'Mr Tickle'
-    contribution = MemberContribution.new :member_name => member_name
-    member = mock_model(Member)
-    Member.should_receive(:find_or_create_from_name).and_return(member)
-    contribution.save!
-    contribution.member.should == member
-    MemberContribution.delete_all
-    Member.delete_all
-  end
-end
-
 describe MemberContribution, " in general" do
 
   before(:each) do
@@ -26,6 +12,7 @@ describe MemberContribution, " in general" do
   it_should_behave_like "an xml-generating model"
 
 end
+
 
 describe MemberContribution, ".to_xml" do
 
@@ -46,18 +33,18 @@ describe MemberContribution, ".to_xml" do
   end
 
   it "should have a 'memberconstituency' tag inside the 'member' tag containing the constituency if the contribution has a constituency" do
-    @contribution.member_constituency = "test constituency"
+    @contribution.constituency_name = "test constituency"
     @contribution.to_xml.should have_tag('member memberconstituency', :text => "test constituency", :count => 1)
   end
 
-  it "should return one 'member' tag containing the member attribute of member contribution" do
-    @contribution.member_name = "John Q. Member"
-    @contribution.to_xml.should have_tag('member', :text => "John Q. Member", :count => 1)
+  it "should return one 'member' tag containing the escaped member attribute of member contribution" do
+    @contribution.member_name = "John &Q. Member"
+    @contribution.to_xml.should have_tag('member', :text => "John &amp;Q. Member", :count => 1)
   end
 
-  it "should contain one 'membercontribution' tag containing the member contribution text" do
-    @contribution.text = "Is this a question?"
-    @contribution.to_xml.should have_tag("membercontribution", "Is this a question?")
+  it "should contain one 'membercontribution' tag containing the escaped member contribution text" do
+    @contribution.text = "Is this a &question?"
+    @contribution.to_xml.should have_tag("membercontribution", "Is this a &amp;question?")
   end
 
   it "should return a 'p' tag containing one member tag (and no text) if there's no oral question number" do

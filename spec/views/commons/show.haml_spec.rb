@@ -6,6 +6,6 @@ describe "commons show.haml", " in general" do
     @house_type = 'commons'
   end
 
-  it_should_behave_like "show.haml"
+  it_should_behave_like "show.haml for a sitting type"
 
 end

@@ -1,4 +1,8 @@
-require File.dirname(__FILE__) + '/house_controller_spec_helper'
+require File.dirname(__FILE__) + '/../spec_helper'
+
+describe CommonsController, " in general" do 
+  it_should_behave_like "All controllers"
+end
 
 describe CommonsController, "#route_for" do
 
@@ -68,22 +72,3 @@ describe CommonsController, " handling GET /commons/1999/feb/08.xml" do
 
 end
 
-describe CommonsController, " handling GET /commons/source/1999/feb/08.xml" do
-
-  before(:all) do
-    @sitting_model = HouseOfCommonsSitting
-  end
-
-  it_should_behave_like " handling GET /<house_type>/source/1999/feb/08.xml"
-
-end
-
-describe CommonsController, " handling GET /commons/year/month/day.xml with real data and views" do
-
-  before(:all) do
-    @hansard_parser = Hansard::HouseCommonsParser
-  end
-
-  it_should_behave_like " handling GET /<house_type>/year/month/day.xml with real data and views"
-
-end

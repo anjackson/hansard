@@ -9,7 +9,7 @@ module SectionSpecHelper
   end
 
   def make_written_answers
-    @answers = WrittenAnswersSitting.create
+    @answers = WrittenAnswersSitting.create :date => '2007-12-12'
     @parent_answer = create_section 'TRANSPORT', @answers, nil
     @first_answer  = create_section 'Heavy Goods Vehicles (Public Weighbridge Facilities)', @answers, @parent_answer
     @second_answer = create_section 'Driving Licences (Overseas Recognition)', @answers, @parent_answer
@@ -17,16 +17,16 @@ module SectionSpecHelper
     @solo_answer   = create_section 'HEALTH', @answers, nil
 
     @parent_answer.sections = [@first_answer, @second_answer, @third_answer]
-    @answers.sections = [@parent_answer, @solo_answer]
+    @answers.direct_descendents = [@parent_answer, @solo_answer]
     @answers.save!
   end
 
   def make_sitting_with_oral_answers
-    @sitting = HouseOfCommonsSitting.create
+    @sitting = HouseOfCommonsSitting.create :date => '2007-12-12'
     @debates = Debates.create(:sitting_id => @sitting.id)
     @debates.sitting = @sitting
     @sitting.debates = @debates
-    @sitting.sections = [@debates]
+    @sitting.direct_descendents = [@debates]
     @sitting.save!
     @oral_questions = create_section 'ORAL QUESTIONS', @sitting, @debates, OralQuestions
     @oral_questions_section = create_section 'TRANSPORT', @sitting, @oral_questions, OralQuestionsSection
@@ -41,11 +41,11 @@ module SectionSpecHelper
   end
 
   def make_sitting
-    @sitting = HouseOfCommonsSitting.create
+    @sitting = HouseOfCommonsSitting.create :date => '2007-12-12'
     @debates = Debates.create(:sitting_id => @sitting.id)
     @debates.sitting = @sitting
     @sitting.debates = @debates
-    @sitting.sections = [@debates]
+    @sitting.direct_descendents = [@debates]
     @sitting.save!
     @parent = create_section 'TRANSPORT', @sitting, @debates
     @first  = create_section 'Heavy Goods Vehicles (Public Weighbridge Facilities)', @sitting, @parent
@@ -58,7 +58,4 @@ module SectionSpecHelper
     @sitting.save!
   end
 
-  def destroy_sitting
-    Sitting.find(:all).each {|s| s.destroy}
-  end
 end

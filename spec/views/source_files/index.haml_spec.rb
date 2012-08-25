@@ -2,11 +2,11 @@ require File.dirname(__FILE__) + '/../../spec_helper'
 
 describe "source_files/index.haml", " in general" do
 
-  it "should have an 'h1' tag" do
+  it "should have an 'h2' tag" do
     assigns[:source_files] = []
     assigns[:error_types] = []
     render 'source_files/index.haml'
-    response.should have_tag("h1")
+    response.should have_tag("h2")
   end
 
   # this is so so very wrong

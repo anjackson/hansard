@@ -9,50 +9,66 @@ end
 
 def setup_vote
   vote = Vote.new
-  vote.name = "test name"
-  vote.constituency = "test constituency"
+  vote.name = "test &name"
+  vote.constituency = "test & constituency"
   vote
 end
 
-describe Vote, " in general" do
-  
-  before(:each) do
-    @model = setup_vote
-    
-    @mock_builder = mock_vote_builder
-  end
-  
-  it_should_behave_like "an xml-generating model"
+describe Vote do 
 
-end
-
-describe Vote, ".to_xml" do
-  
   before do
+    @model = setup_vote
     @mock_builder = mock_vote_builder
-    @vote = setup_vote
-  end
-
-  it "should return the name of the voter" do
-    @vote.to_xml.should match(/test name/)
   end
   
-  it "should return an 'i' tag containing the constituency of the voter in brackets if there is one" do
-    @vote.to_xml.should have_tag('i', :text => "(test constituency)")
+  describe "in general" do
+    
+    it_should_behave_like "an xml-generating model"
+
   end
 
-end
+  describe Vote, ".to_xml" do
 
-describe Vote, ".first_col" do
-  
-  it "should return the first column" do
-    vote = Vote.new(:column => "2")
-    vote.first_col.should == 2
+    before do 
+       @vote = setup_vote
+    end
+    
+    it "should return the name of the voter" do
+      @vote.to_xml.should match(/test &amp;name/)
+    end
+
+    it "should return an 'i' tag containing the escaped constituency of the voter in brackets if there is one" do
+      @vote.to_xml.should have_tag('i', :text => "(test &amp; constituency)")
+    end
+
   end
-  
-  it "should return nil if the vote has no column" do
-    vote = Vote.new(:column => nil)
-    vote.first_col.should be_nil
+
+  describe Vote, "when asked for its end column" do
+
+    it "should return the first column" do
+      vote = Vote.new(:column => "2")
+      vote.start_column.should == 2
+    end
+
+    it "should return nil if the vote has no column" do
+      vote = Vote.new(:column => nil)
+      vote.start_column.should be_nil
+    end
+
+  end
+
+  describe Vote, " when asked for its end column" do
+
+    it "should return the column" do
+      vote = Vote.new(:column => "2")
+      vote.end_column.should == 2
+    end
+
+    it "should return nil if the vote has no column" do
+      vote = Vote.new(:column => nil)
+      vote.end_column.should be_nil
+    end
+
   end
   
 end

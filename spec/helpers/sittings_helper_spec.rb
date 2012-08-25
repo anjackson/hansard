@@ -1,71 +1,95 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-describe SittingsHelper, ' when getting section occurrences' do 
+describe SittingsHelper do 
+  
+  before do 
+    self.class.send(:include, ApplicationHelper)
+    self.class.send(:include, SittingsHelper)
+  end
 
-  before do
-    @section = mock_model(Section)
-    @section.stub!(:month)
-    Section.stub!(:find_by_title_in_interval).and_return([@section])
-  end
-  
-  it 'should group the sections by month when the resolution is year' do
-    @section.should_receive(:month).and_return(1)
-    section_occurrences("test", Time.now, Time.now, :year) do |label, sections|
-      label.should == "January"
+  describe ' when returning links for the timeline intervals' do
+
+    it 'should generate a link to show the sittings for the decade if the resolution is decade' do
+      link = '<a href="/sittings/1920s">1920s</a>'
+      link_for("1920s", :decade, [1,0], {}).should match(/#{link}/)
     end
-  end
-  
-  it 'should group the sections by date when the resolution is month' do
-    @section.should_receive(:date).and_return(Date.new(2006, 6, 5))
-    section_occurrences("test", Time.now, Time.now, :month) do |label, sections|
-      label.should == "5 Jun"
+
+    it 'should generate a link to show the commons sittings for the decade if the resolution is decade' do
+      link = '<a href="/commons/1920s">1920s</a>'
+      link_for("1920s", :decade, [1,0], {:sitting_type => HouseOfCommonsSitting}).should match(/#{link}/)
     end
-  end
-  
-  it 'should group the sections by year when the resolution is not month or year ' do
-    @section.should_receive(:year).and_return(1884)
-    section_occurrences("test", Time.now, Time.now, nil) do |label, sections|
-      label.should == '1884'
+
+    it 'should generate a link to show the sittings for the year if the resolution is year' do
+      link = '<a href="/sittings/1921">1921</a>'
+      link_for("1921", :year, [1,0], {}).should match(/#{link}/)
     end
+
+    it 'should generate a link to show the commons sittings for the year if the resolution is year' do
+      link = '<a href="/commons/1921">1921</a>'
+      link_for("1921", :year, [1,0], {:sitting_type => HouseOfCommonsSitting}).should match(/#{link}/)
+    end
+
+    it 'should generate a link to show the sittings for the month if the resolution is month' do
+      link = '<a href="/sittings/1921/dec">Dec</a>'
+      link_for("1921_12", :month, [1,0], {}).should match(/#{link}/)
+    end
+
+    it 'should generate a link to show the commons sittings for the month if the resolution is month' do
+      link = '<a href="/commons/1921/dec">Dec</a>'
+      link_for("1921_12", :month, [1,0], {:sitting_type => HouseOfCommonsSitting}).should match(/#{link}/)
+    end
+
+    it 'should generate a link to show the sittings for the day if the resolution is day' do
+      link = '<a href="/sittings/1921/dec/11">11</a>'
+      link_for(Date.new(1921,12,11), :day, [1,0], {}).should match(/#{link}/)
+    end
+
+    it 'should generate a link to show the commons sittings for the day if the resolution is day' do
+      link = '<a href="/commons/1921/dec/11">11</a>'
+      link_for(Date.new(1921,12,11), :day, [1,0], {:sitting_type => HouseOfCommonsSitting}).should match(/#{link}/)
+    end
+
   end
+
+  describe " when generating sittings timelines" do
+
+    it 'should create a timeline, passing the sitting type' do
+      should_receive(:timeline_options).with(:day, HouseOfCommonsSitting).and_return({})
+      stub!(:timeline)
+      sitting_timeline(Date.new(1921,12,11), :day, HouseOfCommonsSitting)
+    end
+
+    it 'should get a timeline with top label "Sittings by decade"' do
+       stub!(:timeline_options).and_return({})
+       date = Date.new(1921,12,11)
+       should_receive(:timeline).with(date, :decade, {:top_label => "Sittings by decade"})
+       sitting_timeline(date, :decade, Sitting)
+     end
+
+  end
+
+  describe 'when generating a link to a section a number of years ago' do 
+  
+    before do 
+      stub!(:section_url).and_return('http://test.host')
+      @section = mock_model(Section, :title_via_associations => 'test title')
+    end
     
-end
-
-describe SittingsHelper, ' when getting frequent section links' do
-  
-  before do
-    @section = mock_model(Section)
-    @section.stub!(:first_member)
-    stub!(:section_url).and_return("http://test.url")
+    it 'should ask for a section from the number of years ago' do 
+      Sitting.should_receive(:section_from_years_ago).with(10).and_return(@section)
+      link_to_section_years_ago(10)
+    end
+    
+    it 'should return a link to the section url whose text is the section title via associations' do 
+      Sitting.stub!(:section_from_years_ago).and_return(@section)
+      link_to_section_years_ago(10).should have_tag('a[href=http://test.host]', :text => 'test title')
+    end
+    
+    it 'should return an empty string if there are no sections' do 
+      Sitting.stub!(:section_from_years_ago).and_return(nil)
+      link_to_section_years_ago(10).should == ''
+    end
+    
   end
   
-  it 'should group the sections by the first member to speak' do
-    @section.should_receive(:first_member)
-    frequent_section_links([@section])
-  end
-  
-  it 'should give the member as "[No speaker]" when the first member is nil' do 
-    @section.should_receive(:first_member)
-    frequent_section_links([@section]).should match(/[No speaker]/)
-  end
-  
-  it 'should give comma-separated numbered links to each section for a member' do
-    expected = '[<a href=\"http://test.url\">1<\/a>, <a href="http://test.url">2</a>]'
-    frequent_section_links([@section, @section]).should match(/#{expected}/)
-  end
-  
-end
-
-describe SittingsHelper, ' when returning links for the timeline intervals' do
-
-  it 'should generate a link to show the sittings for the decade if the resolution is century' do
-    link = '<a href="/sittings/1920s">1920s</a>'
-    link_for("1920s", :century, [1,0], {}).should match(/#{link}/)
-  end
-  
-  it 'should delegate to the timeline plugin code otherwise' do 
-    should_receive(:timeline_link_for).with("1921", nil, [1,0], {})
-    link_for("1921", nil, [1,0], {})
-  end
-
 end

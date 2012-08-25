@@ -1,46 +1,48 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-describe "show.haml", :shared => true do
+describe "show.haml for a sitting type", :shared => true do
 
   before do
-    @debates = mock_model(Debates)
-    @debates.stub!(:sections).and_return([])
-    @sitting = mock_model(Sitting)
-    @sitting.stub!(:date_text)
-    @sitting.stub!(:debates).and_return(@debates)
+    @sitting = mock_model(Sitting, :anchor => 'sitting', :all_sections => ['a section'])
+    assigns[:sitting_type] = Sitting
+    assigns[:date] = Date.new(2004, 1, 2)
+    assigns[:day] = true
     @controller.template.stub!(:render)
-    assigns[:sitting] = @sitting
-    @first_section = mock_model(Section)
-    @first_section.stub!(:title).and_return("First Title")
-    @first_section.stub!(:title?).and_return(true)
-    @first_section.stub!(:sections).and_return([])
-    @second_section = mock_model(Section)
-    @second_section.stub!(:title).and_return("Second Title")
-    @second_section.stub!(:title?).and_return(true)
-    @second_section.stub!(:sections).and_return([])
-    @controller.template.stub!(:section_url).and_return("http://test.host")
-    @debates.stub!(:sections).and_return([@first_section, @second_section])
+    assigns[:sittings] = [@sitting]
   end
 
   def do_render
-    render "#{@house_type}/show.haml"
+    render "sittings/show.haml", :layout => "application"
   end
 
-  it "should render the 'hansard_header' partial" do
-    @controller.template.should_receive(:render).with(:partial => "partials/hansard_header")
+  it 'should return an unordered list of links to anchors made of the sitting uri component' do
+    assigns[:sittings] = [@sitting, @sitting]
+    @controller.template.should_receive(:link_to_sitting_anchor).with(assigns[:sittings][0]).twice.and_return 'x'
+    @controller.template.should_receive(:link_to_parliament_uk).with(assigns[:sittings][0]).twice.and_return ''
+    do_render
+    response.should have_tag('ul[class=jumplist] li[class=jumplist-item]', :text => "Skip to x" )
+  end
+  
+  it 'should not show links to anchors if there are no sections in the sittings' do 
+    @sitting = mock_model(Sitting, :anchor => 'sitting', :all_sections => [])
+    assigns[:sittings] = [@sitting]
+  end
+
+  it "should render the 'partials/_sitting' partial, passing the sittings" do
+    @controller.template.should_receive(:render).with(:partial => "partials/sitting", :collection => [@sitting])
     do_render
   end
 
-  it "should render the 'partials/_section_link' partial, passing the sitting's debates' sections" do
-    @controller.template.should_receive(:render).with(:partial => "partials/section_link", :collection => @sitting.debates.sections)
+  it "should give the message 'No information is available for this date.' if no information is available for that date" do
+    assigns[:sittings] = []
     do_render
+    response.should have_tag("div.no-sittings", :text => "No information is available for this date.")
   end
 
-  it "should give the message 'No information from the <house_type> was found for this period.' if no sitting is passed to it" do
-    assigns[:sitting] = nil
+  it 'should show a link to the previous and next sitting day with content if no information is available for that date' do
+    assigns[:sittings] = []
+    @controller.template.should_receive(:day_navigation).with(assigns[:sitting_type], assigns[:date])
     do_render
-    response.should have_tag("div.no-sittings", :text => "No information from the #{@house_type.capitalize} was found for this period.")
   end
 
 end
-

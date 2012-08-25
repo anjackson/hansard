@@ -26,6 +26,26 @@ describe String do
     "R".is_roman_numeral?.should be_false
   end
 
+  it 'should return "I" for "1".to_roman' do 
+    "1".to_roman.should == "I"
+  end
+  
+  it 'should return "III" for "3".to_roman' do 
+    "3".to_roman.should == "III"
+  end
+  
+  it 'should raise exception for "R".to_roman' do
+    lambda {"R".to_roman}.should raise_error
+  end
+  
+  it 'should raise exception for an arabic numeral string that is greater than maximum number handled by to_roman (3999)' do
+    lambda {"4000".to_roman}.should raise_error
+  end
+
+  it 'should convert to a roman numeral an arabic numeral string that is one less than the maximum number handled by to_roman (3999)' do
+    "3999".to_roman.should == "MMMCMXCIX"
+  end
+  
   it 'should return 1 for "I".roman_to_i' do
     "I".roman_to_i.should == 1
   end
@@ -40,5 +60,16 @@ describe String do
 
   it 'should convert to integer a roman numeral string that is one less than the maximum number handled by roman_to_i (3999)' do
     "MMMCMXCIX".roman_to_i.should == 3999
+  end
+end
+
+describe Integer do 
+  
+  it 'should convert 4 to "IV"' do 
+    4.to_roman.should == 'IV'
+  end
+
+  it 'should raise exception for 4000.to_roman' do
+    lambda {4000.to_roman}.should raise_error
   end
 end

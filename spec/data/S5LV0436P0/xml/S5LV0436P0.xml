@@ -4,14 +4,16 @@ xsi:noNamespaceSchemaLocation="hansard_v8.xsd">
   <titlepage>
   <image src="S5LV0436P0I0001"/>  
   <col>1</col>
-  <image src="S5LV0436P0I0003"/>  
+  <image src="S5LV0436P0I0003"/> 
+  <session>During the Third Session of the Second Parliament of the United Kingdom</session> 
   <col>2</col>
   <p></p>
   <col>4</col>
   <housecommons>
+    <image src="S5LV0436P0I0004"/> 
     <col>1</col>
     <title></title>
-    <date format="1985-12-16">Monday 17 December 1985</date>
+    <date format="1985-12-16">Tuesday 17 December 1985</date>
     <p></p>
     <debates>
       <section>

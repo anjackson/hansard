@@ -14,12 +14,12 @@ describe "a date-based controller", :shared => true do
   end
   
   it "should treat a request with just a year and month as a request at the month resolution" do
-    get :show, :year => '1999', :month => 'feb'
+    get :index, :year => '1999', :month => 'feb'
     assigns[:resolution].should == :month
   end
   
   it "should treat a request with just a year as a request at the year resolution" do
-    get :show, :year => '1999'
+    get :index, :year => '1999'
     assigns[:resolution].should == :year
   end
   

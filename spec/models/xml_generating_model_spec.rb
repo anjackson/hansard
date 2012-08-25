@@ -35,7 +35,6 @@ describe "a section to_xml method", :shared => true do
     [first_contribution, second_contribution].each do |contribution|
       @section.contributions << contribution
       contribution.stub!(:cols).and_return([])
-      contribution.stub!(:image_sources).and_return([])
       contribution.stub!(:different_image).and_return(false)
       contribution.should_receive(:to_xml).with(:builder => @mock_builder)
     end
@@ -49,7 +48,6 @@ describe "a section to_xml method", :shared => true do
       second_section = mock_model(@subsection_class)
       [first_section, second_section].each do |section|
         @section.sections << section
-        section.stub!(:start_image_src)
         section.stub!(:start_column)
         section.should_receive(:to_xml).with(:builder => @mock_builder)
       end

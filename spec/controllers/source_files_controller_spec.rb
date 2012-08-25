@@ -1,5 +1,9 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
+describe SourceFilesController, " in general" do 
+  it_should_behave_like "All controllers"
+end
+
 describe SourceFilesController, "#route_for" do
 
   it "should map { :controller => 'source_files', :action => 'index'} to /source_files" do
@@ -77,6 +81,16 @@ describe SourceFilesController, " when handling GET /source_files/S5LV0436P0" do
   it "should assign the source file for the view" do
     do_get
     assigns[:source_file].should == @source_file
+  end
+
+end
+
+describe SourceFilesController, 'when handling requests for source file names that don\'t exist' do 
+
+  it 'should return an error message' do 
+    SourceFile.stub!(:find_by_name).and_return(nil)
+    get 'show', :name => 'non_file'
+    response.should render_template('source_files/no_source_file')
   end
 
 end

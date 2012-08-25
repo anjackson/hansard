@@ -1,4 +1,8 @@
-require File.dirname(__FILE__) + '/house_controller_spec_helper'
+require File.dirname(__FILE__) + '/../spec_helper'
+
+describe LordsController, " in general" do 
+  it_should_behave_like "All controllers"
+end
 
 describe LordsController, "#route_for" do
 
@@ -67,22 +71,5 @@ describe LordsController, " handling GET /lords/1999/feb/08.xml" do
 
 end
 
-describe LordsController, " handling GET /lords/source/1999/feb/08.xml" do
 
-  before(:all) do
-    @sitting_model = HouseOfLordsSitting
-  end
 
-  it_should_behave_like " handling GET /<house_type>/source/1999/feb/08.xml"
-
-end
-
-describe LordsController, " handling GET /lords/year/month/day.xml with real data and views" do
-
-  before(:all) do
-    @hansard_parser = Hansard::HouseLordsParser
-  end
-
-  it_should_behave_like " handling GET /<house_type>/year/month/day.xml with real data and views"
-
-end

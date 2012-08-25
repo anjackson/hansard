@@ -1,6 +1,19 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe String, 'ordinal_to_number' do
+
+  it 'should convert "Eleventh" to 11' do
+    "Eleventh".ordinal_to_number.should == 11
+  end
+
+  it 'should convert "Thirteenth" to 13' do
+    "Thirteenth".ordinal_to_number.should == 13
+  end
+
+  it 'should convert "Sixteenth" to 16' do
+    "Sixteenth".ordinal_to_number.should == 16
+  end
+
   it 'should convert "Twenty-sixth" to 26' do
     "Twenty-sixth".ordinal_to_number.should == 26
   end
