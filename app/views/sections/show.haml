@@ -1,2 +1,9 @@
-- @marker = marker_html(@section, @marker_options)
-= render :partial => 'section', :object => @section, :locals => { :suppress_title => true }
+- @title = @section.title_via_associations
+
+- @header_title = @section.title
+
+%cite.section= "#{@section.hansard_reference}"
+
+= render :partial => 'sections/section', :object => @section, :locals => { :suppress_title => true }
+
+

@@ -1,0 +1,13 @@
+- @title = "Office not found"
+- @unfound_office = h params['name'].titleize
+- @office_matches = Office.find_partial_matches @unfound_office, 30
+
+%p
+  Sorry, we don't have an office with the name
+  %em= @unfound_office
+
+- unless @office_matches.empty?
+  %ul#office-matches
+    &hellip; but we do have offices with a similar name:
+    - @office_matches.each do |office_match|
+      %li.office-match= link_to office_match.name, office_url(office_match)

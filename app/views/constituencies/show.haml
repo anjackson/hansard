@@ -1,0 +1,13 @@
+- @title = "#{@constituency.complete_name} #{@constituency.years}"
+- @resource = @constituency
+
+%h3 MPs
+%ol.mps-list
+  - @constituency.commons_memberships.sort_by(&:first_possible_date).each do |membership|
+    %li.constituency-member= commons_membership_details(membership)
+
+- if File.exists?(@constituency.history_doc)
+  %h3 Constitituency history
+  %p
+    %a{:href=>'/constituency-histories/' + @constituency.slug + '.doc'}=  @constituency.complete_name + ' (.doc format)'
+  %p Standard Notes (including Constituency histories) are compiled for the benefit of Members of Parliament and their personal staff and have been made available here as an experiment and by permission of the House of Commons, Department for Information Services (House of Commons Library). Authors are available to discuss the contents of these papers with Members and their staff but cannot advise others.

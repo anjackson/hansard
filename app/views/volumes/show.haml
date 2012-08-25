@@ -1,0 +1,15 @@
+- @title = volume_title(@series, params[:volume_number], params[:part])
+
+- @volumes.each do |volume|
+  %h2= h "#{volume.name}, columns by day"
+  - if volume.missing_sittings? 
+    %p.missing-data= "Some sittings have not been loaded from this volume. There #{ volume.missing_sittings > 1 ? 'are' : 'is'} #{pluralize(volume.missing_sittings, 'missing sitting')}."
+  - if volume.missing_columns? 
+    %p.missing-data= "Some information may be missing from this volume around #{volume.source_file.missing_columns.size > 1 ? 'columns' : 'column'} #{volume.source_file.missing_columns.to_sentence}. The column numbers on those pages are not continuous."
+    
+  - volume.sittings_by_date_and_column.each do |sitting|
+    - if sitting.date >= FIRST_DATE and sitting.date <= LAST_DATE
+      %h4.sitting_date= resolution_title(sitting.class, sitting.date, :day)
+      %table
+        %tbody
+          = sitting_column_links(sitting)

@@ -1,0 +1,31 @@
+- @title = "Divisions (" + number_with_delimiter(Division.count) + ")"
+- alphabet_links(@letters, :divisions_url, @letter, :index_letter) do |letter_link|
+  = letter_link
+%table#divisions
+  %tbody
+    - @divisions_in_groups_by_section_title_and_section_and_sub_section.each do |divisions_in_groups_by_section_and_sub_section|
+      - is_first = true
+      - divisions_in_groups_by_section_and_sub_section.each do |divisions_by_section|
+        - division = divisions_by_section[0][0]
+        - if division.date >= FIRST_DATE and division.date <= LAST_DATE
+          %tr
+            %td.title{:width=>"50%"}
+              = format_division_section_title(division) if is_first
+              - is_first = false
+            %td.division_numbers
+              = link_to_divisions(divisions_by_section[0]) if one_division_section?(divisions_by_section) || division.sub_section_title.blank?
+            %td.date
+              = format_date(division.date, :day, {:brief => true})
+            %td.house
+              = division.house
+        
+          - unless one_division_section?(divisions_by_section)
+            - divisions_by_section.each do |divisions|
+              - unless divisions[0].sub_section_title.blank?
+                %tr
+                  %td.division_section
+                    = divisions[0].sub_section_title
+                  %td.division_numbers
+                    = link_to_divisions(divisions)
+                  %td
+                  %td

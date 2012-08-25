@@ -1,14 +1,26 @@
-.member_contribution{:id => member_contribution.xml_id}
-  - if member_contribution.question_no
-    %span.question_no= member_contribution.question_no
-  %cite.member= link_to_member(member_contribution.member) + colon_after_member_name(member_contribution)
-  - if member_contribution.member_constituency
-    %span.member_constituency= member_contribution.member_constituency + colon_after_constituency(member_contribution)
-  - if member_contribution.procedural_note
-    %span.procedural_note= member_contribution.procedural_note + ':'
-  - if member_contribution.text
-    %blockquote.contribution_text= format_contribution(member_contribution.text)
-  - else
-    %p
-      %span.warning No contribution text recorded for Member Contribution
-      %span.warning= member_contribution.id
+- if member_contribution.text
+  .hentry.member_contribution{:id => member_contribution.xml_id}
+    %a{:name => member_contribution.anchor_id}
+    %blockquote.contribution_text.entry-content{ person_cite_attribute(member_contribution.person) }
+      - if member_contribution.person
+        = speech_permalink(member_contribution, @marker_options)
+      - if member_contribution.question_no
+        %span.question_no= member_contribution.question_no
+      - if member_contribution.prefix
+        %span.prefix= member_contribution.prefix
+      - if member_contribution.person
+        %cite.member.author.entry-title= link_to member_contribution.member_name, person_url(member_contribution.person), :title => member_contribution.person.name
+      - else
+        %cite.member.author.entry-title.unmatched-member= member_contribution.member_name
+      - if member_contribution.member_suffix
+        - if member_contribution.constituency
+          %span.member_constituency= link_to_constituency member_contribution.constituency, member_contribution.member_suffix
+        -else
+          %span.member_constituency= member_contribution.member_suffix
+      - if member_contribution.procedural_note
+        %span.procedural_note= member_contribution.procedural_note
+      - if member_contribution.is_a?(WrittenMemberContribution) && member_contribution.text.starts_with?('<p')
+        = format_contribution(member_contribution, @sitting, @marker_options).sub('<p','<p class="first-para"')
+      - else
+        %p.first-para
+          = format_contribution(member_contribution, @sitting, @marker_options)

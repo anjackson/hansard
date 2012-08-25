@@ -1,0 +1,13 @@
+- @title = "Constituency not found"
+- @unfound_constituency = h params['name'].titleize
+- @constituency_matches = Constituency.find_partial_matches @unfound_constituency
+
+%p
+  Sorry, we don't have a constituency with the name
+  %em= @unfound_constituency
+
+- if !@constituency_matches.empty?
+  %ul#constituency-matches
+    &hellip; but we do have constituencies with a similar name:
+    - @constituency_matches.each do |constituency_match|
+      %li.constituency-match= link_to constituency_match.name, constituency_url(constituency_match)

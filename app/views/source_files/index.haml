@@ -1,29 +1,28 @@
-- @title = "Source files"
-- @javascript = :defaults
-%h1
-  = @source_files.length
-  Source Files
+- @title = @source_files.length.to_s + " source files"
 
-%table
+%h2 Errors by type
+
+%table.source-files
   %tr
-    %th Error types
-    %th.number File count
-    %th.percentage Percentage of files
+    %th Type
+    %th.number File
+    %th.percentage Percentage
   - @error_types.each_with_index do |type, index|
     %tr
-      %td= type
+      %td= link_to(type, source_file_error_url(type))
       - error_count = @error_types_to_files[type].size.to_s
       %td.number= error_count
       %td.percentage= number_to_percentage(error_count.to_f / @source_files.length * 100, :precision => 0)
-%table
+      
+%h2 Errors by file
+
+%table.source-files
   %tr
     %th
       File
     %th
       Schema
     %th
-      Schema valid?
-    %th
-      Problems
+      Errors
   = render :partial => 'source_file', :collection => @source_files
 

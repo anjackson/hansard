@@ -1,0 +1,26 @@
+%h2 House of Commons
+= "#{@commons_memberships.size} known constituencies, #{@commons_count} known members"
+%table.commons-members-on-date
+  %theader
+    %th Constituency
+    %th Members
+  - @commons_memberships.each do |constituency_id, membership_list|
+    %tr.constituency-members
+      %td.constituency= link_to membership_list.first.constituency_name, constituency_url(membership_list.first.constituency)
+      %td.members
+        - membership_list.each do |membership|
+          =link_to membership.person.name, person_url(membership.person)
+          %br
+%h3 House of Lords
+= "#{@lords_count} known members"
+%table.lords-members-on-date
+  %theader
+    %th Title
+    %th Member
+  - @lords_memberships.each do |person_id, membership_list|
+    %tr.title-member
+      %td.title
+        - membership_list.each do |membership|
+          = title_details(membership)
+          %br
+      %td.member= link_to membership_list.first.person.name, person_url(membership_list.first.person)

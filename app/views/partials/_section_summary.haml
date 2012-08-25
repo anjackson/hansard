@@ -1,0 +1,8 @@
+- section = section_summary
+
+%li.section-summary= link_to_section section
+- if expand && section.sections && !section.sections.empty?
+  %ol.xoxo
+    - section.sections.each do |a_section|
+      - if a_section.linkable?
+        = render :partial => 'partials/section_summary', :object => a_section, :locals => {:expand => false}

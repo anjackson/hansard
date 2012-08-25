@@ -1,6 +1,6 @@
 %div
-  -if data_file.sitting
-    =link_to(data_file.name, sitting_date_url(data_file.sitting))
+  -if data_file.sitting and data_file.sitting.date >= FIRST_DATE and data_file.sitting.date <= LAST_DATE
+    = link_to(data_file.name, sitting_date_url(data_file.sitting))
   -else
-    =data_file.name 
-  =truncate(html_linebreaks(h(data_file.log)), 250) if !data_file.log.blank?
+    = data_file.name
+  =truncate(html_linebreaks(h(data_file.log)), 250) if data_file.log?

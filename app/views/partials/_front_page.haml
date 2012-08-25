@@ -1,0 +1,12 @@
+%p= "Two centuries ago <strong>" + link_to_section_years_ago(200) + "</strong> A century ago <strong>" + link_to_section_years_ago(100) + "</strong> A decade ago <strong>" + link_to_section_years_ago(10) + "</strong>"
+    
+%p This site is generated from information from Hansard, the Official Report of debates in Parliament. Information presented here is generated from the publicly available XML files. Material on this site remains under Parliamentary Copyright. Within these copyright constraints, you are encouraged to use and to explore the information provided.
+
+%p= "There's Hansard itself; " + link_to(" by volume", volumes_url) + ", just the " + link_to("Lords sittings", lords_url) + ", " + link_to("Commons sittings", commons_url) + " or " + link_to("Westminster Hall sittings", westminster_hall_url) + ". You can also view " + link_to("Written Answers", written_answers_url) + ", " + link_to("Written Statements", written_statements_url) + ", " + link_to("Lords reports", lords_reports_url) + " or " + link_to("Grand Committee reports", grand_committee_report_url) + "."
+
+%p= "We also have extracted lists of " + link_to("People", people_url) + " who are recorded as having spoken, " +  link_to("Constituencies", constituencies_url) + ", " + link_to("Offices", offices_url) + ", " + link_to("Acts", acts_url) + ", " + link_to("Bills", bills_url) + " and " + link_to("Divisions", divisions_url) + ". You can also see information about the " + link_to("Source files", source_files_url) + " containing the original XML and the " + link_to("Data files", data_files_url) + " we generate from them."
+
+%p Information used to make this site has been provided by the Hansard Digitisation Project, led by the Directorate of Information Services of the House of Commons and the Library of the House of Lords. The site is still undergoing development and experimentation, and further features may be added in due course. Work to improve the quality of the data is also ongoing.
+
+%p= "<a href='http://millbanksystems.wordpress.com'>Blog</a> | <a href='http://groups.google.com/group/hansard-prototype/'>Google Group</a> | <a href='http://code.google.com/p/hansard/issues'>Project issues</a> | <a href='http://#{request.host_with_port}/credits'>Credits</a> | <a href='http://#{request.host_with_port}/api'>API</a>"
+

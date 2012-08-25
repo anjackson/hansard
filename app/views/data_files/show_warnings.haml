@@ -1,16 +1,6 @@
-- @javascript = :defaults
 - @title = "Data files: Warnings"
-#wtf
-  And now we explain what all of this means.
+
 %table#data_file_warnings
-  %thead
-    %tr
-      %th Source file
-      %th Type
-      %th Date
-      %th Warning
-      %th Saved
-      %th= DataFile.reload_possible? ? 'Reload' : ''
   %tbody
     = render :partial => 'warning', :collection => @data_files[false] if @data_files[false]
     = render :partial => 'warning', :collection => @data_files[true] if @data_files[true]

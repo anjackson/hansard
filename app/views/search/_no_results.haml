@@ -1,0 +1,8 @@
+- @title = "Search: no results for '#{@query}'"
+- if @search.date_filter?
+  %p=  "We couldn't find any results for '#{@query}' in this period."
+- else
+  %p= "Sorry. We couldn't find anything when we tried searching for '#{@query}'." 
+- if !@search.filters.empty?
+  %p= "Would you like to #{ link_to "search", :query => @query } for '#{@query}' without any filters?"
+%p= link_to("Search Help", search_url)

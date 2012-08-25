@@ -1,9 +1,8 @@
-.search-result
-  = hit_link(contribution)
-  .search-result-fragment
-    = hit_fragment(@result_set, contribution)
-  .search-result-details 
-    = contribution.section.sitting.date_text + ", " + contribution.section.sitting.title
-
-
-
+- if contribution.date >= FIRST_DATE and contribution.section.date <= LAST_DATE
+  .search-result
+    %h4.result-title= section_contribution_link(contribution, contribution.first_linkable_parent)
+    %cite= speaker_facet_link(contribution.person, contribution.person.name, @query, {:show_times => false}) if contribution.person
+    .date= sitting_type_facet_link(contribution.sitting_type, @query, contribution.sitting_type) + ' &mdash; ' + contribution.date.to_s(:long)
+    %blockquote.search-result-fragment
+      = hit_fragment(contribution, @search)
+      

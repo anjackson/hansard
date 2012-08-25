@@ -1,0 +1,14 @@
+- @title = "Acts"
+- alphabet_links(@acts, :acts_url, @letter) do |letter_link|
+  = letter_link
+%ol.acts
+  - @list_acts.each do |act|
+    %li.act{ :class=>"act-id-#{act.slug}" }
+      - if @last_act_name != act.name
+        %a{ :name => act.name }
+      = link_to act.name_and_year, act_url(act)
+      - if act.act_mentions_count > 1
+        %span.note{:title=>act.act_mentions_count.to_s + ' mentions'}= act.act_mentions_count
+      - @last_act_name = act.name
+      
+%p.note= total_count(Act)

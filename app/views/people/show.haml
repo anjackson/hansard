@@ -1,0 +1,66 @@
+- @title = @person.name
+- @hide_title = true
+- @resource = @person
+- @resource_name_method = :lastname
+
+%h1.vcard= hcard_person(@person) 
+= birth_and_death_dates(@person)
+%br
+- if @year
+  - @title += ": speeches in #{@year}"
+  = link_to "Summary information for #{@person.name}", person_url(@person)
+  %h2 Contributions
+  - if @person.active_years.include? @year
+    = render :partial => "person_year"
+- else
+  = speaker_search_form @person, @person.contribution_count == 0
+  
+  - if !@person.alternative_names.empty?
+    %h2 Alternative names
+    %ol.alternative-names
+      - @person.alternative_names.sort_by(&:first_possible_date).each do |name|
+        %li.alternative-name= alternative_name_details(name)
+        
+  - if !@person.constituencies.empty?
+    %h2 Constituencies
+    %ol.constituencies
+      - @person.commons_memberships.sort_by(&:first_possible_date).each do |membership|
+        %li.constituency= commons_membership_details(membership, display=:constituency)
+
+  - if !@person.office_holders.empty?
+    %h2.offices Offices
+    %ol.offices
+      - @person.office_holders.sort_by(&:first_possible_date).each do |holder|
+        %li.office= office_holder_details(holder, :link_to => :office)
+
+
+  - if !@person.lords_memberships.empty?
+    %h2 Titles in Lords
+    %ol.lords-memberships
+      - @person.lords_memberships.sort_by(&:start_date).each do |membership|
+        %li.lords-membership= title_details(membership, {:include_dates => true})
+
+
+  - if !@person.alternative_titles.empty?
+    %h2 Other Titles
+    %ol.alternative-titles
+      - @person.alternative_titles.sort_by(&:start_date).each do |title|
+        %li.alternative-title= title_details(title, {:include_dates => true})
+        
+  %h2 Contributions
+  - unless @year
+    - if @person.contribution_count > 2 and @person.first_contribution and @person.first_contribution.date >= FIRST_DATE
+      %p.first-speech= "First recorded, on #{featured_speech(@person.first_contribution)}"
+    %p.by-year
+      = "By year, #{@person.contribution_count} in total: "
+      - @person.active_years.collect do |year|
+        %span.speeches-by-year
+          - if year == @year
+            = year.to_s
+          - else
+            - if year >= FIRST_DATE.year and year <= LAST_DATE.year
+              = link_to year.to_s, person_year_url(@person, year)
+    - if @person.contribution_count > 2 and @person.last_contribution and @person.last_contribution.date <= LAST_DATE
+      %p.last-speech= "Last recorded, on #{featured_speech(@person.last_contribution)}"
+      
+%p.disclaimer Information presented on this page was prepared from the XML source files, together with information from the History of Parliament Trust, the work of Leigh Rayment and public sources. The means by which names are recognised means that errors may remain in the data presented.

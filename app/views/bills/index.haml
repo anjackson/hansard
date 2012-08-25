@@ -1,0 +1,14 @@
+- @title = "Bills"
+- alphabet_links(@bills, :bills_url, @letter) do |letter_link|
+  = letter_link
+%ol#bills
+  - @list_bills.each do |bill|
+    %li.bill{ :class=>"bill-id-#{bill.slug}" }
+      - if @last_bill_name != bill.name
+        %a{ :name => bill.name }
+      = link_to bill.name_and_number, bill_url(bill)
+      - if bill.bill_mentions_count > 1
+        %span.note{:title=>bill.bill_mentions_count.to_s + ' mentions'}= bill.bill_mentions_count
+      - @last_bill_name = bill.name
+
+%p.note= total_count(Bill)

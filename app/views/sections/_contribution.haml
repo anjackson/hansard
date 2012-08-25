@@ -1,14 +1,24 @@
-= marker_html(contribution, @marker_options)
+= marker_html(contribution, @sitting, @marker_options)
+- contribution_content = format_contribution(contribution, @sitting, @marker_options)
 - if contribution.is_a? TimeContribution
-  .time
-    = format_time(contribution)
+  - if contribution.time
+    %span.time.published= format_time(contribution)
 - elsif contribution.is_a? ProceduralContribution
-  .procedural{:id => contribution.xml_id}
-    = format_contribution(contribution.text, ['div'])
+  %p.procedural{:id => contribution.xml_id}
+    = contribution_permalink(contribution, @marker_options)
+    = contribution_content
 - elsif contribution.is_a? MemberContribution
-  = render :partial => 'member_contribution', :object => contribution
+  = render :partial => 'sections/member_contribution', :object => contribution
 - elsif contribution.is_a? QuoteContribution
-  %q.quote{:id => contribution.xml_id}= format_contribution(contribution.text, ['div'])
+  %q{:id => contribution.anchor_id}
+    = contribution_content
 - elsif contribution.is_a? TableContribution
-  .table{:id => contribution.xml_id}
-    = format_contribution(contribution.text, ['div'])
+  .table{:id => contribution.anchor_id}
+    = contribution_content
+- elsif contribution.is_a?(UnparsedDivisionPlaceholder)
+  .unparsed_division
+    = contribution_content
+- elsif contribution.is_a?(DivisionPlaceholder) && contribution.text?
+  .division{:id => contribution.division_id}
+    %a{:name => contribution.anchor_id}
+    = contribution_content

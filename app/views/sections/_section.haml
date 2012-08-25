@@ -1,8 +1,11 @@
 - suppress_title = false unless suppress_title
-= marker_html(section, @marker_options)
 - unless suppress_title
-  - if section.title && !section.is_a?(WrittenAnswersBody)
+  - if section.title
     %h2
-      %a{ :name => section.slug, :href => '#' + section.slug }= section.plain_title
-= render :partial => 'contribution', :collection => section.contributions
-= render :partial => 'section', :collection => section.sections
+      %a{ :name => section.slug, :href => '#' + section.slug }= section.title
+= render :partial => 'sections/contribution', :collection => section.contributions
+- if section.sections && section.sections.size > 0 && (section.sections.first.is_written_body?)
+  = render :partial => 'sections/section', :collection => section.sections
+- else
+  %ol.xoxo
+    = render :partial => "partials/section_link", :collection => section.sections

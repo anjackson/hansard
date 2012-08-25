@@ -1,0 +1,13 @@
+- @title = "Act not found"
+- @unfound_act = h params['name'].titleize
+- @act_matches = Act.find_partial_matches @unfound_act, 30
+
+%p
+  Sorry, we don't have an Act with the name
+  %em= @unfound_act
+
+- if !@act_matches.empty?
+  %ul#act-matches
+    &hellip; but we do have Acts with a similar name:
+    - @act_matches.each do |act_match|
+      %li.act-match= link_to act_match.name_and_year, act_url(act_match)

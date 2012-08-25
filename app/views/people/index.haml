@@ -1,0 +1,14 @@
+- @title = "People"
+
+- alphabet_links(@people, :people_url, @letter, :ascii_alphabetical_name) do |letter_link|
+  = letter_link
+
+%ol
+  - @list_people.each do |person|
+    %li.person
+      = link_to person.alphabetical_name, person_url(:name => person.slug)
+      %span.note{:title=> birth_and_death_dates(person)}= birth_and_death_dates(person)
+
+
+%p.note= total_count(Person)
+

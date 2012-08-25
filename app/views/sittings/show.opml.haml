@@ -1,0 +1,13 @@
+- if !@sittings.empty?
+  = '<?xml version="1.0" encoding="UTF-8"?>'
+  %opml{ :version=>"2.0" }
+    %head
+      %title= resolution_title(@sitting_type, @date, :day)
+      %dateCreated= @date.strftime("%a, %d %b %Y %H:%M:%S %z")
+      %ownerName= "UK Parliament"
+      %ownerEmail= "mail@robertbrook.com"
+      %ownerId= "http://www.parliament.uk"
+      %docs= "http://www.opml.org/spec2"
+    %body
+      -@sittings.each do |sitting|
+        = render :partial => "partials/section_opml", :collection => sitting.top_level_sections

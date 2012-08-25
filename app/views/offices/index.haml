@@ -1,0 +1,10 @@
+- @title = "Offices"
+- alphabet_links(@offices, :offices_url, @letter) do |letter_link|
+  = letter_link
+%ol
+  - @list_offices.each do |office|
+    %li.office
+      = link_to office.name, office_url(office)
+
+%p.note= total_count(Office)
+

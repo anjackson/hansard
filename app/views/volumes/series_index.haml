@@ -1,0 +1,49 @@
+- @title = series_title(params[:series], @series_list)
+- @series_list.each do |series|
+  %h2= "Volumes in #{series.name}, by number"
+  %table.volumes
+    %thead
+      %tr
+        %th Number
+        %th Start date
+        %th End date
+        %th Loading status (% success)
+        %th Sittings found
+        %th Sittings loaded
+    %tbody
+      - series.expected_volumes.each do |volume_number, part, volume|
+        %tr.volume-info
+          %td.volume-link{:title => "Volume " + volume_number.to_s}
+            - if volume
+              = volume_link volume
+            - else
+              = Volume.volume_name(volume_number, part)
+          %td.start-date{:title => "Start date for volume " + volume_number.to_s}
+            - if volume and volume.start_date
+              = format_date(volume.start_date, :day, {:brief => true})
+            - elsif volume
+              = 'unknown'
+            - else
+              = '&mdash;'
+          %td.end-date{:title => "End date for volume " + volume_number.to_s}
+            - if volume and volume.end_date
+              = format_date(volume.end_date, :day, {:brief => true})
+            - elsif volume
+              = 'unknown'
+            - else
+              = '&mdash;'
+          %td.percent-success{:title => "Percent successfully loaded from volume " + volume_number.to_s}
+            - if volume  
+              = "#{volume.percent_success.round}%"
+            - else
+              = '&mdash;'
+          %td.sittings-found{:title => "Sittings found in volume " + volume_number.to_s}
+            - if volume
+              = volume.sittings_tried_count
+            - else
+              = '&mdash;'
+          %td.sittings-loaded{:title => "Sittings loaded from volume " + volume_number.to_s}
+            - if volume
+              = volume.sittings_count
+            - else
+              = '&mdash;'

@@ -1,0 +1,5 @@
+- @title = division_title(@division)
+%ul
+  %li=link_to 'view in debate', division_in_section_url(@division)
+  %li=link_to 'export to csv', url_for(@params_for_csv_url)
+

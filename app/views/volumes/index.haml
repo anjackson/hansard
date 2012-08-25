@@ -1,0 +1,32 @@
+- @title = "Volumes"
+
+%h3 Parsing status
+
+%p= "#{format_percent(Series.percent_loaded).capitalize} of the volumes available have been loaded, of which #{format_percent(Series.percent_success)} of the information was loaded successfully."
+
+- if ParserRun.latest != "(not recorded)"
+  %p= "Source data parsed on #{ParserRun.latest}." 
+
+%h3 Volumes by series
+
+%table#series
+  %thead
+    %tr
+      %th Series
+      %th Loaded
+      %th Success
+  %tbody
+  - @series.each do |series|
+    %tr.series-info
+      %td.series-link= series_link(series)
+      %td.percent-loaded= format_percent(series.percent_loaded).capitalize
+      %td.percent-success= format_percent(series.percent_success).capitalize
+      
+%p Further information about Series numbering, naming and citation can be found in the <a href="http://www.parliament.uk/documents/upload/g17.pdf">House of Commons Information Office Factsheet G17: <cite>The Official Report</cite></a> [PDF].
+    
+%h3 Volumes by monarch
+
+%ol#monarchs
+  - @monarchs.reverse.each do |monarch|
+    %li.monarch= monarch_link(monarch)
+    

@@ -1,0 +1,1 @@
+page.replace_html('data_file_with_id_'+@data_file.id.to_s , :partial => "warning_reloaded" , :object => @data_file)

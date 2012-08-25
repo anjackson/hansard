@@ -1,0 +1,23 @@
+%p We have a basic REST API. You can get information available here in different formats by changing the file extension on URLs.
+
+%h2 Sitting days
+ 
+%p= "The default HTML rendering of a page: " + link_to(example_api_url, example_api_url)
+
+%p= "OPML output for that page: " + link_to("#{example_api_url}.opml", "#{example_api_url}.opml")
+
+%p= "JSON output for that page: " + link_to("#{example_api_url}.js", "#{example_api_url}.js")
+
+%h2 Constituencies
+
+%p Add <code>.js</code> to a constituency URL to get JSON output.
+
+%h2 People
+
+%p Add <code>.js</code> to a person URL to get JSON output.
+
+%h2 Memberships
+
+%p= "The default HTML list of members of each House on a given day: " + link_to(example_membership_url, example_membership_url)
+
+%p= "JSON output for that page: " + link_to("#{example_membership_url}.js", "#{example_membership_url}.js")

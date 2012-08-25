@@ -1,0 +1,19 @@
+- @title = h "Volumes in the Reign of #{Monarch.monarch_name(@monarch)}, by regnal years"
+%table
+  %thead
+    %tr
+      %th Regnal years
+      %th Volume
+      %th Start date
+      %th End date
+  %tbody
+    - @volumes.each do |volume|
+      %tr.volume-info
+        %td= regnal_years_text(volume)
+        %td= volume_link(volume)
+        %td.start-date
+          - if volume.start_date
+            = format_date(volume.start_date, :day, {:brief => true})
+        %td.end-date
+          - if volume.end_date
+            = format_date(volume.end_date, :day, {:brief => true})

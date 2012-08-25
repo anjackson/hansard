@@ -1,0 +1,17 @@
+- @title = @bill.name_and_number
+- @resource = @bill
+- if !@other_bills.empty?
+  = index_link(@bill, nil, text="Other Bills by this name", @bill.name)
+%table.bill-mentions
+  %theader
+    %th Section title
+    %th Mentions
+    %th House
+    %th Date
+  - @bill.first_mentions.each do |mention|
+    - if mention.section.date >= FIRST_DATE and mention.section.date <= LAST_DATE
+      %tr.bill-mention
+        %td.section= link_to(mention.section.title, section_contribution_url(mention.contribution, mention.section))
+        %td.count= mention.mentions_in_section
+        %td.house= mention.section.sitting_type
+        %td.date= mention.date.to_s(:rfc288)

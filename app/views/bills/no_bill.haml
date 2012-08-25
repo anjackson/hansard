@@ -1,0 +1,13 @@
+- @title = "Bill not found"
+- @unfound_bill = h params['name'].titleize
+- @bill_matches = Bill.find_partial_matches @unfound_bill, 30
+
+%p
+  Sorry, we don't have a Bill with the name
+  %em= @unfound_bill
+
+- if !@bill_matches.empty?
+  %ul#bill-matches
+    &hellip; but we do have Bills with a similar name:
+    - @bill_matches.each do |bill_match|
+      %li.bill-match= link_to bill_match.name_and_number, bill_url(bill_match)

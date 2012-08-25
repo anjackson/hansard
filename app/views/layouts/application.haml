@@ -1,31 +1,58 @@
-<!DOCTYPE html>
+<!doctype html>
 %html{ :lang => 'en-GB' }
   %head
-    %meta{ 'http-equiv'.to_sym=>"Content-Type", :content=>"text/html;charset=utf-8" }
-    %title= "UK Parliament: Hansard: " << ( strip_tags(@title) || "Please give me a title" )
-    = stylesheet_link_tag "screen", :media => "screen"
+    %meta{ :charset=>"utf-8" }
+    %title= format_page_title @title
+    %meta{ :author => "UK Parliament" }
+    %meta{ :name => "y_key", :content => "51ff727eff55314a" }
+    %link{ :rel=>"copyright", :href=>"http://www.parliament.uk/site_information/parliamentary_copyright.cfm" }
+    %meta{ :name => "keywords", :content => "Hansard, House of Commons, House of Lords, Parliament, UK" << sitting_keyword_with_comma(@sitting.class) }
+    %meta{ :name => "description", :content => format_page_title(@title) }
+    %link{ :rel=>"search", :type=>"application/opensearchdescription+xml", :title=>"Hansard Prototype", :href=>"http://#{request.host_with_port}/search.xml" }
+    - if @day
+      = auto_discovery_link_tag(:opml, "#{current_url}.opml", {:title => "OPML"})
+      = auto_discovery_link_tag(:json, "#{current_url}.js", {:title => "JSON"})
+    - if @search 
+      = auto_discovery_link_tag(:atom, "#{atom_url}", {:title => "Atom"})
+    - if is_home? 
+      - default_time_feeds
+    = javascript_include_tag 'prototype', 'effects', :cache => true
+    = stylesheet_link_tag "screen", :media => "screen", :title => "Default"
     = stylesheet_link_tag "print", :media => "print"
-    = javascript_include_tag :defaults
-  %body
+  %body{:id => "hansard-millbanksytems-com"}
     #header
+      .search-help= link_to("Search Help", search_url)
       = search_form
-      = day_nav_links
-      %p.description
-        = [@section.sitting.title.to_s, @section.sitting.date_text.to_s].join(' ') if @section
-    = sitting_nav_links(@sitting) if @sitting
-    = section_nav_links(@section) if @section
-    #content
-      %h1
-        = @title
-      =@marker
+      #nav
+        = link_to_unless_current("HANSARD 1803&ndash;2005", home_url, {:rel => "home", :id => "home"})
+        - if @sitting
+          &rarr;
+          = sitting_breadcrumbs(@sitting_type, @date)
+        - elsif @resolution == :day || @resolution == :month || @resolution == :year
+          &rarr;
+          = sitting_breadcrumbs(Sitting, @date, @resolution)
+        - elsif @resource
+          &rarr;
+          = resource_breadcrumbs(@resource, @resource_name_method)
+        - if @section
+          &rarr;
+          = section_breadcrumbs(@section, @header_title)
+      - if @day
+        %p#day-nav= day_navigation(@sitting_type, @date)
+      - unless is_home? || @hide_title
+        %h1.title= @title
+    #content{:class => body_class(@sitting.class)}
+      = @marker
       = yield
-      #footer
-        URL for this page:
-        = link_to "http://" << request.host_with_port << request.path, request.path
-        - if @day
-          %br
-            XML source for this day:
-            = link_to "http://" << request.host_with_port << sitting_date_source_url(@sitting), sitting_date_source_url(@sitting)
-          %br
-            XML output for this day:
-            = link_to "http://" << request.host_with_port << sitting_date_xml_url(@sitting), sitting_date_xml_url(@sitting)
+      = render :partial => "partials/front_page" if is_home?
+      #section-navigation= section_navigation(@section) if @section
+    #footer
+      %p= link_to_unless_current("Noticed a typo?", typos_url) + " | <a href='https://spreadsheets.google.com/viewform?key=p_zCPmAX1qx1llDkHKzRlNQ' target='_BLANK' title='Opens a new page'>Report other issues</a> | <a href='http://www.parliament.uk/site_information/parliamentary_copyright.cfm' rel='copyright' id='copyright'>&copy UK Parliament</a>"
+      - if is_production_env?
+        %script{:type => "text/javascript"}
+          var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+          document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+        %script{:type => "text/javascript"}
+          var pageTracker = _gat._getTracker("UA-3110135-1");
+          pageTracker._initData();
+          pageTracker._trackPageview();

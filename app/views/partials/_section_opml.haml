@@ -1,0 +1,10 @@
+- if section_opml.linkable?
+  - if section_opml.word_count > 0
+    %outline{ :id => section_opml.id, :title => CGI.escapeHTML(HTMLEntities.decode_entities(section_opml.title)), :text => section_opml.contributions.collect { |contribution| CGI.escapeHTML(contribution.member_name.to_s + contribution.text.to_s) }.join("&lt;br/&gt;"), :type => "link", :url => home_url.chop + section_url(section_opml) }
+  - if !section_opml.sections.empty?
+    %outline{ :id => section_opml.id, :text => section_opml.title }
+      = render :partial => "partials/section_opml", :collection => section_opml.sections
+- else
+  - if !section_opml.sections.empty?
+    %outline{ :id => section_opml.id, :text => section_opml.title }
+      = render :partial => "partials/section_opml", :collection => section_opml.sections

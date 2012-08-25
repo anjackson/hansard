@@ -1,13 +1,7 @@
-- @title = resolution_title(@date, @resolution)
-- if @resolution == :day
-  = render :partial => "partials/sitting", :collection => @sittings
-- else
-  .timeline#timeline
-    = timeline(@date, @timeline_resolution, timeline_options(@timeline_resolution)) 
-  %h3 Frequent titles
-  - frequent_section_titles(@date, @timeline_resolution) do |title, start_date, end_date|
-    %h4= title 
-    - section_occurrences(title, start_date, end_date, @timeline_resolution) do |date,sections|
-      .frequent-section
-        %strong= date
-        = frequent_section_links(sections) 
+- @title = resolution_title(@sitting_type, @date, @resolution) unless @title
+
+#timeline
+  = sitting_timeline(@date, @timeline_resolution, @sitting_type)
+
+= timeline_search_form(params) unless is_home?
+

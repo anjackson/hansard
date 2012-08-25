@@ -1,18 +1,8 @@
 - data_file = warning
 %tr{ :id => 'data_file_with_id_'+data_file.id.to_s }
-  %td= data_file.stripped_name
-  %td= data_file.type_of_data.sub('writtenanswers','written answers')
-  %td= data_file.date_text
-  %td= truncate(h(data_file.log), 250)
-  %td= data_file.saved ? 'Y' : 'N'
+  %td= [data_file.stripped_name, data_file.type_of_data, data_file.date_text, (data_file.saved ? 'Saved' : 'Not saved')].join("<br/>")
+  %td.warning= truncate(h(data_file.log), 255)
   %td
     - if data_file.reload_possible?
-      - if data_file.name.include? 'commons'
-        - action = 'reload_commmons_for_date'
-      - elsif data_file.name.include? 'lords'
-        - action = 'reload_lords_for_date'
-      - form_remote_tag :url => { :controller => 'data_files', :action => action, :date => data_file.date.to_s }, :before => %[Element.show('spinner')], :success  => %[Element.hide('spinner')] do
+      - form_remote_tag :url => { :controller => 'data_files', :action => data_file.get_reload_action, :date => data_file.date.to_s } do
         = submit_tag "Reload"
-        = image_tag 'spinner.gif', :id => 'spinner', :style => 'display: none'
-    - else
-      / this col shouldn't even appear. oh how I wish I could link to the source file on this page

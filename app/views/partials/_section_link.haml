@@ -1,13 +1,28 @@
 - section = section_link
+
 - if section.linkable?
-  .section-line
-    - section_id = 'section_'+section.id.to_s
-    %span.section-link{ :id => section_id }
-      = link_to section.title, section_url(section)
-      - length = section.contribution_character_length
-      - if length > 0 && length < 90
-        .section-preview
-          = section.contributions.collect { |contribution| contribution.member_name.to_s + contribution.text.to_s }.join('<br />')
-    = render :partial => "partials/section_link", :collection => section.sections
+  - if section.words > 0
+    %span.section-column-reference= section.column_reference
+  %li.section-line
+    %span.section-link{ :id => section.link_id }
+
+      - if section.words < 1
+        %span.blank-section= link_to_section section
+
+      - elsif section.words < 32
+        %span.minor-section{:title=>preview(section)}= link_to_section section
+
+      - else
+        %span.major-section{:title=>preview(section)}= link_to_section section
+
+      - if section.words > 0
+        %span.section-word-length= "#{number_with_delimiter(section.word_count)} words#{section.division_count > 0 ? ', ' : ''}"
+
+      - if section.division_count > 0
+        %span.section_division_count= pluralize(section.division_count, 'division')
+  - unless section.sections.empty?
+    %ol.xoxo
+      = render :partial => "partials/section_link", :collection => section.sections
 - else
-  = render :partial => "partials/section_link", :collection => section.sections
+  - unless section.sections.empty?
+    = render :partial => "partials/section_link", :collection => section.sections

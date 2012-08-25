@@ -1,10 +1,9 @@
-- warning = warning_reloaded
-%td= warning.directory.split('/').last+'.xml'
-%td= data_file.type_of_data.sub('writtenanswers','written answers')
-%td= warning.date_text
-%td= "reloaded (#{Time.now.to_s}): #{h(warning.log)}"
-%td= warning.saved ? 'Y' : 'N'
+- data_file = warning_reloaded
+
+%td= [(data_file.directory.split('/').last+'.xml'), data_file.type_of_data, data_file.date_text, (data_file.saved ? 'Saved' : 'Not saved')].join("<br/>")
+%td.warning
+  = "<span class='reload_time'>#{Time.now}</span><br/>#{h(data_file.log)}"
 %td
-  - if warning.reload_possible?
-    - form_remote_tag :url => { :controller => 'data_files', :action => 'reload_commmons_for_date', :date => warning.date.to_s } do
+  - if data_file.reload_possible?
+    - form_remote_tag :url => { :controller => 'data_files', :action => data_file.get_reload_action, :date => data_file.date.to_s } do
       = submit_tag "Reload"

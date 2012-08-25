@@ -1,0 +1,11 @@
+- @title = "Constituencies"
+
+- alphabet_links(@constituencies, :constituencies_url, @letter) do |letter_link|
+  = letter_link
+
+%ol
+  - @list_constituencies.each do |constituency|
+    %li.constituency
+      = link_to "#{constituency.name} #{constituency.years}", constituency_url(constituency)
+
+%p.note= total_count(Constituency)

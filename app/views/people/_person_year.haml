@@ -1,0 +1,14 @@
+%h3= @year.to_s
+- @person.contributions_in_year(@year).each do |contributions|
+  - contribution = contributions.first
+  - section = contribution.first_linkable_parent
+  %p.person-contribution
+    - if contributions.size > 1
+      %span.title-many
+        = contributions.size.to_s + " speeches &mdash;"
+        %strong= section_contribution_link contribution, section
+    - else
+      %span.title-one
+        = section_contribution_link contribution, section
+    %span.house= section.sitting_type
+    %span.date= contribution.sitting.date.to_s(:long)

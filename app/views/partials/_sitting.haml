@@ -1,2 +1,6 @@
-.sitting
-  = sitting_link(sitting)
+%h3{:id => sitting.anchor}
+  = resolution_title(sitting.class, sitting.date, :day) 
+  %span.sitting-volume="Series #{sitting.series.number} Vol. #{sitting.volume.number}"
+
+%ol.xoxo.first
+  = render :partial => "partials/section_link", :collection => sitting.top_level_sections

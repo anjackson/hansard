@@ -1,11 +1,38 @@
-- @title = search_results_title(@member, @decade, @query)
-= render :partial => "facets"
-.top-pagination
-  = will_paginate @paginator 
-- if @result_set.total_hits > 1
-  = sort_link(@sort)
-.search-results
-  = search_results_summary(@result_set, @query)
-  = render :partial => "contribution", :collection => @result_set.results
-.bottom-pagination
-  = will_paginate @paginator 
+- @title = "Search: #{@search.query}" 
+
+/ #search-bookmark= "Bookmark this search: " + link_to(url_for :only_path=>false,:overwrite_params=>{})
+
+#sitting-date-matches= "Jump to: " + (link_to date_params_title(@search.date_match), on_date_url(@search.date_match)) if @search.date_match
+
+#speaker-matches= "Search for speeches by: " + speaker_links(@search.speaker_matches) if !@search.speaker_matches.empty?
+
+= search_timeline(@search)
+
+- unless @search.filters.empty?
+  Showing only:
+  - @search.filters.each do |filter|
+    %span.filter= show_filter(filter, @search)
+
+- if @search.any_facets?
+  - @query = @search.query
+  - if @search.display_speaker_facets.size > 1
+    %ol#by-member-facet
+      Show only contributions by: 
+      - @search.display_speaker_facets.each do |speaker, times|
+        %li= speaker_facet_link(speaker, nil, @query, {:times => times})
+
+- if @search.results_size > 0
+  - paginator_content = will_paginate @paginator
+
+  #search-results
+    - if @search.results_size > 1
+      #sort-links= sort_links(@search.sort, params)
+    = search_results_summary(@search)
+    = render :partial => "contribution", :collection => @search.get_results
+    
+  - if paginator_content
+    .pagination= paginator_content
+ 
+- else
+  = render :partial => "no_results"
+

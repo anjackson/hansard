@@ -1,0 +1,7 @@
+- @title = @office.name
+- @resource = @office
+
+%h3 People
+%ol.office-holders
+  - @office.people_by_date.each do |holder|
+    %li.office-holder= office_holder_details(holder, :link_to => :person)

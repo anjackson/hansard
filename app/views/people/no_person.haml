@@ -1,0 +1,13 @@
+- @title = "Person not found"
+- @unfound_person = h params['name'].titleize
+- @person_matches = Person.find_partial_matches @unfound_person
+
+%p
+  Sorry, we don't have a person with the name
+  %em= @unfound_person
+    
+- if !@person_matches.empty?
+  %ul#person-matches
+    &hellip; but we do have speakers with a similar name:
+    - @person_matches.each do |person_match|
+      %li.person-match= link_to person_match.name, person_url(person_match)

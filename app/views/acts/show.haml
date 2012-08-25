@@ -1,0 +1,24 @@
+- @title = @act.name_and_year
+- @resource = @act
+- if !@other_acts.empty?
+  - if @other_acts.length == 1
+    %p= index_link(@act, nil, text="[Another Act called <q>#{@act.name}</q>]", @act.name)
+  - else
+    %p= index_link(@act, nil, text="[#{@other_acts.length} other Acts called <q>#{@act.name}</q>]", @act.name)
+    
+- if @act.first_mentions.length > 0
+  %table.act-mentions
+    %theader
+      %th Section
+      %th Mentions
+      %th House
+      %th Date
+    - @act.first_mentions.each do |mention|
+      - if mention.section.date >= FIRST_DATE and mention.section.date <= LAST_DATE
+        %tr.act-mention
+          %td.section= link_to(mention.section.title, section_contribution_url(mention.contribution, mention.section))
+          %td.count= mention.mentions_in_section
+          %td.house= mention.section.sitting_type
+          %td.date= mention.date.to_s(:rfc288)
+- else
+  %p No mentions found for this Act
