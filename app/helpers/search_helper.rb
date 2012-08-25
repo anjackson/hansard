@@ -1,136 +1,190 @@
 module SearchHelper
+  
+  include PresentOnDateTimelineHelper
+  
+  def search_timeline(search)
+    RAILS_DEFAULT_LOGGER.info 'producing timeline'
+    resolution = Date.higher_resolution(search.resolution)
+    return if (resolution.nil?) or (search.date_facets.empty? and !search.date_filter?)
+    options = timeline_options(resolution, Sitting).merge(:top_label => "Results by decade")
+    timeline = timeline(timeline_date(search), resolution, options) do |start_date, end_date|
+      search.date_facets
+    end
+    RAILS_DEFAULT_LOGGER.info 'produced timeline'
+    timeline
+  end
+  
+  def timeline_date(search)
+    search.timeline_anchor or search.start_date
+  end
+  
+  def timeline_link(label, interval, options, resolution, html_options={})
+    html_options[:title] = "Results for '#{@query}' #{interval_suffix(resolution, label, interval)}"
+    link_to(label, timeline_url(interval, options, resolution), html_options)
+  end
 
-
-  def link_for interval, resolution, counts, options
-    if counts.sum > 0
-      link_to interval.to_s, {:controller => "search",
-                              :action     => "show",
-                              :query      => @query,
-                              :decade     => interval}
-    else
-      interval
+  def timeline_url(interval, options, resolution)
+    link_params = params_without_date_and_page_filters(resolution)
+    add_date_filter(link_params, resolution, interval)
+    url_for link_params
+  end
+  
+  def atom_url
+    url_for(params.merge(:format => 'atom'))
+  end
+  
+  def add_date_filter(params, resolution, interval) 
+    if resolution and interval
+      params[resolution] = interval.to_s.sub('_','-') 
+    elsif interval
+      params[:century] = interval
+    end
+  end
+    
+  def params_without_date_and_page_filters(resolution)
+    higher_resolution = Date.higher_resolution(resolution)
+    lower_resolution = Date.lower_resolution(resolution)
+    params_without(['page', higher_resolution, lower_resolution, :century])
+  end
+  
+  def interval_suffix(resolution, label, interval)
+    case resolution
+      when nil
+        ": #{label}"
+      when :decade
+        "in the #{label}" 
+      when :year
+        "in #{label}"
+      when :month 
+        "in #{label}"
+      when :day
+        "on #{interval.to_s(:long)}"
+      else 
+        ''
     end
   end
 
-  def sort_link(current_sort)
-    # if current_sort == "date"
-    #       params.delete(:sort)
-    #       link_to "<p><button id='sort_by_frequency'>Sort results by frequency</button></p>", params
-    #     else
-    #       link_to "<p><button id='sort_by_date'>Sort results by date</button></p>", params.merge(:sort => "date")
-    #     end
+  def speaker_links(speakers)
+    speakers.collect {|speaker| speaker_link(speaker)}.join(', ')
+  end
+  
+  def speaker_link(speaker)
+     link_to speaker.name, person_url(speaker), :class => "speaker-match"
+  end
+  
+  def sort_links(current_sort, params)
+    sort_links = []
+    sort_params = params_without('page')
+    sort_links << sort_link(current_sort, 'reverse_date', "Sort by MOST RECENT", sort_params)
+    sort_links << sort_link(current_sort, 'date', "Sort by EARLIEST", sort_params)
+    sort_links << sort_link(current_sort, nil, "Sort by MOST RELEVANT", sort_params)
+    sort_links.join(' | ')
+  end
+  
+  def sort_link(current_sort, sort, text, params)
+    link_to_unless(current_sort == sort, text, params.merge(:sort => sort))
   end
 
-  def hit_fragment(result_set, contribution)
-    if result_set.highlights[contribution.id]["text"]
-      fragment = result_set.highlights[contribution.id]["text"].join << " &hellip;"
-    else
-      fragment = ''
-    end
-    format_result_fragment(fragment)
-  end
-
-  def format_result_fragment(fragment)
-    # unescape any full html entities
-    fragment = CGI::unescapeHTML(fragment)
-    leading_punctuation = /^(\/|\\|;|\.|,|\(|\)|:)/
-    problems = [leading_punctuation]
-    problems.each do |problem|
-      fragment.gsub!(problem, '')
+  def hit_fragment(contribution, search)
+    fragment = ''
+    if search.highlights[contribution.id]
+      fragment = search.highlights[contribution.id].join(" &hellip; ")
+      fragment = format_result_fragment(fragment, search)
     end
     fragment
   end
 
-  def member_name_facets(result_set)
-    if result_set.facets and !result_set.facets["facet_fields"].empty?
-      member_name_facets = result_set.facets["facet_fields"]["member_name_facet"]
-      member_name_facets = sort_by_reverse_value_then_key(member_name_facets)
-      yield member_name_facets
+  def format_result_fragment(fragment, search)
+    fragment = fragment.gsub('&amp;', '&')
+    leading_punctuation = [/\A(\/|\\|;|\.|,|\(|\)|:)/, '']
+    broken_entities = [/\A(#x[\dA-Z]{2,4};)/, '']
+    contribution_pattern = /(contribut(.){0,4})/i
+    problems = [leading_punctuation, broken_entities]
+    unless contribution_pattern.match(search.query)
+      prefix = Regexp.escape(search.highlight_prefix || '')
+      suffix = Regexp.escape(search.highlight_suffix || '')
+      problems << contribution_highlighted = [/#{prefix}#{contribution_pattern}#{suffix}/i, '\1']
     end
+    problems.each do |problem, replacement|
+      fragment.gsub!(problem, replacement)
+    end
+    fragment
   end
 
-  def date_facets(result_set)
-    return false if !result_set.facets
-    return false if result_set.facets["facet_fields"].nil?
-    return false if result_set.facets["facet_fields"].empty?
-    return false if result_set.facets["facet_fields"]["date_facet"].nil?
-    return false if result_set.facets["facet_fields"]["date_facet"].empty?
-    return result_set.facets["facet_fields"]["date_facet"]
-  end
-
-  def date_timeline(result_set)
-    return nil if !date_facets(result_set)
-    options = timeline_options(:century)
-    timeline(LAST_DATE, :century, options) do |start_date, end_date| 
-      date_facet_hash(result_set, start_date, end_date) 
-    end  
-  end
-
-  def date_facet_hash(result_set, start_date, end_date)
-    date_facets = date_facets(result_set)
-    date_facets = date_facets.collect{|date_string, count| [ Date.parse(date_string), count] }
-    facet_hash = {}
-    date_facets.each{ |k,v| facet_hash[k] = v }
-    facet_hash
-  end
-
-  def sort_by_reverse_value_then_key(hash)
-    # sorts by score from high to low and then by name from a to z
-    hash.sort{ |a,b| [b[1], a[0].downcase] <=> [a[1], b[0].downcase] }.collect
-  end
-
-  def hit_link(contribution)
-    link_text = contribution.section.title || contribution.section.sitting.title
-    url = section_url(contribution.section) + "##{contribution.xml_id}"
+  def hit_section_link section
+    link_text = section.title || section.sitting.title
+    url = section_url(section)
     link_to link_text, url
   end
 
-  def member_name_facet_link(member, times, query)
-    if times > 1
-      link_to "<strong>" << times.to_s << "</strong> " << format_member_name(member), member_name_facet_url(member, query)
-    else
-      link_to format_member_name(member), member_name_facet_url(member, query)
+  def sitting_type_facet_link(type, query, text=nil)
+    link_text = text || type
+    link_to(link_text, sitting_type_facet_url(type, query), {:title=>"Show only results from #{type}"})
+  end
+
+  def sitting_type_facet_url(type, query)
+    params.merge(:type => type, :query => query, :page => nil)
+  end
+
+  def speaker_facet_link(speaker, name, query, options = {})
+    options[:show_times] = true if options[:show_times].nil?
+    name_to_use = name || speaker.name
+    link_text = name_to_use 
+    if options[:show_times] && options[:times] > 1
+      link_text += " <span class='facet_times'>(#{options[:times]})</span>"
     end
+    link_text +=options[:end_char] if options[:end_char]
+    link_to link_text, params.merge(:speaker => speaker.slug, :query => query, :page => nil), {:title=>"Show only results from #{name_to_use}"}
   end
 
-  def member_name_facet_url(member, query)
-    {:controller => "search",
-     :action     => "show",
-     :member     => member,
-     :query      => query,
-     :page       => nil}
+  def show_filter(filter, search)
+    filter_text = ''
+    param = nil
+    if filter.is_a? Date
+      filter_text = format_date(filter, search.resolution)
+      param = search.resolution.to_s
+    elsif filter.is_a? Person
+      filter_text = filter.name
+      param = "speaker"
+    else
+      filter_text = filter
+      param = 'type'
+    end
+    return "#{filter_text} #{link_to '&times;', params_without([param, 'page'])}"
   end
-
-  def search_results_title(member_name, decade, query)
-    title = "Search: '#{query}'"
-    title += " spoken by #{link_to_member_from_name(format_member_name(member_name))}" if member_name
-    title += " in the #{decade}" if decade
-    title
-  end
-
-  def search_results_summary(result_set, query)
+  
+  def search_results_summary(search)
     text = ''
 
-    if result_set.results.empty?
-      text += "<h3>No results found for <em>#{query}</em>.</h3>"
-      text += "<p>Try your search on more recent Parliament information?</p>"
-      text += google_custom_search_form(query)
-    else
-       if result_set.total_hits <= @num_per_page
-          text += "<h3>#{result_set.total_hits} results</h3>"
-        else
-      start = ((@page - 1) * @num_per_page) + 1
-      finish = start + (@num_per_page - 1)
-      finish = result_set.total_hits if finish > result_set.total_hits
-      text += "<h3>Results #{start} to #{finish} of #{result_set.total_hits}</h3>"
-    end
-    end
-
+      if search.results_size <= search.num_per_page
+        text += "<h3>#{pluralize(search.results_size, 'result')}</h3>"
+      else
+        start = search.first_result
+        finish = search.last_result
+        text += "<h3 id='results-header'>Results #{number_with_delimiter(start)} to #{number_with_delimiter(finish)} of #{number_with_delimiter(search.results_size)}</h3>"
+      end
     text
   end
-
-  def format_member_name(name)
-    CGI::unescapeHTML(name)
+  
+  def first_results_url
+    url_for(params.merge(:only_path => false, :page => 1))
+  end
+  
+  def next_results_url(paginator)
+    url_for(params.merge(:only_path => false, :page => paginator.next_page))
+  end
+  
+  def previous_results_url(paginator)
+    url_for(params.merge(:only_path => false, :page => paginator.previous_page))
+  end
+  
+  def last_results_url(paginator)
+    url_for(params.merge(:only_path => false, :page => paginator.total_pages))
+  end
+  
+  def atom_link(builder, rel, href)
+    builder.link(:rel => rel, :href => href, :type => 'application/atom+xml')
   end
 
 end
+

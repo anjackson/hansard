@@ -1,206 +1,385 @@
-require 'hpricot'
-
 module ApplicationHelper
-
-  def num_timeline_years(resolution)
-    resolution == :century ? {:num_years => 200} : {}
-  end
-   
-  def timeline_options(resolution)
-    {:first_of_month => false}.merge(num_timeline_years(resolution))
+  
+  def is_home? 
+    request.url == home_url
   end
   
-  def frequent_section_titles(date, resolution)
-    options = num_timeline_years(resolution)
-    start_date = get_start_date(date, resolution, options)
-    end_date = get_end_date(date, resolution, options)
-    Section.frequent_titles_in_interval(start_date, end_date).each do |title|
-      yield title, start_date, end_date
+  def default_time_feeds
+    DEFAULT_FEEDS.each do |years| 
+      puts auto_discovery_link_tag(:atom, "#{years_ago_url(:years => years, :format => 'xml')}", {:title => "#{years} years ago"})
     end
   end
   
-  def link_to_member(member)
-    link_to member.name, show_member_url(:name => member.slug)
+  def body_class sitting_class
+    if sitting_class.name.to_s =~ /Class$/
+      "page"
+    else
+      sitting_class.to_s.underscore.dasherize
+    end
   end
 
-  def link_to_member_from_name(member_name)
-    member = Member.find_by_name(member_name)
-    link_to_member(member)
+  def sitting_keyword_with_comma sitting_class
+    if sitting_class.name.to_s =~ /Class$/
+      ''
+    else
+      ', ' << sitting_class.to_s.titleize.gsub(/Of/, 'of').gsub(/Sitting/, 'sitting')
+    end
   end
 
-  def intro section
-    section.introduction.text
+  def is_production_env?
+    RAILS_ENV == 'production'
   end
 
-  def marker_html(section_or_contribution, options)
-    markers = ''
-    section_or_contribution.markers(options) do |marker_type, marker_value|
-      if marker_type == "image"
-        markers += image_marker(marker_value)
-      elsif marker_type == "column"
-        markers += column_marker(marker_value)
+  def params_without(to_remove)
+    param_hash = params
+    if to_remove.is_a? Array
+      to_remove.each do |key|
+        param_hash = remove_key(key, param_hash)
       end
+    else
+      param_hash = remove_key(to_remove, param_hash)
     end
-    markers
+    param_hash
   end
 
-  def image_marker(image_src)
-    "<span class='sidenote'>Img #{image_src}</span>"
+  def remove_key(key, hash)
+    key = key.to_s
+    hash.reject{|k,v| k==key}
   end
 
-  def column_marker(column)
-    "<span class='sidenote'><a name='column_#{column}' href='#column_#{column}'>Col #{column}</a></span>"
-  end
-
-  def section_url(section)
-    params = section.id_hash
-    url_for(params.merge!(:controller => "sections", :action => "show"))
-  end
-
-  def resolution_title(date, resolution)
-    title = "Sittings by decade"
-    case resolution
-      when :decade
-        title = "Sittings in the #{date.decade_string}"
-      when :year
-        title = "Sittings in #{date.year}"
-      when :month
-        title = "Sittings in #{Date::MONTHNAMES[date.month]} #{date.year}"
-      when :day
-        title = "Sitting of #{date.day} #{Date::MONTHNAMES[date.month]} #{date.year}"
+  def format_page_title title
+    if params[:home_page]
+      title = "HANSARD 1803&ndash;2005"
+    else
+      return nil unless title
+      title = strip_tags(title.sub('<lb>', ' <lb>'))
+      if @section
+        title = title + " (Hansard, #{format_date(@section.date, :day)})"
+      else
+        title = title + " (Hansard)"
+      end
+      title.gsub!(",,",",")
+      title.to_s
     end
     title
   end
 
-  def on_date_url(date_params)
-    params = { :controller => 'sittings',
-               :action => 'show',
-               :year => date_params[:year],
-               :month => date_params[:month],
-               :day => date_params[:day] }
-    url_for params
+  def current_url
+    "http://#{request.host_with_port}#{request.path}"
   end
 
-  def sitting_nav_links(sitting)
-    open :table, { :id => 'navigation-by-sittings' } do
+  def timeline_options(resolution, sitting_type)
+    options = { :upper_nav_limit => LAST_DATE,
+                :lower_nav_limit => FIRST_DATE,
+                :first_of_month => false,
+                :navigation => true,
+                :sitting_type => sitting_type }
+    options
+  end
 
-      open :thead do
-        open :th do
-          puts "Hansard"
-        end
-      end
+  def link_to_section section
+    link_to section.title, section_url(section)
+  end
 
-      open :tr do
-        open :td do
-          puts "This year&mdash;<br/>"
-          open :a, { :class => 'sitting-year', :href => on_date_url(:year => sitting.year, :month => nil, :day => nil)} do
-            puts sitting.year
-          end
-        end
-      end
-
-      open :tr do
-        open :td do
-          puts "This month&mdash;<br/>"
-          open :a, { :class => 'sitting-month', :href => on_date_url(:year => sitting.year, :month => month_abbr(sitting.month), :day => nil)} do
-            puts "#{month_abbr(sitting.month).titleize} #{sitting.year}"
-          end
-        end
-      end
-
-      open :tr do
-        open :td do
-          puts "This day&mdash;<br/>"
-          open :a, { :class => 'sitting-day', :href => on_date_url(:year => sitting.year, :month => month_abbr(sitting.month), :day => zero_padded_day(sitting.day))} do
-            puts "#{sitting.day} #{month_abbr(sitting.month).titleize} #{sitting.year}"
-          end
-        end
-      end
-
-      open :tfoot do
-        open :td do
-          open :p do
-            puts "Top of page."
-          end
-          open :p do
-            puts "&copy; UK Parliament."
-          end
-        end
-      end
+  def section_contribution_link contribution, section
+    url = section_contribution_url(contribution, section)
+    if contribution
+      return link_to(contribution.title_via_associations, url)
+    else
+      return link_to(section.title, url)
     end
   end
 
-  def day_link(sitting, direction)
-    next_sitting = sitting.class.find_next(sitting.date, direction)
-    if next_sitting
-      open :a, { :href => sitting_date_url(next_sitting) } do
-        yield
-      end
+  def section_contribution_url(contribution, section)
+    url = section_url(section)
+    url += "##{contribution.anchor_id}" if contribution
+    url
+  end
+
+  def link_to_constituency(constituency, text)
+    link_to text, constituency_url(constituency), :title => constituency.name
+  end
+
+  def person_cite_attribute person
+    person ? {:cite => person_url(person)} : {}
+  end
+
+  def hcard_person(person)
+    hcard = ''
+    if Person.find_title(person.name)
+      hcard += "<span class='title'>#{person.honorific}</span> "
+      hcard += "<span class='family-name'>#{person.lastname}</span>"
     else
+      hcard += "<span class='honorific-prefix'>#{person.honorific}</span > "
+      hcard += "<span class='given-name'>#{person.firstname}</span> "
+      hcard += "<span class='family-name'>#{person.lastname}</span>"
+    end
+    return "<span class='fn'>#{hcard}</span>"
+  end
+
+  def date_params_title(date_params)
+    resolution_prefix(date_params[:resolution], Sitting) + format_date_params(date_params)
+  end
+
+  def resolution_prefix(resolution, sitting_type)
+    sitting_string = sitting_prefix(sitting_type)
+    prefix = case resolution
+      when nil
+        "#{sitting_string.pluralize} in the "
+      when :decade
+        "#{sitting_string.pluralize} in the "
+      when :year
+        "#{sitting_string.pluralize} in "
+      when :month
+        "#{sitting_string.pluralize} in "
+      when :day
+        "#{sitting_string.singularize} of "
+    end
+    prefix
+  end
+
+  def sitting_prefix sitting_type
+    if sitting_type == Sitting
+      "Sitting"
+    elsif [HouseOfLordsSitting, HouseOfCommonsSitting, WestminsterHallSitting].include? sitting_type
+      "#{sitting_type.sitting_type_name} Sitting"
+    elsif [CommonsWrittenAnswersSitting, CommonsWrittenStatementsSitting, LordsWrittenAnswersSitting, LordsWrittenStatementsSitting].include? sitting_type
+      "#{sitting_type.sitting_type_name} (#{sitting_type.house})"
+    else
+      sitting_type.sitting_type_name.singularize
+    end
+  end
+
+  def resolution_title(sitting_type, date, resolution)
+    resolution_prefix(resolution, sitting_type) + format_date(date, resolution)
+  end
+
+  def get_years_and_yymmdd sitting
+    return [nil, nil] unless sitting.volume
+    start_year = sitting.volume.session_start_year
+    end_year = sitting.volume.session_end_year
+    return [nil, nil] unless start_year and end_year
+    years = "#{start_year}#{end_year.to_s[2..3]}"
+    yymmdd = "#{sitting.year.to_s[2..3]}#{zero_padded_digit(sitting.month)}#{zero_padded_digit(sitting.day)}"
+    return years, yymmdd
+  end
+
+  def parliament_uk_base_url
+    'http://www.publications.parliament.uk/pa'
+  end
+
+  def link_to_lords_at_parliament_uk sitting, anchor
+    if sitting.date >= Date.new(1995, 11, 15)
+      years, yymmdd = get_years_and_yymmdd sitting
+      return nil unless years and yymmdd
+      two_letters = (sitting.date >= Date.new(2006,11,15)) ? 'cm' : 'vo'
+      "#{parliament_uk_base_url}/ld#{years}/ldhansrd/#{two_letters}#{yymmdd}/index/#{yymmdd[1..5]}-x.htm#{anchor}"
+    else
+      nil
+    end
+  end
+
+  def link_to_commons_at_parliament_uk sitting, type, type2
+    years, yymmdd = get_years_and_yymmdd sitting
+    return nil unless years and yymmdd
+    if sitting.date > Date.new(1995, 11, 8)
+      "#{parliament_uk_base_url}/cm#{years}/cmhansrd/vo#{yymmdd}/#{type}/#{yymmdd[1..5]}-x.htm"
+    elsif type2 && (sitting.date >= Date.new(1988,11,22) )
+      type2 = 'Orals' if (type2 == 'Debate' && sitting.debates && sitting.debates.oral_questions)
+      "#{parliament_uk_base_url}/cm#{years}/cmhansrd/#{sitting.date.to_s}/#{type2}-1.html"
+    else
+      nil
+    end
+  end
+
+  def link_to_parliament_uk sitting
+    url = case sitting
+      when HouseOfLordsSitting
+        link_to_lords_at_parliament_uk sitting, ''
+      when LordsWrittenAnswersSitting
+        link_to_lords_at_parliament_uk sitting, '#start_written'
+      when LordsWrittenStatementsSitting
+        link_to_lords_at_parliament_uk sitting, '#start_minist'
+      when HouseOfCommonsSitting
+        link_to_commons_at_parliament_uk sitting, 'debindx', 'Debate'
+      when CommonsWrittenAnswersSitting
+        link_to_commons_at_parliament_uk sitting, 'index', 'Writtens'
+      when CommonsWrittenStatementsSitting
+        link_to_commons_at_parliament_uk sitting, 'wmsindx', nil
+      when WestminsterHallSitting
+        link_to_commons_at_parliament_uk sitting, 'hallindx', nil
+      else
+        nil
+    end
+    url ? link_to(' <small>[Official site]</small>',url) : ''
+  end
+
+  def link_to_sitting_anchor sitting
+    link_to(sitting_prefix(sitting.class), "##{sitting.anchor}")
+  end
+
+  def month_string date, options={}
+    options[:brief] ? "#{month_abbr(date.month).titleize}." : Date::MONTHNAMES[date.month]
+  end
+
+  def format_date(date, resolution, options={})
+    case resolution
+      when :decade
+        "#{date.decade_string}"
+      when :year
+        "#{date.year}"
+      when :month
+        "#{month_string(date,options)} #{date.year}"
+      when :day
+        "#{date.day} #{month_string(date,options)} #{date.year}"
+      else
+        "#{date.century_ordinal} century"
+    end
+  end
+
+  def format_date_params(date_params)
+    formatted_date = []
+    formatted_date << date_params[:day] if date_params[:day]
+    formatted_date << date_params[:month].titlecase if date_params[:month]
+    formatted_date << date_params[:year] if date_params[:year]
+    return formatted_date.join(' ')
+  end
+
+  def month_abbr(month)
+    Date::ABBR_MONTHNAMES[month].downcase
+  end
+
+  def url_for_date(date)
+    on_date_url({:year => date.year,
+                 :month => month_abbr(date.month),
+                 :day => zero_padded_digit(date.day)})
+  end
+
+  def on_date_url(date_params)
+    sitting_type = date_params[:sitting_type] || Sitting
+    if date_params[:year] and date_params[:month] and date_params[:day]
+      action = "show"
+    else
+      action = "index"
+    end
+    params = { :controller => sitting_type.uri_component,
+               :action => action }
+    if date_params[:century]
+      params.update(:century => date_params[:century])
+    elsif date_params[:decade]
+      params.update(:decade => date_params[:decade])
+    elsif date_params[:year]
+      params.update(:year => date_params[:year],
+                    :month => date_params[:month],
+                    :day => date_params[:day])
+    else
+      params.update(:century => nil, :decade => nil, :year => nil)
+    end
+    url_for params
+  end
+
+  def make_link css_class, url
+    haml_tag :a, { :class => css_class, :href => url} do
       yield
     end
   end
 
-  def day_nav_links
-    open :ul, { :id => 'navigation-by-links' } do
+  def resource_breadcrumbs(model_instance, resource_name_method)
+    index_link(model_instance, resource_name_method)
+  end
+  
+  def index_link(model_instance, resource_name_method, text=nil, anchor=nil)
+    resource_name_method = :name unless resource_name_method
+    type = model_instance.class.name.downcase.pluralize
+    name = model_instance.send(resource_name_method)
+    letter = first_letter(name)
+    url = send("#{type}_url".to_sym, :letter => letter)
+    url += "##{anchor}" if anchor
+    text = "#{type.capitalize} (#{letter.upcase})" unless text
+    make_link type, url do
+      puts text
+    end
+  end
 
-      open :li do
-        open :a, :href => home_url do
-          puts "Hansard <strong>1804-2004</strong>"
-        end
+  def first_letter(string)
+    letter_pattern = /^.*?([A-Za-z])/
+    if letter_match = letter_pattern.match(string)
+      return letter_match[1].downcase 
+    else
+      return nil
+    end    
+  end
+  
+  def sitting_breadcrumbs(sitting_type, date, resolution=:day)
+    if resolution == :day || resolution == :month || resolution == :year
+      make_link 'sitting-decade', on_date_url(:decade => "#{date.decade}s" ) do
+        puts format_date(date, :decade)
       end
-      if @day
-        day_nav_links_with_day
-      else
-        day_nav_links_without_day
+    end
+    if resolution == :day || resolution == :month
+      puts " &rarr;"
+      make_link 'sitting-year', on_date_url(:year => date.year) do
+        puts format_date(date, :year)
+      end
+    end
+    if resolution == :day
+      puts " &rarr;"
+      make_link 'sitting-month', on_date_url(:year => date.year, :month => month_abbr(date.month)) do
+        puts format_date(date, :month, {:brief => false})
+      end
+      puts " &rarr;"
+      make_link 'sitting-day',url_for_date(date) do
+        puts format_date(date, :day, {:brief => false})
       end
     end
   end
 
-  def day_nav_links_with_day
-    open :li do
-      day_link(@sitting,"<") { puts "Previous sitting day" }
-    end
-    open :li do
-      day_link(@sitting, ">") { puts "Next sitting day" }
-    end
-
+  def day_navigation(sitting_type, date)
+    day_navigation_link(sitting_type, date, ">", "Forward to", "Next")
+    day_navigation_link(sitting_type, date, "<", "Back to", "Previous")
   end
 
-  def day_nav_links_without_day
-    open :li do
-      open :a, :href => parliament_sessions_url do
-        puts "Sessions"
+  def day_navigation_link(sitting_type, date, direction, text, link_text)
+    sitting = sitting_type.find_next(date, direction)
+    if sitting and sitting.date >= FIRST_DATE and sitting.date <= LAST_DATE
+      puts "<span class='#{link_text.downcase}-sitting-day'>"
+      puts "<span class='sitting-day'>#{link_text} sitting day</span>"
+      puts link_to(sitting.date.to_s(:long), url_for_date(sitting.date))
+      puts "</span>"
+    end
+  end
+  
+  def haml_search form_id, accesskey, query=nil, alt_text='Search', disabled=false
+    escaped_query = HTMLEntities.new.encode(query, :named)
+    disable = disabled ? "disabled='true'" : ""
+    haml_tag :form, { :action => "#{search_url}", :method => "post", :id => form_id, :rel=>"search" } do
+      puts "<input size='24' title='Access key: #{accesskey.upcase}' accesskey='#{accesskey}' name='query' id='#{form_id}-query' type='search' placeholder='Search Hansard' autosave='#{request.host_with_port}' results='10' value='#{escaped_query or ''}' #{disable}>"
+      yield
+      puts "<input type='submit' value='#{alt_text}' #{disable}>"
+    end
+  end
+
+  def search_form
+    haml_search('search', 's', @query){}
+  end
+
+  def speaker_search_form person, disabled=false
+    haml_search("person-search", 'm', nil, 'Search in speeches by this person', disabled) do
+      puts "<input type='hidden' name='speaker' value='#{person.slug}'>"
+    end
+  end
+  
+  def timeline_search_form params
+    haml_search('timeline-search', 't', nil, 'Search in this period') do 
+      puts "<input type='hidden' name='century' value='#{params[:century]}'>" if params[:century]
+      puts "<input type='hidden' name='decade' value='#{params[:decade]}'>" if params[:decade]
+      if params[:year] and params[:month]
+        month_integer = Date::ABBR_MONTHNAMES.index(params[:month].capitalize)
+        puts "<input type='hidden' name='month' value='#{params[:year]}-#{month_integer}'>"
+      elsif params[:year]
+        puts "<input type='hidden' name='year' value='#{params[:year]}'>" if params[:year]
       end
     end
-  end
-
-  def search_form id='search', submit_text='Search', &block
-    open :form, { :action => "#{search_url}", :id => id } do
-      puts "<input accesskey='s' name='query' size='20' type='text' value='#{@query}'>"
-      puts "<input name='sa' type='submit' value='#{submit_text}'>"
-      yield if block
-    end
-  end
-
-  def member_search_form member_name
-    search_form('search_by_member', "Search in these results") do
-      open :input, { :name => 'member', :type => 'hidden', :value => member_name }
-    end
-  end
-
-  def google_custom_search_form(default_query="")
-    javascript = <<EOF
-    <div id="search_box">
-      <form id="searchbox_002582221602550181161:owz178jujce" action="http://www.google.com/cse">
-        <input type="hidden" name="cx" value="002582221602550181161:owz178jujce" />
-        <input type="hidden" name="cof" value="FORID:0" />
-        <input name="q" type="text" size="40" value="#{default_query}" />
-        <input type="submit" name="sa" value="Search" />
-      </form>
-      <script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_002582221602550181161%3Aowz178jujce"></script>
-    </div>
-EOF
   end
 
 
@@ -212,73 +391,13 @@ EOF
     else
       sitting_string = sitting_display_date(sitting)
     end
+
     if sitting_url
       link_to(sitting_string, sitting_date_url(sitting))
     else
       sitting_string
     end
-  end
 
-  def index_link(index)
-    link_text = "#{index.start_date_text} &ndash; #{index.end_date_text}"
-    url = index_date_span_url(index)
-    if url
-      link_to link_text, url
-    else
-      link_text
-    end
-  end
-
-  def alphabet_links(index)
-    links = []
-    index_link = index_date_span_url(index)
-    ('A'..'Z').each do |letter|
-      links << "<a href=\"#{index_link}?letter=#{letter}\">#{letter}</a>"
-    end
-    links.join(' ')
-  end
-
-  def index_entry_links(index_entry)
-    index_entry_index = index_entry.index
-    # nasty: assumes house of commons, not correct yet, waiting for calendar
-    index_entry.text.gsub! /\((\d+)\.(\d+)\.(\d+)\)/, link_to('\0', '/19\3/\2/\1')
-    column_reference = /(\s)(\d+)(,|\s|&#x2013;\d+,|&#x2013;\d+$|$)/
-    # written_answer_col = /(\s)(\d+)(w)/
-    index_entry.text = create_index_links_for_columns(index_entry.text, index_entry_index, column_reference, HouseOfCommonsSitting)
-    # index_entry.text = create_index_links(index_entry.text, index, written_answer_col, WrittenAnswersSitting)
-
-  end
-
-  def create_index_links_for_columns(entry, index, pattern, sitting_type)
-    entry.gsub!(pattern) do
-      text = $1
-      column = $2
-      suffix = $3
-      section = sitting_type.find_section_by_column_and_date_range(column, index.start_date, index.end_date)
-      if section
-        text += link_to(column, section_url(section) + "#column_#{column}")
-      else
-        text += column
-      end
-      text += suffix
-      text
-    end
-    entry
-  end
-
-  def index_date_span_url(index)
-    begin
-      url_for(:controller  => 'indices',
-              :action      => 'show',
-              :start_year  => index.start_date.year,
-              :start_month => month_abbr(index.start_date.month),
-              :start_day   => zero_padded_day(index.start_date.day),
-              :end_year    => index.end_date.year,
-              :end_month   => month_abbr(index.end_date.month),
-              :end_day     => zero_padded_day(index.end_date.day))
-    rescue
-      nil
-    end
   end
 
   def sitting_date_url(sitting)
@@ -287,10 +406,6 @@ EOF
     rescue
       nil
     end
-  end
-
-  def sitting_date_source_url(sitting)
-    url_for(sitting_date_url_params(sitting, :action => "show_source", :format => "xml"))
   end
 
   def sitting_date_xml_url(sitting)
@@ -304,58 +419,12 @@ EOF
     params.merge!(options)
   end
 
-  def month_abbr(month)
-    Date::ABBR_MONTHNAMES[month].downcase
-  end
-
-  def zero_padded_day(day)
-    day < 10 ? "0"+ day.to_s : day.to_s
-  end
-
   def sitting_display_date(sitting)
     sitting.date.strftime("%A, %B %d, %Y")
   end
 
-  def colon_after_member_name contribution
-    if (!contribution.member_constituency and !contribution.procedural_note)
-      ':'
-    else
-      ''
-    end
-  end
-
-  def colon_after_constituency contribution
-    if (contribution.member_constituency and !contribution.procedural_note)
-      ':'
-    else
-      ''
-    end
-  end
-
-  def format_section_title title
-    title.gsub('<lb>',' ').gsub('<lb/>',' ').gsub('</lb>','').squeeze(' ')
-  end
-
   def format_time time_contribution
-    %Q[<abbr class="dtstart" title="#{time_contribution.timestamp}">#{time_contribution.text}</abbr>]
-  end
-
-  def format_contribution text, outer_elements=[]
-    if text.include? ':'
-      text = text.sub(':','').strip
-    end
-
-    if text.include? "<quote>"
-      text = text.gsub('<quote>"','<quote>').gsub('"</quote>','</quote>')
-    end
-
-    xml = '<wrapper>' + text + '</wrapper>'
-    doc = Hpricot.XML xml
-    inner_elements = []
-    parts = handle_contribution_part doc.children.first, [], inner_elements, outer_elements
-    parts = '<p>' + parts.join('').squeeze(' ') + '</p>'
-    parts.sub!("&#x00B7;", ".")
-    parts
+    %Q[<a href="##{time_contribution.timestamp}" name="#{time_contribution.timestamp}"><abbr class="dtstart" title="#{time_contribution.timestamp}">#{time_contribution.text}</abbr></a>]
   end
 
   def html_list(text)
@@ -365,6 +434,23 @@ EOF
 
   def html_linebreaks(text)
     text.gsub("\n", "<br />")
+  end
+
+  def alphabet_links(models, url_method, current_letter, field=:name)
+    ('A'..'Z').each do |letter|
+      if current_letter == letter.downcase
+        yield letter_nav("<span class='selected-letter'>#{letter}</span>")
+      elsif models.any?{ |model| model.send(field).starts_with?(letter) }
+        yield letter_nav(link_to(letter, self.send(url_method, :letter=> letter.downcase)))
+      else
+        yield letter_nav(letter)
+      end
+    end
+    puts '<hr/>'
+  end
+
+  def letter_nav(content)
+    "<span class='letter-nav'>#{content}</span>"
   end
 
   def xsd_valid source_file
@@ -401,71 +487,256 @@ EOF
     end
   end
 
-  private
-
-    def close_add_open parts, inner_elements, outer_elements, addition
-      inner_elements.each { |e| parts << "</#{e}>" }
-      parts << "</p>"
-      outer_elements.each { |e| parts << "</#{e}>" }
-
-      parts << addition
-
-      outer_elements.reverse.each { |e| parts << "<#{e}>" }
-      parts << "<p>"
-      inner_elements.reverse.each { |e| parts << "<#{e}>" }
+  def featured_speech(contribution)
+    date = contribution.section.sitting.date.to_s(:long)
+    link = section_contribution_link contribution, contribution.section
+    type = contribution.sitting_type
+    "#{date} #{link} #{type}"
+  end
+  
+  def commons_membership_details(membership, display=:person)
+    if display == :person
+      text = link_to membership.person.name, person_url(membership.person)
+    else
+      text = link_to membership.constituency.name, constituency_url(membership.constituency)
     end
-
-    def wrap_with element, node, parts, inner_elements, outer_elements
-      parts << '<'+element+'>'
-      handle_contribution_part(node, parts, inner_elements + [element], outer_elements)
-      parts << '</'+element+'>'
+    text += " #{dates_or_unknown(membership)}"
+  end
+  
+  def title_details(title, options={})
+    text = nil
+    if !title.name.blank?
+      text = title.name 
+    else
+      text = "#{title.degree} #{title.title}"
     end
-
-    def handle_contribution_part node, parts, inner_elements, outer_elements
-      node.children.each do |child|
-        if child.text?
-          parts << child.to_s if child.to_s.size > 0
-        elsif child.elem?
-          name = child.name
-          if name == 'quote'
-            parts << '<q class="quote">'
-            handle_contribution_part(child, parts, inner_elements, outer_elements)
-            parts << '</q>'
-          elsif name == 'col'
-            parts << column_marker(child.inner_html)
-          elsif name == 'image'
-            parts << image_marker(child.attributes['src'])
-          elsif name == 'lb'
-            #should this be a br tag? doesn't look right though...
-            parts << '</p><p>'
-          elsif name == 'i'
-            #shouldn't be i tag, but what?
-            wrap_with 'i', child, parts, inner_elements, outer_elements
-          elsif name == 'b'
-            wrap_with 'b', child, parts, inner_elements, outer_elements
-          elsif name == 'sub'
-            wrap_with 'sub', child, parts, inner_elements, outer_elements
-          elsif(name == 'ol' or name == 'ul')
-            addition = child.to_s
-            list_has_numbering = /<li>\d+\. /.match addition
-            if list_has_numbering
-              addition.sub!('<ol','<ol class="hide_numbering"')
-            end
-            close_add_open parts, inner_elements, outer_elements, addition
-          elsif(name == 'table')
-            parts << child.to_s
-          elsif name == 'sup'
-            wrap_with 'sup', child, parts, inner_elements, outer_elements
-          elsif name == 'member'
-            parts << '<span class="member">'
-            handle_contribution_part(child, parts, inner_elements, outer_elements)
-            parts << '</span>'
+    if options[:include_dates] == true
+      if title.start_date 
+        if title.estimated_start_date
+          text += " #{title.start_date.year} - "
+        else
+          text += " #{title.start_date.to_s(:long)} - "
+        end
+        if title.end_date
+          if title.estimated_end_date
+            text += title.end_date.year.to_s
           else
-            parts << "<p class='warning'>Unhandled element in contribution text: #{name}.</p>"
+            text += title.end_date.to_s(:long)
           end
         end
       end
-      parts
+    end
+    text
+  end
+
+  def office_holder_details holder, options
+    if options[:link_to] == :office
+      link = office_link(holder.office)
+    elsif options[:link_to] == :person
+      link = link_to holder.person.name, person_url(holder.person)
+    end
+    details = "#{link} #{dates_or_unknown(holder)}"
+    details += "<sup>*</sup>" unless holder.confirmed?
+    details
+  end
+
+  def office_link office
+    link_to(office.name, office_url(:name => office.slug))
+  end
+
+  def dates_or_unknown(model)
+    if model.respond_to?('estimated_start_date?') and model.estimated_start_date?
+      text = model.start_date ? model.start_date.year.to_s : '?'
+    else
+      text =  model.start_date ? model.start_date.to_s(:long) : '?'
+    end
+    text += ' - '
+    if model.respond_to?('estimated_end_date?') and model.estimated_end_date?
+      text += model.end_date ? model.end_date.year.to_s : '?'
+    else
+      text += model.end_date ? model.end_date.to_s(:long) : '?'
+    end
+  end
+
+  def total_count model_type
+    "#{number_with_delimiter(model_type.count)} #{model_type.name.downcase.pluralize} in total"
+  end
+
+  def preview section
+    preview = ''
+
+    section.contributions.each do |contribution|
+      preview += "#{contribution.member_name} #{contribution.text} "
+      break if preview.size > 75
+    end
+
+    preview = strip_tags preview
+    truncate(preview, 75)
+  end
+
+  def format_display_text text, sitting, options
+    text = String.new text
+    text.strip!
+    text.sub!(/\A(<[^>]+>)?:\s*/, '\1')
+    text = normalize_quote_tags(text)
+
+    doc = Hpricot.XML(text.starts_with?('<division>') ? text : "<wrapper>#{text}</wrapper>")
+    text_context = { :parts => [],
+                     :sitting => sitting }
+    final_text = handle_contribution_part doc.children.first, text_context, options
+    final_text = final_text.join('').squeeze(' ')
+    final_text.gsub!("&#x00B7;", ".")
+
+    final_text = UrlResolver.new(final_text).markup_references
+    final_text = EcDirectiveResolver.new(final_text).markup_references
+    final_text
+  end
+
+  def normalize_quote_tags text
+    text = text.gsub(':<quote>','<quote>')
+    text = text.gsub('<quote>"','<quote>')
+    text = text.gsub('"</quote>','</quote>')
+    text
+  end
+
+  def column_marker(column, sitting)
+    column_string = sitting.class.normalized_column(column)
+    title = "Col. #{column_string}"
+    anchor = "column_#{column_string.downcase}"
+    title += " &mdash; #{sitting.hansard_reference column}" if sitting
+    "<a class='permalink column-permalink' id='#{anchor}' title='#{title}' name='#{anchor}' href='##{anchor}' rel='bookmark'>#{column_string}</a>"
+  end
+
+  def image_marker(image, sitting)
+    return "" unless image_exists?(image)
+    url = image_url(image)
+    "<a href='#{url}' class='page-preview'>P</a>"
+  end
+  
+  def image_url(image)
+    "/images/pages/#{image}.jpg"
+  end
+  
+  def image_exists?(image)
+    File.exist?("#{RAILS_ROOT}/public/images/pages/#{image}.jpg")
+  end
+  
+  def contribution_permalink(contribution, marker_options)
+    if marker_options[:hide_markers]
+      ''
+    else
+      "<a class='permalink' href='##{contribution.anchor_id}' title='Link to this contribution' rel='bookmark'>&sect;</a>"
+    end
+  end
+  
+  def speech_permalink(contribution, marker_options)
+    if marker_options[:hide_markers]
+      ''
+    else
+      "<a class='speech-permalink permalink' href='##{contribution.anchor_id}' title='Link to this speech by #{contribution.person.name}' rel='bookmark'>&sect;</a>"
+    end
+  end
+
+  def markup_official_report_references(contribution, text)
+    hansard_resolver = ReportReferenceResolver.new(text)
+    text = hansard_resolver.markup_references do |reference|
+      begin
+        params = hansard_resolver.reference_params(reference)
+      rescue
+        params = {}
+      end
+      if params.empty?
+        reference
+      else
+        if ! params[:date]
+          month = params.delete(:month)
+          day = params.delete(:day)
+          params[:date] = Date.new(contribution.year, month, day)
+        end
+        hansard_reference = HansardReference.new(params)
+        if hansard_reference.find_sections.size == 1
+          link_to reference, column_url(hansard_reference.column, hansard_reference.find_sections.first)
+        else
+          reference
+        end
+      end
+    end
+    text
+  end
+
+  def handle_contribution_part node, context, options={}
+    parts = context[:parts]
+    sitting = context[:sitting]
+    replacement_tags = { 'quote'  => 'q',
+                         'i'      => 'span class="italic"',
+                         'b'      => 'span class="bold"',
+                         'u'      => 'span class="underline"',
+                         'member' => 'span class="member"',
+                         'membercontribution' => 'span class="membercontribution"',
+                         'memberconstituency' => 'span class="memberconstituency"',
+                         'sub'    => 'sub',
+                         'tr'     => 'tr',
+                         'td'     => 'td',
+                         'sup'    => 'sup'}
+    node.children.each do |child|
+
+      if child.text? && (text = child.to_s).size > 0
+        parts << text
+      end
+
+      next unless child.elem?
+
+      if replacement_tags.has_key? child.name
+        wrap_with replacement_tags[child.name], child, context, options
+        next
+      end
+
+      case child.name
+        when 'col'
+          unless options[:hide_markers]
+            parts << '</table>' if options[:in_table]
+            parts << column_marker(child.inner_html, sitting) 
+            parts << '<table>' if options[:in_table]
+          end
+        when 'image'
+          unless options[:hide_markers]
+            parts << image_marker(child[:src], sitting)
+          end
+        when 'ob'
+          parts << '<span class="obscured">'
+          parts << '[...]'
+          parts << '</span>'
+        when 'lb'
+          parts << '</p><p>'
+        when 'ol', 'ul'
+          list = child.to_s
+          list.sub!("<#{child.name}", %Q|<#{child.name} class="hide_numbering"|) if list[/<li>\d+\. /]
+          parts << list
+        when 'table'
+          wrap_with 'table', child, context, options.merge(:in_table=>true)
+        when 'abbr'
+          parts << child.to_s
+        when 'p'
+          tag = 'p'
+          tag += " id=\"#{child.attributes['id']}\"" if child.attributes['id']
+          wrap_with tag, child, context, options
+        when 'a'
+          parts << child
+        else
+          parts << "<! -- Unhandled element: #{child.name}. -->"
+      end
+
+    end
+    parts
+  end
+
+  private
+
+    def wrap_with element, node, context, options={}
+      element_name = element.split(' ').first
+      context[:parts] << "<#{element}>"
+      handle_contribution_part(node, context, options)
+      context[:parts] << "</#{element_name}>"
     end
 
 end
