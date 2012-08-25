@@ -1,7 +1,7 @@
 class String
 
   ORDINAL_PATTERN = /^(\d+)(st|nd|rd|th)$/
-  SINGLE_DIGIT_ORDINALS = %w[first second third fourth fifth sixth seventh eigth ninth]
+  SINGLE_DIGIT_ORDINALS = %w[first second third fourth fifth sixth seventh eighth ninth]
   DOUBLE_DIGIT_ORDINALS = %w[eleventh twelfth thirteenth fourteenth fifteenth sixteenth seventeenth eighteenth nineteenth]
   DECADE_ORDINALS = %w[tenth twentieth thirtieth fortieth fiftieth sixtieth seventieth eightieth ninetieth]
   DECADE_SIGNIFIER = %w[twenty thirty forty fifty sixty seventy eighty ninety]
@@ -14,6 +14,8 @@ class String
       value = match[1].to_i
     elsif (index = SINGLE_DIGIT_ORDINALS.index(ordinal))
       value = index + 1
+    elsif (index = DOUBLE_DIGIT_ORDINALS.index(ordinal))
+      value = 10 + (index + 1)
     elsif (index = DECADE_ORDINALS.index(ordinal))
       value = 10 * (index + 1)
     else
@@ -30,5 +32,6 @@ class String
 
     value
   end
-
+  
 end
+

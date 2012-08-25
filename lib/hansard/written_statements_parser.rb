@@ -2,13 +2,13 @@ require 'rubygems'
 require 'open-uri'
 require 'hpricot'
 
-class Hansard::WrittenAnswersParser
+class Hansard::WrittenStatementsParser
 
   include Hansard::WrittenParserHelper
   attr_reader :sitting
   attr_accessor :anchor_integer
-
-  def initialize file, data_file=nil, source_file=nil, parse_divisions=false
+  
+  def initialize file, data_file=nil, source_file=nil, parse_divisions=true
     @anchor_integer = 1
     @data_file = data_file
     @unexpected = false
@@ -20,24 +20,23 @@ class Hansard::WrittenAnswersParser
   def sitting_type
     case house(@filename)
       when 'commons'
-        CommonsWrittenAnswersSitting
+        CommonsWrittenStatementsSitting
       when 'lords'
-        LordsWrittenAnswersSitting
+        LordsWrittenStatementsSitting
       else
-        WrittenAnswersSitting
+        WrittenStatementsSitting
     end
   end
 
   def expected_root_element
-    'writtenanswers'
+    'writtenstatements'
   end
 
   def get_group_model_class
-    WrittenAnswersGroup
+    WrittenStatementsGroup
   end
 
   def get_body_model_class
-    WrittenAnswersBody
+    WrittenStatementsBody
   end
-
 end

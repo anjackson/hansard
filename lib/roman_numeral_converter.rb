@@ -31,7 +31,18 @@ class String
   def is_arabic_numeral?
     IS_ARABIC.match(self) ? true : false
   end
-#  when IS_ARABIC then puts ROMAN_NUMERALS[line.to_i - 1]
+  
+  def to_roman
+    if is_arabic_numeral?
+      if ROMAN_NUMERALS.size >= self.to_i
+        ROMAN_NUMERALS[self.to_i - 1]
+      else
+        raise "cannot convert to roman numeral, '#{self}' is larger than the maximum number handled #{MAXIMUM_ROMAN_HANDLED + 1}"
+      end
+    else
+      raise "cannot convert to roman numeral, '#{self}' is not an arabic number string less than #{MAXIMUM_ROMAN_HANDLED + 1}"
+    end
+  end
 
   def roman_to_i
     if is_roman_numeral?
@@ -44,4 +55,12 @@ class String
       raise "cannot convert to integer, '#{self}' is not a recognized roman numeral less than the maximum handled #{MAXIMUM_ROMAN_HANDLED + 1}"
     end
   end
+end
+
+class Integer
+  
+  def to_roman
+    self.to_s.to_roman
+  end
+
 end

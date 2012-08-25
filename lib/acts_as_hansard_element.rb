@@ -32,44 +32,29 @@ module Acts
         column_marker(options){ |marker_type, marker_value| yield marker_type, marker_value }
       end
 
-      def image_marker(options)
-        images = find_images_in_text
-        if images.empty?
-          if first_image_source and first_image_source != options[:current_image_src]
-            # yield the marker so that it can be rendered
-            options[:current_image_src] = first_image_source
-            yield "image", first_image_source
-          end
-        else
-          options[:current_image_src] = images.last
-        end
-      end
-
       def column_marker(options)
-        text_cols = find_columns_in_text
-        if text_cols.empty?
-          if first_col and first_col != options[:current_column]
-            # yield the marker so that it can be rendered
-            options[:current_column] = first_col
-            yield "column", first_col
-          end
-        else
-          options[:current_column] = text_cols.last
+        if start_column and start_column != options[:current_column]
+          # yield the marker so that it can be rendered
+          options[:current_column] = start_column
+          yield "column", start_column
+        end
+        if start_column and start_column != end_column
+          options[:current_column] = end_column
         end
       end
-
-      def find_images_in_text
-        images = []
-        images = text.scan(/<image src="(.*?)"/) if respond_to? "text" and text
-        images = images.map{ |i| i[0] }
+      
+      def image_marker(options)
+        return unless respond_to? :start_image
+        if start_image != options[:current_image]
+          # yield the marker so that it can be rendered
+          options[:current_image] = start_image
+          yield "image", start_image
+        end
+        if start_image != end_image
+          options[:current_image] = end_image
+        end
       end
-
-      def find_columns_in_text
-        text_cols = []
-        text_cols = text.scan(/<col>(.*?)<\/col>/) if respond_to? "text" and text
-        text_cols.map{ |c| c[0].to_i.nonzero? ? c[0].to_i : c[0] }
-      end
-
+      
     end
 
     module SingletonMethods

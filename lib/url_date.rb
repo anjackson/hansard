@@ -1,7 +1,7 @@
 class UrlDate
 
   attr_reader :year, :month, :day, :hash
-  
+
   def UrlDate::mm_to_mmm mm
     Date::ABBR_MONTHNAMES[mm.to_i].downcase
   end
@@ -37,10 +37,16 @@ class UrlDate
   end
 
   def day
-    if @day and (@day.length == 1)
-      '0'+@day
+    (@day && @day.length == 1) ? '0'+@day : @day
+  end
+
+  def to_hash
+    if @day
+      {:year=>year, :month=>month, :day=>day}
+    elsif @month
+      {:year=>year, :month=>month}
     else
-      @day
+      {:year=>year}
     end
   end
 

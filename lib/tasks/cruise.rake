@@ -3,7 +3,6 @@ $LOAD_PATH.unshift(rspec_base) if File.exist?(rspec_base)
 require 'spec/rake/spectask'
 require 'spec/rake/verify_rcov'
 
-
 namespace :db do
   namespace :test do
     desc 'Use the migrations to create the test database'
@@ -22,10 +21,9 @@ end
 
 desc "Run specs and rcov"
 Spec::Rake::SpecTask.new(:cruise_coverage) do |t|
-  
   t.spec_opts = ['--options', "#{RAILS_ROOT}/spec/rcov_spec.opts"]
   t.spec_files = FileList['spec/**/*_spec.rb']
   t.rcov = true
   t.rcov_dir = ENV['CC_BUILD_ARTIFACTS']
-  t.rcov_opts = ['--exclude', 'spec,/usr/lib/ruby', '--rails', '--text-report', '-Ilib']
+  t.rcov_opts = ['--exclude', 'spec,/usr/lib/ruby,/Library/Ruby/Gems,/Library/Ruby/Site', '--rails', '--xrefs', '--text-report', '-Ilib']
 end
