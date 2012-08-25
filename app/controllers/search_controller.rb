@@ -2,83 +2,76 @@ require 'open-uri'
 
 class SearchController < ApplicationController
 
-  def index
-  end
+  before_filter :redirect_to_search_result_url, :only => 'show'
 
-  def random
-    size = Section.count
-    section = Section.find(rand(size-1))
-    redirect_to section_url(section)
+  def index
   end
 
   def show
     @query = params[:query]
-    @member = params[:member]
-    @decade = params[:decade]
-    @page = (params[:page] or 1).to_i
-    @num_per_page = 30
-    @sort = params[:sort]
-
-    @decade = nil unless /\d\d\d\ds/.match @decade
-    @sort = nil unless 'date' == @sort
-
-    redirect_to :back and return if @member.blank? and @query.blank?
-
-    @search_options = pagination_options.merge(highlight_options)
-    @search_options = @search_options.merge(sort_options) if @sort
-
-    if @member
-      query = members_speech_search(@member, @query)
-    elsif @decade
-      query = decade_search(@decade, @query)
-    else
-      query = text_search(@query)
-      @search_options = @search_options.merge(facet_options)
+    render :template => "search/index" and return if @query.blank? 
+    options = get_search_params(params) 
+    @search = Search.new(options)
+    respond_to do |format|
+      format.html do 
+        handle_hansard_reference(@search.hansard_reference) and return if @search.hansard_reference
+        success = get_search_results
+        render :template => "search/query_error" and return false if !success
+      end
+      format.atom do
+        success = get_search_results
+        if success
+          render :template => 'search/show.atom.builder' and return false
+        else
+          render :template => 'search/query_error.atom.builder' and return false
+        end
+      end
     end
-
-    begin
-      @result_set = Contribution.find_by_solr(query, @search_options)
-      @paginator = WillPaginate::Collection.new(@page, @num_per_page, @result_set.total_hits)
-    rescue
-      render :template => "search/query_error"
-    end
-
   end
 
   private
 
-    def text_search(query)
-      "text:#{query}"
+    def get_search_results
+      success = false
+      begin
+        @search.get_results
+        @paginator = WillPaginate::Collection.new(@search.page, @search.num_per_page, @search.results_size) 
+        success = true
+      rescue SearchException => e
+        logger.error "Solr error: #{e.to_s}"
+      end
+      return success
+    end
+    
+    def get_search_params params
+      options = {}
+      sort_options = ['date', 'reverse_date']
+      param_keys = [:query, :speaker, :century, :decade, :year, :month, :day, :sort, :type, :all_speaker_filters]
+      param_keys.each{ |key| options[key] = params[key] }
+      options[:page] = params[:page].to_i if !params[:page].blank?
+      options[:century] = nil unless /C\d\d/.match options[:century]
+      options[:decade] = nil unless /\d\d\d\ds/.match options[:decade]
+      options[:year] = nil unless /\d\d\d\d/.match options[:year]
+      options[:month] = nil unless /\d\d\d\d-\d\d?/.match options[:month]
+      options[:day] = nil unless /\d\d\d\d-\d\d?-\d\d?/.match options[:day]
+      options[:sort] = nil unless sort_options.include? options[:sort]
+      return options
     end
 
-    def decade_search(decade, query)
-      start_year = decade.to_i
-      "text:#{query} AND date:[#{start_year}-01-01 TO #{start_year + 9}-12-31]"
+    def handle_hansard_reference reference
+      @reference = reference
+      if !@reference.find_sections.empty?
+        redirect_to column_url(@reference.column, @reference.find_sections.first)
+      else
+        render :template => 'search/reference_not_found'
+      end
     end
 
-    def members_speech_search(member_name, query)
-      "text:#{query} AND member_name:\"#{member_name}\""
+    def redirect_to_search_result_url
+      if params[:query]
+        params[:query].gsub!('.','')
+      end
+      redirect_to params and return false if request.post? and not params[:query].nil?
     end
-
-    def sort_options
-      { :order => "#{@sort} asc" }
-    end
-
-    def highlight_options
-      { :highlight => { :fields =>"text",
-                        :prefix => "<em>",
-                        :suffix => "</em>",
-                        :require_field_match => true } }
-    end
-
-    def pagination_options
-      { :offset => (@page - 1) * @num_per_page,
-        :limit  => @num_per_page }
-    end
-
-    def facet_options
-      { :facets => { :fields => [:member_name, :date],
-                     :zeros => false, :sort => true } }
-    end
-
+    
 end

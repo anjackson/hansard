@@ -1,23 +1,13 @@
 class MembersController < ApplicationController
 
-  caches_page :index, :show_member
+  before_filter :check_letter_index, :only => [:index]
 
   def index
-    @members = find_all_members
+    redirect_to people_url, :status => :moved_permanently
   end
 
-  def show_member
-    @member = find_member params[:name]
-    @contributions_in_groups_by_year_and_section = @member.contributions_in_groups_by_year_and_section
+  def show
+    redirect_to person_url(params[:name]), :status => :moved_permanently
   end
-
-  protected
-
-    def find_all_members
-      Member.find_all_members
-    end
-
-    def find_member slug
-      Member.find_member slug
-    end
+  
 end
