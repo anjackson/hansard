@@ -1,4 +1,4 @@
-class WrittenAnswersGroup < Section
+class WrittenStatementsGroup < Section
 
    belongs_to :sitting
 

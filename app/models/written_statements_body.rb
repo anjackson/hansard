@@ -1,4 +1,4 @@
-class WrittenAnswersBody < Section
+class WrittenStatementsBody < Section
 
   def id_hash
     parent_section.id_hash

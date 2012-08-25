@@ -1,0 +1,2 @@
+class ContentTellerVote < ContentVote
+end

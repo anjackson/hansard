@@ -1,7 +1,15 @@
 class HouseOfLordsReport < Sitting
 
+  def self.anchor
+    self.uri_component
+  end
+
   def self.uri_component
     'lords_reports'
+  end
+  
+  def self.house
+    'Lords'
   end
 
   def to_xml(options={})
@@ -10,7 +18,6 @@ class HouseOfLordsReport < Sitting
       marker_xml(options)
       xml.title(title)
       xml.date(date_text, :format => date.strftime("%Y-%m-%d"))
-      xml << text + "\n"
       debates.to_xml(options) if debates
     end
   end

@@ -1,0 +1,2 @@
+class NotContentVote < Vote
+end

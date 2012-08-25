@@ -1,22 +1,16 @@
-class WrittenAnswersSitting < Sitting
+class WrittenStatementsSitting < Sitting
 
-  has_many :groups, :class_name => "WrittenAnswersGroup", :foreign_key => "sitting_id", :dependent => :destroy
+  has_many :groups, :class_name => "WrittenStatementsGroup", :foreign_key => "sitting_id", :dependent => :destroy
 
   alias :to_activerecord_xml :to_xml
 
   def self.uri_component
-    'written_answers'
+    'written_statements'
   end
 
   def each_section
     all_sections.each do |section|
-      if section.is_a? WrittenAnswersGroup
-        section.sections.each do |body_section|
-          yield body_section
-        end
-      else
-        yield section
-      end
+      yield section
     end
   end
 
@@ -41,7 +35,7 @@ class WrittenAnswersSitting < Sitting
   end
 
   # These STI subclasses need to be loaded explicitly or they aren't included in finders
-  require_association 'commons_written_answers_sitting'
-  require_association 'lords_written_answers_sitting'
+  require_association 'commons_written_statements_sitting'
+  require_association 'lords_written_statements_sitting'
 
 end

@@ -1,15 +1,11 @@
-class HouseOfLordsSitting < Sitting
+class LordsWrittenStatementsSitting < WrittenStatementsSitting
 
   def self.anchor
-    self.uri_component
+    "lords_#{self.uri_component}"
   end
 
   def self.house
     'Lords'
-  end
-
-  def self.uri_component
-    'lords'
   end
 
   protected
@@ -19,6 +15,7 @@ class HouseOfLordsSitting < Sitting
     end
 
     def self.hansard_reference_suffix
-      ""
+      "WS"
     end
+
 end

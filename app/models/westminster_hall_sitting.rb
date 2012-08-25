@@ -1,15 +1,25 @@
-class HouseOfCommonsSitting < Sitting
+class WestminsterHallSitting < Sitting
 
-  def self.anchor
-    self.uri_component
-  end
+  class << self
+    def anchor
+      uri_component
+    end
 
-  def self.house
-    'Commons'
-  end
+    def house
+      'Commons'
+    end
 
-  def self.uri_component
-    'commons'
+    def uri_component
+      'westminster_hall'
+    end
+
+    def hansard_reference_prefix
+      "HC"
+    end
+
+    def hansard_reference_suffix
+      "WH"
+    end
   end
 
   def to_xml(options={})
@@ -22,13 +32,4 @@ class HouseOfCommonsSitting < Sitting
     end
   end
 
-  protected
-
-    def self.hansard_reference_prefix
-      "HC"
-    end
-
-    def self.hansard_reference_suffix
-      ""
-    end
 end

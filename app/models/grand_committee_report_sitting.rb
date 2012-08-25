@@ -1,20 +1,18 @@
-class HouseOfCommonsSitting < Sitting
+class GrandCommitteeReportSitting < Sitting
+
+  has_one :section, :foreign_key => "sitting_id", :dependent => :destroy
 
   def self.anchor
     self.uri_component
   end
 
-  def self.house
-    'Commons'
-  end
-
   def self.uri_component
-    'commons'
+    'grand_committee_report'
   end
 
   def to_xml(options={})
     xml = options[:builder] ||= Builder::XmlMarkup.new(:indent => 1)
-    xml.housecommons do
+    xml.grandcommitteereport do
       marker_xml(options)
       xml.title(title)
       xml.date(date_text, :format => date.strftime("%Y-%m-%d"))
@@ -22,13 +20,21 @@ class HouseOfCommonsSitting < Sitting
     end
   end
 
+  def top_level_sections
+    [section]
+  end
+  
+  def self.house
+    'Lords'
+  end
+
   protected
 
     def self.hansard_reference_prefix
-      "HC"
+      "HL"
     end
 
     def self.hansard_reference_suffix
-      ""
+      "GC"
     end
 end

@@ -1,24 +1,21 @@
-class HouseOfLordsSitting < Sitting
+class CommonsWrittenAnswersSitting < WrittenAnswersSitting
 
   def self.anchor
-    self.uri_component
+    "commons_#{self.uri_component}"
   end
 
   def self.house
-    'Lords'
-  end
-
-  def self.uri_component
-    'lords'
+    'Commons'
   end
 
   protected
 
     def self.hansard_reference_prefix
-      "HL"
+      "HC"
     end
 
     def self.hansard_reference_suffix
-      ""
+      "W"
     end
+
 end
