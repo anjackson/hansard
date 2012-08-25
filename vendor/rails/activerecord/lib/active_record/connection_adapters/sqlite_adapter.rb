@@ -1,33 +1,11 @@
-# Author: Luke Holden <lholden@cablelan.net>
-# Updated for SQLite3: Jamis Buck <jamis@37signals.com>
-
 require 'active_record/connection_adapters/abstract_adapter'
 
 module ActiveRecord
   class Base
     class << self
-      # sqlite3 adapter reuses sqlite_connection.
-      def sqlite3_connection(config) # :nodoc:
-        parse_config!(config)
-
-        unless self.class.const_defined?(:SQLite3)
-          require_library_or_gem(config[:adapter])
-        end
-
-        db = SQLite3::Database.new(
-          config[:database],
-          :results_as_hash => true,
-          :type_translation => false
-        )
-
-        db.busy_timeout(config[:timeout]) unless config[:timeout].nil?
-
-        ConnectionAdapters::SQLite3Adapter.new(db, logger)
-      end
-
       # Establishes a connection to the database that's used by all Active Record objects
       def sqlite_connection(config) # :nodoc:
-        parse_config!(config)
+        parse_sqlite_config!(config)
 
         unless self.class.const_defined?(:SQLite)
           require_library_or_gem(config[:adapter])
@@ -47,7 +25,7 @@ module ActiveRecord
       end
 
       private
-        def parse_config!(config)
+        def parse_sqlite_config!(config)
           config[:database] ||= config[:dbfile]
           # Require database.
           unless config[:database]
@@ -56,7 +34,7 @@ module ActiveRecord
 
           # Allow database path relative to RAILS_ROOT, but only if
           # the database path is not the special path that tells
-          # Sqlite build a database only in memory.
+          # Sqlite to build a database only in memory.
           if Object.const_defined?(:RAILS_ROOT) && ':memory:' != config[:database]
             config[:database] = File.expand_path(config[:database], RAILS_ROOT)
           end
@@ -92,7 +70,7 @@ module ActiveRecord
     #
     # Options:
     #
-    # * <tt>:database</tt> -- Path to the database file.
+    # * <tt>:database</tt> - Path to the database file.
     class SQLiteAdapter < AbstractAdapter
       def adapter_name #:nodoc:
         'SQLite'
@@ -129,7 +107,7 @@ module ActiveRecord
           :decimal     => { :name => "decimal" },
           :datetime    => { :name => "datetime" },
           :timestamp   => { :name => "datetime" },
-          :time        => { :name => "datetime" },
+          :time        => { :name => "time" },
           :date        => { :name => "date" },
           :binary      => { :name => "blob" },
           :boolean     => { :name => "boolean" }
@@ -154,39 +132,25 @@ module ActiveRecord
         catch_schema_changes { log(sql, name) { @connection.execute(sql) } }
       end
 
-      def update(sql, name = nil) #:nodoc:
-        execute(sql, name)
+      def update_sql(sql, name = nil) #:nodoc:
+        super
         @connection.changes
       end
 
-      def delete(sql, name = nil) #:nodoc:
+      def delete_sql(sql, name = nil) #:nodoc:
         sql += " WHERE 1=1" unless sql =~ /WHERE/i
-        execute(sql, name)
-        @connection.changes
+        super sql, name
       end
 
-      def insert(sql, name = nil, pk = nil, id_value = nil, sequence_name = nil) #:nodoc:
-        execute(sql, name = nil)
-        id_value || @connection.last_insert_row_id
+      def insert_sql(sql, name = nil, pk = nil, id_value = nil, sequence_name = nil) #:nodoc:
+        super || @connection.last_insert_row_id
       end
 
-      def select_all(sql, name = nil) #:nodoc:
+      def select_rows(sql, name = nil)
         execute(sql, name).map do |row|
-          record = {}
-          row.each_key do |key|
-            if key.is_a?(String)
-              record[key.sub(/^\w+\./, '')] = row[key]
-            end
-          end
-          record
+          (0...(row.size / 2)).map { |i| row[i] }
         end
       end
-
-      def select_one(sql, name = nil) #:nodoc:
-        result = select_all(sql, name)
-        result.nil? ? nil : result.first
-      end
-
 
       def begin_db_transaction #:nodoc:
         catch_schema_changes { @connection.transaction }
@@ -228,7 +192,7 @@ module ActiveRecord
       end
 
       def indexes(table_name, name = nil) #:nodoc:
-        execute("PRAGMA index_list(#{table_name})", name).map do |row|
+        execute("PRAGMA index_list(#{quote_table_name(table_name)})", name).map do |row|
           index = IndexDefinition.new(table_name, row['name'])
           index.unique = row['unique'] != '0'
           index.columns = execute("PRAGMA index_info('#{index.name}')").map { |col| col['name'] }
@@ -250,16 +214,23 @@ module ActiveRecord
       end
 
       def add_column(table_name, column_name, type, options = {}) #:nodoc:
+        if @connection.respond_to?(:transaction_active?) && @connection.transaction_active?
+          raise StatementInvalid, 'Cannot add columns to a SQLite database while inside a transaction'
+        end
+        
         super(table_name, column_name, type, options)
         # See last paragraph on http://www.sqlite.org/lang_altertable.html
         execute "VACUUM"
       end
 
-      def remove_column(table_name, column_name) #:nodoc:
-        alter_table(table_name) do |definition|
-          definition.columns.delete(definition[column_name])
+      def remove_column(table_name, *column_names) #:nodoc:
+        column_names.flatten.each do |column_name|
+          alter_table(table_name) do |definition|
+            definition.columns.delete(definition[column_name])
+          end
         end
       end
+      alias :remove_columns :remove_column
 
       def change_column_default(table_name, column_name, default) #:nodoc:
         alter_table(table_name) do |definition|
@@ -274,18 +245,34 @@ module ActiveRecord
             self.type    = type
             self.limit   = options[:limit] if options.include?(:limit)
             self.default = options[:default] if include_default
+            self.null    = options[:null] if options.include?(:null)
           end
         end
       end
 
       def rename_column(table_name, column_name, new_column_name) #:nodoc:
-        alter_table(table_name, :rename => {column_name => new_column_name})
+        alter_table(table_name, :rename => {column_name.to_s => new_column_name.to_s})
       end
 
+      def empty_insert_statement(table_name)
+        "INSERT INTO #{table_name} VALUES(NULL)"
+      end
 
       protected
+        def select(sql, name = nil) #:nodoc:
+          execute(sql, name).map do |row|
+            record = {}
+            row.each_key do |key|
+              if key.is_a?(String)
+                record[key.sub(/^"?\w+"?\./, '')] = row[key]
+              end
+            end
+            record
+          end
+        end
+
         def table_structure(table_name)
-          returning structure = execute("PRAGMA table_info(#{table_name})") do
+          returning structure = execute("PRAGMA table_info(#{quote_table_name(table_name)})") do
             raise(ActiveRecord::StatementInvalid, "Could not find table '#{table_name}'") if structure.empty?
           end
         end
@@ -307,28 +294,30 @@ module ActiveRecord
         end
 
         def copy_table(from, to, options = {}) #:nodoc:
-          create_table(to, options) do |@definition|
+          options = options.merge(:id => !columns(from).detect{|c| c.name == 'id'}.nil?)
+          create_table(to, options) do |definition|
+            @definition = definition
             columns(from).each do |column|
               column_name = options[:rename] ?
                 (options[:rename][column.name] ||
                  options[:rename][column.name.to_sym] ||
                  column.name) : column.name
-
+              
               @definition.column(column_name, column.type,
                 :limit => column.limit, :default => column.default,
                 :null => column.null)
             end
-            @definition.primary_key(primary_key(from))
+            @definition.primary_key(primary_key(from)) if primary_key(from)
             yield @definition if block_given?
           end
 
-          copy_table_indexes(from, to)
+          copy_table_indexes(from, to, options[:rename] || {})
           copy_table_contents(from, to,
             @definition.columns.map {|column| column.name},
             options[:rename] || {})
         end
 
-        def copy_table_indexes(from, to) #:nodoc:
+        def copy_table_indexes(from, to, rename = {}) #:nodoc:
           indexes(from).each do |index|
             name = index.name
             if to == "altered_#{from}"
@@ -337,10 +326,17 @@ module ActiveRecord
               name = name[5..-1]
             end
 
-            # index name can't be the same
-            opts = { :name => name.gsub(/_(#{from})_/, "_#{to}_") }
-            opts[:unique] = true if index.unique
-            add_index(to, index.columns, opts)
+            to_column_names = columns(to).map(&:name)
+            columns = index.columns.map {|c| rename[c] || c }.select do |column|
+              to_column_names.include?(column)
+            end
+
+            unless columns.empty?
+              # index name can't be the same
+              opts = { :name => name.gsub(/_(#{from})_/, "_#{to}_") }
+              opts[:unique] = true if index.unique
+              add_index(to, columns, opts)
+            end
           end
         end
 
@@ -349,8 +345,11 @@ module ActiveRecord
           rename.inject(column_mappings) {|map, a| map[a.last] = a.first; map}
           from_columns = columns(from).collect {|col| col.name}
           columns = columns.find_all{|col| from_columns.include?(column_mappings[col])}
-          @connection.execute "SELECT * FROM #{from}" do |row|
-            sql = "INSERT INTO #{to} ("+columns*','+") VALUES ("
+          quoted_columns = columns.map { |col| quote_column_name(col) } * ','
+
+          quoted_to = quote_table_name(to)
+          @connection.execute "SELECT * FROM #{quote_table_name(from)}" do |row|
+            sql = "INSERT INTO #{quoted_to} (#{quoted_columns}) VALUES ("
             sql << columns.map {|col| quote row[column_mappings[col]]} * ', '
             sql << ')'
             @connection.execute sql
@@ -379,14 +378,6 @@ module ActiveRecord
             'INTEGER PRIMARY KEY NOT NULL'.freeze
           end
         end
-    end
-
-    class SQLite3Adapter < SQLiteAdapter # :nodoc:
-      def table_structure(table_name)
-        returning structure = @connection.table_info(table_name) do
-          raise(ActiveRecord::StatementInvalid, "Could not find table '#{table_name}'") if structure.empty?
-        end
-      end
     end
 
     class SQLite2Adapter < SQLiteAdapter # :nodoc:

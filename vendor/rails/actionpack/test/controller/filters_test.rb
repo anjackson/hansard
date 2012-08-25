@@ -1,5 +1,6 @@
-require File.dirname(__FILE__) + '/../abstract_unit'
+require 'abstract_unit'
 
+# FIXME: crashes Ruby 1.9
 class FilterTest < Test::Unit::TestCase
   class TestController < ActionController::Base
     before_filter :ensure_login
@@ -44,7 +45,9 @@ class FilterTest < Test::Unit::TestCase
     (1..3).each do |i|
       define_method "try_#{i}" do
         instance_variable_set :@try, i
-        action_name != "fail_#{i}"
+        if action_name == "fail_#{i}"
+          head(404)
+        end
       end
     end
   end
@@ -131,6 +134,11 @@ class FilterTest < Test::Unit::TestCase
     before_filter(ConditionalClassFilter, :ensure_login, Proc.new {|c| c.assigns["ran_proc_filter1"] = true }, :except => :show_without_filter) { |c| c.assigns["ran_proc_filter2"] = true}
   end
 
+  class ConditionalOptionsFilter < ConditionalFilterController
+    before_filter :ensure_login, :if => Proc.new { |c| true }
+    before_filter :clean_up_tmp, :if => Proc.new { |c| false }
+  end
+
   class EmptyFilterChainController < TestController
     self.filter_chain.clear
     def show
@@ -147,6 +155,30 @@ class FilterTest < Test::Unit::TestCase
       def wonderful_life
         @ran_filter ||= []
         @ran_filter << "wonderful_life"
+      end
+  end
+
+  class SkippingAndLimitedController < TestController
+    skip_before_filter :ensure_login
+    before_filter :ensure_login, :only => :index
+
+    def index
+      render :text => 'ok'
+    end
+    
+    def public
+    end
+  end
+  
+  class SkippingAndReorderingController < TestController
+    skip_before_filter :ensure_login
+    before_filter :find_record
+    before_filter :ensure_login
+
+    private
+      def find_record
+        @ran_filter ||= []
+        @ran_filter << "find_record"
       end
   end
 
@@ -234,7 +266,7 @@ class FilterTest < Test::Unit::TestCase
     before_filter(AuditFilter)
 
     def show
-      render_text "hello"
+      render :text => "hello"
     end
   end
 
@@ -271,11 +303,11 @@ class FilterTest < Test::Unit::TestCase
     before_filter :second, :only => :foo
 
     def foo
-      render_text 'foo'
+      render :text => 'foo'
     end
 
     def bar
-      render_text 'bar'
+      render :text => 'bar'
     end
 
     protected
@@ -325,6 +357,97 @@ class FilterTest < Test::Unit::TestCase
     end
   end
 
+  class ErrorToRescue < Exception; end
+
+  class RescuingAroundFilterWithBlock
+    def filter(controller)
+      begin
+        yield
+      rescue ErrorToRescue => ex
+        controller.send! :render, :text => "I rescued this: #{ex.inspect}"
+      end
+    end
+  end
+
+  class RescuedController < ActionController::Base
+    around_filter RescuingAroundFilterWithBlock.new
+
+    def show
+      raise ErrorToRescue.new("Something made the bad noise.")
+    end
+
+  private
+    def rescue_action(exception)
+      raise exception
+    end
+  end
+
+  class NonYieldingAroundFilterController < ActionController::Base
+
+    before_filter :filter_one
+    around_filter :non_yielding_filter
+    before_filter :filter_two
+    after_filter :filter_three
+
+    def index
+      render :inline => "index"
+    end
+
+    #make sure the controller complains
+    def rescue_action(e); raise e; end
+
+    private
+
+      def filter_one
+        @filters  ||= []
+        @filters  << "filter_one"
+      end
+
+      def filter_two
+        @filters  << "filter_two"
+      end
+
+      def non_yielding_filter
+        @filters  << "zomg it didn't yield"
+        @filter_return_value
+      end
+
+      def filter_three
+        @filters  << "filter_three"
+      end
+
+  end
+
+  def test_non_yielding_around_filters_not_returning_false_do_not_raise
+    controller = NonYieldingAroundFilterController.new
+    controller.instance_variable_set "@filter_return_value", true
+    assert_nothing_raised do
+      test_process(controller, "index")
+    end
+  end
+
+  def test_non_yielding_around_filters_returning_false_do_not_raise
+    controller = NonYieldingAroundFilterController.new
+    controller.instance_variable_set "@filter_return_value", false
+    assert_nothing_raised do
+      test_process(controller, "index")
+    end
+  end
+
+  def test_after_filters_are_not_run_if_around_filter_returns_false
+    controller = NonYieldingAroundFilterController.new
+    controller.instance_variable_set "@filter_return_value", false
+    test_process(controller, "index")
+    assert_equal ["filter_one", "zomg it didn't yield"], controller.assigns['filters']
+  end
+
+  def test_after_filters_are_not_run_if_around_filter_does_not_yield
+    controller = NonYieldingAroundFilterController.new
+    controller.instance_variable_set "@filter_return_value", true
+    test_process(controller, "index")
+    assert_equal ["filter_one", "zomg it didn't yield"], controller.assigns['filters']
+  end
+
   def test_empty_filter_chain
     assert_equal 0, EmptyFilterChainController.filter_chain.size
     assert test_process(EmptyFilterChainController).template.assigns['action_executed']
@@ -372,6 +495,11 @@ class FilterTest < Test::Unit::TestCase
     assert !response.template.assigns["ran_proc_filter2"]
   end
 
+  def test_running_conditional_options
+    response = test_process(ConditionalOptionsFilter)
+    assert_equal %w( ensure_login ), response.template.assigns["ran_filter"]
+  end
+
   def test_running_collection_condition_filters
     assert_equal %w( ensure_login ), test_process(ConditionalCollectionFilterController).template.assigns["ran_filter"]
     assert_equal nil, test_process(ConditionalCollectionFilterController, "show_without_filter").template.assigns["ran_filter"]
@@ -403,13 +531,6 @@ class FilterTest < Test::Unit::TestCase
   def test_running_before_and_after_condition_filters
     assert_equal %w( ensure_login clean_up_tmp), test_process(BeforeAndAfterConditionController).template.assigns["ran_filter"]
     assert_equal nil, test_process(BeforeAndAfterConditionController, "show_without_filter").template.assigns["ran_filter"]
-  end
-
-  def test_bad_filter
-    bad_filter_controller = Class.new(ActionController::Base)
-    assert_raises(ActionController::ActionControllerError) do
-      bad_filter_controller.before_filter 2
-    end
   end
 
   def test_around_filter
@@ -468,6 +589,15 @@ class FilterTest < Test::Unit::TestCase
     response = test_process(PrependingBeforeAndAfterController)
     assert_equal %w( before_all between_before_all_and_after_all after_all ), response.template.assigns["ran_filter"]
   end
+  
+  def test_skipping_and_limiting_controller
+    assert_equal %w( ensure_login ), test_process(SkippingAndLimitedController, "index").template.assigns["ran_filter"]
+    assert_nil test_process(SkippingAndLimitedController, "public").template.assigns["ran_filter"]
+  end
+
+  def test_skipping_and_reordering_controller
+    assert_equal %w( find_record ensure_login ), test_process(SkippingAndReorderingController, "index").template.assigns["ran_filter"]
+  end
 
   def test_conditional_skipping_of_filters
     assert_nil test_process(ConditionalSkippingController, "login").template.assigns["ran_filter"]
@@ -490,6 +620,16 @@ class FilterTest < Test::Unit::TestCase
 
   def test_changing_the_requirements
     assert_equal nil, test_process(ChangingTheRequirementsController, "go_wild").template.assigns['ran_filter']
+  end
+
+  def test_a_rescuing_around_filter
+    response = nil
+    assert_nothing_raised do
+      response = test_process(RescuedController)
+    end
+
+    assert response.success?
+    assert_equal("I rescued this: #<FilterTest::ErrorToRescue: Something made the bad noise.>", response.body)
   end
 
   private
@@ -592,10 +732,6 @@ class ControllerWithProcFilter < PostsController
   end
 end
 
-class ControllerWithWrongFilterType < PostsController
-  around_filter lambda { yield }, :only => :no_raise
-end
-
 class ControllerWithNestedFilters < ControllerWithSymbolAsFilter
   around_filter :raise_before, :raise_after, :without_exception, :only => :raises_both
 end
@@ -642,15 +778,8 @@ class YieldingAroundFiltersTest < Test::Unit::TestCase
     assert_equal 1, ControllerWithFilterClass.filter_chain.size
     assert_equal 1, ControllerWithFilterInstance.filter_chain.size
     assert_equal 3, ControllerWithSymbolAsFilter.filter_chain.size
-    assert_equal 1, ControllerWithWrongFilterType.filter_chain.size
     assert_equal 6, ControllerWithNestedFilters.filter_chain.size
     assert_equal 4, ControllerWithAllTypesOfFilters.filter_chain.size
-  end
-
-  def test_wrong_filter_type
-    assert_raise(ActionController::ActionControllerError) do
-      test_process(ControllerWithWrongFilterType,'no_raise')
-    end
   end
 
   def test_base
@@ -722,7 +851,7 @@ class YieldingAroundFiltersTest < Test::Unit::TestCase
   def test_first_filter_in_multiple_before_filter_chain_halts
     controller = ::FilterTest::TestMultipleFiltersController.new
     response = test_process(controller, 'fail_1')
-    assert_equal '', response.body
+    assert_equal ' ', response.body
     assert_equal 1, controller.instance_variable_get(:@try)
     assert controller.instance_variable_get(:@before_filter_chain_aborted)
   end
@@ -730,7 +859,7 @@ class YieldingAroundFiltersTest < Test::Unit::TestCase
   def test_second_filter_in_multiple_before_filter_chain_halts
     controller = ::FilterTest::TestMultipleFiltersController.new
     response = test_process(controller, 'fail_2')
-    assert_equal '', response.body
+    assert_equal ' ', response.body
     assert_equal 2, controller.instance_variable_get(:@try)
     assert controller.instance_variable_get(:@before_filter_chain_aborted)
   end
@@ -738,7 +867,7 @@ class YieldingAroundFiltersTest < Test::Unit::TestCase
   def test_last_filter_in_multiple_before_filter_chain_halts
     controller = ::FilterTest::TestMultipleFiltersController.new
     response = test_process(controller, 'fail_3')
-    assert_equal '', response.body
+    assert_equal ' ', response.body
     assert_equal 3, controller.instance_variable_get(:@try)
     assert controller.instance_variable_get(:@before_filter_chain_aborted)
   end

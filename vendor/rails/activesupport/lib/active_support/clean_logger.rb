@@ -1,5 +1,5 @@
 require 'logger'
-require File.dirname(__FILE__) + '/core_ext/class/attribute_accessors'
+require 'active_support/core_ext/class/attribute_accessors'
 
 # Extensions to the built in Ruby logger.
 #
@@ -11,6 +11,8 @@ require File.dirname(__FILE__) + '/core_ext/class/attribute_accessors'
 # You can then specify the datetime format, for example:
 #
 #   logger.datetime_format = "%Y-%m-%d"
+#
+# Note: This logger is deprecated in favor of ActiveSupport::BufferedLogger
 class Logger
   # Set to false to disable the silencer
   cattr_accessor :silencer
@@ -44,18 +46,56 @@ class Logger
     formatter.datetime_format if formatter.respond_to?(:datetime_format)
   end
   
-  alias :old_formatter :formatter
+  alias :old_formatter :formatter if method_defined?(:formatter)
   # Get the current formatter. The default formatter is a SimpleFormatter which only
   # displays the log message
   def formatter
     @formatter ||= SimpleFormatter.new
+  end
+
+  unless const_defined? :Formatter
+    class Formatter
+      Format = "%s, [%s#%d] %5s -- %s: %s\n"
+
+      attr_accessor :datetime_format
+
+      def initialize
+        @datetime_format = nil
+      end
+
+      def call(severity, time, progname, msg)
+        Format % [severity[0..0], format_datetime(time), $$, severity, progname,
+        msg2str(msg)]
+      end
+
+      private
+        def format_datetime(time)
+          if @datetime_format.nil?
+            time.strftime("%Y-%m-%dT%H:%M:%S.") << "%06d " % time.usec
+          else
+            time.strftime(@datetime_format)
+          end
+        end
+
+        def msg2str(msg)
+          case msg
+          when ::String
+            msg
+          when ::Exception
+            "#{ msg.message } (#{ msg.class })\n" <<
+            (msg.backtrace || []).join("\n")
+          else
+            msg.inspect
+          end
+        end
+    end
   end
   
   # Simple formatter which only displays the message.
   class SimpleFormatter < Logger::Formatter
     # This method is invoked when a log event occurs
     def call(severity, timestamp, progname, msg)
-      "#{msg}\n"
+      "#{String === msg ? msg : msg.inspect}\n"
     end
   end
 
@@ -74,5 +114,14 @@ class Logger
       def format_message(severity, timestamp, msg, progname)
         formatter.call(severity, timestamp, progname, msg)
       end
+      
+      attr_writer :formatter
+      public :formatter=
+
+      alias old_format_datetime format_datetime
+      def format_datetime(datetime) datetime end
+
+      alias old_msg2str msg2str
+      def msg2str(msg) msg end
     end
 end

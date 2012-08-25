@@ -27,13 +27,14 @@ $:.unshift(File.dirname(__FILE__)) unless
 unless defined?(ActiveSupport)
   begin
     $:.unshift(File.dirname(__FILE__) + "/../../activesupport/lib")  
-    require 'active_support'  
+    require 'active_support'
   rescue LoadError
     require 'rubygems'
     gem 'activesupport'
   end
 end
 
+require 'active_resource/formats'
 require 'active_resource/base'
 require 'active_resource/validations'
 require 'active_resource/custom_methods'

@@ -1,10 +1,10 @@
 ENV['RAILS_ENV']  = (ENV['RAILS_ENV'] || 'development').dup 
 SOLR_PATH = "#{File.dirname(File.expand_path(__FILE__))}/../solr" unless defined? SOLR_PATH
-
 unless defined? SOLR_PORT
   SOLR_PORT = ENV['PORT'] || case ENV['RAILS_ENV']
               when 'test' then 8981
               when 'production' then 8983
+              when 'hot' then 8983
               else 8982
               end
 end

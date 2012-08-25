@@ -11,11 +11,11 @@
 # limitations under the License.
 
 module Solr; end
-require 'solr/exception'
-require 'solr/request'
-require 'solr/connection'
-require 'solr/response'
-require 'solr/util'
-require 'solr/xml'
-require 'solr/importer'
-require 'solr/indexer'
+require File.dirname(__FILE__) + '/solr/exception'
+require File.dirname(__FILE__) + '/solr/request'
+require File.dirname(__FILE__) + '/solr/connection'
+require File.dirname(__FILE__) + '/solr/response'
+require File.dirname(__FILE__) + '/solr/util'
+require File.dirname(__FILE__) + '/solr/xml'
+require File.dirname(__FILE__) + '/solr/importer'
+require File.dirname(__FILE__) + '/solr/indexer'

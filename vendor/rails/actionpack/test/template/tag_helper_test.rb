@@ -1,10 +1,7 @@
-require "#{File.dirname(__FILE__)}/../abstract_unit"
+require 'abstract_unit'
 
-class TagHelperTest < Test::Unit::TestCase
-  include ActionView::Helpers::TagHelper
-  include ActionView::Helpers::UrlHelper
-  include ActionView::Helpers::TextHelper
-  include ActionView::Helpers::CaptureHelper
+class TagHelperTest < ActionView::TestCase
+  tests ActionView::Helpers::TagHelper
 
   def test_tag
     assert_equal "<br />", tag("br")
@@ -13,7 +10,9 @@ class TagHelperTest < Test::Unit::TestCase
   end
 
   def test_tag_options
-    assert_match /\A<p class="(show|elsewhere)" \/>\z/, tag("p", "class" => "show", :class => "elsewhere")
+    str = tag("p", "class" => "show", :class => "elsewhere")
+    assert_match /class="show"/, str
+    assert_match /class="elsewhere"/, str
   end
 
   def test_tag_options_rejects_nil_option
@@ -70,5 +69,9 @@ class TagHelperTest < Test::Unit::TestCase
     ['&1;', '&#1dfa3;', '& #123;'].each do |escaped|
       assert_equal %(<a href="#{escaped.gsub /&/, '&amp;'}" />), tag('a', :href => escaped)
     end
+  end
+
+  def test_disable_escaping
+    assert_equal '<a href="&amp;" />', tag('a', { :href => '&amp;' }, false, false)
   end
 end

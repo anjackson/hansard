@@ -53,11 +53,7 @@ module ActsAsSolr #:nodoc:
     def max_score
       @solr_data[:max_score]
     end
-    
-    # Returns the highlighted fields which one has asked for..
-    def highlights
-      @solr_data[:highlights]
-    end
+
     alias docs results
     alias records results
     alias num_found total

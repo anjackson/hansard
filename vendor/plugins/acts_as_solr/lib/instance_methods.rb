@@ -1,7 +1,7 @@
 module ActsAsSolr #:nodoc:
   
   module InstanceMethods
-    include ActionView::Helpers::TextHelper
+    
     # Solr id is <class.name>:<id> to be unique across all models
     def solr_id
       "#{self.class.name}:#{record_id(self)}"
@@ -70,7 +70,7 @@ module ActsAsSolr #:nodoc:
           next if value.nil? || value.to_s.strip.empty?
           [value].flatten.each do |v|
             v = set_value_if_nil(suffix) if value.to_s == ""
-            field = Solr::Field.new("#{field_name}_#{suffix}" => ERB::Util.html_escape(strip_tags(v.to_s)))
+            field = Solr::Field.new("#{field_name}_#{suffix}" => ERB::Util.html_escape(v.to_s))
             field.boost = validate_boost(field_boost)
             doc << field
           end

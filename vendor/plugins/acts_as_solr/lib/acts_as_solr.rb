@@ -34,6 +34,7 @@ require File.dirname(__FILE__) + '/search_results'
 module ActsAsSolr
   
   class Post    
+    
     def self.execute(request)
       begin
         if File.exists?(RAILS_ROOT+'/config/solr.yml')
@@ -44,7 +45,7 @@ module ActsAsSolr
         else
           url = 'http://localhost:8982/solr'
         end
-        connection = Solr::Connection.new(url, :timeout => 30)
+        connection = Solr::Connection.new(url)
         return connection.send(request)
       rescue 
         raise "Couldn't connect to the Solr server at #{url}. #{$!}"

@@ -8,12 +8,18 @@ require 'test/unit'
 require 'action_controller'
 require 'action_controller/cgi_ext'
 require 'action_controller/test_process'
+require 'action_view/test_case'
+
+begin
+  require 'ruby-debug'
+rescue LoadError
+  # Debugging disabled. `gem install ruby-debug` to enable.
+end
 
 # Show backtraces for deprecated behavior for quicker cleanup.
 ActiveSupport::Deprecation.debug = true
 
 ActionController::Base.logger = nil
-ActionController::Base.ignore_missing_templates = false
 ActionController::Routing::Routes.reload rescue nil
 
 
@@ -24,6 +30,7 @@ def uses_mocha(test_name)
     require 'stubba'
   end
   yield
-rescue LoadError
+rescue LoadError => load_error
+  raise unless load_error.message =~ /mocha/i
   $stderr.puts "Skipping #{test_name} tests. `gem install mocha` and try again."
 end

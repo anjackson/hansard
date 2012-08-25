@@ -1,6 +1,5 @@
-require File.dirname(__FILE__) + '/../abstract_unit'
-
-silence_warnings { Customer = Struct.new(:name, :id) }
+require 'abstract_unit'
+require 'controller/fake_models'
 
 class CustomersController < ActionController::Base
 end
@@ -16,6 +15,9 @@ module NewRenderTestHelper
   def rjs_helper_method_from_module
     page.visual_effect :highlight
   end
+end
+
+class LabellingFormBuilder < ActionView::Helpers::FormBuilder
 end
 
 class NewRenderTestController < ActionController::Base
@@ -76,11 +78,6 @@ class NewRenderTestController < ActionController::Base
     @secret = 'in the sauce'
     render :file => 'test/render_file_with_ivar', :use_full_path => true
   end
- 
-  def render_file_not_using_full_path_with_relative_path
-    @secret = 'in the sauce'
-    render :file => 'test/../test/render_file_with_ivar', :use_full_path => true
-  end
   
   def render_file_not_using_full_path_with_dot_in_path
     @secret = 'in the sauce'
@@ -137,13 +134,48 @@ class NewRenderTestController < ActionController::Base
   def partial_with_locals
     render :partial => "customer", :locals => { :customer => Customer.new("david") } 
   end
-  
+
+  def partial_with_form_builder
+    render :partial => ActionView::Helpers::FormBuilder.new(:post, nil, @template, {}, Proc.new {})
+  end
+
+  def partial_with_form_builder_subclass
+    render :partial => LabellingFormBuilder.new(:post, nil, @template, {}, Proc.new {})
+  end
+
   def partial_collection
     render :partial => "customer", :collection => [ Customer.new("david"), Customer.new("mary") ]
+  end
+  
+  def partial_collection_with_spacer
+    render :partial => "customer", :spacer_template => "partial_only", :collection => [ Customer.new("david"), Customer.new("mary") ]
+  end
+  
+  def partial_collection_with_counter
+    render :partial => "customer_counter", :collection => [ Customer.new("david"), Customer.new("mary") ]
   end
 
   def partial_collection_with_locals
     render :partial => "customer_greeting", :collection => [ Customer.new("david"), Customer.new("mary") ], :locals => { :greeting => "Bonjour" }
+  end
+
+  def partial_collection_shorthand_with_locals
+    render :partial => [ Customer.new("david"), Customer.new("mary") ], :locals => { :greeting => "Bonjour" }
+  end
+
+  def partial_collection_shorthand_with_different_types_of_records
+    render :partial => [
+        BadCustomer.new("mark"),
+        GoodCustomer.new("craig"),
+        BadCustomer.new("john"),
+        GoodCustomer.new("zach"),
+        GoodCustomer.new("brandon"),
+        BadCustomer.new("dan") ],
+      :locals => { :greeting => "Bonjour" }
+  end
+
+  def partial_collection_shorthand_with_different_types_of_records_with_counter
+    partial_collection_shorthand_with_different_types_of_records
   end
 
   def empty_partial_collection
@@ -153,15 +185,27 @@ class NewRenderTestController < ActionController::Base
   def partial_with_hash_object
     render :partial => "hash_object", :object => {:first_name => "Sam"}
   end
-
+  
+  def partial_hash_collection
+    render :partial => "hash_object", :collection => [ {:first_name => "Pratik"}, {:first_name => "Amy"} ]
+  end
+  
+  def partial_hash_collection_with_locals
+    render :partial => "hash_greeting", :collection => [ {:first_name => "Pratik"}, {:first_name => "Amy"} ], :locals => { :greeting => "Hola" }
+  end
+  
   def partial_with_implicit_local_assignment
     @customer = Customer.new("Marcel")
     render :partial => "customer"
   end
   
+  def missing_partial
+    render :partial => 'thisFileIsntHere'
+  end
+  
   def hello_in_a_string
     @customers = [ Customer.new("david"), Customer.new("mary") ]
-    render :text =>  "How's there? #{render_to_string("test/list")}"
+    render :text =>  "How's there? " << render_to_string(:template => "test/list")
   end
   
   def render_to_string_with_assigns
@@ -195,12 +239,24 @@ class NewRenderTestController < ActionController::Base
     render :inline =>  "Hello: <%= params[:name] %>"
   end
 
+  def accessing_request_in_template
+    render :inline =>  "Hello: <%= request.host %>"
+  end
+
+  def accessing_logger_in_template
+    render :inline =>  "<%= logger.class %>"
+  end
+  
+  def accessing_action_name_in_template
+    render :inline =>  "<%= action_name %>"
+  end
+
   def accessing_params_in_template_with_layout
     render :layout => nil, :inline =>  "Hello: <%= params[:name] %>"
   end
 
   def render_with_explicit_template
-    render "test/hello_world"
+    render :template => "test/hello_world"
   end
 
   def double_render
@@ -230,11 +286,11 @@ class NewRenderTestController < ActionController::Base
   end
 
   def hello_world_from_rxml_using_action
-    render :action => "hello_world.builder"
+    render :action => "hello_world_from_rxml.builder"
   end
 
   def hello_world_from_rxml_using_template
-    render :template => "test/hello_world.builder"
+    render :template => "test/hello_world_from_rxml.builder"
   end
 
   def head_with_location_header
@@ -346,6 +402,22 @@ class NewRenderTestController < ActionController::Base
     render :text => "hello world!"
   end
 
+  def render_call_to_partial_with_layout
+    render :action => "calling_partial_with_layout"
+  end
+
+  def render_call_to_partial_with_layout_in_main_layout_and_within_content_for_layout
+    render :action => "calling_partial_with_layout"
+  end
+
+  def render_using_layout_around_block
+    render :action => "using_layout_around_block"
+  end
+
+  def render_using_layout_around_block_in_main_layout_and_within_content_for_layout
+    render :action => "using_layout_around_block"
+  end
+  
   def rescue_action(e) raise end
     
   private
@@ -368,6 +440,10 @@ class NewRenderTestController < ActionController::Base
           "layouts/builder"
         when "action_talk_to_layout", "layout_overriding_layout"
           "layouts/talk_from_action"
+        when "render_call_to_partial_with_layout_in_main_layout_and_within_content_for_layout"
+          "layouts/partial_with_layout"
+        when "render_using_layout_around_block_in_main_layout_and_within_content_for_layout"
+          "layouts/block_with_layout"
       end
     end
 end
@@ -446,11 +522,6 @@ class NewRenderTest < Test::Unit::TestCase
     assert_equal "The secret is in the sauce\n", @response.body
   end
 
-  def test_render_file_not_using_full_path_with_relative_path
-    get :render_file_not_using_full_path_with_relative_path
-    assert_equal "The secret is in the sauce\n", @response.body
-  end
-
   def test_render_file_not_using_full_path_with_dot_in_path
     get :render_file_not_using_full_path_with_dot_in_path
     assert_equal "The secret is in the sauce\n", @response.body
@@ -470,25 +541,18 @@ class NewRenderTest < Test::Unit::TestCase
   end
 
   def test_access_to_request_in_view
-    view_internals_old_value = ActionController::Base.view_controller_internals
+    get :accessing_request_in_template
+    assert_equal "Hello: www.nextangle.com", @response.body
+  end
 
-    ActionController::Base.view_controller_internals = false
-    ActionController::Base.protected_variables_cache = nil
-
-    get :hello_world
-    assert !assigns.include?('request'), 'request should not be in assigns'
-
-    ActionController::Base.view_controller_internals = true
-    ActionController::Base.protected_variables_cache = nil
-
-    get :hello_world
-    assert !assigns.include?('request'), 'request should not be in assigns'
-    assert_kind_of ActionController::AbstractRequest, assigns['_request']
-    assert_kind_of ActionController::AbstractRequest, @response.template.request
-
-  ensure
-    ActionController::Base.view_controller_internals = view_internals_old_value
-    ActionController::Base.protected_variables_cache = nil
+  def test_access_to_logger_in_view
+    get :accessing_logger_in_template
+    assert_equal "Logger", @response.body
+  end
+  
+  def test_access_to_action_name_in_view
+    get :accessing_action_name_in_template
+    assert_equal "accessing_action_name_in_template", @response.body
   end
 
   def test_render_xml
@@ -511,6 +575,12 @@ EOS
   def test_render_xml_with_default
     get :greeting
     assert_equal "<p>This is grand!</p>\n", @response.body
+  end
+
+  def test_render_with_default_from_accept_header
+    @request.env["HTTP_ACCEPT"] = "text/javascript"
+    get :greeting
+    assert_equal "$(\"body\").visualEffect(\"highlight\");", @response.body
   end
 
   def test_render_rjs_with_default
@@ -586,7 +656,7 @@ EOS
   end  
 
   def test_bad_render_to_string_still_throws_exception
-    assert_raises(ActionController::MissingTemplate) { get :render_to_string_with_exception }
+    assert_raises(ActionView::MissingTemplate) { get :render_to_string_with_exception }
   end
   
   def test_render_to_string_that_throws_caught_exception_doesnt_break_assigns
@@ -611,7 +681,7 @@ EOS
   end
 
   def test_render_with_explicit_template
-    assert_deprecated(/render/) { get :render_with_explicit_template }
+    get :render_with_explicit_template
     assert_response :success
   end
 
@@ -653,14 +723,46 @@ EOS
     assert_equal "Hello: david", @response.body
   end
 
+  def test_partial_with_form_builder
+    get :partial_with_form_builder
+    assert_match(/<label/, @response.body)
+    assert_template('test/_form')
+  end
+
+  def test_partial_with_form_builder_subclass
+    get :partial_with_form_builder_subclass
+    assert_match(/<label/, @response.body)
+    assert_template('test/_labelling_form')
+  end
+
   def test_partial_collection
     get :partial_collection
     assert_equal "Hello: davidHello: mary", @response.body
   end
-
+  
+  def test_partial_collection_with_counter
+    get :partial_collection_with_counter
+    assert_equal "david1mary2", @response.body
+  end
+  
   def test_partial_collection_with_locals
     get :partial_collection_with_locals
     assert_equal "Bonjour: davidBonjour: mary", @response.body
+  end
+  
+  def test_partial_collection_with_spacer
+    get :partial_collection_with_spacer
+    assert_equal "Hello: davidonly partialHello: mary", @response.body
+  end
+
+  def test_partial_collection_shorthand_with_locals
+    get :partial_collection_shorthand_with_locals
+    assert_equal "Bonjour: davidBonjour: mary", @response.body
+  end
+
+  def test_partial_collection_shorthand_with_different_types_of_records
+    get :partial_collection_shorthand_with_different_types_of_records
+    assert_equal "Bonjour bad customer: mark1Bonjour good customer: craig2Bonjour bad customer: john3Bonjour good customer: zach4Bonjour good customer: brandon5Bonjour bad customer: dan6", @response.body
   end
 
   def test_empty_partial_collection
@@ -670,12 +772,28 @@ EOS
 
   def test_partial_with_hash_object
     get :partial_with_hash_object
-    assert_equal "Sam", @response.body
+    assert_equal "Sam\nmaS\n", @response.body
+  end
+  
+  def test_hash_partial_collection
+    get :partial_hash_collection
+    assert_equal "Pratik\nkitarP\nAmy\nymA\n", @response.body
+  end
+  
+  def test_partial_hash_collection_with_locals
+    get :partial_hash_collection_with_locals
+    assert_equal "Hola: PratikHola: Amy", @response.body
   end
 
   def test_partial_with_implicit_local_assignment
     get :partial_with_implicit_local_assignment
     assert_equal "Hello: Marcel", @response.body
+  end
+  
+  def test_render_missing_partial_template
+    assert_raises(ActionView::MissingTemplate) do
+      get :missing_partial
+    end
   end
   
   def test_render_text_with_assigns
@@ -780,8 +898,29 @@ EOS
       map.resources :customers
       map.connect ':controller/:action/:id'
     end
-    
+
     get :render_with_object_location
-    assert_equal "http://test.host/customers/1", @response.headers["Location"]
+    assert_equal "http://www.nextangle.com/customers/1", @response.headers["Location"]
   end
+
+  def test_render_call_to_partial_with_layout
+    get :render_call_to_partial_with_layout
+    assert_equal "Before (David)\nInside from partial (David)\nAfter", @response.body
+  end
+
+  def test_render_call_to_partial_with_layout_in_main_layout_and_within_content_for_layout
+    get :render_call_to_partial_with_layout_in_main_layout_and_within_content_for_layout
+    assert_equal "Before (Anthony)\nInside from partial (Anthony)\nAfter\nBefore (David)\nInside from partial (David)\nAfter\nBefore (Ramm)\nInside from partial (Ramm)\nAfter", @response.body
+  end
+
+  def test_using_layout_around_block
+    get :render_using_layout_around_block
+    assert_equal "Before (David)\nInside from block\nAfter", @response.body
+  end
+
+  def test_using_layout_around_block_in_main_layout_and_within_content_for_layout
+    get :render_using_layout_around_block_in_main_layout_and_within_content_for_layout
+    assert_equal "Before (Anthony)\nInside from first block in layout\nAfter\nBefore (David)\nInside from block\nAfter\nBefore (Ramm)\nInside from second block in layout\nAfter\n", @response.body
+  end
+
 end

@@ -1,7 +1,7 @@
 module Mime
   SET              = []
-  EXTENSION_LOOKUP = Hash.new { |h, k| h[k] = Type.new(k) unless k == "" }
-  LOOKUP           = Hash.new { |h, k| h[k] = Type.new(k) unless k == "" }
+  EXTENSION_LOOKUP = Hash.new { |h, k| h[k] = Type.new(k) unless k.blank? }
+  LOOKUP           = Hash.new { |h, k| h[k] = Type.new(k) unless k.blank? }
 
   # Encapsulates the notion of a mime type. Can be used at render time, for example, with:
   #
@@ -17,6 +17,10 @@ module Mime
   #     end
   #   end
   class Type
+    @@html_types = Set.new [:html, :all]
+    @@unverifiable_types = Set.new [:text, :json, :csv, :xml, :rss, :atom, :yaml]
+    cattr_reader :html_types, :unverifiable_types
+
     # A simple helper class used in parsing the accept header
     class AcceptItem #:nodoc:
       attr_accessor :order, :name, :q
@@ -52,12 +56,18 @@ module Mime
         EXTENSION_LOOKUP[extension]
       end
 
-      def register(string, symbol, mime_type_synonyms = [], extension_synonyms = [])
-        Mime.send :const_set, symbol.to_s.upcase, Type.new(string, symbol, mime_type_synonyms)
+      # Registers an alias that's not used on mime type lookup, but can be referenced directly. Especially useful for
+      # rendering different HTML versions depending on the user agent, like an iPhone.
+      def register_alias(string, symbol, extension_synonyms = [])
+        register(string, symbol, [], extension_synonyms, true)
+      end
 
-        SET << Mime.send(:const_get, symbol.to_s.upcase)
+      def register(string, symbol, mime_type_synonyms = [], extension_synonyms = [], skip_lookup = false)
+        Mime.instance_eval { const_set symbol.to_s.upcase, Type.new(string, symbol, mime_type_synonyms) }
 
-        ([string] + mime_type_synonyms).each { |string| LOOKUP[string] = SET.last }
+        SET << Mime.const_get(symbol.to_s.upcase)
+
+        ([string] + mime_type_synonyms).each { |string| LOOKUP[string] = SET.last } unless skip_lookup
         ([symbol.to_s] + extension_synonyms).each { |ext| EXTENSION_LOOKUP[ext] = SET.last }
       end
 
@@ -65,8 +75,11 @@ module Mime
         # keep track of creation order to keep the subsequent sort stable
         list = []
         accept_header.split(/,/).each_with_index do |header, index| 
-          params = header.split(/;\s*q=/)
-          list << AcceptItem.new(index, *params) unless params.empty?
+          params, q = header.split(/;\s*q=/)       
+          if params
+            params.strip!          
+            list << AcceptItem.new(index, params, q) unless params.empty?
+          end
         end
         list.sort!
 
@@ -91,7 +104,7 @@ module Mime
           list[text_xml].name = Mime::XML.to_s
         end
 
-        # Look for more specific xml-based types and sort them ahead of app/xml
+        # Look for more specific XML-based types and sort them ahead of app/xml
 
         if app_xml
           idx = app_xml
@@ -139,14 +152,26 @@ module Mime
     end
     
     def ==(mime_type)
-      (@synonyms + [ self ]).any? { |synonym| synonym.to_s == mime_type.to_s } if mime_type
+      return false if mime_type.blank?
+      (@synonyms + [ self ]).any? do |synonym| 
+        synonym.to_s == mime_type.to_s || synonym.to_sym == mime_type.to_sym 
+      end
     end
-    
+
+    # Returns true if Action Pack should check requests using this Mime Type for possible request forgery.  See
+    # ActionController::RequestForgerProtection.
+    def verify_request?
+      !@@unverifiable_types.include?(to_sym)
+    end
+
+    def html?
+      @@html_types.include?(to_sym) || @string =~ /html/
+    end
+
     private
       def method_missing(method, *args)
         if method.to_s =~ /(\w+)\?$/
-          mime_type = $1.downcase.to_sym
-          mime_type == @symbol || (mime_type == :html && @symbol == :all)
+          $1.downcase.to_sym == to_sym
         else
           super
         end

@@ -3,24 +3,26 @@ require 'action_controller/session/cookie_store'
 
 module ActionController #:nodoc:
   class Base
-    # Process a request extracted from an CGI object and return a response. Pass false as <tt>session_options</tt> to disable
+    # Process a request extracted from a CGI object and return a response. Pass false as <tt>session_options</tt> to disable
     # sessions (large performance increase if sessions are not needed). The <tt>session_options</tt> are the same as for CGI::Session:
     #
     # * <tt>:database_manager</tt> - standard options are CGI::Session::FileStore, CGI::Session::MemoryStore, and CGI::Session::PStore
     #   (default). Additionally, there is CGI::Session::DRbStore and CGI::Session::ActiveRecordStore. Read more about these in
     #   lib/action_controller/session.
     # * <tt>:session_key</tt> - the parameter name used for the session id. Defaults to '_session_id'.
-    # * <tt>:session_id</tt> - the session id to use.  If not provided, then it is retrieved from the +session_key+ parameter
-    #   of the request, or automatically generated for a new session.
+    # * <tt>:session_id</tt> - the session id to use.  If not provided, then it is retrieved from the +session_key+ cookie, or 
+    #   automatically generated for a new session.
     # * <tt>:new_session</tt> - if true, force creation of a new session.  If not set, a new session is only created if none currently
     #   exists.  If false, a new session is never created, and if none currently exists and the +session_id+ option is not set,
     #   an ArgumentError is raised.
-    # * <tt>:session_expires</tt> - the time the current session expires, as a +Time+ object.  If not set, the session will continue
+    # * <tt>:session_expires</tt> - the time the current session expires, as a Time object.  If not set, the session will continue
     #   indefinitely.
-    # * <tt>:session_domain</tt> -  the hostname domain for which this session is valid. If not set, defaults to the hostname of the
+    # * <tt>:session_domain</tt> - the hostname domain for which this session is valid. If not set, defaults to the hostname of the
     #   server.
     # * <tt>:session_secure</tt> - if +true+, this session will only work over HTTPS.
     # * <tt>:session_path</tt> - the path for which this session applies.  Defaults to the directory of the CGI script.
+    # * <tt>:cookie_only</tt> - if +true+ (the default), session IDs will only be accepted from cookies and not from
+    #   the query string or POST parameters. This protects against session fixation attacks.
     def self.process_cgi(cgi = CGI.new, session_options = {})
       new.process_cgi(cgi, session_options)
     end
@@ -32,29 +34,30 @@ module ActionController #:nodoc:
 
   class CgiRequest < AbstractRequest #:nodoc:
     attr_accessor :cgi, :session_options
+    class SessionFixationAttempt < StandardError #:nodoc:
+    end
 
     DEFAULT_SESSION_OPTIONS = {
       :database_manager => CGI::Session::CookieStore, # store data in cookie
       :prefix           => "ruby_sess.",    # prefix session file names
-      :session_path     => "/"              # available to all paths in app
+      :session_path     => "/",             # available to all paths in app
+      :session_key      => "_session_id",
+      :cookie_only      => true
     } unless const_defined?(:DEFAULT_SESSION_OPTIONS)
 
     def initialize(cgi, session_options = {})
       @cgi = cgi
       @session_options = session_options
-      @env = @cgi.send(:env_table)
+      @env = @cgi.send!(:env_table)
       super()
     end
 
     def query_string
-      if (qs = @cgi.query_string) && !qs.empty?
+      qs = @cgi.query_string if @cgi.respond_to?(:query_string)
+      if !qs.blank?
         qs
-      elsif uri = @env['REQUEST_URI']
-        parts = uri.split('?')
-        parts.shift
-        parts.join('?')
       else
-        @env['QUERY_STRING'] || ''
+        super
       end
     end
 
@@ -62,6 +65,7 @@ module ActionController #:nodoc:
     # variable is already set, wrap it in a StringIO.
     def body
       if raw_post = env['RAW_POST_DATA']
+        raw_post.force_encoding(Encoding::BINARY) if raw_post.respond_to?(:force_encoding)
         StringIO.new(raw_post)
       else
         @cgi.stdinput
@@ -69,23 +73,18 @@ module ActionController #:nodoc:
     end
 
     def query_parameters
-      @query_parameters ||= CGI.parse_query_parameters(query_string)
+      @query_parameters ||= self.class.parse_query_parameters(query_string)
     end
 
     def request_parameters
-      @request_parameters ||=
-        if ActionController::Base.param_parsers.has_key?(content_type)
-          self.class.parse_formatted_request_parameters(content_type, body.read)
-        else
-          CGI.parse_request_parameters(@cgi.params)
-        end
+      @request_parameters ||= parse_formatted_request_parameters
     end
 
     def cookies
       @cgi.cookies.freeze
     end
 
-    def host_with_port
+    def host_with_port_without_standard_port_handling
       if forwarded = env["HTTP_X_FORWARDED_HOST"]
         forwarded.split(/,\s?/).last
       elsif http_host = env['HTTP_HOST']
@@ -98,11 +97,11 @@ module ActionController #:nodoc:
     end
 
     def host
-      host_with_port[/^[^:]+/]
+      host_with_port_without_standard_port_handling.sub(/:\d+$/, '')
     end
 
     def port
-      if host_with_port =~ /:(\d+)$/
+      if host_with_port_without_standard_port_handling =~ /:(\d+)$/
         $1.to_i
       else
         standard_port
@@ -115,6 +114,9 @@ module ActionController #:nodoc:
           @session = Hash.new
         else
           stale_session_check! do
+            if cookie_only? && query_parameters[session_options_with_string_keys['session_key']]
+              raise SessionFixationAttempt
+            end
             case value = session_options_with_string_keys['new_session']
               when true
                 @session = new_session
@@ -144,7 +146,7 @@ module ActionController #:nodoc:
     end
 
     def method_missing(method_id, *arguments)
-      @cgi.send(method_id, *arguments) rescue super
+      @cgi.send!(method_id, *arguments) rescue super
     end
 
     private
@@ -156,6 +158,10 @@ module ActionController #:nodoc:
           CGI::Session.new(@cgi, session_options_with_string_keys.merge("new_session" => false)).delete rescue nil
           CGI::Session.new(@cgi, session_options_with_string_keys.merge("new_session" => true))
         end
+      end
+
+      def cookie_only?
+        session_options_with_string_keys['cookie_only']
       end
 
       def stale_session_check!
@@ -197,7 +203,7 @@ end_msg
       begin
         output.write(@cgi.header(@headers))
 
-        if @cgi.send(:env_table)['REQUEST_METHOD'] == 'HEAD'
+        if @cgi.send!(:env_table)['REQUEST_METHOD'] == 'HEAD'
           return
         elsif @body.respond_to?(:call)
           # Flush the output now in case the @body Proc uses

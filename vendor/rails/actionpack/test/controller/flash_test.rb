@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../abstract_unit'
+require 'abstract_unit'
 
 class FlashTest < Test::Unit::TestCase
   class TestController < ActionController::Base
@@ -31,7 +31,7 @@ class FlashTest < Test::Unit::TestCase
     def use_flash_and_keep_it
       @flash_copy = {}.update flash
       @flashy = flash["that"]
-      silence_warnings { keep_flash }
+      flash.keep
       render :inline => "hello"
     end
     
@@ -52,7 +52,7 @@ class FlashTest < Test::Unit::TestCase
     end
 
     def rescue_action(e)
-      raise unless ActionController::MissingTemplate === e
+      raise unless ActionView::MissingTemplate === e
     end
 
     # methods for test_sweep_after_halted_filter_chain
@@ -70,7 +70,6 @@ class FlashTest < Test::Unit::TestCase
       flash["foo"] = "bar"
       redirect_to :action => "std_action"
       @flash_copy = {}.update(flash)
-      false
     end
   end
 
@@ -94,7 +93,7 @@ class FlashTest < Test::Unit::TestCase
   def test_keep_flash
     get :set_flash
     
-    assert_deprecated(/keep_flash/) { get :use_flash_and_keep_it }
+    get :use_flash_and_keep_it
     assert_equal "hello", @response.template.assigns["flash_copy"]["that"]
     assert_equal "hello", @response.template.assigns["flashy"]
 

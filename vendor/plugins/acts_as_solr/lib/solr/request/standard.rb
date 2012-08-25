@@ -9,34 +9,33 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 class Solr::Request::Standard < Solr::Request::Select
 
   VALID_PARAMS = [:query, :sort, :default_field, :operator, :start, :rows,
     :filter_queries, :field_list, :debug_query, :explain_other, :facets, :highlighting]
-  
+    
   def initialize(params)
     super('standard')
-    
+
     raise "Invalid parameters: #{(params.keys - VALID_PARAMS).join(',')}" unless 
       (params.keys - VALID_PARAMS).empty?
-    
+
     raise ":query parameter required" unless params[:query]
-    
+
     @params = params.dup
-    
+
     # Validate operator
     if params[:operator]
       raise "Only :and/:or operators allowed" unless 
         [:and, :or].include?(params[:operator])
-        
+
       @params[:operator] = params[:operator].to_s.upcase
     end
 
     # Validate start, rows can be transformed to ints
     @params[:start] = params[:start].to_i if params[:start]
     @params[:rows] = params[:rows].to_i if params[:rows]
-    
+
     @params[:field_list] ||= ["*","score"]
   end
   

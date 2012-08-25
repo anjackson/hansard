@@ -4,7 +4,7 @@ require 'net/http'
 require 'active_record'
 require "#{File.dirname(__FILE__)}/../../config/environment.rb"
 
-namespace :solr do
+namespace :old_solr do
 
   desc 'Starts Solr. Options accepted: RAILS_ENV=your_env, PORT=XX. Defaults to development if none.'
   task :start do
@@ -16,6 +16,7 @@ namespace :solr do
       puts "Port #{SOLR_PORT} in use" and return
 
     rescue Errno::ECONNREFUSED #not responding
+   
       Dir.chdir(SOLR_PATH) do
         pid = fork do
           #STDERR.close

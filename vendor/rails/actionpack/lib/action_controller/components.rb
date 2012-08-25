@@ -36,20 +36,15 @@ module ActionController #:nodoc:
   # So to repeat: Components are a special-purpose approach that can often be replaced with better use of partials and filters.
   module Components
     def self.included(base) #:nodoc:
-      base.send :include, InstanceMethods
-      base.extend(ClassMethods)
-
-      base.helper do
-        def render_component(options)
-          @controller.send(:render_component_as_string, options)
-        end
-      end
-
-      # If this controller was instantiated to process a component request,
-      # +parent_controller+ points to the instantiator of this controller.
-      base.send :attr_accessor, :parent_controller
-
       base.class_eval do
+        include InstanceMethods
+        extend ClassMethods
+        helper HelperMethods
+
+        # If this controller was instantiated to process a component request,
+        # +parent_controller+ points to the instantiator of this controller.
+        attr_accessor :parent_controller
+
         alias_method_chain :process_cleanup, :components
         alias_method_chain :set_session_options, :components
         alias_method_chain :flash, :components
@@ -67,6 +62,12 @@ module ActionController #:nodoc:
       end
     end
 
+    module HelperMethods
+      def render_component(options)
+        @controller.send!(:render_component_as_string, options)
+      end
+    end
+
     module InstanceMethods
       # Extracts the action_name from the request parameters and performs that action.
       def process_with_components(request, response, method = :perform_action, *arguments) #:nodoc:
@@ -78,7 +79,7 @@ module ActionController #:nodoc:
         # Renders the component specified as the response for the current method
         def render_component(options) #:doc:
           component_logging(options) do
-            render_text(component_response(options, true).body, response.headers["Status"])
+            render_for_text(component_response(options, true).body, response.headers["Status"])
           end
         end
 

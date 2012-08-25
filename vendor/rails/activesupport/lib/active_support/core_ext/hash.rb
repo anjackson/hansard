@@ -1,5 +1,5 @@
-%w(keys indifferent_access reverse_merge conversions diff slice).each do |ext|
-  require "#{File.dirname(__FILE__)}/hash/#{ext}"
+%w(keys indifferent_access reverse_merge conversions diff slice except).each do |ext|
+  require "active_support/core_ext/hash/#{ext}"
 end
 
 class Hash #:nodoc:
@@ -9,4 +9,5 @@ class Hash #:nodoc:
   include ActiveSupport::CoreExtensions::Hash::Conversions
   include ActiveSupport::CoreExtensions::Hash::Diff
   include ActiveSupport::CoreExtensions::Hash::Slice
+  include ActiveSupport::CoreExtensions::Hash::Except
 end

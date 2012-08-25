@@ -188,7 +188,7 @@
          when the number of items in the set is less than maxSize.  For smaller
          sets, this representation is more memory efficient, more efficient to
          iterate over, and faster to take intersections.  -->
-    <HashDocSet maxSize="3000" loadFactor="0.75"/>
+    <HashDocSet maxSize="12500" loadFactor="0.75"/>
 
 
     <!-- boolToFilterOptimizer converts boolean clauses with zero boost
@@ -264,6 +264,13 @@
      </lst>
   </requestHandler>
 
+  <requestHandler name="/mlt" class="solr.MoreLikeThisHandler">
+      <lst name="defaults">
+          <str name="mlt.fl">mlt</str>
+          <int name="mlt.mindf">1</int>
+      </lst>
+  </requestHandler>
+  
   <!-- DisMaxRequestHandler allows easy searching across multiple fields
        for simple user-entered phrases. 
        see http://wiki.apache.org/solr/DisMaxRequestHandler
@@ -383,7 +390,7 @@
      <!-- the field in your schema that you want to be able to build -->
      <!-- your spell index on. This should be a field that uses a very -->
      <!-- simple FieldType without a lot of Analysis (ie: string) -->
-     <str name="termSourceField">word</str>
+     <str name="termSourceField">spell</str>
      
    </requestHandler>
 

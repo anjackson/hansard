@@ -8,6 +8,7 @@ require 'active_record/connection_adapters/abstract/schema_statements'
 require 'active_record/connection_adapters/abstract/database_statements'
 require 'active_record/connection_adapters/abstract/quoting'
 require 'active_record/connection_adapters/abstract/connection_specification'
+require 'active_record/connection_adapters/abstract/query_cache'
 
 module ActiveRecord
   module ConnectionAdapters # :nodoc:
@@ -22,12 +23,14 @@ module ActiveRecord
     # SchemaStatements#remove_column are very useful.
     class AbstractAdapter
       include Quoting, DatabaseStatements, SchemaStatements
+      include QueryCache
       @@row_even = true
 
       def initialize(connection, logger = nil) #:nodoc:
         @connection, @logger = connection, logger
         @runtime = 0
         @last_verification = 0
+        @query_cache_enabled = false
       end
 
       # Returns the human-readable name of the adapter.  Use mixed case - one
@@ -61,6 +64,19 @@ module ActiveRecord
         rt
       end
 
+      # QUOTING ==================================================
+
+      # Override to return the quoted table name. Defaults to column quoting.
+      def quote_table_name(name)
+        quote_column_name(name)
+      end
+
+      # REFERENTIAL INTEGRITY ====================================
+
+      # Override to turn off referential integrity while executing <tt>&block</tt>.
+      def disable_referential_integrity(&block)
+        yield
+      end
 
       # CONNECTION MANAGEMENT ====================================
 
@@ -85,7 +101,7 @@ module ActiveRecord
         false
       end
 
-      # Lazily verify this connection, calling +active?+ only if it hasn't
+      # Lazily verify this connection, calling <tt>active?</tt> only if it hasn't
       # been called for +timeout+ seconds.
       def verify!(timeout)
         now = Time.now.to_i
@@ -112,22 +128,18 @@ module ActiveRecord
       protected
         def log(sql, name)
           if block_given?
-            if @logger and @logger.level <= Logger::INFO
-              result = nil
-              seconds = Benchmark.realtime { result = yield }
-              @runtime += seconds
-              log_info(sql, name, seconds)
-              result
-            else
-              yield
-            end
+            result = nil
+            seconds = Benchmark.realtime { result = yield }
+            @runtime += seconds
+            log_info(sql, name, seconds)
+            result
           else
             log_info(sql, name, 0)
             nil
           end
         rescue Exception => e
           # Log message and raise exception.
-          # Set last_verfication to 0, so that connection gets verified
+          # Set last_verification to 0, so that connection gets verified
           # upon reentering the request loop
           @last_verification = 0
           message = "#{e.class.name}: #{e.message}: #{sql}"
