@@ -1,1 +1,2 @@
 config/deployed_database.yml
+*.DS_Store
